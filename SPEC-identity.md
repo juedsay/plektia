@@ -2,7 +2,7 @@
 
 > Módulo del [mapa de capacidades](CAPABILITY-MAP.md). Depende de
 > [`platform`](SPEC-platform.md) y hereda sus comandos, estructura, estilo,
-> testing y límites. Estado: **borrador, pendiente de aprobación**.
+> testing y límites. Estado: **aprobado (2026-10-09)**.
 
 ## Objetivo
 
@@ -151,6 +151,6 @@ alter table public.profiles enable row level security;
 
 ## Preguntas abiertas
 
-1. **Proveedores OAuth:** hay que crear una OAuth App en GitHub y un cliente en Google Cloud. Lo guiamos con `wizard` cuando lleguemos. ¿Tenés acceso a Google Cloud Console con tu cuenta?
-2. **Handle del owner:** ¿qué `handle` querés para vos? (por ejemplo `juedsay`).
+1. ~~Proveedores OAuth~~ Hay acceso a Google Cloud Console; la OAuth App de GitHub y el cliente de Google se crean con `wizard` al implementar.
+2. ~~Handle del owner~~ `juedsay` (rol `owner`; va en `seed.sql` y en la allowlist de producción).
 3. **A verificar al implementar:** el campo exacto donde el evento del hook informa `email_verified` según el proveedor. Si no viene confiable, se lee de `identities` antes de decidir.
