@@ -12,8 +12,31 @@
   enérgico, editorial). La v1 sale con 1 tema; los tokens se diseñan
   intercambiables desde el inicio y los otros 3 llegan en una entrega propia.
 
+## Feedback ronda 1 (2026-10-09)
+
+- **Vinkolo:** el nombre gustaba, pero los aros entrelazados lo hacen parecer una app de citas.
+- **Bonduu:** el logo y la marca gustan, pero el nombre se confunde con Badoo (citas).
+- **Hilvanu:** original, pero la "h" minúscula no convence y la marca resulta demasiado tierna o infantil.
+- **Criterios nuevos:** nada que remita a apps de citas (aros, abrazos, corazones, terminaciones "-oo", "-uu" u "-olo"). Cercana pero **adulta**. No se descartan los conceptos anteriores. Explorar paletas y logos nuevos.
+
+## Ronda 2 de nombres
+
+Los `.com` cortos están todos registrados; se aceptan `.app`, `.link` y `.page` (más `get<nombre>.com` como opción).
+
+| Nombre | Idea | Dominios libres | Uso visible en la web |
+|---|---|---|---|
+| Lazen | Lazo/enlazar + "zen" (calma) | lazen.app, .link, .page, getlazen.com | No |
+| Trelia | Enrejado (trellis): estructura donde todo crece conectado | trelia.app, .link, .page | No |
+| Unira | Unir | unira.app, .link, .page | No |
+| Aunio | Aunar (juntar esfuerzos) | aunio.app | Parecidos: Auni AI, Unio |
+| ~~Teselia~~ | Teselas, mosaico | teselia.app | Descartado: es el nombre en español de la región Unova de Pokémon |
+
 ## Pendiente
 
 - Elegir nombre final y revisar marcas registradas (INPI Argentina, EUIPO, USPTO).
 - Logotipo, isotipo, imagotipo, paleta y tipografía (`brandkit`).
 - Sistema de diseño y tokens con temas (`impeccable`).
+
+## Ronda 3 (2026-10-09)
+
+Lista corta: **Plektia** (plektia.com y .app libres) y **Catenio** (catenio.app libre), más Vinkolo, Bonduu y Hilvanu. Descartados: Lazen, Trelia, Unira y Aunio (en uso según el usuario) e Iunga (marca IUNGO). Se exploran 4 direcciones (nodos y red, monograma geométrico, señal y pulso, tipográfico) con 4 familias de paleta.
