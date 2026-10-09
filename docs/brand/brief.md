@@ -70,3 +70,16 @@ Los `.com` cortos están todos registrados; se aceptan `.app`, `.link` y `.page`
 ## Ronda 3 (2026-10-09)
 
 Lista corta: **Plektia** (plektia.com y .app libres) y **Catenio** (catenio.app libre), más Vinkolo, Bonduu y Hilvanu. Descartados: Lazen, Trelia, Unira y Aunio (en uso según el usuario) e Iunga (marca IUNGO). Se exploran 4 direcciones (nodos y red, monograma geométrico, señal y pulso, tipográfico) con 4 familias de paleta.
+
+## Dirección visual de la página pública (2026-10-09)
+
+Elegida: **Patchera con hilo** (dirección asignada por el dado de impeccable, seed `2a81963b`).
+
+- Cada link es un puerto con su jack; un **hilo** (trazo trenzado hueso) enhebra todos los jacks con curvas variables hacia ambos lados, sin cruzar nunca el texto. Empieza con un nudo en el primer link y termina suelto en el último; no sale del logo.
+- Encabezado con el **avatar del usuario**; el logo de Plektia va en un pie discreto ("Hecho con Plektia").
+- **En vivo:** el jack y el tramo de hilo que llega a él se ponen lima y el jack late (pulso). Los demás links mantienen brillo pleno: nada se ve apagado ni desactualizado.
+- **Último video de YouTube:** línea plegable con título y antigüedad; al tocarla se despliega la miniatura.
+- **Sin numeración** de links.
+- Secciones con título (REDES, PROYECTOS…) que el usuario crea, ordena, renombra u oculta desde el panel.
+- Animaciones: enhebrado único al cargar y tensado del tramo al enfocar un link; todas respetan `prefers-reduced-motion`.
+- **Variante en reserva:** fusión patchera + subte (línea troncal con nodos y secciones como tramos de color). Puede convertirse en un segundo estilo de página elegible.
