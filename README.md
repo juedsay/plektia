@@ -1,4 +1,4 @@
-# Social Links Hub (nombre provisorio)
+# Plektia
 
 Página personal de links y redes sociales con detección de transmisiones en
 vivo (YouTube, Twitch), último video de YouTube, panel de edición y servidor

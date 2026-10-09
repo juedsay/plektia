@@ -176,5 +176,5 @@ Los bugs se arreglan con el patrón *Prove-It*: primero un test que falla, despu
 ## Preguntas abiertas
 
 1. ~~¿Docker instalado?~~ Sí: Docker 29.8, git 2.56 y gh 2.101 disponibles. pnpm local está en 11.25; se actualiza a 12 con Corepack.
-2. ~~¿Repo?~~ Privado en GitHub (`juedsay/social-links-hub`, nombre provisorio). Se hace público después de la primera entrega usable con la CI en verde.
+2. ~~¿Repo?~~ Privado en GitHub (`juedsay/plektia`). Se hace público después de la primera entrega usable con la CI en verde.
 3. ~~¿Dominio?~~ Arrancamos en `*.workers.dev`. El dominio propio se decide junto con el nombre de la marca.
