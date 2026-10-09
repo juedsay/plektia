@@ -15,7 +15,16 @@
 | Superficie secundaria | Grafito `#3A3D42` |
 
 - **Restricción conocida:** la lima casi no contrasta sobre fondos claros. En la versión clara el nodo de acento pasa a negro. Al armar los tokens se evalúa una lima oscura para fondo claro.
-- **Pendiente:** revisar marcas registradas (INPI, EUIPO, USPTO) antes de comprar el dominio.
+- **Marcas registradas (búsqueda en TMview, 2026-10-09):** no hay ninguna marca "Plektia" idéntica. Parecidas en clases de software (9, 35, 42):
+
+| Marca | Oficina | Estado | Clases | Riesgo |
+|---|---|---|---|---|
+| PLEKTRA | Suiza (IGE) | Registrada (2012) | 9, 35, 42 | Medio: una letra de diferencia y mismas clases, pero solo vale en Suiza |
+| ALEKTIA | EUIPO | Registrada (2025) | 9, 35, 37, 38, 42 | Bajo-medio: rima, pero empieza distinto |
+| ELEKTIA | INPI Argentina | Registrada (2025) | 9, 35, 37 | Bajo-medio: rima, pero empieza distinto |
+
+  El resto (PLENTIA, PLESTIA, ΠΛΕΚΤΑ…) son de otros rubros. TMview no tiene valor legal: antes de registrar, consultar a un agente de marcas.
+- **Si se registra:** INPI Argentina, clases 9 (software) y 42 (SaaS); evaluar la 35.
 
 ---
 
