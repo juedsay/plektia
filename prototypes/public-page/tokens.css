@@ -1,0 +1,69 @@
+/*
+ * Tokens de Plektia. Cada tema redefine el mismo set de variables; los
+ * componentes solo leen tokens, nunca colores sueltos. La v1 trae el tema
+ * "tecnico"; "cercano", "energico" y "editorial" se suman con el mismo contrato.
+ * Contraste verificado contra --color-bg (WCAG 2.2 AAA): fg 17:1, fg-muted 8.6:1, live 14.9:1.
+ */
+:root,
+[data-theme="tecnico"] {
+  color-scheme: dark;
+
+  --color-bg: #121315;
+  --color-fg: #f2f2ee;
+  --color-fg-muted: #aeb1b7;
+  --color-line: #3a3d42;
+  --color-line-soft: #26282c;
+  --color-surface: #1b1d20;
+  --color-live: #c6f432;
+  --color-live-ink: #121315;
+  --color-thread: #f2f2ee;
+  --color-thread-twist: #121315;
+  /* La lima es exclusiva del en vivo: foco y selección usan hueso. */
+  --color-focus: #f2f2ee;
+  --color-selection-bg: #f2f2ee;
+  --color-selection-fg: #121315;
+
+  --font-display: "Bricolage Grotesque", system-ui, sans-serif;
+  --font-body: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-data: ui-monospace, "Cascadia Mono", "SF Mono", Menlo, monospace;
+
+  --text-xs: 0.8125rem;
+  --text-sm: 0.875rem;
+  --text-md: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.75rem;
+
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-10: 2.5rem;
+
+  --radius-sm: 4px;
+  --radius-md: 6px;
+
+  --text-section: 1.25rem;
+  --text-link: 1.0625rem;
+
+  --jack-size: 18px;
+  --jack-col: 4.5rem;
+  --thread-width: 3.2px;
+  --row-min: 3.25rem;
+  --target-min: 44px;
+
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --dur-fast: 160ms;
+  --dur-base: 320ms;
+  --dur-thread: 1200ms;
+  --dur-pulse: 1800ms;
+}
+
+@media (min-width: 48rem) {
+  :root,
+  [data-theme="tecnico"] {
+    --jack-col: 5.5rem;
+  }
+}

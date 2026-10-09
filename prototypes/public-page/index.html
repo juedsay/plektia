@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="es-AR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#121315" />
+    <title>juedsay · Plektia</title>
+    <meta name="description" content="Streams, código y diseño. Todos los links de juedsay en un solo lugar." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..600&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="./tokens.css" />
+    <link rel="stylesheet" href="./styles.css" />
+    <script type="module" src="./page.js"></script>
+  </head>
+  <!-- Prototipo con datos sintéticos de ejemplo: reemplazar al portar a Astro. -->
+  <body data-theme="tecnico">
+    <div class="page">
+      <header class="topbar">
+        <a class="icon-button" href="https://plektia.app" aria-label="Plektia: creá tu propia página">
+          <svg viewBox="0 0 64 64" aria-hidden="true">
+            <path d="M18 54V12H34A12 12 0 0 1 34 36H18" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linejoin="round" />
+            <circle cx="18" cy="12" r="5" fill="currentColor" />
+            <circle cx="18" cy="36" r="5" fill="currentColor" />
+            <circle cx="18" cy="54" r="5" fill="currentColor" />
+            <circle cx="46" cy="24" r="5.5" fill="var(--color-live)" />
+          </svg>
+        </a>
+        <button class="icon-button" type="button" data-share aria-label="Compartir esta página">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M12 15V3M7.5 7.5 12 3l4.5 4.5" />
+            <path d="M8 11H6a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-8a1 1 0 0 0-1-1h-2" />
+          </svg>
+        </button>
+      </header>
+
+      <main>
+        <section class="identity" aria-labelledby="profile-name">
+          <!-- Placeholder: al portar, <img alt="Foto de perfil de …"> con el avatar real. -->
+          <div class="avatar" aria-hidden="true">J</div>
+          <h1 id="profile-name">juedsay</h1>
+          <p class="bio">Streams, código y diseño</p>
+        </section>
+
+        <div class="patchbay" data-patchbay>
+          <svg class="thread" aria-hidden="true"></svg>
+
+          <section class="bank" aria-labelledby="bank-redes">
+            <h2 id="bank-redes">Redes</h2>
+            <ul class="ports">
+              <li class="port is-live">
+                <span class="jack" aria-hidden="true"></span>
+                <div class="port-body">
+                  <a class="port-link" href="https://www.twitch.tv/juedsay">
+                    <span>
+                      <span class="port-name">Twitch</span>
+                      <span class="port-meta">
+                        <span class="live-label">En vivo</span>
+                        · <time class="live-time" data-live-since="demo">1:24:05</time>
+                        · Programando Plektia
+                      </span>
+                    </span>
+                    <svg class="go" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9" /></svg>
+                  </a>
+                </div>
+              </li>
+
+              <li class="port">
+                <span class="jack" aria-hidden="true"></span>
+                <div class="port-body">
+                  <a class="port-link" href="https://www.youtube.com/@juedsay">
+                    <span>
+                      <span class="port-name">YouTube</span>
+                      <span class="port-meta">youtube.com/@juedsay</span>
+                    </span>
+                    <svg class="go" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9" /></svg>
+                  </a>
+                  <button class="latest-toggle" type="button" data-latest-toggle aria-expanded="false" aria-controls="latest-youtube">
+                    <span class="latest-text">
+                      <span class="port-meta">Último video · hace 2 días</span>
+                      <span class="latest-title">Cómo testeo RLS con pgTAP</span>
+                    </span>
+                    <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg>
+                  </button>
+                  <div class="latest-panel" id="latest-youtube" inert>
+                    <div>
+                      <a class="latest-video" href="https://www.youtube.com/@juedsay" aria-label="Ver en YouTube: Cómo testeo RLS con pgTAP, 12 minutos 34 segundos">
+                        <svg viewBox="0 0 320 180" role="presentation">
+                          <rect width="320" height="180" fill="var(--color-surface)" />
+                          <path d="M0 132h320M0 150h320M0 168h320" stroke="var(--color-line)" />
+                          <rect x="24" y="28" width="140" height="10" rx="2" fill="var(--color-line)" />
+                          <rect x="24" y="46" width="96" height="10" rx="2" fill="var(--color-line)" />
+                          <circle cx="160" cy="92" r="22" fill="none" stroke="var(--color-fg)" stroke-width="2" />
+                          <path d="M154 81v22l18-11z" fill="var(--color-fg)" />
+                        </svg>
+                        <span class="duration" aria-hidden="true">12:34</span>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </li>
+
+              <li class="port">
+                <span class="jack" aria-hidden="true"></span>
+                <div class="port-body">
+                  <a class="port-link" href="https://www.instagram.com/juedsay">
+                    <span>
+                      <span class="port-name">Instagram</span>
+                      <span class="port-meta">@juedsay</span>
+                    </span>
+                    <svg class="go" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9" /></svg>
+                  </a>
+                </div>
+              </li>
+            </ul>
+          </section>
+
+          <section class="bank" aria-labelledby="bank-proyectos">
+            <h2 id="bank-proyectos">Proyectos</h2>
+            <ul class="ports">
+              <li class="port">
+                <span class="jack" aria-hidden="true"></span>
+                <div class="port-body">
+                  <a class="port-link" href="https://example.com">
+                    <span>
+                      <span class="port-name">Portfolio</span>
+                      <span class="port-meta">Trabajos y casos de estudio</span>
+                    </span>
+                    <svg class="go" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9" /></svg>
+                  </a>
+                </div>
+              </li>
+              <li class="port">
+                <span class="jack" aria-hidden="true"></span>
+                <div class="port-body">
+                  <a class="port-link" href="https://github.com/juedsay">
+                    <span>
+                      <span class="port-name">GitHub</span>
+                      <span class="port-meta">github.com/juedsay</span>
+                    </span>
+                    <svg class="go" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9" /></svg>
+                  </a>
+                </div>
+              </li>
+            </ul>
+          </section>
+
+          <section class="bank" aria-labelledby="bank-articulos">
+            <h2 id="bank-articulos">Artículos</h2>
+            <ul class="ports">
+              <li class="port">
+                <span class="jack" aria-hidden="true"></span>
+                <div class="port-body">
+                  <a class="port-link" href="https://example.com/rls">
+                    <span>
+                      <span class="port-name">Guía de RLS en Supabase</span>
+                      <span class="port-meta">Lectura de 8 minutos</span>
+                    </span>
+                    <svg class="go" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9" /></svg>
+                  </a>
+                </div>
+              </li>
+            </ul>
+          </section>
+        </div>
+      </main>
+
+      <footer class="footer">
+        <a href="https://plektia.app">
+          <svg width="14" height="14" viewBox="0 0 64 64" aria-hidden="true">
+            <path d="M18 54V12H34A12 12 0 0 1 34 36H18" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linejoin="round" />
+            <circle cx="18" cy="12" r="5" fill="currentColor" />
+            <circle cx="18" cy="36" r="5" fill="currentColor" />
+            <circle cx="18" cy="54" r="5" fill="currentColor" />
+            <circle cx="46" cy="24" r="5.5" fill="var(--color-live)" />
+          </svg>
+          Hecho con Plektia
+        </a>
+      </footer>
+    </div>
+    <p class="toast" role="status" aria-live="polite" data-toast></p>
+  </body>
+</html>

@@ -25,3 +25,7 @@ Thumbs.db
 !.vscode/extensions.json
 .idea/
 *.log
+
+# Impeccable: capturas de revisión temporales
+.impeccable/review/
+.impeccable/build/
