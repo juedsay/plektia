@@ -35,7 +35,7 @@ Versiones estables verificadas en npm el 2026-10-09:
 | `platform` | Repo, Astro + Cloudflare, Supabase local, CI, arnés de tests, cabeceras de seguridad (CSP) | — |
 | `identity` | Login con GitHub/Google, registro cerrado (allowlist), sesiones, protección de rutas, perfil de usuario (`handle`) | `platform` |
 | `links` | Modelo de datos: perfil, secciones, links, etiquetas (guardadas, sin UI de filtro). CRUD, orden, RLS | `identity` |
-| `admin-panel` | UI de edición: crear/editar/borrar, reordenar arrastrando, vista previa | `links`, `brand-system` |
+| `admin-panel` | UI de edición: crear/editar/borrar; reordenar arrastrando links y secciones, mover links entre secciones, crear/renombrar/ocultar secciones y mostrar u ocultar sus títulos; vista previa | `links`, `brand-system` |
 | `public-page` | Página pública `/{handle}`: render estático, SEO, Open Graph, accesibilidad | `links`, `brand-system` |
 | `live-status` | Proveedores YouTube y Twitch: estado en vivo + último video de YouTube. Cron + caché. Interfaz de proveedor extensible (Kick en v2) | `links` |
 | `click-analytics` | Conteo de clics por link, sin cookies ni datos personales; vista en el panel | `public-page`, `admin-panel` |
