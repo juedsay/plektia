@@ -2,7 +2,7 @@
  * Tokens de Plektia. Cada tema redefine el mismo set de variables; los
  * componentes solo leen tokens, nunca colores sueltos. La v1 trae el tema
  * "tecnico"; "cercano", "energico" y "editorial" se suman con el mismo contrato.
- * Contraste verificado contra --color-bg (WCAG 2.2 AAA): fg 17:1, fg-muted 8.6:1, live 14.9:1.
+ * Contraste verificado contra --color-bg (WCAG 2.2 AAA): fg 16.6:1, fg-muted 8.6:1, live 14.5:1.
  */
 :root,
 [data-theme="tecnico"] {

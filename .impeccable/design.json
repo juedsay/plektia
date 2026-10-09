@@ -1,0 +1,390 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-09T23:52:57.471Z",
+  "title": "Design System: Plektia",
+  "extensions": {
+    "colorMeta": {
+      "negro-patchera": {
+        "role": "neutral",
+        "displayName": "Negro patchera",
+        "canonical": "oklch(18.6% 0.004 264.5)",
+        "cssVar": "--color-bg",
+        "tonalRamp": [
+          "oklch(15% 0.004 264.5)",
+          "oklch(25% 0.004 264.5)",
+          "oklch(35% 0.004 264.5)",
+          "oklch(45% 0.004 264.5)",
+          "oklch(55% 0.004 264.5)",
+          "oklch(65% 0.004 264.5)",
+          "oklch(80% 0.004 264.5)",
+          "oklch(95% 0.004 264.5)"
+        ]
+      },
+      "hueso": {
+        "role": "neutral",
+        "displayName": "Hueso",
+        "canonical": "oklch(96% 0.005 106.5)",
+        "cssVar": "--color-fg (también --color-thread, --color-focus, --color-selection-bg)",
+        "tonalRamp": [
+          "oklch(15% 0.005 106.5)",
+          "oklch(25% 0.005 106.5)",
+          "oklch(35% 0.005 106.5)",
+          "oklch(45% 0.005 106.5)",
+          "oklch(55% 0.005 106.5)",
+          "oklch(65% 0.005 106.5)",
+          "oklch(80% 0.005 106.5)",
+          "oklch(95% 0.005 106.5)"
+        ]
+      },
+      "hueso-apagado": {
+        "role": "neutral",
+        "displayName": "Hueso apagado",
+        "canonical": "oklch(76% 0.009 264.5)",
+        "cssVar": "--color-fg-muted",
+        "tonalRamp": [
+          "oklch(15% 0.009 264.5)",
+          "oklch(25% 0.009 264.5)",
+          "oklch(35% 0.009 264.5)",
+          "oklch(45% 0.009 264.5)",
+          "oklch(55% 0.009 264.5)",
+          "oklch(65% 0.009 264.5)",
+          "oklch(80% 0.009 264.5)",
+          "oklch(95% 0.009 264.5)"
+        ]
+      },
+      "grafito": {
+        "role": "neutral",
+        "displayName": "Grafito",
+        "canonical": "oklch(35.9% 0.01 260.7)",
+        "cssVar": "--color-line",
+        "tonalRamp": [
+          "oklch(15% 0.01 260.7)",
+          "oklch(25% 0.01 260.7)",
+          "oklch(35% 0.01 260.7)",
+          "oklch(45% 0.01 260.7)",
+          "oklch(55% 0.01 260.7)",
+          "oklch(65% 0.01 260.7)",
+          "oklch(80% 0.01 260.7)",
+          "oklch(95% 0.01 260.7)"
+        ]
+      },
+      "grafito-tenue": {
+        "role": "neutral",
+        "displayName": "Grafito tenue",
+        "canonical": "oklch(27.6% 0.008 264.4)",
+        "cssVar": "--color-line-soft",
+        "tonalRamp": [
+          "oklch(15% 0.008 264.4)",
+          "oklch(25% 0.008 264.4)",
+          "oklch(35% 0.008 264.4)",
+          "oklch(45% 0.008 264.4)",
+          "oklch(55% 0.008 264.4)",
+          "oklch(65% 0.008 264.4)",
+          "oklch(80% 0.008 264.4)",
+          "oklch(95% 0.008 264.4)"
+        ]
+      },
+      "superficie": {
+        "role": "neutral",
+        "displayName": "Superficie",
+        "canonical": "oklch(23% 0.007 258.4)",
+        "cssVar": "--color-surface",
+        "tonalRamp": [
+          "oklch(15% 0.007 258.4)",
+          "oklch(25% 0.007 258.4)",
+          "oklch(35% 0.007 258.4)",
+          "oklch(45% 0.007 258.4)",
+          "oklch(55% 0.007 258.4)",
+          "oklch(65% 0.007 258.4)",
+          "oklch(80% 0.007 258.4)",
+          "oklch(95% 0.007 258.4)"
+        ]
+      },
+      "lima-en-vivo": {
+        "role": "primary",
+        "displayName": "Lima en vivo",
+        "canonical": "oklch(90.3% 0.208 122.9)",
+        "cssVar": "--color-live",
+        "tonalRamp": [
+          "oklch(15% 0.05 122.9)",
+          "oklch(25% 0.08 122.9)",
+          "oklch(35% 0.11 122.9)",
+          "oklch(45% 0.14 122.9)",
+          "oklch(55% 0.17 122.9)",
+          "oklch(65% 0.19 122.9)",
+          "oklch(80% 0.2 122.9)",
+          "oklch(95% 0.08 122.9)"
+        ]
+      },
+      "tinta-en-vivo": {
+        "role": "neutral",
+        "displayName": "Tinta en vivo",
+        "canonical": "oklch(18.6% 0.004 264.5)",
+        "cssVar": "--color-live-ink (también --color-thread-twist, --color-selection-fg)",
+        "tonalRamp": [
+          "oklch(15% 0.004 264.5)",
+          "oklch(25% 0.004 264.5)",
+          "oklch(35% 0.004 264.5)",
+          "oklch(45% 0.004 264.5)",
+          "oklch(55% 0.004 264.5)",
+          "oklch(65% 0.004 264.5)",
+          "oklch(80% 0.004 264.5)",
+          "oklch(95% 0.004 264.5)"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "Nombre de la persona bajo el avatar. Uno por página."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Títulos de sección con filete grafito debajo, alineados al carril de texto."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Nombre de cada link."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Base del documento y bio (máx. 32ch)."
+      },
+      "body-sm": {
+        "displayName": "Body small",
+        "purpose": "Título del último video y aviso flotante."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Metadatos de cada link y pie, en hueso apagado."
+      },
+      "data": {
+        "displayName": "Data",
+        "purpose": "Cronómetro en vivo y duración de video, cifras tabulares."
+      }
+    },
+    "shadows": [
+      {
+        "name": "anillo-avatar",
+        "value": "0 0 0 3px var(--color-bg), 0 0 0 5px var(--color-fg)",
+        "purpose": "Doble anillo del avatar; trazo duro, no elevación."
+      },
+      {
+        "name": "ojo-jack",
+        "value": "inset 0 0 0 1.5px var(--color-line)",
+        "purpose": "Borde interior del ojo del jack en reposo."
+      }
+    ],
+    "motion": [
+      {
+        "name": "ease-out",
+        "value": "cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "Curva única de todas las transiciones."
+      },
+      {
+        "name": "dur-fast",
+        "value": "160ms",
+        "purpose": "Hover de botones, flecha de salida, escala del jack."
+      },
+      {
+        "name": "dur-base",
+        "value": "320ms",
+        "purpose": "Chevron y panel del último video, aviso flotante."
+      },
+      {
+        "name": "dur-thread",
+        "value": "1200ms",
+        "purpose": "Enhebrado inicial del hilo, una vez por carga, curva exponencial."
+      },
+      {
+        "name": "dur-pulse",
+        "value": "1800ms",
+        "purpose": "Pulso del jack en vivo, en loop."
+      },
+      {
+        "name": "thread-tension",
+        "value": "lerp 0.18 por cuadro hacia 20% de desvío",
+        "purpose": "Tensado del tramo del link enfocado o con puntero encima."
+      },
+      {
+        "name": "reduced-motion",
+        "value": "prefers-reduced-motion: reduce",
+        "purpose": "Transiciones a 0 ms, pulso quieto a 0.5 de opacidad, hilo completo y tensado instantáneo."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "md",
+        "value": "48rem",
+        "purpose": "El carril de jacks pasa de 4.5rem a 5.5rem."
+      }
+    ],
+    "layout": {
+      "maxWidth": "30rem",
+      "jackColumn": "4.5rem; 5.5rem desde 48rem",
+      "rowMin": "3.25rem",
+      "jackSize": "18px",
+      "threadWidth": "3.2px",
+      "targetMin": "44px"
+    },
+    "theming": {
+      "attribute": "data-theme",
+      "themes": [
+        "tecnico",
+        "cercano",
+        "energico",
+        "editorial"
+      ],
+      "implemented": [
+        "tecnico"
+      ],
+      "contract": "Cada tema redefine el set completo de variables de tokens.css; WCAG 2.2 AAA (7:1 texto) en la página pública. Lima reservada al en vivo; foco y selección en hueso.",
+      "portTarget": "src/ui/styles/"
+    },
+    "portCommitments": [
+      "Alojar Bricolage Grotesque con @fontsource-variable/bricolage-grotesque (OFL-1.1), solo subset latino woff2, y quitar los preconnect a Google Fonts."
+    ],
+    "reserveVariants": [
+      {
+        "name": "Fusión patchera + subte",
+        "status": "sin decidir",
+        "summary": "Línea troncal con nodos y secciones como tramos de línea de color; posible segundo estilo de página."
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Botón de ícono",
+      "kind": "button",
+      "refersTo": "icon-button",
+      "description": "Isotipo y compartir en la barra superior; sin fondo hasta el hover.",
+      "html": "<button class=\"ds-icon-button\" type=\"button\" aria-label=\"Compartir\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M12 15V3M7.5 7.5 12 3l4.5 4.5\"/><path d=\"M8 11H6a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-8a1 1 0 0 0-1-1h-2\"/></svg></button>",
+      "css": ".ds-icon-button{display:inline-grid;place-items:center;min-width:44px;min-height:44px;border:0;border-radius:var(--radius-md,6px);background:transparent;color:var(--color-fg,#f2f2ee);cursor:pointer;transition:background-color 160ms cubic-bezier(0.16,1,0.3,1)} .ds-icon-button svg{width:22px;height:22px} .ds-icon-button:hover{background:var(--color-surface,#1b1d20)} .ds-icon-button:focus-visible{outline:2px solid var(--color-focus,#f2f2ee);outline-offset:4px;border-radius:4px}"
+    },
+    {
+      "name": "Fila de link (puerto)",
+      "kind": "custom",
+      "refersTo": "port-link",
+      "description": "Jack en el carril, nombre y metadato, flecha de salida; filete de 1 px debajo.",
+      "html": "<div class=\"ds-port\"><span class=\"ds-jack\" aria-hidden=\"true\"></span><a class=\"ds-port-link\" href=\"#\"><span><span class=\"ds-port-name\">YouTube</span><span class=\"ds-port-meta\">youtube.com/@juedsay</span></span><svg class=\"ds-go\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" aria-hidden=\"true\"><path d=\"M7 17 17 7M8 7h9v9\"/></svg></a></div>",
+      "css": ".ds-port{display:grid;grid-template-columns:4.5rem minmax(0,1fr);align-items:start;width:24rem;background:var(--color-bg,#121315);color:var(--color-fg,#f2f2ee)} .ds-jack{justify-self:center;position:relative;width:18px;height:18px;margin-top:calc((3.25rem - 18px) / 2);border:2.5px solid var(--color-fg,#f2f2ee);border-radius:50%;transition:transform 160ms cubic-bezier(0.16,1,0.3,1)} .ds-jack::before{content:\"\";position:absolute;inset:3px;border-radius:50%;background:var(--color-bg,#121315);box-shadow:inset 0 0 0 1.5px var(--color-line,#3a3d42)} .ds-port:is(:hover,:focus-within) .ds-jack{transform:scale(1.15)} .ds-port-link{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:0.75rem;min-height:3.25rem;padding:0.75rem 0;color:inherit;text-decoration:none;border-bottom:1px solid var(--color-line-soft,#26282c)} .ds-port-name{display:block;font-family:var(--font-display,'Bricolage Grotesque',system-ui,sans-serif);font-size:1.0625rem;font-weight:500;line-height:1.3} .ds-port-meta{display:block;color:var(--color-fg-muted,#aeb1b7);font-size:0.8125rem} .ds-go{width:18px;height:18px;color:var(--color-fg-muted,#aeb1b7);transition:transform 160ms cubic-bezier(0.16,1,0.3,1),color 160ms cubic-bezier(0.16,1,0.3,1)} .ds-port-link:hover .ds-port-name{text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:3px} .ds-port-link:is(:hover,:focus-visible) .ds-go{color:var(--color-fg,#f2f2ee);transform:translate(2px,-2px)} .ds-port-link:focus-visible{outline:2px solid var(--color-focus,#f2f2ee);outline-offset:4px;border-radius:4px}"
+    },
+    {
+      "name": "Fila en vivo",
+      "kind": "custom",
+      "refersTo": "jack-live",
+      "description": "Jack lima que late; etiqueta y cronómetro en lima.",
+      "html": "<div class=\"ds-port\"><span class=\"ds-jack-live\" aria-hidden=\"true\"></span><a class=\"ds-port-link\" href=\"#\"><span class=\"ds-port-name\">Twitch</span><span class=\"ds-port-meta\"><span class=\"ds-live-label\">En vivo</span> · <time class=\"ds-live-time\">1:24:05</time> · Programando Plektia</span></a></div>",
+      "css": ".ds-port{display:grid;grid-template-columns:4.5rem minmax(0,1fr);width:24rem;background:var(--color-bg,#121315);color:var(--color-fg,#f2f2ee)} .ds-jack-live{justify-self:center;position:relative;width:18px;height:18px;margin-top:calc((3.25rem - 18px) / 2);border:2.5px solid var(--color-live,#c6f432);border-radius:50%} .ds-jack-live::before{content:\"\";position:absolute;inset:3px;border-radius:50%;background:var(--color-live,#c6f432)} .ds-jack-live::after{content:\"\";position:absolute;inset:-6px;border:2px solid var(--color-live,#c6f432);border-radius:50%;animation:ds-pulse 1800ms cubic-bezier(0.16,1,0.3,1) infinite} @keyframes ds-pulse{from{opacity:0.9;transform:scale(0.6)}to{opacity:0;transform:scale(1.7)}} @media (prefers-reduced-motion: reduce){.ds-jack-live::after{animation:none;opacity:0.5}} .ds-port-link{display:block;min-height:3.25rem;padding:0.75rem 0;color:inherit;text-decoration:none;border-bottom:1px solid var(--color-line-soft,#26282c)} .ds-port-link:focus-visible{outline:2px solid var(--color-focus,#f2f2ee);outline-offset:4px;border-radius:4px} .ds-port-name{display:block;font-family:var(--font-display,'Bricolage Grotesque',system-ui,sans-serif);font-size:1.0625rem;font-weight:500;line-height:1.3} .ds-port-meta{display:block;color:var(--color-fg-muted,#aeb1b7);font-size:0.8125rem} .ds-live-label{color:var(--color-live,#c6f432);font-weight:600} .ds-live-time{color:var(--color-live,#c6f432);font-family:var(--font-data,ui-monospace,monospace);font-variant-numeric:tabular-nums}"
+    },
+    {
+      "name": "Título de sección",
+      "kind": "custom",
+      "refersTo": "bank-title",
+      "description": "Headline con filete grafito, sangrado al carril de texto.",
+      "html": "<h2 class=\"ds-bank-title\">Proyectos</h2>",
+      "css": ".ds-bank-title{margin:0 0 0.25rem 4.5rem;padding-bottom:0.75rem;border-bottom:1px solid var(--color-line,#3a3d42);color:var(--color-fg,#f2f2ee);font-family:var(--font-display,'Bricolage Grotesque',system-ui,sans-serif);font-size:1.25rem;font-optical-sizing:auto;font-weight:600;letter-spacing:-0.01em;line-height:1.2}"
+    },
+    {
+      "name": "Último video (plegable)",
+      "kind": "button",
+      "refersTo": "latest-toggle",
+      "description": "Sub-fila sin caja colgada del link, con filete punteado y chevron.",
+      "html": "<button class=\"ds-latest\" type=\"button\" aria-expanded=\"false\"><span class=\"ds-latest-text\"><span class=\"ds-latest-meta\">Último video · hace 2 días</span><span class=\"ds-latest-title\">Cómo testeo RLS con pgTAP</span></span><svg class=\"ds-chevron\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"m6 9 6 6 6-6\"/></svg></button>",
+      "css": ".ds-latest{display:flex;align-items:center;gap:0.75rem;width:20rem;min-height:44px;padding:0.5rem 0;border:0;border-top:1px dashed var(--color-line,#3a3d42);background:transparent;color:var(--color-fg,#f2f2ee);font:inherit;text-align:left;cursor:pointer} .ds-latest-text{display:grid;min-width:0} .ds-latest-meta{color:var(--color-fg-muted,#aeb1b7);font-size:0.8125rem} .ds-latest-title{overflow:hidden;font-size:0.875rem;text-overflow:ellipsis;white-space:nowrap} .ds-chevron{flex:none;width:18px;height:18px;margin-left:auto;transition:transform 320ms cubic-bezier(0.16,1,0.3,1)} .ds-latest[aria-expanded=\"true\"] .ds-chevron{transform:rotate(180deg)} .ds-latest:hover .ds-latest-title{text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:3px} .ds-latest:focus-visible{outline:2px solid var(--color-focus,#f2f2ee);outline-offset:4px;border-radius:4px}"
+    },
+    {
+      "name": "Avatar",
+      "kind": "custom",
+      "refersTo": "avatar",
+      "description": "El jack más grande: círculo de 88 px con doble anillo (en producción, foto real).",
+      "html": "<div class=\"ds-avatar\" aria-hidden=\"true\">J</div>",
+      "css": ".ds-avatar{display:grid;place-items:center;width:88px;height:88px;border-radius:50%;background:var(--color-surface,#1b1d20);color:var(--color-fg,#f2f2ee);box-shadow:0 0 0 3px var(--color-bg,#121315),0 0 0 5px var(--color-fg,#f2f2ee);font-family:var(--font-display,'Bricolage Grotesque',system-ui,sans-serif);font-size:2rem;font-weight:500}"
+    },
+    {
+      "name": "Aviso flotante",
+      "kind": "custom",
+      "refersTo": "toast",
+      "description": "Confirmación breve en hueso sobre negro, abajo al centro.",
+      "html": "<p class=\"ds-toast\" role=\"status\">Link copiado</p>",
+      "css": ".ds-toast{display:inline-block;margin:0;padding:0.5rem 1rem;border-radius:var(--radius-md,6px);background:var(--color-fg,#f2f2ee);color:var(--color-bg,#121315);font-size:0.875rem}"
+    },
+    {
+      "name": "Badge de duración",
+      "kind": "chip",
+      "refersTo": "duration-badge",
+      "description": "Duración sobre la miniatura, cifras tabulares.",
+      "html": "<span class=\"ds-duration\">12:34</span>",
+      "css": ".ds-duration{padding:0 0.25rem;border-radius:var(--radius-sm,4px);background:var(--color-bg,#121315);color:var(--color-fg,#f2f2ee);font-family:var(--font-data,ui-monospace,monospace);font-size:0.8125rem;font-variant-numeric:tabular-nums}"
+    }
+  ],
+  "narrative": {
+    "northStar": "La patchera",
+    "overview": "La página pública de Plektia es un panel de conexiones de estudio: cada link es un puerto con su jack anillado, y un hilo trenzado color hueso los enhebra a todos de arriba abajo, empezando con un nudo y terminando suelto. Lo que está en vivo se enciende en lima: el jack late y el tramo de hilo que llega a él cambia de color. Todo lo demás conserva brillo pleno; nada se ve apagado ni viejo. El mundo rechaza la columna de botones redondeados centrados típica de la categoría: acá no hay tarjetas, ni píldoras, ni sombras de elevación.\n\nEs un sistema oscuro, plano y de una sola columna angosta (30rem), pensado para el celular dentro del navegador embebido de una red social, de noche y con datos móviles. La densidad es de lista: filas de 3.25rem separadas por filetes de 1 px, títulos de sección a tamaño real en la voz de la marca, y metadatos chicos en gris claro. El hilo es la única pieza expresiva y vive en su propio carril, a la izquierda del texto; su forma cambia en cada carga.\n\nEl sistema es un **contrato de tokens tematizable**: la v1 trae el tema \"técnico\" (el que documenta este archivo) y el producto va a ofrecer cuatro temas elegibles por el usuario (técnico, cercano, enérgico, editorial). Cada tema redefine el mismo set de variables; los componentes nunca leen colores sueltos.",
+    "keyCharacteristics": [
+      "Fondo negro casi neutro, texto hueso, lima reservada a la señal en vivo.",
+      "Una columna de 30rem con un carril de jacks a la izquierda y el texto a la derecha.",
+      "Hilo SVG trenzado, con forma aleatoria por carga, que nunca cruza el texto.",
+      "Plano: separación por filetes de 1 px, sin sombras de elevación ni tarjetas.",
+      "Bricolage Grotesque para nombres y títulos; fuente del sistema para cuerpo y metadatos; monoespaciada tabular para tiempos.",
+      "WCAG 2.2 AAA en la página pública, en todos los temas."
+    ],
+    "rules": [
+      {
+        "name": "La regla de la señal única",
+        "body": "La lima es exclusiva del en vivo. Si nadie transmite, la página no tiene lima salvo el nodo del isotipo. Foco, selección, hover y estados activos usan hueso, nunca lima.",
+        "section": "colors"
+      },
+      {
+        "name": "La regla del contrato de tokens",
+        "body": "Los componentes leen solo variables (`--color-*`, `--font-*`, `--text-*`, `--space-*`, `--radius-*`); ningún color literal en componentes. Un tema nuevo (cercano, enérgico, editorial) se activa con `data-theme` y redefine el set completo, incluido `--color-live`, `--color-focus` y `--color-selection-*`. Todo tema debe cumplir WCAG 2.2 AAA en la página pública: 7:1 para texto, 4.5:1 para texto grande, medido contra su propio fondo y su superficie. En un tema claro la lima no alcanza: hay que definir otra señal en vivo que cumpla.",
+        "section": "colors"
+      },
+      {
+        "name": "La regla de la voz de marca",
+        "body": "Bricolage Grotesque solo en nombres: persona, secciones y links (y la inicial del avatar provisorio). Párrafos, metadatos, botones y avisos van en la fuente del sistema.",
+        "section": "typography"
+      },
+      {
+        "name": "La regla de las cifras quietas",
+        "body": "Todo número que cambia en pantalla (tiempo en vivo, duración) usa la monoespaciada con `tabular-nums` para que no tiemble el ancho.",
+        "section": "typography"
+      },
+      {
+        "name": "La regla del carril del hilo",
+        "body": "El hilo vive solo en el carril de jacks y su margen izquierdo. Su desvío hacia la derecha se calcula contra el borde del texto, con un respiro de 8 px más medio grosor del trazo: nunca cruza ni toca el texto, en ningún ancho de pantalla.",
+        "section": "layout"
+      },
+      {
+        "name": "La regla del filete",
+        "body": "Para separar, un filete de 1 px; para agrupar, espacio. Nunca una caja con fondo o sombra alrededor de un link.",
+        "section": "elevation"
+      },
+      {
+        "name": "La regla del anillo",
+        "body": "Si `box-shadow` aparece, es un anillo concéntrico de spread puro (`0 0 0 Npx`), nunca una sombra con desplazamiento o desenfoque.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "**Do** reservar la lima para el en vivo: jack, pulso, tramo de hilo, etiqueta y cronómetro.",
+      "**Do** usar hueso para foco (contorno de 2 px, offset de 4 px) y selección (fondo hueso, texto negro).",
+      "**Do** separar filas con filetes de 1 px y agrupar con espacio.",
+      "**Do** mantener el hilo dentro del carril de jacks y recalcularlo en cada cambio de tamaño.",
+      "**Do** respetar `prefers-reduced-motion`: sin transiciones, sin pulso animado, hilo completo y quieto.",
+      "**Do** definir cada tema nuevo redefiniendo el set completo de tokens y verificar 7:1 de texto contra su fondo y su superficie.",
+      "**Do** dar a cada blanco táctil al menos 44 × 44 px.",
+      "**Do** usar la monoespaciada con cifras tabulares para todo número que cambia en pantalla."
+    ],
+    "donts": [
+      "**Don't** usar la lima para foco, hover, selección, botones o decoración.",
+      "**Don't** convertir los links en botones redondeados centrados, píldoras o tarjetas con fondo.",
+      "**Don't** usar sombras con desenfoque o desplazamiento; `box-shadow` solo como anillo de spread puro.",
+      "**Don't** dejar que el hilo cruce el texto ni que su animación mueva el layout.",
+      "**Don't** numerar los links ni atenuar los que no están en vivo.",
+      "**Don't** escribir colores literales en componentes; siempre tokens del tema.",
+      "**Don't** usar grafito o grafito tenue para texto: son colores de trazo.",
+      "**Don't** cargar fuentes desde un CDN externo en el producto portado."
+    ]
+  }
+}
