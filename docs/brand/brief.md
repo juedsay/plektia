@@ -1,4 +1,25 @@
-# Brief de marca (en exploración)
+# Brief de marca
+
+## Decisión final (2026-10-09)
+
+- **Nombre:** Plektia (del griego *plektós*, "tejido, entrelazado"). `plektia.com` y `plektia.app` libres al 2026-10-09 (sin comprar).
+- **Isotipo:** dirección "nodos y red": una "P" de trazo fino con tres nodos sobre el asta y un nodo de acento en la panza (la señal de en vivo). Archivos en [`plektia/`](plektia/).
+- **Logotipo:** `plektia` en minúsculas, Bricolage Grotesque 500.
+- **Paleta A:**
+
+| Rol | Color |
+|---|---|
+| Fondo principal | Negro `#121315` |
+| Texto y trazos | Hueso `#F2F2EE` |
+| Acento / en vivo | Lima `#C6F432` (solo sobre fondo oscuro: contraste ~15:1) |
+| Superficie secundaria | Grafito `#3A3D42` |
+
+- **Restricción conocida:** la lima casi no contrasta sobre fondos claros. En la versión clara el nodo de acento pasa a negro. Al armar los tokens se evalúa una lima oscura para fondo claro.
+- **Pendiente:** revisar marcas registradas (INPI, EUIPO, USPTO) antes de comprar el dominio.
+
+---
+
+# Historial de exploración
 
 ## Decisiones
 
