@@ -57,6 +57,17 @@ platform → identity → links → public-page ┼→ click-analytics
 4. `live-status` → **tercera entrega**: punto rojo y último video
 5. `mcp-server` y `click-analytics`
 
+## Hoja de ruta (después de la v1)
+
+| Versión | Idea | Notas |
+|---|---|---|
+| v2 | **Homepage de Plektia en la raíz** (`plektia.app/`), con su propia landing y registro, como hace Linktree | La raíz deja de mostrar `DEFAULT_HANDLE`; `/plektia` pasa a ser el perfil propio de la marca (como `linktr.ee/linktr.ee`) |
+| v2 | Kick en vivo, filtros por etiqueta, los otros 3 temas | Ya previstos en los specs |
+| v3 | **Sección Shop** separada de Links (pestañas Links / Shop) | Requiere un tipo de bloque nuevo; no es un link común |
+| v3 | **Avatar animado** (GIF o WebP animado) | Con pausa automática por `prefers-reduced-motion` y un control para detenerlo (AAA) |
+| v3 | **Íconos de atajo** a las redes del usuario, debajo de la bio | Salen de los links con proveedor detectado; podría adelantarse porque es chico |
+| v3 | Variante de estilo "patchera + subte" | En reserva en el brief de marca |
+
 ## Fuera de alcance (v1)
 
 - Multiusuario abierto (registro público). El modelo de datos ya lo soporta; solo falta abrir el registro.
