@@ -153,7 +153,7 @@ Los bugs se arreglan con el patrón *Prove-It*: primero un test que falla, despu
 ## Seguridad de la plataforma
 
 - **CSP** con `security.csp` de Astro (hashes automáticos, sin `unsafe-inline` en scripts). Las cabeceras restantes se agregan en `middleware.ts`.
-- **Secretos:** `wrangler secret` en producción y `.dev.vars` en local (en `.gitignore`); `.env.example` documenta cada variable. La `service_role` key de Supabase solo la usa el cron, nunca código que corre por request de usuario.
+- **Secretos:** `wrangler secret` en producción y `.dev.vars` en local (en `.gitignore`); `.env.example` documenta cada variable. La `service_role` key de Supabase solo puede importarse en módulos `infrastructure/**/ingest-client.ts`, que únicamente invocan funciones Postgres `ingest_*` acotadas (estado en vivo y métricas). Nunca da acceso libre a tablas ni se usa con consultas armadas a partir de datos del usuario; una regla de Semgrep lo verifica.
 - **Dependencias:** Renovate con PRs agrupados; `pnpm audit` y revisión de dependencias en CI. Antes de sumar un paquete se audita (mantenimiento, descargas, scripts de instalación). pnpm bloquea los `postinstall` salvo los permitidos explícitamente.
 - **CI** (GitHub Actions, en cada PR): `check` → `lint` → `test:coverage` → `test:db` → `build` → `test:e2e` → `audit:deps` → gitleaks → Semgrep (`p/owasp-top-ten`, `p/typescript`, `p/secrets`). Todos bloquean el merge. Las actions se fijan por SHA y los permisos del `GITHUB_TOKEN` son mínimos.
 - **Rama `main` protegida:** solo entra por PR con CI en verde.
@@ -162,7 +162,7 @@ Los bugs se arreglan con el patrón *Prove-It*: primero un test que falla, despu
 
 - **Siempre:** usar pnpm; correr `check`, `lint` y `test` antes de cada commit; validar toda entrada con Zod en el borde; RLS en toda tabla nueva; escribir el test de seguridad junto con la feature; usar la última versión estable.
 - **Preguntar antes:** sumar una dependencia; cambiar el esquema de la base; tocar la CI o las cabeceras de seguridad; subir una versión major; cualquier acción en Cloudflare, Supabase o GitHub que no sea local.
-- **Nunca:** commitear secretos o `.dev.vars`; desactivar RLS, la CSP o un test para que algo pase; usar la `service_role` key en código que corre por request; usar npm o yarn; instalar versiones `beta`, `next` o `canary`; agregar líneas de coautoría a los commits.
+- **Nunca:** commitear secretos o `.dev.vars`; desactivar RLS, la CSP o un test para que algo pase; usar la `service_role` key fuera de un `ingest-client.ts` o para algo distinto de invocar funciones `ingest_*`; usar npm o yarn; instalar versiones `beta`, `next` o `canary`; agregar líneas de coautoría a los commits.
 
 ## Criterios de éxito
 

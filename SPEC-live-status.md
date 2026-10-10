@@ -2,7 +2,7 @@
 
 > Módulo del [mapa de capacidades](CAPABILITY-MAP.md). Depende de
 > [`links`](SPEC-links.md) y hereda las convenciones de [`platform`](SPEC-platform.md).
-> Estado: **borrador, pendiente de aprobación**.
+> Estado: **aprobado (2026-10-10)**.
 
 ## Objetivo
 
@@ -111,7 +111,7 @@ create table public.featured_content (
 ```
 
 - **Lectura:** `public_page_v` (de `links`) suma `is_live`, `live_*` y `featured_*`. Solo devuelve `is_live = true` si `checked_at > now() - interval '25 minutes'`, así la regla de datos viejos vive en la base.
-- **Escritura de `provider_channels`, `channel_status` y `featured_content`:** sin políticas de escritura para `anon` ni `authenticated`. Escribe solo el proceso de refresco, que corre en el handler `scheduled` y en la Action de "Comprobar ahora" con la clave de servicio. Es el **único** lugar del sistema autorizado a usarla (regla de [`platform`](SPEC-platform.md)), y lo hace mediante funciones `ingest_*` acotadas, no con acceso libre a tablas.
+- **Escritura de `provider_channels`, `channel_status` y `featured_content`:** sin políticas de escritura para `anon` ni `authenticated`. Escribe solo el proceso de refresco, que corre en el handler `scheduled` y en la Action de "Comprobar ahora" con la clave de servicio. Solo puede hacerlo a través de `ingest-client.ts`, que invoca funciones `ingest_*` acotadas y nunca accede libremente a las tablas (regla de [`platform`](SPEC-platform.md)).
 - "Comprobar ahora" pasa primero por un caso de uso con la sesión del dueño, que valida el *rate limit*, y recién después invoca el refresco **solo de sus canales**.
 
 ## Seguridad: amenazas y mitigaciones
@@ -152,5 +152,5 @@ create table public.featured_content (
 
 ## Preguntas abiertas
 
-1. ¿10 minutos para la revisión del en vivo, o 15?
-2. Las credenciales de YouTube (API key) y Twitch (app) se crean en sus consolas de desarrollador. Lo guiamos con `wizard` al implementar. ¿Tenés cuenta de desarrollador en Twitch?
+1. ~~Frecuencia~~ Aprobado: 10 minutos.
+2. ~~Credenciales~~ Hay cuenta de desarrollador en Twitch; la app de Twitch y la API key de YouTube se crean con `wizard` al implementar.
