@@ -3,7 +3,7 @@
 > Módulo del [mapa de capacidades](CAPABILITY-MAP.md). Depende de
 > [`links`](SPEC-links.md), [`identity`](SPEC-identity.md) y `brand-system`
 > ([DESIGN.md](DESIGN.md)). Hereda las convenciones de [`platform`](SPEC-platform.md).
-> Estado: **borrador, pendiente de aprobación**.
+> Estado: **aprobado (2026-10-10)**.
 
 ## Objetivo
 
@@ -124,4 +124,4 @@ Cada operación de owner queda registrada en `private.audit_log`: quién, qué, 
 
 ## Preguntas abiertas
 
-1. ¿6 segundos para deshacer te parece bien, o preferís otro tiempo?
+1. ~~Tiempo para deshacer~~ Aprobado: 6 segundos.
