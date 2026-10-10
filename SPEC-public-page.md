@@ -2,7 +2,7 @@
 
 > Módulo del [mapa de capacidades](CAPABILITY-MAP.md). Depende de
 > [`links`](SPEC-links.md) y de `brand-system` ([DESIGN.md](DESIGN.md)). Hereda las
-> convenciones de [`platform`](SPEC-platform.md). Estado: **borrador, pendiente de aprobación**.
+> convenciones de [`platform`](SPEC-platform.md). Estado: **aprobado (2026-10-10)**.
 
 ## Objetivo
 
@@ -35,11 +35,13 @@ Sigue [DESIGN.md](DESIGN.md) y el prototipo; acá solo se fija lo que el prototi
 
 | Ruta | Render | Caché |
 |---|---|---|
-| `/{handle}` y `/` | On-demand en el Worker. Una sola consulta a `public_page_v`, que incluye el estado en vivo y el último video | `Cache-Control: public, s-maxage=60, stale-while-revalidate=300`. Al editar desde el panel o el MCP se purga esa URL en Cloudflare, así que los cambios se ven al instante |
+| `/{handle}` y `/` | On-demand en el Worker. Una sola consulta a `public_page_v`, que incluye el estado en vivo y el último video | [Workers Cache](https://developers.cloudflare.com/workers/cache/): `Cache-Control: public, max-age=60, stale-while-revalidate=300` y `Cache-Tag: profile:{handle}`. Al editar desde el panel o el MCP, y cuando el cron cambia el estado en vivo, el Worker llama a `ctx.cache.purge({ tags: ["profile:{handle}"] })` y el cambio se ve al instante. Funciona en `workers.dev` y no necesita token de API |
 | `/plektia`, `/plektia/privacidad` | Prerenderizadas en el build | Estáticas |
 | 404 | On-demand | `s-maxage=60` |
 
 - La clave de caché es solo la ruta: los query strings no generan variantes. Así se evita el envenenamiento de caché y se aprovecha mejor.
+- Las rutas autenticadas (`/admin`, `/auth`, `/mcp`) responden `Cache-Control: private, no-store`; además, la caché se saltea sola ante `Set-Cookie` o `Authorization`. Un test E2E lo verifica.
+- **A verificar al implementar:** la purga está limitada al *entrypoint* que cachea. Hay que confirmar que el handler `scheduled` del cron comparte entrypoint con el `fetch` de Astro, o purgar a través de un *service binding* propio.
 - El tiempo en vivo sale del servidor como `started_at`; el reloj corre en el cliente.
 - **JavaScript:** solo los tres scripts del prototipo (hilo, disclosure del video, compartir), sin React, como módulos ES con `defer`.
 - **Fuente:** Bricolage Grotesque servida desde el propio sitio con `@fontsource-variable/bricolage-grotesque`, solo el subset latino en woff2, con `font-display: swap` y métricas de respaldo ajustadas para que el cambio de fuente no mueva el layout. Es el compromiso que quedó abierto en la revisión de diseño.
@@ -133,4 +135,4 @@ Se miden en CI con Lighthouse sobre perfil de celular y 4G lento:
 
 ## Preguntas abiertas
 
-1. Purgar la caché de Cloudflare requiere un token de API con permiso solo de purga, guardado como secreto del Worker. ¿Te parece bien, o preferís no purgar y aceptar hasta 60 segundos de demora en los cambios?
+1. ~~Purga de caché~~ Resuelto: cambios al instante con Workers Cache y purga por etiqueta desde el propio Worker, sin token de API. Se descartó pasar a Vercel.
