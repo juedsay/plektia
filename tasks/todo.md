@@ -27,7 +27,7 @@
   - **Verificar:** `pnpm test:coverage`.
   - **Archivos:** `eslint.config.js`, `.prettierrc`, `vitest.config.ts`, `src/domain/result.ts`, `tests/unit/domain/result.test.ts`.
 
-- [ ] **Tarea 3: Supabase local y pgTAP** · M · Deps: 1
+- [x] **Tarea 3: Supabase local y pgTAP** · M · Deps: 1
   - `supabase init`, `config.toml` (email/contraseña desactivados), scripts `db:*`, una migración vacía de base, la primera prueba pgTAP y `db:types`.
   - **Aceptación:**
     - `pnpm db:start && pnpm db:reset && pnpm test:db` pasa en un clon limpio.

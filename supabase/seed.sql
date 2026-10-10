@@ -1,0 +1,2 @@
+-- Datos de desarrollo de Plektia. Solo datos ficticios o propios del owner: nunca datos reales de terceros.
+-- Se cargan con `pnpm db:reset`. Los perfiles y links de prueba se suman en las tareas 7 y 13.

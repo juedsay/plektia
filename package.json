@@ -19,7 +19,13 @@
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
     "lint": "eslint . && prettier --check .",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "db:start": "supabase start",
+    "db:stop": "supabase stop",
+    "db:reset": "supabase db reset",
+    "db:types": "supabase gen types typescript --local --schema public > src/infrastructure/supabase/database.types.ts && prettier --write src/infrastructure/supabase/database.types.ts",
+    "test:db": "supabase test db",
+    "db:advisors": "supabase db advisors --local --fail-on warn"
   },
   "packageManager": "pnpm@11.28.5+sha512.484563d30b4c2ad27cb48aa94ff2b302dbcebc8ff6bf28816c2589886e146ce7f76f354f3bc1a438e6f5e9768c302aa0a6f7add8232903cd4cf81426cbc14d9e",
   "dependencies": {
@@ -42,6 +48,7 @@
     "globals": "17.13.0",
     "prettier": "3.9.10",
     "prettier-plugin-astro": "1.1.1",
+    "supabase": "2.120.0",
     "typescript": "6.0.3",
     "typescript-eslint": "8.71.1",
     "vitest": "5.0.3",

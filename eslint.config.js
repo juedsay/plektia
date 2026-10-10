@@ -15,6 +15,8 @@ export default tseslint.config(
       "playwright-report/",
       "test-results/",
       "worker-configuration.d.ts",
+      // Generado por `pnpm db:types`.
+      "src/infrastructure/supabase/database.types.ts",
       // El prototipo estático es material de referencia; se porta en la fase F4.
       "prototypes/",
     ],
