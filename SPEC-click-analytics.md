@@ -2,7 +2,7 @@
 
 > Módulo del [mapa de capacidades](CAPABILITY-MAP.md). Depende de
 > [`public-page`](SPEC-public-page.md) y [`admin-panel`](SPEC-admin-panel.md), y hereda
-> las convenciones de [`platform`](SPEC-platform.md). Estado: **borrador, pendiente de aprobación**.
+> las convenciones de [`platform`](SPEC-platform.md). Estado: **aprobado (2026-10-10)**.
 
 ## Objetivo
 
