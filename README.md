@@ -45,7 +45,6 @@ La app queda en `http://127.0.0.1:4321`, corriendo en workerd (el runtime de Clo
 | `pnpm format` | Formatea con Prettier |
 | `pnpm test` | Tests unitarios y de integración (Vitest, incluye chequeo de tipos) |
 | `pnpm test:coverage` | Tests con cobertura: falla por debajo de 90 % en `domain`/`application` y 80 % global |
-
 | `pnpm db:start` / `pnpm db:stop` | Levanta o frena Supabase local (Studio en `http://127.0.0.1:56623`) |
 | `pnpm db:reset` | Recrea la base local con las migraciones y `supabase/seed.sql` |
 | `pnpm test:db` | Tests pgTAP de la base (RLS, funciones y permisos) |
