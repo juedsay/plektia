@@ -91,7 +91,7 @@ alter table public.profiles enable row level security;
 | `update` | `authenticated` | Solo `id = auth.uid()`. Las columnas `role`, `handle` e `id` no se pueden cambiar (privilegios por columna: `grant update (display_name, bio, avatar_url)`) |
 | `insert` / `delete` | nadie | Solo el trigger y el `on delete cascade` |
 
-**`handle`:** 3 a 30 caracteres, `^[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$`, sin guiones dobles. Se reservan las rutas propias (`admin`, `api`, `auth`, `login`, `logout`, `mcp`, `oauth`, `_astro`, `.well-known`, `robots.txt`, `sitemap.xml`, `favicon.ico`…). La lista vive en `src/domain/handle.ts` y en un `check` de la base generado desde el mismo origen.
+**`handle`:** 3 a 30 caracteres, `^[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$`, sin guiones dobles. Se reservan las rutas propias (`admin`, `api`, `auth`, `login`, `logout`, `mcp`, `oauth`, `plektia`, `_astro`, `.well-known`, `robots.txt`, `sitemap.xml`, `favicon.ico`…). La lista vive en `src/domain/handle.ts` y en un `check` de la base generado desde el mismo origen.
 
 ### Código (puertos y casos de uso)
 

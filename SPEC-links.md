@@ -2,7 +2,7 @@
 
 > Módulo del [mapa de capacidades](CAPABILITY-MAP.md). Depende de
 > [`identity`](SPEC-identity.md) y hereda las convenciones de
-> [`platform`](SPEC-platform.md). Estado: **borrador, pendiente de aprobación**.
+> [`platform`](SPEC-platform.md). Estado: **aprobado (2026-10-09)**.
 
 ## Objetivo
 
@@ -172,4 +172,4 @@ Errores tipados como valores: `invalid_input`, `not_found`, `conflict`, `limit_r
 
 ## Preguntas abiertas
 
-1. ¿Los límites (30 secciones, 200 links, 5 etiquetas) te parecen bien para la v1?
+1. ~~Límites~~ Aprobados: 30 secciones, 200 links y 5 etiquetas por link.
