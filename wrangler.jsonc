@@ -6,13 +6,13 @@
   "compatibility_flags": [
     "nodejs_compat",
     // Impide que fetch() alcance IPs privadas o internas: primera barrera contra SSRF.
-    "global_fetch_strictly_public"
+    "global_fetch_strictly_public",
   ],
   "assets": {
     "binding": "ASSETS",
-    "directory": "./dist"
+    "directory": "./dist",
   },
   "observability": {
-    "enabled": true
-  }
+    "enabled": true,
+  },
 }

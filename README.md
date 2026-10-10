@@ -39,5 +39,9 @@ La app queda en `http://127.0.0.1:4321`, corriendo en workerd (el runtime de Clo
 | `pnpm check` | Chequeo de tipos (`astro check` + `tsc`) |
 | `pnpm build` | Build de producción en `dist/` |
 | `pnpm preview` | Sirve el build localmente |
+| `pnpm lint` | ESLint (TypeScript estricto, Astro y accesibilidad) + Prettier |
+| `pnpm format` | Formatea con Prettier |
+| `pnpm test` | Tests unitarios y de integración (Vitest, incluye chequeo de tipos) |
+| `pnpm test:coverage` | Tests con cobertura: falla por debajo de 90 % en `domain`/`application` y 80 % global |
 
-Los comandos de tests, base de datos y deploy se suman en las tareas 2 a 6 (ver [SPEC-platform.md](SPEC-platform.md)).
+Los comandos de base de datos, E2E y deploy se suman en las tareas 3 a 6 (ver [SPEC-platform.md](SPEC-platform.md)).

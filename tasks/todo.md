@@ -19,7 +19,7 @@
   - **Verificar:** `pnpm check` y `pnpm build` sin errores; `pnpm dev` y abrir la página.
   - **Archivos:** `package.json`, `astro.config.mjs`, `tsconfig.json`, `wrangler.jsonc`, `docs/adr/0001-*.md`, `docs/adr/0002-*.md`.
 
-- [ ] **Tarea 2: Calidad de código y tests unitarios** · M · Deps: 1
+- [x] **Tarea 2: Calidad de código y tests unitarios** · M · Deps: 1
   - ESLint (flat) + `typescript-eslint` + `eslint-plugin-astro`, Prettier, Vitest 5 con cobertura (90 % en `domain`/`application`, 80 % global) y el primer módulo `src/domain/result.ts` con tests.
   - **Aceptación:**
     - `pnpm lint` y `pnpm test:coverage` pasan.
