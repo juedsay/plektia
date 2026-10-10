@@ -10,7 +10,7 @@
 
 ## F1 · Platform
 
-- [ ] **Tarea 1: Scaffold de Astro 7 en Cloudflare** · M · Deps: ninguna
+- [x] **Tarea 1: Scaffold de Astro 7 en Cloudflare** · M · Deps: ninguna
   - Astro 7 + `@astrojs/cloudflare` + `@astrojs/react`, pnpm 12 vía Corepack, Node 24, TS estricto, `.gitattributes` (LF), `.nvmrc`, `.env.example`, alias `@/`.
   - **Aceptación:**
     - `pnpm dev` muestra una página "Hola Plektia" en el runtime workerd.

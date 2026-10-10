@@ -18,7 +18,7 @@ Versiones estables verificadas en npm el 2026-10-09:
 
 | Capa | Elección | Motivo |
 |---|---|---|
-| Runtime | Node 24 LTS · pnpm 12 | |
+| Runtime | Node 24 LTS · pnpm 11 · TypeScript 6 | Ver [ADR 0002](docs/adr/0002-versiones-typescript-pnpm.md) |
 | Framework | **Astro 7.3** + islas React 19 solo donde hace falta (panel, drag & drop) | La página pública es casi toda estática: 0 KB de JS por defecto, mejor LCP. Server Islands para el bloque "en vivo" sin romper la caché de la página. |
 | Hosting | **Cloudflare Workers** (`@astrojs/cloudflare` 14) | Cloudflare mantiene Astro desde 2026; Cron Triggers cada pocos minutos en el plan gratuito (en Vercel Hobby son diarios). |
 | Datos y auth | **Supabase** (Postgres + RLS + Auth + OAuth 2.1 server) | RLS aísla datos por usuario desde la base; el OAuth server autentica clientes MCP. |

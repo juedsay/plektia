@@ -5,9 +5,39 @@ vivo (YouTube, Twitch), último video de YouTube, panel de edición y servidor
 MCP para gestionarla desde un agente de IA.
 
 > En desarrollo. El alcance y las decisiones están en
-> [CAPABILITY-MAP.md](CAPABILITY-MAP.md) y en los `SPEC-*.md` de cada módulo.
+> [CAPABILITY-MAP.md](CAPABILITY-MAP.md), los `SPEC-*.md` de cada módulo,
+> [DESIGN.md](DESIGN.md) y [docs/adr/](docs/adr/). El avance está en
+> [tasks/todo.md](tasks/todo.md).
 
 ## Stack
 
 Astro 7 · React 19 (islas) · Cloudflare Workers · Supabase (Postgres + RLS +
-Auth) · Zod · Vitest · Playwright · pnpm.
+Auth) · Zod · Vitest · Playwright · TypeScript 6 · pnpm 11.
+
+## Requisitos
+
+- Node 24 (ver `.nvmrc`).
+- pnpm 11, activado con Corepack: `corepack enable` (la versión exacta sale de `packageManager`).
+- Docker Desktop (para Supabase local, desde la tarea 3).
+
+## Levantar el proyecto
+
+```bash
+corepack enable
+pnpm install --frozen-lockfile
+cp .env.example .dev.vars
+pnpm dev
+```
+
+La app queda en `http://127.0.0.1:4321`, corriendo en workerd (el runtime de Cloudflare Workers).
+
+## Comandos
+
+| Comando | Qué hace |
+|---|---|
+| `pnpm dev` | Servidor de desarrollo en workerd |
+| `pnpm check` | Chequeo de tipos (`astro check` + `tsc`) |
+| `pnpm build` | Build de producción en `dist/` |
+| `pnpm preview` | Sirve el build localmente |
+
+Los comandos de tests, base de datos y deploy se suman en las tareas 2 a 6 (ver [SPEC-platform.md](SPEC-platform.md)).

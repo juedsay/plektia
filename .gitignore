@@ -29,3 +29,6 @@ Thumbs.db
 # Impeccable: capturas de revisión temporales
 .impeccable/review/
 .impeccable/build/
+
+# Tipos generados por `wrangler types`
+worker-configuration.d.ts

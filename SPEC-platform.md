@@ -21,7 +21,7 @@ con tests en verde; cada push pasa por la CI; `main` se despliega solo.
 1. Windows 11 como entorno de desarrollo; Docker Desktop disponible (lo necesita Supabase local).
 2. Un solo paquete (no monorepo). Si el MCP o los proveedores crecen, se extraen a `packages/` con un ADR.
 3. Cuentas existentes de GitHub, Cloudflare y Supabase. El alta de secretos y DNS se guía con `wizard`.
-4. TypeScript en modo `strict` en todo el código. **Riesgo:** TypeScript 7 (compilador nativo) puede no ser compatible todavía con `astro check` y `typescript-eslint`. Se verifica al armar el proyecto; si falla, se fija la última 6.x y se registra en un ADR.
+4. TypeScript en modo `strict` en todo el código. **Verificado en la tarea 1:** TypeScript 7 no es compatible con `@astrojs/check`; se usa la 6.0.3 ([ADR 0002](docs/adr/0002-versiones-typescript-pnpm.md)).
 
 ## Stack y versiones
 
@@ -30,8 +30,9 @@ Las versiones exactas quedan fijadas en `pnpm-lock.yaml`. Regla: **última estab
 | Herramienta | Versión de referencia (2026-10-09) |
 |---|---|
 | Node | 24 LTS (`.nvmrc`, `engines`) |
-| pnpm | 12.x (campo `packageManager`, activado con Corepack) |
+| pnpm | 11.28 (campo `packageManager`, activado con Corepack; ver [ADR 0002](docs/adr/0002-versiones-typescript-pnpm.md)) |
 | Astro / `@astrojs/cloudflare` / `@astrojs/react` | 7.3 / 14.3 / 7.0 |
+| TypeScript | 6.0 (ADR 0002) |
 | React | 19.3 |
 | Supabase JS / SSR / CLI | 2.117 / 0.12 / última |
 | Zod | 4.6 |
