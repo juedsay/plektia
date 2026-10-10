@@ -3,7 +3,7 @@
 > Módulo del [mapa de capacidades](CAPABILITY-MAP.md). Depende de
 > [`identity`](SPEC-identity.md) y [`links`](SPEC-links.md); usa también
 > [`live-status`](SPEC-live-status.md) y [`click-analytics`](SPEC-click-analytics.md).
-> Hereda las convenciones de [`platform`](SPEC-platform.md). Estado: **borrador, pendiente de aprobación**.
+> Hereda las convenciones de [`platform`](SPEC-platform.md). Estado: **aprobado (2026-10-10)**.
 
 ## Objetivo
 
@@ -142,4 +142,4 @@ create table public.mcp_grants (
 
 ## Preguntas abiertas
 
-1. ¿Te sirve que "Solo lectura" sea el permiso por defecto en la pantalla de consentimiento, o preferís que venga marcado "Lectura y edición"?
+1. ~~Permiso por defecto~~ Aprobado: "Solo lectura".
