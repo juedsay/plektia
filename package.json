@@ -25,7 +25,8 @@
     "db:reset": "supabase db reset",
     "db:types": "supabase gen types typescript --local --schema public > src/infrastructure/supabase/database.types.ts && prettier --write src/infrastructure/supabase/database.types.ts",
     "test:db": "supabase test db",
-    "db:advisors": "supabase db advisors --local --fail-on warn"
+    "db:advisors": "supabase db advisors --local --fail-on warn",
+    "test:e2e": "playwright test"
   },
   "packageManager": "pnpm@11.28.5+sha512.484563d30b4c2ad27cb48aa94ff2b302dbcebc8ff6bf28816c2589886e146ce7f76f354f3bc1a438e6f5e9768c302aa0a6f7add8232903cd4cf81426cbc14d9e",
   "dependencies": {
@@ -38,6 +39,7 @@
   "devDependencies": {
     "@astrojs/check": "^0.9.10",
     "@eslint/js": "10.0.1",
+    "@playwright/test": "1.64.0",
     "@types/node": "^24.19.1",
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",

@@ -35,7 +35,7 @@
   - **Verificar:** los tres comandos.
   - **Archivos:** `supabase/config.toml`, `supabase/migrations/0000_base.sql`, `supabase/tests/0000_smoke.test.sql`, `package.json`.
 
-- [ ] **Tarea 4: Cabeceras de seguridad y harness E2E** · M · Deps: 1
+- [x] **Tarea 4: Cabeceras de seguridad y harness E2E** · M · Deps: 1
   - `security.csp` de Astro + `middleware.ts` con el resto de las cabeceras; Playwright 1.64 con un test que verifica la CSP, HSTS, `frame-ancestors`, `Referrer-Policy`, `Permissions-Policy` y `X-Content-Type-Options`.
   - **Aceptación:** el E2E de cabeceras pasa contra `pnpm preview`.
   - **Verificar:** `pnpm test:e2e`.

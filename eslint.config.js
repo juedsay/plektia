@@ -1,11 +1,12 @@
 // @ts-check
 import js from "@eslint/js";
+import { defineConfig } from "eslint/config";
 import astro from "eslint-plugin-astro";
 import jsxA11y from "eslint-plugin-jsx-a11y-x";
 import globals from "globals";
 import tseslint from "typescript-eslint";
 
-export default tseslint.config(
+export default defineConfig(
   {
     ignores: [
       "dist/",
@@ -40,6 +41,8 @@ export default tseslint.config(
       "@typescript-eslint/consistent-type-assertions": ["error", { assertionStyle: "as" }],
       "no-console": ["error", { allow: ["warn", "error"] }],
       eqeqeq: ["error", "always"],
+      // TypeScript estricto exige `process.env["X"]` para índices: no forzar el punto.
+      "@typescript-eslint/dot-notation": ["error", { allowIndexSignaturePropertyAccess: true }],
     },
   },
   ...astro.configs.recommended,

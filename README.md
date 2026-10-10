@@ -45,10 +45,11 @@ La app queda en `http://127.0.0.1:4321`, corriendo en workerd (el runtime de Clo
 | `pnpm format` | Formatea con Prettier |
 | `pnpm test` | Tests unitarios y de integración (Vitest, incluye chequeo de tipos) |
 | `pnpm test:coverage` | Tests con cobertura: falla por debajo de 90 % en `domain`/`application` y 80 % global |
+| `pnpm test:e2e` | E2E con Playwright contra el build de producción (en local usa Microsoft Edge) |
 | `pnpm db:start` / `pnpm db:stop` | Levanta o frena Supabase local (Studio en `http://127.0.0.1:56623`) |
 | `pnpm db:reset` | Recrea la base local con las migraciones y `supabase/seed.sql` |
 | `pnpm test:db` | Tests pgTAP de la base (RLS, funciones y permisos) |
 | `pnpm db:types` | Genera los tipos de TypeScript desde el esquema local |
 | `pnpm db:advisors` | Asesores de seguridad y rendimiento de Supabase; falla ante advertencias |
 
-Los comandos de E2E y deploy se suman en las tareas 4 a 6 (ver [SPEC-platform.md](SPEC-platform.md)).
+Los comandos de deploy se suman en la tarea 6 (ver [SPEC-platform.md](SPEC-platform.md)).
