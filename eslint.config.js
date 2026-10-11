@@ -20,6 +20,8 @@ export default defineConfig(
       "src/infrastructure/supabase/database.types.ts",
       // El prototipo estático es material de referencia; se porta en la fase F4.
       "prototypes/",
+      // Ejemplos de las reglas de Semgrep: código inseguro a propósito.
+      ".semgrep/",
     ],
   },
   js.configs.recommended,

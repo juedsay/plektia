@@ -1,0 +1,10 @@
+rules:
+  - id: plektia-no-set-html
+    message: >-
+      `set:html` inyecta HTML sin escapar (XSS). Usá `{valor}` o `set:text`.
+      Ver SPEC-public-page, amenaza "XSS con título, bio o descripción".
+    severity: ERROR
+    languages: [generic]
+    paths:
+      include: ["*.astro"]
+    pattern-regex: 'set:html\s*='

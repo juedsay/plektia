@@ -1,0 +1,11 @@
+---
+const bio = Astro.props.bio;
+---
+<!-- ruleid: plektia-no-set-html -->
+<p set:html={bio} />
+<!-- ruleid: plektia-no-set-html -->
+<div set:html = {bio}></div>
+<!-- ok: plektia-no-set-html -->
+<p>{bio}</p>
+<!-- ok: plektia-no-set-html -->
+<p set:text={bio} />

@@ -1,0 +1,8 @@
+rules:
+  - id: plektia-no-dangerous-html
+    message: >-
+      `dangerouslySetInnerHTML` inyecta HTML sin escapar (XSS). Renderizá el texto
+      como hijo del elemento. Ver SPEC-admin-panel, amenaza "XSS en el panel".
+    severity: ERROR
+    languages: [typescript]
+    pattern: <$EL dangerouslySetInnerHTML={$X} ... />

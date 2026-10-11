@@ -1,0 +1,62 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "description": "Actualizaciones de Plektia: última versión estable, en PRs agrupados que pasan por la CI completa.",
+  "extends": [
+    "config:recommended",
+    "helpers:pinGitHubActionDigests",
+    "docker:pinDigests",
+    ":semanticCommits"
+  ],
+  "timezone": "America/Argentina/Buenos_Aires",
+  "schedule": ["before 9am on monday"],
+  "rangeStrategy": "pin",
+  "minimumReleaseAge": "3 days",
+  "lockFileMaintenance": { "enabled": true },
+  "packageRules": [
+    {
+      "description": "Las majors esperan aprobación en el Dependency Dashboard (SPEC-platform: preguntar antes).",
+      "matchUpdateTypes": ["major"],
+      "dependencyDashboardApproval": true
+    },
+    {
+      "description": "ADR 0002: pnpm 12 se distribuye como binario que bloquea el control de aplicaciones de Windows.",
+      "matchPackageNames": ["pnpm"],
+      "allowedVersions": "<12"
+    },
+    {
+      "description": "ADR 0002: @astrojs/check todavía no soporta TypeScript 7.",
+      "matchPackageNames": ["typescript"],
+      "allowedVersions": "<7"
+    },
+    {
+      "groupName": "astro",
+      "matchPackageNames": ["astro", "@astrojs/**"]
+    },
+    {
+      "groupName": "lint y formato",
+      "matchPackageNames": [
+        "eslint",
+        "@eslint/**",
+        "typescript-eslint",
+        "eslint-plugin-**",
+        "prettier",
+        "prettier-plugin-**",
+        "globals"
+      ]
+    },
+    {
+      "groupName": "tests",
+      "matchPackageNames": ["vitest", "@vitest/**", "@playwright/test"]
+    }
+  ],
+  "customManagers": [
+    {
+      "description": "Imágenes de Docker fijadas por digest en las variables del workflow de CI.",
+      "customType": "regex",
+      "managerFilePatterns": ["/^\\.github/workflows/.+\\.ya?ml$/"],
+      "matchStrings": [
+        "# renovate: datasource=(?<datasource>\\S+) depName=(?<depName>\\S+)\\s+\\w+: \\S+:(?<currentValue>[^@\\s]+)@(?<currentDigest>sha256:[a-f0-9]+)"
+      ]
+    }
+  ]
+}
