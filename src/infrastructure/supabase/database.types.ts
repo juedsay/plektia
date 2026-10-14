@@ -3,7 +3,46 @@ export type Json = string | number | boolean | null | { [key: string]: Json | un
 export type Database = {
   public: {
     Tables: {
-      [_ in never]: never;
+      profiles: {
+        Row: {
+          avatar_path: string | null;
+          bio: string | null;
+          created_at: string;
+          disabled: boolean;
+          display_name: string;
+          handle: string;
+          id: string;
+          role: Database["public"]["Enums"]["user_role"];
+          theme: Database["public"]["Enums"]["profile_theme"];
+          updated_at: string;
+        };
+        ComputedFields: never;
+        Insert: {
+          avatar_path?: string | null;
+          bio?: string | null;
+          created_at?: string;
+          disabled?: boolean;
+          display_name: string;
+          handle: string;
+          id: string;
+          role?: Database["public"]["Enums"]["user_role"];
+          theme?: Database["public"]["Enums"]["profile_theme"];
+          updated_at?: string;
+        };
+        Update: {
+          avatar_path?: string | null;
+          bio?: string | null;
+          created_at?: string;
+          disabled?: boolean;
+          display_name?: string;
+          handle?: string;
+          id?: string;
+          role?: Database["public"]["Enums"]["user_role"];
+          theme?: Database["public"]["Enums"]["profile_theme"];
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
     };
     Views: {
       [_ in never]: never;
@@ -12,7 +51,8 @@ export type Database = {
       [_ in never]: never;
     };
     Enums: {
-      [_ in never]: never;
+      profile_theme: "tecnico";
+      user_role: "owner" | "member";
     };
     CompositeTypes: {
       [_ in never]: never;
@@ -123,6 +163,9 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      profile_theme: ["tecnico"],
+      user_role: ["owner", "member"],
+    },
   },
 } as const;

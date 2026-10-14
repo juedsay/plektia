@@ -72,11 +72,11 @@
 
 ## F2 · Identity
 
-- [ ] **Tarea 7: Esquema de identidad y registro cerrado** · M · Deps: 3
+- [x] **Tarea 7: Esquema de identidad y registro cerrado** · M · Deps: 3
   - Migración: `private.allowed_emails`, `profiles` (con `role`, `theme`, `avatar_path`, `disabled`), hook `before_user_created` (allowlist + email verificado), trigger de perfil, RLS y privilegios por columna, y handles reservados (incluido `plektia`).
   - **Aceptación:** los tests pgTAP de la tabla de amenazas de `identity` pasan: allowlist, email no verificado, escalada de rol, perfil ajeno y lectura de la allowlist.
   - **Verificar:** `pnpm test:db`.
-  - **Archivos:** `supabase/migrations/0001_identity.sql`, `supabase/tests/identity.test.sql`, `supabase/seed.sql`.
+  - **Archivos:** `supabase/migrations/20261014180000_identity.sql`, `supabase/tests/0001_identity.test.sql`, `supabase/seed.sql`.
 
 - [ ] **Tarea 8: Sesión del servidor y rutas protegidas** · M · Deps: 7
   - Dominio: `Handle` y `safeRedirectPath`, con 15 o más casos maliciosos. Puerto `SessionReader` + adaptador con `getClaims()`, cliente de servidor con cookies `HttpOnly` y middleware que protege `/admin/*`.

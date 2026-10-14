@@ -59,36 +59,19 @@ URL pública (`/{handle}`).
 
 ### Modelo de datos
 
-```sql
--- Esquema `private`: no se expone por la API REST de Supabase.
-create table private.allowed_emails (
-  email       citext primary key check (email = lower(trim(email))),
-  handle      citext not null unique,
-  invited_by  uuid references auth.users(id),
-  created_at  timestamptz not null default now()
-);
+Implementado en [`supabase/migrations/20261014180000_identity.sql`](supabase/migrations/20261014180000_identity.sql) (tarea 7):
 
-create type public.user_role as enum ('owner', 'member');
-
-create table public.profiles (
-  id            uuid primary key references auth.users(id) on delete cascade,
-  handle        citext not null unique,
-  display_name  text not null check (char_length(display_name) between 1 and 60),
-  bio           text check (char_length(bio) <= 160),
-  avatar_url    text check (avatar_url ~ '^https://'),
-  role          public.user_role not null default 'member',
-  created_at    timestamptz not null default now(),
-  updated_at    timestamptz not null default now()
-);
-alter table public.profiles enable row level security;
-```
+- **`public.handle`**: dominio sobre `citext` con el formato, la longitud y las palabras reservadas. Lo usan la allowlist y los perfiles, así que la regla vive en un solo lugar de la base.
+- **`private.allowed_emails`**: `email` (normalizado), `handle`, `role` (con el que entra la persona), `invited_by`, `created_at`.
+- **`public.profiles`**: `id`, `handle`, `display_name`, `bio`, `avatar_path` (ruta `{id}/{uuid}.webp` en Storage, la sube `admin-panel`), `role`, `theme` (enum, `tecnico` en v1), `disabled`, `created_at`, `updated_at`. Las columnas `theme` y `avatar_path` vienen de `public-page`, y `disabled`, de `admin-panel`: se crean acá para tener una sola migración de perfiles.
+- El hook es `private.before_user_created(event jsonb)`, fuera del esquema expuesto por la API.
 
 **Políticas RLS de `profiles`:**
 
 | Operación | Quién | Regla |
 |---|---|---|
-| `select` | `anon`, `authenticated` | Todas las filas (son datos públicos; el email no está en esta tabla) |
-| `update` | `authenticated` | Solo `id = auth.uid()`. Las columnas `role`, `handle` e `id` no se pueden cambiar (privilegios por columna: `grant update (display_name, bio, avatar_url)`) |
+| `select` | `anon`, `authenticated` | Los perfiles activos (`not disabled`), más el propio. El email no está en esta tabla |
+| `update` | `authenticated` | Solo `id = auth.uid()`, activo y sin `client_id` en el JWT (los clientes MCP escriben por funciones `mcp_*`). Privilegios por columna: `grant update (display_name, bio, theme)`; `role`, `handle`, `disabled` e `id` no se pueden cambiar |
 | `insert` / `delete` | nadie | Solo el trigger y el `on delete cascade` |
 
 **`handle`:** 3 a 30 caracteres, `^[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$`, sin guiones dobles. Se reservan las rutas propias (`admin`, `api`, `auth`, `login`, `logout`, `mcp`, `oauth`, `plektia`, `_astro`, `.well-known`, `robots.txt`, `sitemap.xml`, `favicon.ico`…). La lista vive en `src/domain/handle.ts` y en un `check` de la base generado desde el mismo origen.
@@ -153,4 +136,4 @@ alter table public.profiles enable row level security;
 
 1. ~~Proveedores OAuth~~ Hay acceso a Google Cloud Console; la OAuth App de GitHub y el cliente de Google se crean con `wizard` al implementar.
 2. ~~Handle del owner~~ `juedsay` (rol `owner`; va en `seed.sql` y en la allowlist de producción).
-3. **A verificar al implementar:** el campo exacto donde el evento del hook informa `email_verified` según el proveedor. Si no viene confiable, se lee de `identities` antes de decidir.
+3. ~~Campo de `email_verified`~~ El evento del hook trae `user` con la forma de `auth.users`. El hook acepta solo `app_metadata.provider` = `github` o `google` con `user_metadata.email_verified = true` (claims del proveedor). Con email y contraseña ese campo lo controla quien se registra, así que nunca se acepta. Si un usuario se crea sin pasar por el hook (API admin), el trigger de perfil igual aborta el alta si no hay invitación.
