@@ -14,6 +14,17 @@ MCP para gestionarla desde un agente de IA.
 Astro 7 · React 19 (islas) · Cloudflare Workers · Supabase (Postgres + RLS +
 Auth) · Zod · Vitest · Playwright · TypeScript 6 · pnpm 11.
 
+## Calidad y seguridad
+
+Cada PR pasa por la [CI](.github/workflows/ci.yml) y no se puede mergear a `main` si algo falla:
+
+- **Tipos, lint, tests unitarios y build**, con cobertura mínima de 90 % en reglas de negocio y 80 % global.
+- **Base de datos:** tests pgTAP de cada política RLS y asesores de seguridad de Supabase.
+- **E2E** con Playwright contra el build de producción, incluidas las cabeceras de seguridad y un intento de XSS.
+- **Seguridad:** `pnpm audit`, gitleaks sobre todo el historial y Semgrep (OWASP Top Ten, TypeScript, secretos y [reglas propias](.semgrep/rules/) con sus tests).
+
+Las dependencias las actualiza Renovate en PRs agrupados que pasan por la misma CI.
+
 ## Requisitos
 
 - Node 24 (ver `.nvmrc`).
