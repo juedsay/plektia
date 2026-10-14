@@ -247,14 +247,14 @@ fi
 
 # ── 2 ─────────────────────────────────────────────────────────────────────
 stage "Cloudflare: primer deploy (crea el Worker)"
-say "Se compila el proyecto y se publica el Worker 'plektia' en workers.dev."
+say "Se compila el proyecto y se publica el Worker 'app' en workers.dev."
 say "Si tu cuenta todavía no tiene subdominio workers.dev, Wrangler te pide elegir uno."
 warn "Esto publica la app en una URL pública."
 if confirm "¿Publico ahora? (respondé n si ya lo publicaste en una corrida anterior)"; then
   pnpm build
   pnpm deploy:worker
 fi
-step "Escribí la URL del Worker (https://plektia.<tu-subdominio>.workers.dev)."
+step "Escribí la URL del Worker (https://app.<tu-subdominio>.workers.dev)."
 ask PRODUCTION_URL "URL:"
 PRODUCTION_URL="${PRODUCTION_URL%/}"
 
@@ -272,7 +272,7 @@ fi
 
 # ── 4 ─────────────────────────────────────────────────────────────────────
 stage "Cloudflare: token de deploy para la CI"
-say "Creamos un token de cuenta que solo puede desplegar el Worker 'plektia'."
+say "Creamos un token de cuenta que solo puede desplegar el Worker 'app'."
 open_url "https://dash.cloudflare.com/?to=/:account/api-tokens"
 step "Tocá 'Create Token' → 'Create Custom Token'."
 step "Nombre: plektia-deploy-ci"
