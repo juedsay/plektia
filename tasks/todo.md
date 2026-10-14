@@ -54,7 +54,7 @@
   - **Verificar:** PRs de prueba en GitHub.
   - **Archivos:** `.github/workflows/ci.yml`, `.semgrep/rules.yml`, `renovate.json`.
 
-- [ ] **Tarea 6: Deploy y cron (spike de riesgos)** · M · Deps: 5
+- [x] **Tarea 6: Deploy y cron (spike de riesgos)** · M · Deps: 5
   - `src/worker.ts` con `fetch` + `scheduled`. Deploy desde `main` a `*.workers.dev` con `wrangler`. `wizard` para el token de Cloudflare y el proyecto de Supabase en la nube.
   - **Spike:** que la purga de Workers Cache funcione desde `scheduled`.
   - **Aceptación:**
