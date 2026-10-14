@@ -41,7 +41,7 @@
   - **Verificar:** `pnpm test:e2e`.
   - **Archivos:** `astro.config.mjs`, `src/middleware.ts`, `playwright.config.ts`, `e2e/security-headers.spec.ts`.
 
-- [ ] **Tarea 5: CI en GitHub Actions** · M · Deps: 2, 3, 4
+- [x] **Tarea 5: CI en GitHub Actions** · M · Deps: 2, 3, 4
   - Workflow con: check → lint → test:coverage → test:db → build → e2e → `pnpm audit` → gitleaks → Semgrep. Incluye reglas propias:
     - sin `set:html` ni `dangerouslySetInnerHTML` con datos de usuario;
     - la clave de servicio solo en `**/ingest-client.ts`.
