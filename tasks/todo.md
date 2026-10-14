@@ -88,12 +88,13 @@
 
 - [ ] **Tarea 9: Login con GitHub y Google** · M · Deps: 8
   - `wizard` para la OAuth App de GitHub y el cliente de Google. Páginas `/login`, `/auth/callback` y `/auth/logout`; rate limit; mensaje único de "sin acceso"; script `pnpm user:allow`. En E2E, la sesión de prueba sale de la API admin local.
+  - **Migraciones en producción:** job en `deploy.yml` que corre `supabase db push` contra el proyecto en la nube antes de publicar el Worker, con el token de Supabase y la contraseña de la base en el entorno `production`. Incluye activar el hook `before_user_created` en el proyecto.
   - **Aceptación:**
     - Entrás con GitHub y con Google (prueba manual documentada).
     - Un correo no invitado no crea cuenta.
     - Los E2E de CSRF, cookies y rate limit pasan.
   - **Verificar:** `pnpm test:e2e`; prueba manual en el deploy.
-  - **Archivos:** `src/pages/login.astro`, `src/pages/auth/callback.ts`, `src/pages/auth/logout.ts`, `scripts/allow-user.ts`, `e2e/auth.spec.ts`.
+  - **Archivos:** `src/pages/login.astro`, `src/pages/auth/callback.ts`, `src/pages/auth/logout.ts`, `scripts/allow-user.ts`, `e2e/auth.spec.ts`, `.github/workflows/deploy.yml`.
 
 ### ✅ Checkpoint F2
 - [ ] Entrás a `/admin` (vacío) en producción con tu cuenta; nadie más puede.

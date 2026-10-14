@@ -66,12 +66,12 @@ La app queda en `http://127.0.0.1:4321`, corriendo en workerd (el runtime de Clo
 
 ## Deploy
 
-Producción: **https://plektia.plektia.workers.dev** (Cloudflare Workers).
+Producción: **https://app.plektia.workers.dev** (Cloudflare Workers).
 
 Cada merge a `main` se publica solo: cuando la [CI](.github/workflows/ci.yml) pasa, el
 [workflow de deploy](.github/workflows/deploy.yml) compila ese mismo commit, lo publica con
 `wrangler deploy` y corre los E2E de cabeceras de seguridad contra la URL real. El token de
-Cloudflare vive en el entorno `production` de GitHub, solo puede editar el Worker `plektia`
+Cloudflare vive en el entorno `production` de GitHub, solo puede editar el Worker `app`
 y ningún otro job lo ve.
 
 El cron (`scheduled` en [src/worker.ts](src/worker.ts)) corre cada 5 minutos. Para probarlo
