@@ -185,7 +185,8 @@ finish() {
 # ──────────────────────────────────────────────────────────────────────────
 
 TOTAL_STAGES=6
-REPO="juedsay/plektia"
+# El repo sale del clon actual (el fork de quien corre el wizard, no el original).
+REPO=$(gh repo view --json nameWithOwner --jq .nameWithOwner 2>/dev/null || true)
 GH_ENV="production"
 
 # Secretos y variables del entorno `production` de GitHub: solo los ve el job de
@@ -292,16 +293,25 @@ fi
 
 # ── 5 ─────────────────────────────────────────────────────────────────────
 stage "GitHub: entorno 'production' y sus secretos"
+if [[ -z "$REPO" ]]; then
+  warn "No pude detectar el repo de GitHub de este clon (¿gh sin login?)."
+  ask REPO "Escribí el repo (usuario/nombre):"
+fi
 say "Creo el entorno 'production' en $REPO, limitado a ramas protegidas (main),"
 say "y guardo ahí el token, el Account ID y la URL pública."
-if confirm "¿Configuro GitHub ahora?"; then
-  gh api -X PUT "repos/$REPO/environments/$GH_ENV" --input - >/dev/null <<'JSON'
+if confirm "¿Es tu repo $REPO y configuro GitHub ahora?"; then
+  if gh api -X PUT "repos/$REPO/environments/$GH_ENV" --input - >/dev/null <<'JSON'
 {"deployment_branch_policy": {"protected_branches": true, "custom_branch_policies": false}}
 JSON
-  printf '  %s✓ entorno%s %s listo\n' "$GREEN" "$RESET" "$GH_ENV"
-  set_env_secret CLOUDFLARE_API_TOKEN "$CLOUDFLARE_API_TOKEN"
-  set_env_secret CLOUDFLARE_ACCOUNT_ID "$CLOUDFLARE_ACCOUNT_ID"
-  set_env_var PRODUCTION_URL "$PRODUCTION_URL"
+  then
+    printf '  %s✓ entorno%s %s listo\n' "$GREEN" "$RESET" "$GH_ENV"
+    set_env_secret CLOUDFLARE_API_TOKEN "$CLOUDFLARE_API_TOKEN"
+    set_env_secret CLOUDFLARE_ACCOUNT_ID "$CLOUDFLARE_ACCOUNT_ID"
+    set_env_var PRODUCTION_URL "$PRODUCTION_URL"
+  else
+    warn "No pude crear el entorno en $REPO: ¿tenés permisos de administrador ahí?"
+    SKIPPED+=("entorno $GH_ENV y sus secretos en $REPO")
+  fi
 else
   SKIPPED+=("entorno $GH_ENV y sus secretos en GitHub")
 fi
