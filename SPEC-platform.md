@@ -168,9 +168,9 @@ Los bugs se arreglan con el patrón *Prove-It*: primero un test que falla, despu
 ## Criterios de éxito
 
 - [ ] `pnpm install && pnpm db:start && pnpm dev` levanta la app en un clon limpio, siguiendo el README.
-- [ ] Una página de prueba se despliega en Cloudflare desde `main` y responde con todas las cabeceras de seguridad (verificado por E2E).
+- [x] Una página de prueba se despliega en Cloudflare desde `main` y responde con todas las cabeceras de seguridad (verificado por E2E).
 - [ ] Hay al menos un test de cada nivel (unit, integración, pgTAP, E2E) y todos pasan en CI.
-- [ ] La CI falla si se commitea un secreto de prueba, si una dependencia tiene una vulnerabilidad alta o si la cobertura baja del umbral.
+- [x] La CI falla si se commitea un secreto de prueba, si una dependencia tiene una vulnerabilidad alta o si la cobertura baja del umbral.
 - [x] El cron (`scheduled`) corre en local con `wrangler dev --test-scheduled` y queda registrado en los logs.
 - [x] ADR 0001 (Astro + Cloudflare sobre Next.js + Vercel) escrito.
 
