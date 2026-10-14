@@ -10,7 +10,7 @@
 - **Calidad:** principios SOLID y arquitectura de puertos y adaptadores; la seguridad se revisa en cada spec, test y review.
 - **Login:** GitHub y Google OAuth. **Registro cerrado**: solo entra quien el admin da de alta.
 - **URLs:** `/{handle}` es la ruta canónica; la raíz del dominio muestra el perfil por defecto (`DEFAULT_HANDLE`).
-- **Repo:** GitHub **privado** con higiene de repo público desde el día 1 (sin secretos en el historial), para abrirlo más adelante.
+- **Repo:** GitHub **público** ([juedsay/plektia](https://github.com/juedsay/plektia)); `main` solo acepta PRs con la CI en verde.
 
 ## Stack
 
