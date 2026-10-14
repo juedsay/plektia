@@ -1,0 +1,51 @@
+# Deploy de Plektia a Cloudflare Workers (SPEC-platform). Corre solo cuando la CI
+# pasó sobre un push a `main`: lo que llega a producción es exactamente lo que se probó.
+name: Deploy
+
+on:
+  workflow_run:
+    workflows: [CI]
+    types: [completed]
+    branches: [main]
+
+permissions:
+  contents: read
+
+# Un deploy a la vez y sin cancelar uno a medias.
+concurrency:
+  group: deploy-production
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    name: Deploy a Cloudflare Workers
+    if: github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'push'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    # Los secretos de Cloudflare viven en este entorno: ningún otro job los ve.
+    environment:
+      name: production
+      url: ${{ vars.PRODUCTION_URL }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          # El commit que validó la CI, no la punta de `main` en este momento.
+          ref: ${{ github.event.workflow_run.head_sha }}
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+      - name: Activar pnpm (versión de packageManager)
+        run: corepack enable
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build
+      - name: Publicar en Cloudflare
+        run: pnpm deploy:worker
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      - run: pnpm exec playwright install --with-deps chromium
+      - name: E2E de cabeceras contra producción
+        run: pnpm exec playwright test e2e/security-headers.spec.ts
+        env:
+          E2E_BASE_URL: ${{ vars.PRODUCTION_URL }}

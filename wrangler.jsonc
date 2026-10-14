@@ -1,7 +1,7 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "plektia",
-  "main": "@astrojs/cloudflare/entrypoints/server",
+  "main": "./src/worker.ts",
   "compatibility_date": "2026-10-10",
   "compatibility_flags": [
     "nodejs_compat",
@@ -11,6 +11,15 @@
   "assets": {
     "binding": "ASSETS",
     "directory": "./dist",
+  },
+  // Caché del Worker apagada hasta que `public-page` (F4) defina qué se cachea y
+  // con qué etiquetas; el spike de la tarea 6 probó que funciona (ADR 0003).
+  "cache": {
+    "enabled": false,
+  },
+  "triggers": {
+    // Cada 5 minutos: el cron de `live-status` refresca el estado en vivo.
+    "crons": ["*/5 * * * *"],
   },
   "observability": {
     "enabled": true,

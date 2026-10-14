@@ -62,5 +62,31 @@ La app queda en `http://127.0.0.1:4321`, corriendo en workerd (el runtime de Clo
 | `pnpm test:db` | Tests pgTAP de la base (RLS, funciones y permisos) |
 | `pnpm db:types` | Genera los tipos de TypeScript desde el esquema local |
 | `pnpm db:advisors` | Asesores de seguridad y rendimiento de Supabase; falla ante advertencias |
+| `pnpm deploy:worker` | Publica el build en Cloudflare (lo corre la CI; ver [Deploy](#deploy)) |
 
-Los comandos de deploy se suman en la tarea 6 (ver [SPEC-platform.md](SPEC-platform.md)).
+## Deploy
+
+Producción: **https://plektia.plektia.workers.dev** (Cloudflare Workers).
+
+Cada merge a `main` se publica solo: cuando la [CI](.github/workflows/ci.yml) pasa, el
+[workflow de deploy](.github/workflows/deploy.yml) compila ese mismo commit, lo publica con
+`wrangler deploy` y corre los E2E de cabeceras de seguridad contra la URL real. El token de
+Cloudflare vive en el entorno `production` de GitHub, solo puede editar el Worker `plektia`
+y ningún otro job lo ve.
+
+El cron (`scheduled` en [src/worker.ts](src/worker.ts)) corre cada 5 minutos. Para probarlo
+en local, después de `pnpm build`:
+
+```bash
+pnpm exec wrangler dev -c dist/server/wrangler.json --test-scheduled
+curl "http://127.0.0.1:8787/cdn-cgi/handler/scheduled?cron=*/5+*+*+*+*"
+```
+
+Para configurar un deploy desde cero (otra cuenta o un fork), el
+[wizard](scripts/wizard-deploy.sh) guía cada paso manual: login en Cloudflare, primer deploy,
+token de CI con permisos mínimos, secretos en GitHub y proyecto de Supabase. En Windows se
+corre con el bash de Git:
+
+```bash
+& "C:\Program Files\Git\bin\bash.exe" scripts/wizard-deploy.sh
+```
