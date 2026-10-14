@@ -11,3 +11,5 @@ prototypes/
 # Documentos de decisiones y specs: el formato lo cuida quien los escribe.
 *.md
 .impeccable/
+# Ejemplos de las reglas de Semgrep (anotaciones sensibles a la posición).
+.semgrep/

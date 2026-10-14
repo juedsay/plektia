@@ -1,0 +1,10 @@
+rules:
+  - id: plektia-service-key-scope
+    message: >-
+      La clave de servicio de Supabase solo puede usarse en `**/ingest-client.ts`,
+      para invocar funciones `ingest_*` (SPEC-platform, "Secretos").
+    severity: ERROR
+    languages: [generic]
+    paths:
+      exclude: ["**/ingest-client.ts"]
+    pattern-regex: '(SUPABASE_SECRET_KEY|SUPABASE_SERVICE_ROLE_KEY|sb_secret_[A-Za-z0-9_-]+)'
