@@ -6,6 +6,7 @@ export const DEFAULT_REDIRECT = "/admin";
 const MAX_LENGTH = 2048;
 // Caracteres de control (incluidos tab y saltos de línea, que el navegador
 // descarta al interpretar la URL) y barras invertidas, que trata como `/`.
+// eslint-disable-next-line no-control-regex -- detectar caracteres de control es el objetivo.
 const FORBIDDEN = /[\u0000-\u001f\u007f\\]/;
 const BASE = "https://plektia.invalid";
 
