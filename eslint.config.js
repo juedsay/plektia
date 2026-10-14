@@ -41,7 +41,7 @@ export default defineConfig(
       "@typescript-eslint/consistent-type-imports": "error",
       // `as` se permite (los tests lo usan para evitar el estrechamiento), pero no `<T>x`.
       "@typescript-eslint/consistent-type-assertions": ["error", { assertionStyle: "as" }],
-      "no-console": ["error", { allow: ["warn", "error"] }],
+      "no-console": ["error", { allow: ["info", "warn", "error"] }],
       eqeqeq: ["error", "always"],
       // TypeScript estricto exige `process.env["X"]` para índices: no forzar el punto.
       "@typescript-eslint/dot-notation": ["error", { allowIndexSignaturePropertyAccess: true }],
