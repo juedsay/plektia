@@ -1,6 +1,13 @@
 import { describe, expect, it } from "vitest";
 
-import { loginRedirect, requiresSession, usesSession } from "@/infrastructure/http/route-access";
+import {
+  isRateLimited,
+  loginErrorRedirect,
+  loginRedirect,
+  requiresSession,
+  seeOther,
+  usesSession,
+} from "@/infrastructure/http/route-access";
 import { safeRedirectPath } from "@/infrastructure/http/safe-redirect";
 
 describe("requiresSession", () => {
@@ -55,5 +62,27 @@ describe("loginRedirect", () => {
       "https://x.invalid",
     ).searchParams.get("next");
     expect(safeRedirectPath(next)).toBe("/admin/links?a=1");
+  });
+});
+
+describe("isRateLimited", () => {
+  it.each(["/auth/login", "/auth/callback", "/AUTH/logout"])("limita %j", (path) => {
+    expect(isRateLimited(path)).toBe(true);
+  });
+
+  it.each(["/login", "/admin", "/", "/authors"])("no limita %j", (path) => {
+    expect(isRateLimited(path)).toBe(false);
+  });
+});
+
+describe("loginErrorRedirect y seeOther", () => {
+  it("vuelve al login con el aviso y el destino codificado", () => {
+    expect(loginErrorRedirect("/admin/links")).toBe("/login?error=1&next=%2Fadmin%2Flinks");
+  });
+
+  it("seeOther responde 303 con el destino", () => {
+    const response = seeOther("/login");
+    expect(response.status).toBe(303);
+    expect(response.headers.get("Location")).toBe("/login");
   });
 });

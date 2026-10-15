@@ -20,7 +20,13 @@ export default defineConfig({
       provider: "v8",
       include: ["src/**/*.{ts,tsx}"],
       // Las rutas y la configuración se cubren con E2E (Playwright).
-      exclude: ["src/**/*.d.ts", "src/pages/**", "src/middleware/index.ts", "src/worker.ts"],
+      exclude: [
+        "src/**/*.d.ts",
+        "src/pages/**",
+        "src/middleware/index.ts",
+        "src/composition/runtime.ts",
+        "src/worker.ts",
+      ],
       reporter: ["text", "html", "lcov"],
       thresholds: {
         lines: 80,

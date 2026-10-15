@@ -1,0 +1,35 @@
+---
+// Login provisorio (tarea 9): funcional y accesible. El diseño de marca llega
+// con el panel (fase F5).
+import { safeRedirectPath } from "@/infrastructure/http/safe-redirect";
+
+const next = safeRedirectPath(Astro.url.searchParams.get("next"));
+if (Astro.locals.user) return Astro.redirect(next, 303);
+const denied = Astro.url.searchParams.has("error");
+---
+
+<html lang="es-AR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex" />
+    <title>Entrar · Plektia</title>
+  </head>
+  <body>
+    <main>
+      <h1>Entrar a Plektia</h1>
+      {denied && (
+        <p role="alert">Esta cuenta no tiene acceso. Pedile una invitación al administrador.</p>
+      )}
+      <form method="post" action="/auth/login">
+        <input type="hidden" name="next" value={next} />
+        <button type="submit" name="provider" value="github">
+          Entrar con GitHub
+        </button>
+        <button type="submit" name="provider" value="google">
+          Entrar con Google
+        </button>
+      </form>
+    </main>
+  </body>
+</html>

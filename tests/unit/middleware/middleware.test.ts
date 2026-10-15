@@ -3,6 +3,7 @@ import { describe, expect, it, vi } from "vitest";
 
 import type { SessionReader, SessionUser } from "@/application/ports/session-reader";
 import { adminGuardMiddleware } from "@/middleware/admin-guard";
+import { rateLimitMiddleware } from "@/middleware/rate-limit";
 import { securityHeadersMiddleware } from "@/middleware/security-headers";
 import { sessionMiddleware } from "@/middleware/session";
 
@@ -13,6 +14,7 @@ function contextFor(path: string, user: SessionUser | null = null): APIContext {
   return {
     url,
     request: new Request(url),
+    clientAddress: "203.0.113.7",
     cookies: {},
     locals: { user },
   } as unknown as APIContext;
@@ -76,5 +78,39 @@ describe("adminGuardMiddleware", () => {
   it("las rutas públicas pasan sin sesión", async () => {
     const response = (await adminGuardMiddleware(contextFor("/juedsay"), ok)) as Response;
     expect(response.status).toBe(200);
+  });
+});
+
+describe("rateLimitMiddleware", () => {
+  it("fuera de /auth no consulta el límite", async () => {
+    const allow = vi.fn(() => Promise.resolve(false));
+    const response = (await rateLimitMiddleware(() => ({ allow }))(
+      contextFor("/login"),
+      ok,
+    )) as Response;
+    expect(allow).not.toHaveBeenCalled();
+    expect(response.status).toBe(200);
+  });
+
+  it("dentro del límite deja pasar y cuenta por IP y ruta", async () => {
+    const allow = vi.fn(() => Promise.resolve(true));
+    const response = (await rateLimitMiddleware(() => ({ allow }))(
+      contextFor("/auth/login"),
+      ok,
+    )) as Response;
+    expect(allow).toHaveBeenCalledWith("203.0.113.7:/auth/login");
+    expect(response.status).toBe(200);
+  });
+
+  it("pasado el límite responde 429 sin llegar a la página", async () => {
+    const next = vi.fn(ok);
+    const limiter = { allow: () => Promise.resolve(false) };
+    const response = (await rateLimitMiddleware(() => limiter)(
+      contextFor("/auth/callback"),
+      next,
+    )) as Response;
+    expect(next).not.toHaveBeenCalled();
+    expect(response.status).toBe(429);
+    expect(response.headers.get("Retry-After")).toBe("60");
   });
 });
