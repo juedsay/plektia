@@ -11,8 +11,8 @@ function locationOf(response: { headers(): Record<string, string> }): URL {
 test.describe("login", () => {
   test("ofrece GitHub y Google, sin aviso de error", async ({ page }) => {
     await page.goto("/login");
-    await expect(page.getByRole("button", { name: "Entrar con GitHub" })).toBeVisible();
-    await expect(page.getByRole("button", { name: "Entrar con Google" })).toBeVisible();
+    await expect(page.getByRole("link", { name: "Entrar con GitHub" })).toBeVisible();
+    await expect(page.getByRole("link", { name: "Entrar con Google" })).toBeVisible();
     await expect(page.getByRole("alert")).toHaveCount(0);
   });
 
@@ -23,14 +23,11 @@ test.describe("login", () => {
 
   test("manda al proveedor con PKCE y guarda el verificador en una cookie segura", async ({
     request,
-    baseURL,
   }) => {
-    const response = await request.post("/auth/login", {
-      form: { provider: "github", next: "/admin" },
-      headers: { origin: baseURL ?? "" },
+    const response = await request.get("/auth/login?provider=github&next=%2Fadmin", {
       maxRedirects: 0,
     });
-    expect(response.status()).toBe(303);
+    expect(response.status()).toBe(302);
     const location = locationOf(response);
     expect(location.pathname).toBe("/auth/v1/authorize");
     expect(location.searchParams.get("provider")).toBe("github");
@@ -47,19 +44,16 @@ test.describe("login", () => {
     expect(verifier).toMatch(/SameSite=Lax/);
   });
 
-  test("un proveedor que no es GitHub ni Google vuelve al login con el aviso", async ({
-    request,
-    baseURL,
-  }) => {
-    const response = await request.post("/auth/login", {
-      form: { provider: "azure", next: "/admin" },
-      headers: { origin: baseURL ?? "" },
-      maxRedirects: 0,
+  for (const query of ["provider=azure&next=%2Fadmin", "next=%2Fadmin", ""]) {
+    test(`sin un proveedor válido (${query || "sin parámetros"}) vuelve al login con el aviso`, async ({
+      request,
+    }) => {
+      const response = await request.get(`/auth/login?${query}`, { maxRedirects: 0 });
+      expect(response.status()).toBe(302);
+      expect(locationOf(response).pathname).toBe("/login");
+      expect(locationOf(response).searchParams.get("error")).toBe("1");
     });
-    expect(response.status()).toBe(303);
-    expect(locationOf(response).pathname).toBe("/login");
-    expect(locationOf(response).searchParams.get("error")).toBe("1");
-  });
+  }
 });
 
 test.describe("callback", () => {
@@ -107,8 +101,8 @@ test.describe("con sesión", () => {
     expect(locationOf(response).pathname).toBe("/admin/links");
   });
 
-  test("un POST sin formulario no rompe nada", async ({ request, baseURL }) => {
-    const response = await request.post("/auth/login", {
+  test("un logout sin formulario no rompe nada", async ({ request, baseURL }) => {
+    const response = await request.post("/auth/logout", {
       headers: { origin: baseURL ?? "" },
       maxRedirects: 0,
     });

@@ -21,15 +21,20 @@ const denied = Astro.url.searchParams.has("error");
       {denied && (
         <p role="alert">Esta cuenta no tiene acceso. Pedile una invitación al administrador.</p>
       )}
-      <form method="post" action="/auth/login">
-        <input type="hidden" name="next" value={next} />
-        <button type="submit" name="provider" value="github">
-          Entrar con GitHub
-        </button>
-        <button type="submit" name="provider" value="google">
-          Entrar con Google
-        </button>
-      </form>
+      <nav aria-label="Entrar con">
+        <ul>
+          <li>
+            <a href={`/auth/login?provider=github&next=${encodeURIComponent(next)}`}>
+              Entrar con GitHub
+            </a>
+          </li>
+          <li>
+            <a href={`/auth/login?provider=google&next=${encodeURIComponent(next)}`}>
+              Entrar con Google
+            </a>
+          </li>
+        </ul>
+      </nav>
     </main>
   </body>
 </html>
