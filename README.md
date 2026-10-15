@@ -85,6 +85,11 @@ pnpm exec wrangler dev -c dist/server/wrangler.json --test-scheduled
 curl "http://127.0.0.1:8787/cdn-cgi/handler/scheduled?cron=*/5+*+*+*+*"
 ```
 
+Antes de publicar, el mismo workflow aplica las migraciones pendientes en Supabase
+(`supabase db push`). El login real (OAuth de GitHub y Google, hook de invitaciones y la
+invitación del owner) se configura una vez con
+[`scripts/wizard-login.sh`](scripts/wizard-login.sh).
+
 Para configurar un deploy desde cero (otra cuenta o un fork), el
 [wizard](scripts/wizard-deploy.sh) guía cada paso manual: login en Cloudflare, primer deploy,
 token de CI con permisos mínimos, secretos en GitHub y proyecto de Supabase. En Windows se
