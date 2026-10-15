@@ -21,9 +21,9 @@
     // Cada 5 minutos: el cron de `live-status` refresca el estado en vivo.
     "crons": ["*/5 * * * *"],
   },
-  // Datos públicos del proyecto de Supabase (la publishable key va en el
-  // navegador por diseño). En local se reemplazan con `.dev.vars`. La key de
-  // producción se carga en la tarea 9; mientras esté vacía, nadie tiene sesión.
+  // Datos públicos del proyecto de Supabase. En local se reemplazan con
+  // `.dev.vars` (`pnpm env:local`); en producción, la publishable key la pasa el
+  // deploy desde el entorno de GitHub. Si quedara vacía, nadie tendría sesión.
   "vars": {
     "SUPABASE_URL": "https://xggajfivycgttmgbvgys.supabase.co",
     "SUPABASE_PUBLISHABLE_KEY": "",
