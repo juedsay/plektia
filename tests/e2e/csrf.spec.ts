@@ -4,11 +4,11 @@ import { expect, test } from "@playwright/test";
 // En el simulador local (miniflare, que usa `astro preview`), después de un 403
 // que no lee el cuerpo del formulario, el pedido siguiente o simultáneo falla
 // con "fetch failed". En Cloudflare no pasa: se verificó contra producción con
-// pedidos simultáneos y seguidos. Logout comparte la misma protección
-// (`security.checkOrigin` de Astro aplica a todo POST de formulario).
+// pedidos simultáneos y seguidos. `security.checkOrigin` de Astro aplica a todo
+// POST de formulario; el del logout es el que importa (el login es un link).
 test("un formulario de otro sitio se rechaza (CSRF)", async ({ request }) => {
-  const response = await request.post("/auth/login", {
-    form: { provider: "github" },
+  const response = await request.post("/auth/logout", {
+    form: { scope: "global" },
     headers: { origin: "https://evil.test" },
     maxRedirects: 0,
   });
