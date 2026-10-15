@@ -84,7 +84,7 @@
     - Unit e integración pasan (token válido, alterado y vencido).
     - `/admin` sin sesión redirige a `/login?next=`.
   - **Verificar:** `pnpm test`; E2E de redirección.
-  - **Archivos:** `src/domain/handle.ts`, `src/domain/safe-redirect.ts`, `src/application/ports/session-reader.ts`, `src/infrastructure/supabase/supabase-session-reader.ts`, `src/middleware.ts`.
+  - **Archivos:** `src/domain/handle.ts`, `src/infrastructure/http/safe-redirect.ts`, `src/application/ports/session-reader.ts`, `src/infrastructure/supabase/supabase-session-reader.ts`, `src/middleware/`.
 
 - [ ] **Tarea 9: Login con GitHub y Google** · M · Deps: 8
   - `wizard` para la OAuth App de GitHub y el cliente de Google. Páginas `/login`, `/auth/callback` y `/auth/logout`; rate limit; mensaje único de "sin acceso"; script `pnpm user:allow`. En E2E, la sesión de prueba sale de la API admin local.

@@ -75,7 +75,7 @@ src/
   infrastructure/    → Adaptadores que implementan los puertos.
     supabase/        → Clientes, repositorios, tipos generados.
     providers/       → youtube/, twitch/ (uno por carpeta; misma interfaz).
-    http/            → fetch seguro (timeouts, allowlist de hosts).
+    http/            → Reglas y utilidades HTTP puras: cabeceras de seguridad, rutas con sesión, redirección segura, fetch seguro.
   composition/       → Composition root: arma las dependencias por request (inyección manual, sin framework de DI).
   ui/
     components/      → Componentes .astro sin estado.
@@ -83,16 +83,16 @@ src/
     styles/          → Tokens de diseño (vienen de brand-system).
   pages/             → Rutas Astro. Finas: validan entrada, llaman a un caso de uso y renderizan.
   actions/           → Astro Actions del panel (llaman a casos de uso).
-  middleware.ts      → Sesión, cabeceras de seguridad, request id.
+  middleware/        → Un middleware por responsabilidad (cabeceras, sesión, acceso), encadenados con `sequence()` en `index.ts`.
   worker.ts          → Entrada del Worker: fetch (Astro) + scheduled (cron).
 supabase/
   migrations/        → SQL versionado. Toda tabla nace con RLS activado.
   tests/             → Tests pgTAP.
   seed.sql           → Datos de desarrollo (nunca datos reales).
 tests/
-  unit/              → Espejo de src/domain y src/application.
+  unit/              → Espejo de src/ (dominio, casos de uso, adaptadores y middlewares con dobles).
   integration/       → Adaptadores contra Supabase local y APIs mockeadas (MSW).
-e2e/                 → Playwright: flujos completos y chequeos de seguridad.
+  e2e/               → Playwright: flujos completos y chequeos de seguridad.
 docs/
   adr/               → Decisiones de arquitectura (0001-astro-sobre-nextjs.md, …).
 .github/workflows/   → CI.
@@ -138,7 +138,7 @@ export function createLink(deps: { links: LinkWriter }) {
 | Unit | Vitest | Dominio y casos de uso con puertos falsos | `tests/unit/` |
 | Integración | Vitest + Supabase local + MSW | Repositorios reales, proveedores con respuestas grabadas de YouTube/Twitch | `tests/integration/` |
 | Base de datos | pgTAP (`supabase test db`) | **Cada política RLS**: anónimo, dueño, otro usuario, `service_role` | `supabase/tests/` |
-| E2E | Playwright | Flujos completos, accesibilidad (axe) y cabeceras de seguridad | `e2e/` |
+| E2E | Playwright | Flujos completos, accesibilidad (axe) y cabeceras de seguridad | `tests/e2e/` |
 
 **Cobertura mínima:** 90 % en `domain/` y `application/`, 80 % global. Un PR no puede bajarla.
 
