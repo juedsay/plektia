@@ -36,7 +36,7 @@ Las dependencias las actualiza Renovate en PRs agrupados que pasan por la misma 
 ```bash
 corepack enable
 pnpm install --frozen-lockfile
-cp .env.example .dev.vars
+cp .env.example .dev.vars   # y completá SUPABASE_PUBLISHABLE_KEY con `pnpm exec supabase status`
 pnpm db:start   # Supabase local en Docker (puertos 566xx)
 pnpm db:reset   # aplica migraciones y seed
 pnpm dev
@@ -60,6 +60,7 @@ La app queda en `http://127.0.0.1:4321`, corriendo en workerd (el runtime de Clo
 | `pnpm db:start` / `pnpm db:stop` | Levanta o frena Supabase local (Studio en `http://127.0.0.1:56623`) |
 | `pnpm db:reset` | Recrea la base local con las migraciones y `supabase/seed.sql` |
 | `pnpm test:db` | Tests pgTAP de la base (RLS, funciones y permisos) |
+| `pnpm test:integration` | Tests de integración contra Supabase local (sesión: token válido, alterado y vencido) |
 | `pnpm db:types` | Genera los tipos de TypeScript desde el esquema local |
 | `pnpm db:advisors` | Asesores de seguridad y rendimiento de Supabase; falla ante advertencias |
 | `pnpm deploy:worker` | Publica el build en Cloudflare (lo corre la CI; ver [Deploy](#deploy)) |

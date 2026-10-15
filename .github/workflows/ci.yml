@@ -58,6 +58,8 @@ jobs:
       - name: Levantar Supabase local (sin servicios que los tests no usan)
         run: pnpm exec supabase start -x studio,imgproxy,realtime,edge-runtime,logflare,vector,mailpit,supavisor
       - run: pnpm test:db
+      - name: Tests de integración (Supabase local)
+        run: pnpm test:integration
       - run: pnpm db:advisors
 
   e2e:
