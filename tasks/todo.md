@@ -96,6 +96,12 @@
   - **Verificar:** `pnpm test:e2e`; prueba manual en el deploy.
   - **Archivos:** `src/pages/login.astro`, `src/pages/auth/callback.ts`, `src/pages/auth/logout.ts`, `scripts/allow-user.ts`, `e2e/auth.spec.ts`, `.github/workflows/deploy.yml`.
 
+- [ ] **Tarea 9c: Aviso de vencimiento de tokens** · S · Deps: 9
+  - Workflow semanal que abre un issue dos semanas antes de que venzan los tokens de la CI: `plektia-ci` de Supabase (90 días, ~13/01/2027) y el de Cloudflare (14/10/2027). Las fechas viven como variables del entorno `production`.
+  - Script de renovación que guía la creación del token nuevo con los mismos permisos, lo verifica y lo guarda en GitHub.
+  - **Aceptación:** con una fecha de vencimiento cercana, el workflow abre el issue (probado con `workflow_dispatch`).
+  - **Archivos:** `.github/workflows/tokens.yml`, `scripts/renovar-token.sh`.
+
 ### ✅ Checkpoint F2
 - [ ] Entrás a `/admin` (vacío) en producción con tu cuenta; nadie más puede.
 - [ ] Revisión con vos.
@@ -162,6 +168,7 @@
     - Cero requests a Google al cargar.
     - Validadores de metadatos sin errores.
     - La política de privacidad refleja lo implementado.
+    - La app de Google sale de "Prueba": se completa la información de la marca (página principal, política de privacidad y dominios autorizados) y se publica. Hasta entonces solo entran los usuarios de prueba.
   - **Verificar:** E2E de red; Rich Results Test manual.
   - **Archivos:** `src/ui/styles/fonts.css`, `src/ui/components/Seo.astro`, `src/pages/plektia/index.astro`, `src/pages/plektia/privacidad.astro`, `src/pages/sitemap.xml.ts`.
 
