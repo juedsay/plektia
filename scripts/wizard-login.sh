@@ -229,7 +229,6 @@ if [[ -z "$REPO" || -z "$REF" || -z "$APP_URL" ]]; then
   exit 1
 fi
 CALLBACK="https://${REF}.supabase.co/auth/v1/callback"
-HOOK_URI="pg-functions://postgres/private/before_user_created"
 
 banner "Plektia · login con GitHub y Google en producción"
 
@@ -281,15 +280,11 @@ pause "Enter para seguir"
 
 # ── 4 ─────────────────────────────────────────────────────────────────────
 stage "Supabase: clave pública del proyecto"
-say "La publishable key es pública por diseño (va al navegador). La tomo de la CLI."
-PUBLISHABLE_KEY=$(supabase projects api-keys --project-ref "$REF" -o json 2>/dev/null | node scripts/wizard-helpers.mjs publishable-key || true)
-if [[ -n "$PUBLISHABLE_KEY" ]]; then
-  printf '  %s✓ publishable key obtenida%s\n' "$GREEN" "$RESET"
-else
-  open_url "https://supabase.com/dashboard/project/${REF}/settings/api-keys"
-  step "Copiá la 'Publishable key' (empieza con sb_publishable_)."
-  ask PUBLISHABLE_KEY "Pegá la publishable key:"
-fi
+say "La publishable key es pública por diseño (va al navegador de cada visitante)."
+open_url "https://supabase.com/dashboard/project/${REF}/settings/api-keys"
+step "Copiá la 'Publishable key' (empieza con sb_publishable_) con su ícono de copiar."
+note "No la 'Secret key' (sb_secret_…): esa no se usa en la app."
+ask PUBLISHABLE_KEY "Pegá la publishable key:"
 set_env_var SUPABASE_PUBLISHABLE_KEY "$PUBLISHABLE_KEY"
 pause "Enter para seguir"
 
@@ -298,48 +293,35 @@ stage "GitHub: OAuth App"
 open_url "https://github.com/settings/applications/new"
 step "Application name: Plektia"
 step "Homepage URL: ${APP_URL}"
-step "Authorization callback URL: ${CALLBACK}"
-step "Dejá 'Enable Device Flow' sin marcar y tocá 'Register application'."
-ask GITHUB_CLIENT_ID "Pegá el Client ID:"
-step "Tocá 'Generate a new client secret' y copialo (se muestra una sola vez)."
-ask_secret GITHUB_SECRET "Pegá el client secret:"
+step "Redirect URI (o Authorization callback URL): ${CALLBACK}"
+step "Sin 'Allow wildcard matching' ni 'Enable Device Flow'. 'Expire user access tokens': marcado."
+step "Register application → 'Generate a new client secret'."
+note "Tené a mano el Client ID y el secret: los pide el paso 7."
+pause "Enter cuando tengas la app creada"
 
 # ── 6 ─────────────────────────────────────────────────────────────────────
 stage "Google: cliente OAuth"
 open_url "https://console.cloud.google.com/auth/overview"
-step "Si te lo pide, creá un proyecto: plektia."
-step "Branding (o Get started): nombre Plektia, tu email de soporte, público External."
-step "Clients → Create client → Web application. Nombre: Plektia."
-step "Authorized redirect URIs → Add URI: ${CALLBACK}"
-step "Create → copiá el Client ID y el Client secret."
-note "Si la consola no coincide con estos pasos, mandale una captura a Claude."
-ask GOOGLE_CLIENT_ID "Pegá el Client ID:"
-ask_secret GOOGLE_SECRET "Pegá el client secret:"
+step "Arriba, el selector de proyectos: creá y elegí un proyecto propio llamado plektia."
+step "Comenzar: nombre Plektia, tu email de soporte, público Externo, tu email de contacto."
+step "Clientes → Crear cliente → Aplicación web. Nombre: Plektia. Sin orígenes de JavaScript."
+step "URIs de redireccionamiento autorizados → Agregar URI: ${CALLBACK}"
+step "Público → Publicar aplicación (solo pide email y perfil: no requiere revisión de Google)."
+note "Tené a mano el ID y el secreto del cliente: los pide el paso 7."
+pause "Enter cuando tengas el cliente creado"
 
 # ── 7 ─────────────────────────────────────────────────────────────────────
 stage "Supabase: configurar Auth"
-say "Aplico por la API de gestión de Supabase:"
-step "URL del sitio ${APP_URL} y callback permitido ${APP_URL}/auth/callback"
-step "GitHub y Google activados; email y teléfono desactivados"
-step "Hook before_user_created: solo entran los invitados"
-if confirm "¿Aplico la configuración?"; then
-  export APP_URL GITHUB_CLIENT_ID GITHUB_SECRET GOOGLE_CLIENT_ID GOOGLE_SECRET HOOK_URI
-  if node scripts/wizard-helpers.mjs auth-config |
-    curl -fsS -X PATCH "https://api.supabase.com/v1/projects/${REF}/config/auth" \
-      -H "Authorization: Bearer ${SUPABASE_ACCESS_TOKEN}" -H "Content-Type: application/json" \
-      --data @- -o /dev/null; then
-    printf '  %s✓ configuración enviada%s\n' "$GREEN" "$RESET"
-  fi
-  unset GITHUB_SECRET GOOGLE_SECRET
-  say "Verificando lo que quedó en Supabase..."
-  if ! curl -fsS "https://api.supabase.com/v1/projects/${REF}/config/auth" \
-    -H "Authorization: Bearer ${SUPABASE_ACCESS_TOKEN}" | node scripts/wizard-helpers.mjs verify-auth; then
-    warn "Algo no quedó como se esperaba: revisalo en Authentication del panel de Supabase."
-    open_url "https://supabase.com/dashboard/project/${REF}/auth/providers"
-    SKIPPED+=("revisar Auth en el panel de Supabase (proveedores y hook)")
-  fi
-else
-  SKIPPED+=("configuración de Auth en Supabase")
+say "Configura URLs, desactiva email y teléfono, activa el hook y los proveedores, y verifica."
+say "Usa un token temporal (los permisos que la CI no debe tener nunca):"
+open_url "https://supabase.com/dashboard/account/tokens"
+step "Generate new token. Nombre: plektia-setup. Expires in: 7 días."
+step "Resource access: Project → juedsay → plektia."
+step "Project → Project Settings: Read-write."
+step "Application services → API Keys: Read · Auth Config: Read-write. Todo lo demás: None."
+pause "Enter para empezar..."
+if ! bash scripts/configurar-auth.sh; then
+  SKIPPED+=("configuración de Auth: volvé a correr scripts/configurar-auth.sh")
 fi
 pause "Enter para seguir"
 
@@ -347,11 +329,14 @@ pause "Enter para seguir"
 stage "Invitarte como owner"
 say "Tu email tiene que ser el mismo (y verificado) que usás en GitHub y en Google."
 ask OWNER_EMAIL "Tu email:"
+# La invitación corre SQL en la base: usa tu sesión de la CLI, no el token de la
+# CI (que a propósito no tiene permiso para eso).
+unset SUPABASE_ACCESS_TOKEN
 if confirm "¿Invito a ${OWNER_EMAIL} como owner con el handle juedsay?"; then
   supabase link --project-ref "$REF" >/dev/null
   pnpm user:allow "$OWNER_EMAIL" juedsay --role owner --prod
 fi
-unset SUPABASE_ACCESS_TOKEN SUPABASE_DB_PASSWORD
+unset SUPABASE_DB_PASSWORD
 
 finish
 say "Con el próximo deploy, probá: ${APP_URL}/login"
