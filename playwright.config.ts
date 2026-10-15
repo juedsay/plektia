@@ -9,7 +9,8 @@ const isCI = Boolean(process.env["CI"]);
 const remoteBaseURL = process.env["E2E_BASE_URL"];
 // IP propia de cada corrida (rango de documentación 2001:db8::/32): el límite de
 // login cuenta por IP y su estado local sobrevive a los reinicios del servidor.
-// En Cloudflare esta cabecera la reescribe la red y no se puede falsificar.
+// Solo en local: Cloudflare rechaza (403) los pedidos que traen esta cabecera
+// desde afuera, justamente para que nadie pueda falsificar su IP.
 const runIp = `2001:db8::${randomBytes(2).toString("hex")}:${randomBytes(2).toString("hex")}`;
 
 export default defineConfig({
@@ -20,7 +21,7 @@ export default defineConfig({
   reporter: isCI ? [["github"], ["html", { open: "never" }]] : "list",
   use: {
     baseURL: remoteBaseURL ?? `http://127.0.0.1:${String(PORT)}`,
-    extraHTTPHeaders: { "cf-connecting-ip": runIp },
+    ...(remoteBaseURL ? {} : { extraHTTPHeaders: { "cf-connecting-ip": runIp } }),
     trace: "on-first-retry",
   },
   projects: [
