@@ -9,7 +9,7 @@ export default defineConfig({
     },
   },
   test: {
-    include: ["tests/unit/**/*.test.ts", "tests/integration/**/*.test.ts"],
+    include: ["tests/unit/**/*.test.ts"],
     environment: "node",
     typecheck: {
       // Corre los `expectTypeOf` como chequeos reales de tipos.

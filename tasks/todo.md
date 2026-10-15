@@ -78,7 +78,7 @@
   - **Verificar:** `pnpm test:db`.
   - **Archivos:** `supabase/migrations/20261014180000_identity.sql`, `supabase/tests/0001_identity.test.sql`, `supabase/seed.sql`.
 
-- [ ] **Tarea 8: Sesión del servidor y rutas protegidas** · M · Deps: 7
+- [x] **Tarea 8: Sesión del servidor y rutas protegidas** · M · Deps: 7
   - Dominio: `Handle` y `safeRedirectPath`, con 15 o más casos maliciosos. Puerto `SessionReader` + adaptador con `getClaims()`, cliente de servidor con cookies `HttpOnly` y middleware que protege `/admin/*`.
   - **Aceptación:**
     - Unit e integración pasan (token válido, alterado y vencido).
