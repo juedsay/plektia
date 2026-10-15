@@ -81,7 +81,7 @@ Implementado en [`supabase/migrations/20261014180000_identity.sql`](supabase/mig
 | Capa | Archivo | Responsabilidad |
 |---|---|---|
 | domain | `handle.ts` | Value object `Handle` + schema Zod + palabras reservadas |
-| domain | `safe-redirect.ts` | `safeRedirectPath(input): string`: devuelve la ruta solo si es relativa e interna; si no, `/admin` |
+| infrastructure/http | `safe-redirect.ts`, `route-access.ts` | `safeRedirectPath(input): string`: devuelve la ruta solo si es relativa e interna; si no, `/admin` |
 | application/ports | `session-reader.ts` | `getCurrentUser(): Promise<SessionUser \| null>` |
 | application/ports | `profile-repository.ts` | `ProfileReader` / `ProfileWriter` |
 | application | `get-public-profile.ts`, `update-own-profile.ts` | Casos de uso |

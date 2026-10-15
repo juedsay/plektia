@@ -1,4 +1,4 @@
-// Qué rutas necesitan sesión. Pura: el middleware la aplica.
+// Qué rutas leen o exigen sesión (SPEC-identity). Regla de HTTP, pura: la aplican los middlewares.
 
 // Rutas que leen la sesión. El resto (la página pública) no la toca: así nunca
 // responde con `Set-Cookie` y se puede cachear (ADR 0003).

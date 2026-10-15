@@ -113,4 +113,4 @@ jobs:
           semgrep scan --metrics=off --error
           --config p/owasp-top-ten --config p/typescript --config p/secrets
           --config .semgrep/rules --exclude .semgrep
-          src e2e tests supabase astro.config.mjs
+          src tests supabase astro.config.mjs

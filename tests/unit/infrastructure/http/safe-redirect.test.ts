@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { DEFAULT_REDIRECT, safeRedirectPath } from "@/domain/safe-redirect";
+import { DEFAULT_REDIRECT, safeRedirectPath } from "@/infrastructure/http/safe-redirect";
 
 describe("safeRedirectPath", () => {
   it.each([

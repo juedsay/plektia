@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 
-import { loginRedirect, requiresSession, usesSession } from "@/domain/access";
-import { safeRedirectPath } from "@/domain/safe-redirect";
+import { loginRedirect, requiresSession, usesSession } from "@/infrastructure/http/route-access";
+import { safeRedirectPath } from "@/infrastructure/http/safe-redirect";
 
 describe("requiresSession", () => {
   it.each(["/admin", "/admin/", "/admin/links", "/ADMIN", "/Admin/links"])("protege %j", (path) => {
