@@ -1,20 +1,16 @@
-// Cadena de middlewares: acá se conectan con sus dependencias reales. El orden
-// importa: las cabeceras envuelven todo y la sesión se lee antes del control
-// de acceso.
-import { env } from "cloudflare:workers";
+// Cadena de middlewares. El orden importa: las cabeceras envuelven todo, el
+// límite corta antes de tocar Supabase y la sesión se lee antes del acceso.
 import { sequence } from "astro:middleware";
 
-import { createSessionReader } from "@/composition/session";
+import { authRateLimiter, sessionReaderFor } from "@/composition/runtime";
 import { adminGuardMiddleware } from "@/middleware/admin-guard";
+import { rateLimitMiddleware } from "@/middleware/rate-limit";
 import { securityHeadersMiddleware } from "@/middleware/security-headers";
 import { sessionMiddleware } from "@/middleware/session";
 
-const session = sessionMiddleware((request, cookies) =>
-  createSessionReader(
-    { url: env.SUPABASE_URL, publishableKey: env.SUPABASE_PUBLISHABLE_KEY },
-    request,
-    cookies,
-  ),
+export const onRequest = sequence(
+  securityHeadersMiddleware,
+  rateLimitMiddleware(authRateLimiter),
+  sessionMiddleware(sessionReaderFor),
+  adminGuardMiddleware,
 );
-
-export const onRequest = sequence(securityHeadersMiddleware, session, adminGuardMiddleware);

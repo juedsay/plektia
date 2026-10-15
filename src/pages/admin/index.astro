@@ -1,6 +1,6 @@
 ---
-// Panel provisorio (tarea 8): solo confirma que la ruta está protegida.
-// El panel real se construye en la fase F5 (`admin-panel`).
+// Panel provisorio: confirma que la ruta está protegida. El panel real se
+// construye en la fase F5 (`admin-panel`).
 const title = "Panel · Plektia";
 ---
 
@@ -12,7 +12,15 @@ const title = "Panel · Plektia";
     <title>{title}</title>
   </head>
   <body>
-    <h1>Panel</h1>
-    <p>Sesión iniciada.</p>
+    <main>
+      <h1>Panel</h1>
+      <p>Sesión iniciada.</p>
+      <form method="post" action="/auth/logout">
+        <button type="submit">Cerrar sesión</button>
+        <button type="submit" name="scope" value="global">
+          Cerrar sesión en todos los dispositivos
+        </button>
+      </form>
+    </main>
   </body>
 </html>

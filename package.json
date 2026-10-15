@@ -26,6 +26,8 @@
     "db:types": "supabase gen types typescript --local --schema public > src/infrastructure/supabase/database.types.ts && prettier --write src/infrastructure/supabase/database.types.ts",
     "test:db": "supabase test db",
     "test:integration": "vitest run --config vitest.integration.config.ts",
+    "user:allow": "node scripts/allow-user.ts",
+    "env:local": "node scripts/dev-vars.ts",
     "db:advisors": "supabase db advisors --local --fail-on warn",
     "test:e2e": "playwright test",
     "audit:deps": "pnpm audit --audit-level=high",

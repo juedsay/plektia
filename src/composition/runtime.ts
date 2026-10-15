@@ -1,0 +1,21 @@
+// Lo único que lee la configuración del Worker. Páginas y middlewares piden
+// sus dependencias acá, ya armadas.
+import type { AstroCookies } from "astro";
+import { env } from "cloudflare:workers";
+
+import type { AuthGateway } from "@/application/ports/auth-gateway";
+import type { RateLimiter } from "@/application/ports/rate-limiter";
+import type { SessionReader } from "@/application/ports/session-reader";
+import { createAuthGateway } from "@/composition/auth";
+import { createSessionReader } from "@/composition/session";
+import { CloudflareRateLimiter } from "@/infrastructure/cloudflare/cloudflare-rate-limiter";
+
+const supabase = () => ({ url: env.SUPABASE_URL, publishableKey: env.SUPABASE_PUBLISHABLE_KEY });
+
+export const sessionReaderFor = (request: Request, cookies: AstroCookies): SessionReader =>
+  createSessionReader(supabase(), request, cookies);
+
+export const authGatewayFor = (request: Request, cookies: AstroCookies): AuthGateway =>
+  createAuthGateway(supabase(), request, cookies);
+
+export const authRateLimiter = (): RateLimiter => new CloudflareRateLimiter(env.AUTH_RATE_LIMITER);

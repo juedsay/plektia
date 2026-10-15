@@ -28,6 +28,14 @@
     "SUPABASE_URL": "https://xggajfivycgttmgbvgys.supabase.co",
     "SUPABASE_PUBLISHABLE_KEY": "",
   },
+  // Límite de las acciones de login (SPEC-identity): 10 por minuto por IP y ruta.
+  "ratelimits": [
+    {
+      "name": "AUTH_RATE_LIMITER",
+      "namespace_id": "1001",
+      "simple": { "limit": 10, "period": 60 },
+    },
+  ],
   "observability": {
     "enabled": true,
   },
