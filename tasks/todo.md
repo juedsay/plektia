@@ -131,13 +131,13 @@
   - **Verificar:** `pnpm test`.
   - **Archivos:** `src/application/ports/link-repository.ts`, `src/application/links/*.ts`, `src/application/sections/*.ts`, `src/infrastructure/supabase/supabase-link-repository.ts`.
 
-- [ ] **Tarea 13: Vista pública y seed** · S · Deps: 12
+- [x] **Tarea 13: Vista pública y seed** · S · Deps: 12
   - `public_page_v` (`security_invoker`) + `get-public-page` + seed con tus secciones y links reales.
   - **Aceptación:**
     - Una sola consulta devuelve la página.
     - Lo oculto no aparece para `anon` (pgTAP).
   - **Verificar:** `pnpm test:db && pnpm test`.
-  - **Archivos:** `supabase/migrations/0003_public_view.sql`, `src/application/public/get-public-page.ts`, `supabase/seed.sql`.
+  - **Archivos:** `supabase/migrations/20261016100000_public_page.sql`, `src/application/public/get-public-page.ts`, `src/infrastructure/supabase/supabase-public-page-reader.ts`, `supabase/seed.sql`.
 
 ### ✅ Checkpoint F3
 - [ ] Todo el núcleo con RLS probado; cada amenaza de `links` con su test en verde.

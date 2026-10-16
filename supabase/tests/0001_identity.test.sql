@@ -31,6 +31,11 @@ returns void language sql as $$
   select set_config('role', 'anon', true), set_config('request.jwt.claims', '', true);
 $$;
 
+-- Punto de partida propio, sin depender del seed (la transacción se descarta al final).
+delete from public.links where owner_id in ('11111111-1111-4111-8111-111111111111', '22222222-2222-4222-8222-222222222222');
+delete from public.sections where owner_id in ('11111111-1111-4111-8111-111111111111', '22222222-2222-4222-8222-222222222222');
+update public.profiles set bio = null;
+
 -- Usuarios del seed: owner 1111…, miembro 2222….
 
 -- ── Hook before_user_created ─────────────────────────────────────────────────

@@ -20,6 +20,11 @@ returns void language sql as $$
   select set_config('role', 'anon', true), set_config('request.jwt.claims', '', true);
 $$;
 
+-- Punto de partida propio, sin depender del seed (la transacción se descarta al final).
+delete from public.links where owner_id in ('11111111-1111-4111-8111-111111111111', '22222222-2222-4222-8222-222222222222');
+delete from public.sections where owner_id in ('11111111-1111-4111-8111-111111111111', '22222222-2222-4222-8222-222222222222');
+update public.profiles set bio = null;
+
 -- Dueño (1111…) y otro usuario (2222…) vienen del seed.
 -- Secciones: S1 visible y S2 oculta del dueño; M1 visible del otro.
 insert into public.sections (id, owner_id, title, visible) values
