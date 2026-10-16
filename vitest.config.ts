@@ -26,6 +26,9 @@ export default defineConfig({
         "src/middleware/index.ts",
         "src/composition/runtime.ts",
         "src/worker.ts",
+        // Montaje en el DOM: lo cubren los E2E (la lógica vive en módulos puros).
+        "src/ui/scripts/page.ts",
+        "src/ui/scripts/thread.ts",
       ],
       reporter: ["text", "html", "lcov"],
       thresholds: {
