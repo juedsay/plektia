@@ -24,6 +24,13 @@ returns void language sql as $$
            true);
 $$;
 
+-- Visitante anónimo. Borra los claims: `reset role` no los limpia, y un
+-- "anónimo" con los claims del usuario anterior vería lo de ese usuario.
+create function pg_temp.as_anon()
+returns void language sql as $$
+  select set_config('role', 'anon', true), set_config('request.jwt.claims', '', true);
+$$;
+
 -- Usuarios del seed: owner 1111…, miembro 2222….
 
 -- ── Hook before_user_created ─────────────────────────────────────────────────
@@ -98,7 +105,7 @@ select ok(
   not has_table_privilege('anon', 'private.allowed_emails', 'select,insert,update,delete')
     and not has_table_privilege('authenticated', 'private.allowed_emails', 'select,insert,update,delete'),
   'allowlist: anon y authenticated no tienen privilegios sobre la tabla');
-set local role anon;
+select pg_temp.as_anon();
 select throws_ok($$ select * from private.allowed_emails $$, '42501', null, 'allowlist: anon no la puede leer');
 reset role;
 select pg_temp.login('22222222-2222-4222-8222-222222222222');
@@ -108,7 +115,7 @@ reset role;
 -- ── RLS de profiles ──────────────────────────────────────────────────────────
 update public.profiles set disabled = true where id = '33333333-3333-4333-8333-333333333333';
 
-set local role anon;
+select pg_temp.as_anon();
 select is((select count(*)::int from public.profiles), 2, 'perfiles: anon ve los activos y no los dados de baja');
 select throws_ok($$ update public.profiles set bio = 'x' $$, '42501', null, 'perfiles: anon no puede editar');
 reset role;
