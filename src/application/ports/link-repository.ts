@@ -1,0 +1,74 @@
+import type { LinkDraft, LinkPatch } from "@/domain/link";
+import type { Provider } from "@/domain/provider";
+import type { Result } from "@/domain/result";
+import type { SectionDraft, SectionPatch } from "@/domain/section";
+
+// Puertos de secciones y links (SPEC-links, "Código"). Lectura y escritura van
+// separadas (ISP): la página pública solo necesita leer. El dueño nunca es un
+// parámetro: sale de la sesión, y la base lo fija con `auth.uid()` y lo exige
+// con RLS, así que ningún caso de uso puede escribir a nombre de otro.
+
+export interface Link {
+  readonly id: string;
+  readonly sectionId: string | null;
+  readonly title: string;
+  readonly url: string;
+  readonly description: string | null;
+  readonly provider: Provider;
+  readonly providerHandle: string | null;
+  readonly tags: readonly string[];
+  readonly visible: boolean;
+  readonly position: number;
+  readonly version: number;
+}
+
+export interface Section {
+  readonly id: string;
+  readonly title: string;
+  readonly showTitle: boolean;
+  readonly visible: boolean;
+  readonly position: number;
+  readonly version: number;
+}
+
+/** Elemento de una lista de orden: el id y la versión leída (concurrencia optimista). */
+export interface Versioned {
+  readonly id: string;
+  readonly version: number;
+}
+
+export type WriteError = "not_found" | "conflict" | "limit_reached" | "invalid_input" | "forbidden";
+
+export interface OwnLinks {
+  readonly sections: readonly Section[];
+  readonly links: readonly Link[];
+}
+
+export interface LinkReader {
+  /** Todas las secciones y links del usuario de la sesión, en orden. */
+  listOwn(): Promise<OwnLinks>;
+}
+
+export interface LinkWriter {
+  createLink(draft: LinkDraft): Promise<Result<Link, WriteError>>;
+  updateLink(id: string, version: number, patch: LinkPatch): Promise<Result<Link, WriteError>>;
+  deleteLink(id: string, version: number): Promise<Result<void, WriteError>>;
+  /** `items` es el orden final completo del grupo destino (una sección o "Sin sección"). */
+  moveLinks(
+    sectionId: string | null,
+    items: readonly Versioned[],
+  ): Promise<Result<void, WriteError>>;
+}
+
+export interface SectionWriter {
+  createSection(draft: SectionDraft): Promise<Result<Section, WriteError>>;
+  updateSection(
+    id: string,
+    version: number,
+    patch: SectionPatch,
+  ): Promise<Result<Section, WriteError>>;
+  /** Sus links pasan al final de "Sin sección". */
+  deleteSection(id: string, version: number): Promise<Result<void, WriteError>>;
+  /** `items` es el orden final completo de las secciones del usuario. */
+  reorderSections(items: readonly Versioned[]): Promise<Result<void, WriteError>>;
+}

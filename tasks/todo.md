@@ -122,7 +122,7 @@
   - **Verificar:** `pnpm test:db`.
   - **Archivos:** `supabase/migrations/20261016000000_links.sql`, `supabase/tests/0002_links.test.sql`, `supabase/tests/0003_links_rpc.test.sql`.
 
-- [ ] **Tarea 12: Casos de uso y repositorio** · M · Deps: 10, 11
+- [x] **Tarea 12: Casos de uso y repositorio** · M · Deps: 10, 11
   - Puertos `LinkReader` y `LinkWriter`, los casos de uso de links y secciones, y `SupabaseLinkRepository` con `version` optimista.
   - **Aceptación:**
     - Unit con puertos falsos.
