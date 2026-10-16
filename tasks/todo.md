@@ -86,7 +86,7 @@
   - **Verificar:** `pnpm test`; E2E de redirección.
   - **Archivos:** `src/domain/handle.ts`, `src/infrastructure/http/safe-redirect.ts`, `src/application/ports/session-reader.ts`, `src/infrastructure/supabase/supabase-session-reader.ts`, `src/middleware/`.
 
-- [ ] **Tarea 9: Login con GitHub y Google** · M · Deps: 8
+- [x] **Tarea 9: Login con GitHub y Google** · M · Deps: 8
   - `wizard` para la OAuth App de GitHub y el cliente de Google. Páginas `/login`, `/auth/callback` y `/auth/logout`; rate limit; mensaje único de "sin acceso"; script `pnpm user:allow`. En E2E, la sesión de prueba sale de la API admin local.
   - **Migraciones en producción:** job en `deploy.yml` que corre `supabase db push` contra el proyecto en la nube antes de publicar el Worker, con el token de Supabase y la contraseña de la base en el entorno `production`. Incluye activar el hook `before_user_created` en el proyecto.
   - **Aceptación:**
@@ -103,7 +103,7 @@
   - **Archivos:** `.github/workflows/tokens.yml`, `scripts/renovar-token.sh`.
 
 ### ✅ Checkpoint F2
-- [ ] Entrás a `/admin` (vacío) en producción con tu cuenta; nadie más puede.
+- [x] Entrás a `/admin` (vacío) en producción con tu cuenta; nadie más puede (hook en producción y pgTAP; queda la prueba manual con una cuenta no invitada).
 - [ ] Revisión con vos.
 
 ---
