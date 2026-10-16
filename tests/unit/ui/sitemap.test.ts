@@ -5,10 +5,11 @@ import { robotsTxt, sitemapXml } from "@/ui/view/sitemap";
 const origin = "https://app.plektia.workers.dev";
 
 describe("sitemapXml", () => {
-  it("lista la raíz y un /{handle} por perfil", () => {
+  it("lista la landing, la página oficial y un /{handle} por perfil", () => {
     const xml = sitemapXml(origin, ["juedsay", "otra"]);
     expect([...xml.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1])).toEqual([
       "https://app.plektia.workers.dev/",
+      "https://app.plektia.workers.dev/plektia",
       "https://app.plektia.workers.dev/juedsay",
       "https://app.plektia.workers.dev/otra",
     ]);

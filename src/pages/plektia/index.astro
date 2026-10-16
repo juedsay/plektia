@@ -1,0 +1,10 @@
+---
+import { buildPlektiaPage } from "@/content/plektia";
+import ProfilePage from "@/ui/components/ProfilePage.astro";
+
+// Página oficial de la marca (como `linktr.ee/linktree`). Se renderiza en el
+// Worker aunque no consulte la base: así recibe las mismas cabeceras de
+// seguridad que el resto (los archivos estáticos no pasan por el middleware).
+---
+
+<ProfilePage page={buildPlektiaPage()} brand />

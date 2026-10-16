@@ -15,11 +15,12 @@ Servir la página pública de cada usuario (`/{handle}`) tal como la define el p
 1. **Ver la página.** Al abrir `/juedsay` veo el avatar, el nombre y la bio, y las secciones visibles con sus links en el orden que eligió el dueño, unidos por el hilo. "Sin sección" va al final y sin título.
 2. **En vivo.** Si el dueño está transmitiendo, el link correspondiente muestra "En vivo", el tiempo transcurrido y el título del stream, con el jack en lima latiendo. El dato llega de `live-status`; esta página solo lo muestra.
 3. **Último video.** El link de YouTube muestra una sub-fila plegada con el título y la antigüedad del último video. Al desplegarla aparece la miniatura, que **recién en ese momento** se pide a YouTube.
-4. **Compartir.** El botón de arriba a la derecha abre la hoja nativa de compartir. Si no existe, copia el link y lo avisa.
+4. **Compartir.** El botón de arriba a la derecha abre una ventana propia (tarea 16b): una tarjeta de vista previa, copiar el link, las redes principales como links que se abren al tocarlos y "Más opciones" para la hoja nativa. Mientras tanto usa la hoja nativa y, si no existe, copia el link y lo avisa.
 5. **Página oficial de Plektia.** El isotipo de arriba a la izquierda y el pie llevan a `/plektia`, la página de la marca (como `linktr.ee/linktr.ee`): el mismo diseño que la de un usuario, con el isotipo como avatar, una bio que explica qué es Plektia y que por ahora funciona por invitación, y secciones como "Novedades", "Sobre Plektia" y "Legal". Su contenido vive en el repo (`src/content/plektia.ts`) y se valida con los mismos schemas del dominio que los links de usuarios.
-6. **Privacidad.** El pie lleva a `/plektia/privacidad`, que explica en lenguaje simple qué se mide (clics por link, sin cookies ni datos personales) y qué terceros intervienen (YouTube, solo si el visitante despliega la miniatura).
-7. **Raíz del dominio.** `/` es la landing de Plektia (como `linktr.ee/`): una sola pantalla que explica qué es, muestra un ejemplo de página, aclara que por ahora funciona por invitación y lleva a `/plektia` y a entrar. Hasta la tarea 16 muestra provisoriamente la página de `DEFAULT_HANDLE`, con la URL canónica `/{handle}`.
-8. **Handle inexistente.** Devuelve una página 404 con el mismo diseño y un link a `/plektia`.
+6. **Contacto.** `/plektia/contacto` tiene un formulario (nombre, email, mensaje) que nunca expone el correo de Plektia. Los mensajes se guardan en la base y se leen desde el panel; con dominio propio, además llega un aviso por mail. Contra el spam: un campo trampa invisible, un límite de envíos por IP y Turnstile (que carga un script de Cloudflare solo en esta página).
+7. **Privacidad.** El pie lleva a `/plektia/privacidad`, que explica en lenguaje simple qué se mide (clics por link, sin cookies ni datos personales) y qué terceros intervienen (YouTube, solo si el visitante despliega la miniatura).
+8. **Raíz del dominio.** `/` es la landing de Plektia (como `linktr.ee/`): una sola pantalla que explica qué es, muestra un ejemplo de página, aclara que por ahora funciona por invitación y lleva a `/plektia` y a entrar.
+9. **Handle inexistente.** Devuelve una página 404 con el mismo diseño y un link a `/plektia`.
 
 ## Diseño de la página
 
@@ -36,7 +37,7 @@ Sigue [DESIGN.md](DESIGN.md) y el prototipo; acá solo se fija lo que el prototi
 | Ruta | Render | Caché |
 |---|---|---|
 | `/{handle}` y `/` | On-demand en el Worker. Una sola consulta a `public_page_v`, que incluye el estado en vivo y el último video | [Workers Cache](https://developers.cloudflare.com/workers/cache/): `Cache-Control: public, max-age=60, stale-while-revalidate=300` y `Cache-Tag: profile:{handle}`. Al editar desde el panel o el MCP, y cuando el cron cambia el estado en vivo, el Worker llama a `ctx.cache.purge({ tags: ["profile:{handle}"] })` y el cambio se ve al instante. Funciona en `workers.dev` y no necesita token de API |
-| `/` (landing), `/plektia`, `/plektia/privacidad` | Prerenderizadas en el build | Estáticas |
+| `/` (landing), `/plektia`, `/plektia/privacidad`, `/plektia/contacto` | On-demand en el Worker, sin consultar la base. No se prerenderizan porque los archivos estáticos no pasan por el middleware y saldrían sin las cabeceras de seguridad | Las de la tarea 17 |
 | 404 | On-demand | `s-maxage=60` |
 
 - La clave de caché es solo la ruta: los query strings no generan variantes. Así se evita el envenenamiento de caché y se aprovecha mejor.

@@ -1,12 +1,43 @@
 ---
-import { getPublicPage } from "@/application/public/get-public-page";
-import { defaultHandle, publicPages } from "@/composition/runtime";
-import ProfilePage from "@/ui/components/ProfilePage.astro";
+import { landingLinks } from "@/content/landing";
+import Bank from "@/ui/components/Bank.astro";
+import Isotype from "@/ui/components/Isotype.astro";
+import PublicLayout from "@/ui/layouts/PublicLayout.astro";
 
-// La raíz muestra el perfil de `DEFAULT_HANDLE` (SPEC-public-page, "Raíz del
-// dominio"); en la v2 la reemplaza la landing de Plektia.
-const result = await getPublicPage({ pages: publicPages() })(defaultHandle());
-if (!result.ok) return Astro.rewrite("/404");
+// Landing de Plektia (como `linktr.ee/`): una sola pantalla, honesta. La versión
+// completa (beneficios, ejemplos, preguntas) llega con el registro abierto (v2).
+const canonical = new URL("/", Astro.url);
+const description =
+  "Plektia: todos tus links en una sola página, unidos por un hilo. Por ahora, por invitación.";
+const structuredData = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  name: "Plektia",
+  url: canonical.href,
+  description,
+};
 ---
 
-<ProfilePage page={result.value} />
+<PublicLayout
+  title="Plektia · Todos tus links, unidos por un hilo"
+  description={description}
+  canonical={canonical}
+  structuredData={structuredData}
+>
+  <section class="identity hero" aria-labelledby="hero-title">
+    <div class="avatar" aria-hidden="true">
+      <Isotype size={44} />
+    </div>
+    <h1 id="hero-title">plektia</h1>
+    <p class="handle">Todo tejido.</p>
+    <p class="bio">
+      Todos tus links en una sola página, unidos por un hilo: tus redes, tus proyectos y tus
+      streams.
+    </p>
+  </section>
+  <div class="patchbay" data-patchbay>
+    <svg class="thread" aria-hidden="true"></svg>
+    <Bank id="empezar" title="Empezá acá" links={landingLinks()} />
+  </div>
+  <p class="invite">Por ahora Plektia funciona por invitación.</p>
+</PublicLayout>

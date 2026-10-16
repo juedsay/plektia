@@ -28,6 +28,3 @@ export const authRateLimiter = (): RateLimiter => new CloudflareRateLimiter(env.
 export const publicPages = (): PublicPageReader => createPublicPageReader(supabase());
 
 export const publicProfiles = (): PublicProfileDirectory => createPublicPageReader(supabase());
-
-/** Handle que muestra la raíz del dominio (SPEC-public-page, "Raíz del dominio"). */
-export const defaultHandle = (): string => env.DEFAULT_HANDLE;

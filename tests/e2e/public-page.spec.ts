@@ -32,11 +32,34 @@ test.describe("página pública", () => {
     await expect(page.locator('link[rel="canonical"]')).toHaveAttribute("href", /\/juedsay$/);
   });
 
-  test("la raíz muestra el perfil por defecto con su URL canónica", async ({ page }) => {
+  test("la raíz es la landing de Plektia, con salida a /plektia y al login", async ({ page }) => {
     const response = await page.goto("/");
     expect(response?.status()).toBe(200);
-    await expect(page.getByText("@juedsay", { exact: true })).toBeVisible();
-    await expect(page.locator('link[rel="canonical"]')).toHaveAttribute("href", /\/juedsay$/);
+    await expect(page.getByRole("heading", { level: 1 })).toHaveText("plektia");
+    await expect(page.getByText("Por ahora Plektia funciona por invitación.")).toBeVisible();
+    const start = page.getByRole("region", { name: "Empezá acá" });
+    await expect(start.getByRole("link", { name: /Conocé Plektia/ })).toHaveAttribute(
+      "href",
+      "/plektia",
+    );
+    await expect(start.getByRole("link", { name: /Entrar/ })).toHaveAttribute("href", "/login");
+    await expect(page.locator('link[rel="canonical"]')).toHaveAttribute("href", /\/$/);
+  });
+
+  test("/plektia es la página oficial, con el diseño de un perfil", async ({ page }) => {
+    const response = await page.goto("/plektia");
+    expect(response?.status()).toBe(200);
+    // Pasa por el Worker: tiene las cabeceras de seguridad aunque no consulte la base.
+    expect(response?.headers()["content-security-policy"]).toContain("frame-ancestors 'none'");
+    await expect(page).toHaveTitle("Plektia · Página oficial");
+    await expect(page.getByRole("heading", { level: 1 })).toHaveText("Plektia");
+    await expect(page.getByText("@plektia", { exact: true })).toBeVisible();
+    await expect(page.getByText("Todos tus links, unidos por un hilo.")).toBeVisible();
+    await expect(page.getByRole("heading", { level: 2 })).toHaveText([
+      "Novedades",
+      "Sobre Plektia",
+    ]);
+    await expect(page.locator('meta[property="og:type"]')).toHaveAttribute("content", "profile");
   });
 
   for (const path of ["/nadie-existe", "/a", "/con%20espacios"]) {

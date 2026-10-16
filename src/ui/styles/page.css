@@ -419,6 +419,18 @@ button {
   transform: translate(-50%, 0);
 }
 
+/* Landing: el logotipo en minúsculas, como en la marca. */
+.hero h1 {
+  font-size: 2.5rem;
+  letter-spacing: -0.02em;
+}
+
+.invite {
+  margin: var(--space-8) 0 0 var(--jack-col);
+  color: var(--color-fg-muted);
+  font-size: var(--text-sm);
+}
+
 /* 404: el mismo lenguaje, con un solo mensaje y la salida a /plektia. */
 .not-found {
   display: grid;
