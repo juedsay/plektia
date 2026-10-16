@@ -91,7 +91,7 @@ create index links_live_targets on public.links (provider, provider_handle)
   where provider in ('youtube', 'twitch', 'kick');
 ```
 
-- **Posición única por grupo:** un índice único parcial cubre los links con sección, `(section_id, position)`, y otro los "Sin sección", `(owner_id, position) where section_id is null`. Los dos son *deferrable*, para poder reordenar dentro de una transacción.
+- **Posición única por grupo:** una restricción de exclusión cubre los links con sección, `(section_id, position)`, y otra los "Sin sección", `(owner_id, position) where section_id is null`. Las dos son *deferrable*, para poder reordenar dentro de una transacción. (Se usan restricciones de exclusión porque Postgres no permite diferir un índice único parcial.)
 - **Sección del mismo dueño:** un trigger impide asignar un link a una sección de otro usuario. RLS no alcanza para eso, porque la fila nueva es del usuario pero la sección referenciada no.
 - **Al borrar una sección:** `on delete set null` más un trigger `after delete` que recoloca esos links al final de "Sin sección".
 - **Límites:** un trigger `before insert` cuenta y rechaza el link 201 y la sección 31.

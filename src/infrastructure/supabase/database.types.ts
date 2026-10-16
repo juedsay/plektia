@@ -3,6 +3,73 @@ export type Json = string | number | boolean | null | { [key: string]: Json | un
 export type Database = {
   public: {
     Tables: {
+      links: {
+        Row: {
+          created_at: string;
+          description: string | null;
+          id: string;
+          owner_id: string;
+          position: number;
+          provider: Database["public"]["Enums"]["link_provider"];
+          provider_handle: string | null;
+          section_id: string | null;
+          tags: string[];
+          title: string;
+          updated_at: string;
+          url: string;
+          version: number;
+          visible: boolean;
+        };
+        ComputedFields: never;
+        Insert: {
+          created_at?: string;
+          description?: string | null;
+          id?: string;
+          owner_id?: string;
+          position?: number;
+          provider?: Database["public"]["Enums"]["link_provider"];
+          provider_handle?: string | null;
+          section_id?: string | null;
+          tags?: string[];
+          title: string;
+          updated_at?: string;
+          url: string;
+          version?: number;
+          visible?: boolean;
+        };
+        Update: {
+          created_at?: string;
+          description?: string | null;
+          id?: string;
+          owner_id?: string;
+          position?: number;
+          provider?: Database["public"]["Enums"]["link_provider"];
+          provider_handle?: string | null;
+          section_id?: string | null;
+          tags?: string[];
+          title?: string;
+          updated_at?: string;
+          url?: string;
+          version?: number;
+          visible?: boolean;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "links_owner_id_fkey";
+            columns: ["owner_id"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "links_section_id_fkey";
+            columns: ["section_id"];
+            isOneToOne: false;
+            referencedRelation: "sections";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       profiles: {
         Row: {
           avatar_path: string | null;
@@ -43,14 +110,68 @@ export type Database = {
         };
         Relationships: [];
       };
+      sections: {
+        Row: {
+          created_at: string;
+          id: string;
+          owner_id: string;
+          position: number;
+          show_title: boolean;
+          title: string;
+          updated_at: string;
+          version: number;
+          visible: boolean;
+        };
+        ComputedFields: never;
+        Insert: {
+          created_at?: string;
+          id?: string;
+          owner_id?: string;
+          position?: number;
+          show_title?: boolean;
+          title: string;
+          updated_at?: string;
+          version?: number;
+          visible?: boolean;
+        };
+        Update: {
+          created_at?: string;
+          id?: string;
+          owner_id?: string;
+          position?: number;
+          show_title?: boolean;
+          title?: string;
+          updated_at?: string;
+          version?: number;
+          visible?: boolean;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "sections_owner_id_fkey";
+            columns: ["owner_id"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
     };
     Views: {
       [_ in never]: never;
     };
     Functions: {
-      [_ in never]: never;
+      move_links: {
+        Args: { expected_versions: number[]; ids: string[]; target_section: string };
+        Returns: undefined;
+      };
+      reorder_sections: {
+        Args: { expected_versions: number[]; ids: string[] };
+        Returns: undefined;
+      };
     };
     Enums: {
+      link_provider:
+        "generic" | "youtube" | "twitch" | "kick" | "whatsapp" | "github" | "instagram";
       profile_theme: "tecnico";
       user_role: "owner" | "member";
     };
@@ -164,6 +285,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
+      link_provider: ["generic", "youtube", "twitch", "kick", "whatsapp", "github", "instagram"],
       profile_theme: ["tecnico"],
       user_role: ["owner", "member"],
     },

@@ -116,11 +116,11 @@
   - **Verificar:** `pnpm test:coverage`.
   - **Archivos:** `src/domain/safe-url.ts`, `src/domain/provider.ts`, `src/domain/link.ts`, `src/domain/section.ts`, `src/domain/errors.ts`.
 
-- [ ] **Tarea 11: Esquema de links con RLS y operaciones atómicas** · M · Deps: 7
+- [x] **Tarea 11: Esquema de links con RLS y operaciones atómicas** · M · Deps: 7
   - Tablas `sections` y `links`, índices, triggers (dueño de la sección, límites, recolocar al borrar), RPC `reorder_sections` y `move_links`, y políticas RLS (con la condición `client_id is null` en escrituras, preparada para el MCP).
   - **Aceptación:** pgTAP de todas las políticas con 4 roles, de los triggers, de la atomicidad y de los `check` de URL.
   - **Verificar:** `pnpm test:db`.
-  - **Archivos:** `supabase/migrations/0002_links.sql`, `supabase/tests/links.test.sql`, `supabase/tests/links-rpc.test.sql`.
+  - **Archivos:** `supabase/migrations/20261016000000_links.sql`, `supabase/tests/0002_links.test.sql`, `supabase/tests/0003_links_rpc.test.sql`.
 
 - [ ] **Tarea 12: Casos de uso y repositorio** · M · Deps: 10, 11
   - Puertos `LinkReader` y `LinkWriter`, los casos de uso de links y secciones, y `SupabaseLinkRepository` con `version` optimista.
