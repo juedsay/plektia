@@ -165,6 +165,7 @@
   - **Archivos:** `src/ui/scripts/thread.ts`, `src/ui/scripts/disclosure.ts`, `src/ui/scripts/share.ts`, `tests/unit/ui/thread.test.ts`.
 
 - [ ] **Tarea 16: Fuente propia, SEO y páginas de Plektia** · M · Deps: 14
+  - **Landing simple en `/`** (una pantalla: qué es Plektia, ejemplo de página, "por ahora, por invitación", links a `/plektia` y a entrar). Reemplaza el perfil de `DEFAULT_HANDLE` en la raíz, y la variable se elimina.
   - `@fontsource-variable/bricolage-grotesque` (solo subset latino), métricas de respaldo, metadatos, OG, JSON-LD `ProfilePage`, sitemap, robots, y las páginas `/plektia` (página oficial con el diseño de perfil y contenido en `src/content/plektia.ts`, validado con los schemas del dominio) y `/plektia/privacidad`.
   - **Aceptación:**
     - Cero requests a Google al cargar.
