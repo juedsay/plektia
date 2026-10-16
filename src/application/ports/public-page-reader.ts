@@ -36,3 +36,8 @@ export interface PublicPageReader {
   /** La página de un handle, o `null` si no existe o el perfil está dado de baja. */
   getByHandle(handle: Handle): Promise<PublicPage | null>;
 }
+
+export interface PublicProfileDirectory {
+  /** Handles de los perfiles activos, para el sitemap. */
+  listHandles(): Promise<string[]>;
+}

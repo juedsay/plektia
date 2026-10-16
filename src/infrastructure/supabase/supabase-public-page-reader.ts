@@ -1,7 +1,11 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { z } from "zod";
 
-import type { PublicPage, PublicPageReader } from "@/application/ports/public-page-reader";
+import type {
+  PublicPage,
+  PublicPageReader,
+  PublicProfileDirectory,
+} from "@/application/ports/public-page-reader";
 import type { Handle } from "@/domain/handle";
 import { PROVIDERS } from "@/domain/provider";
 import type { Database } from "@/infrastructure/supabase/database.types";
@@ -37,7 +41,7 @@ const RowSchema = z.object({
 });
 
 /** Lee la vista `public_page_v` (una sola consulta por página). */
-export class SupabasePublicPageReader implements PublicPageReader {
+export class SupabasePublicPageReader implements PublicPageReader, PublicProfileDirectory {
   constructor(private readonly client: SupabaseClient<Database>) {}
 
   async getByHandle(handle: Handle): Promise<PublicPage | null> {
@@ -62,5 +66,17 @@ export class SupabasePublicPageReader implements PublicPageReader {
       sections: row.sections,
       unsectionedLinks: row.unsectioned_links,
     };
+  }
+
+  async listHandles(): Promise<string[]> {
+    // De `profiles` y no de la vista: no hace falta armar los links de cada uno.
+    // Como visitante, la RLS ya deja afuera los perfiles dados de baja.
+    const { data, error } = await this.client
+      .from("profiles")
+      .select("handle")
+      .eq("disabled", false)
+      .order("handle");
+    if (error) throw new Error(`public-page: error de la base (${error.code}): ${error.message}`);
+    return data.map((row) => row.handle);
   }
 }

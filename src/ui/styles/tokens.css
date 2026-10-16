@@ -23,8 +23,8 @@
   --color-selection-bg: #f2f2ee;
   --color-selection-fg: #121315;
 
-  /* La fuente propia (subset latino, sin Google) llega en la tarea 16. */
-  --font-display: "Bricolage Grotesque", system-ui, sans-serif;
+  /* `--font-brand` lo define <Font> (astro.config.mjs): archivo propio y respaldo ajustado. */
+  --font-display: var(--font-brand, system-ui, sans-serif);
   --font-body: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   --font-data: ui-monospace, "Cascadia Mono", "SF Mono", Menlo, monospace;
 

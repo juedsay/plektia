@@ -1,7 +1,7 @@
 // @ts-check
 import cloudflare from "@astrojs/cloudflare";
 import react from "@astrojs/react";
-import { defineConfig } from "astro/config";
+import { defineConfig, fontProviders } from "astro/config";
 
 export default defineConfig({
   // Todo se renderiza en el Worker salvo las páginas que declaren `prerender`.
@@ -33,5 +33,27 @@ export default defineConfig({
       ],
     },
   },
+  // Fuente de la marca servida desde el propio sitio (cero pedidos a Google):
+  // solo el subset latino con eje óptico. Astro genera la precarga y un respaldo
+  // con métricas ajustadas para que el cambio de fuente no mueva el layout.
+  fonts: [
+    {
+      provider: fontProviders.local(),
+      name: "Bricolage Grotesque",
+      cssVariable: "--font-brand",
+      fallbacks: ["system-ui", "sans-serif"],
+      options: {
+        variants: [
+          {
+            weight: "200 800",
+            style: "normal",
+            src: [
+              "./node_modules/@fontsource-variable/bricolage-grotesque/files/bricolage-grotesque-latin-opsz-normal.woff2",
+            ],
+          },
+        ],
+      },
+    },
+  ],
   integrations: [react()],
 });

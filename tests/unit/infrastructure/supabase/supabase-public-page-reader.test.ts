@@ -12,6 +12,7 @@ function readerAnswering(response: {
   const builder: Record<string, unknown> = {};
   for (const method of ["select", "eq"]) builder[method] = () => builder;
   builder["maybeSingle"] = () => Promise.resolve(response);
+  builder["order"] = () => Promise.resolve(response);
   const client = { from: () => builder } as unknown as SupabaseClient<Database>;
   return new SupabasePublicPageReader(client);
 }
@@ -69,5 +70,15 @@ describe("SupabasePublicPageReader", () => {
     await expect(
       readerAnswering({ data: broken, error: null }).getByHandle(handle),
     ).rejects.toThrow();
+  });
+
+  it("lista los handles de los perfiles activos", async () => {
+    const reader = readerAnswering({ data: [{ handle: "a" }, { handle: "b" }], error: null });
+    expect(await reader.listHandles()).toEqual(["a", "b"]);
+  });
+
+  it("un error al listar handles se lanza", async () => {
+    const reader = readerAnswering({ data: null, error: { code: "XX000", message: "caída" } });
+    await expect(reader.listHandles()).rejects.toThrow(/XX000/);
   });
 });

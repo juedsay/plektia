@@ -1,6 +1,9 @@
 import { createClient } from "@supabase/supabase-js";
 
-import type { PublicPageReader } from "@/application/ports/public-page-reader";
+import type {
+  PublicPageReader,
+  PublicProfileDirectory,
+} from "@/application/ports/public-page-reader";
 import type { Database } from "@/infrastructure/supabase/database.types";
 import type { SupabaseConfig } from "@/infrastructure/supabase/server-client";
 import { SupabasePublicPageReader } from "@/infrastructure/supabase/supabase-public-page-reader";
@@ -11,7 +14,9 @@ import { SupabasePublicPageReader } from "@/infrastructure/supabase/supabase-pub
  * sesión, sin configuración no hay un "modo apagado" razonable: falla claro en
  * vez de mostrar un 404 a todo el mundo.
  */
-export function createPublicPageReader(config: Partial<SupabaseConfig>): PublicPageReader {
+export function createPublicPageReader(
+  config: Partial<SupabaseConfig>,
+): PublicPageReader & PublicProfileDirectory {
   if (!config.url || !config.publishableKey) {
     throw new Error("public-page: falta SUPABASE_URL o SUPABASE_PUBLISHABLE_KEY");
   }
