@@ -27,6 +27,8 @@
   "vars": {
     "SUPABASE_URL": "https://xggajfivycgttmgbvgys.supabase.co",
     "SUPABASE_PUBLISHABLE_KEY": "",
+    // Perfil que muestra la raíz (`/`); su URL canónica sigue siendo `/{handle}`.
+    "DEFAULT_HANDLE": "juedsay",
   },
   // Límite de las acciones de login (SPEC-identity): 10 por minuto por IP y ruta.
   "ratelimits": [

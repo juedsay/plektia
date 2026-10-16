@@ -28,6 +28,7 @@ const link = {
 const row = {
   handle: "juedsay",
   display_name: "Julián",
+  show_handle: false,
   bio: "Streams y código",
   avatar_path: null,
   theme: "tecnico",
@@ -42,6 +43,7 @@ describe("SupabasePublicPageReader", () => {
     expect(await readerAnswering({ data: row, error: null }).getByHandle(handle)).toEqual({
       handle: "juedsay",
       displayName: "Julián",
+      showHandle: false,
       bio: "Streams y código",
       avatarPath: null,
       theme: "tecnico",

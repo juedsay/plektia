@@ -1,0 +1,35 @@
+---
+import type { PublicPage } from "@/application/ports/public-page-reader";
+import Bank from "@/ui/components/Bank.astro";
+import ProfileHeader from "@/ui/components/ProfileHeader.astro";
+import PublicLayout from "@/ui/layouts/PublicLayout.astro";
+
+interface Props {
+  page: PublicPage;
+}
+const { page } = Astro.props;
+// La raíz (`/`) también muestra un perfil, pero su URL canónica es siempre `/{handle}`.
+const canonical = new URL(`/${page.handle}`, Astro.url);
+const description = page.bio ?? `Todos los links de ${page.displayName} en un solo lugar.`;
+---
+
+<PublicLayout
+  title={`${page.displayName} · Plektia`}
+  description={description}
+  canonical={canonical}
+  theme={page.theme}
+>
+  <ProfileHeader page={page} />
+  <div class="patchbay" data-patchbay>
+    <svg class="thread" aria-hidden="true"></svg>
+    {page.sections.map((section) => (
+      <Bank
+        id={section.id}
+        title={section.title}
+        showTitle={section.showTitle}
+        links={section.links}
+      />
+    ))}
+    <Bank id="sin-seccion" links={page.unsectionedLinks} />
+  </div>
+</PublicLayout>

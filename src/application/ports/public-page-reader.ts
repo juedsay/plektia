@@ -23,6 +23,8 @@ export interface PublicSection {
 export interface PublicPage {
   readonly handle: string;
   readonly displayName: string;
+  /** Si el encabezado muestra el `@handle` (el dueño puede ocultarlo). */
+  readonly showHandle: boolean;
   readonly bio: string | null;
   readonly avatarPath: string | null;
   readonly theme: "tecnico";

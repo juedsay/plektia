@@ -1,0 +1,41 @@
+---
+import "@/ui/styles/tokens.css";
+import "@/ui/styles/page.css";
+
+import Footer from "@/ui/components/Footer.astro";
+import Topbar from "@/ui/components/Topbar.astro";
+
+interface Props {
+  title: string;
+  description: string;
+  /** URL canónica absoluta; se omite en páginas que no deben indexarse (404). */
+  canonical?: URL;
+  theme?: "tecnico";
+}
+const { title, description, canonical, theme = "tecnico" } = Astro.props;
+---
+
+<!doctype html>
+<html lang="es-AR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#121315" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    {canonical ? (
+      <link rel="canonical" href={canonical} />
+    ) : (
+      <meta name="robots" content="noindex" />
+    )}
+  </head>
+  <body data-theme={theme}>
+    <div class="page">
+      <Topbar />
+      <main>
+        <slot />
+      </main>
+      <Footer />
+    </div>
+  </body>
+</html>

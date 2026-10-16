@@ -1,0 +1,12 @@
+---
+import { getPublicPage } from "@/application/public/get-public-page";
+import { publicPages } from "@/composition/runtime";
+import ProfilePage from "@/ui/components/ProfilePage.astro";
+
+// Las rutas propias (`/login`, `/admin`…) ganan sobre esta por ser estáticas, y
+// sus nombres están reservados: ningún handle puede tapar una.
+const result = await getPublicPage({ pages: publicPages() })(Astro.params.handle);
+if (!result.ok) return Astro.rewrite("/404");
+---
+
+<ProfilePage page={result.value} />

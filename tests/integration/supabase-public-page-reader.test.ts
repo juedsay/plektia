@@ -19,6 +19,7 @@ describe("página pública contra Supabase local (seed)", () => {
     expect(result.ok).toBe(true);
     if (!result.ok) return;
     expect(result.value.displayName).toBeTruthy();
+    expect(result.value.showHandle).toBe(true);
     expect(result.value.sections.length).toBeGreaterThan(0);
     for (const section of result.value.sections) {
       for (const link of section.links) expect(link.url).toMatch(/^(https:\/\/|mailto:)/);

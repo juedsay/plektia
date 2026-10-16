@@ -7,6 +7,7 @@ import type { Handle } from "@/domain/handle";
 const page: PublicPage = {
   handle: "juedsay",
   displayName: "Julián",
+  showHandle: true,
   bio: null,
   avatarPath: null,
   theme: "tecnico",

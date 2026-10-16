@@ -21,6 +21,7 @@ const PublicLinkSchema = z.object({
 const RowSchema = z.object({
   handle: z.string(),
   display_name: z.string(),
+  show_handle: z.boolean(),
   bio: z.string().nullable(),
   avatar_path: z.string().nullable(),
   theme: z.literal("tecnico"),
@@ -42,7 +43,9 @@ export class SupabasePublicPageReader implements PublicPageReader {
   async getByHandle(handle: Handle): Promise<PublicPage | null> {
     const { data, error } = await this.client
       .from("public_page_v")
-      .select("handle, display_name, bio, avatar_path, theme, sections, unsectioned_links")
+      .select(
+        "handle, display_name, show_handle, bio, avatar_path, theme, sections, unsectioned_links",
+      )
       .eq("handle", handle)
       .maybeSingle();
     if (error) throw new Error(`public-page: error de la base (${error.code}): ${error.message}`);
@@ -52,6 +55,7 @@ export class SupabasePublicPageReader implements PublicPageReader {
     return {
       handle: row.handle,
       displayName: row.display_name,
+      showHandle: row.show_handle,
       bio: row.bio,
       avatarPath: row.avatar_path,
       theme: row.theme,
