@@ -1,0 +1,50 @@
+import { describe, expect, it } from "vitest";
+
+import type { PublicPage, PublicPageReader } from "@/application/ports/public-page-reader";
+import { getPublicPage } from "@/application/public/get-public-page";
+import type { Handle } from "@/domain/handle";
+
+const page: PublicPage = {
+  handle: "juedsay",
+  displayName: "Julián",
+  bio: null,
+  avatarPath: null,
+  theme: "tecnico",
+  sections: [],
+  unsectionedLinks: [],
+};
+
+/** Lector falso que recuerda con qué handles lo llamaron. */
+class FakeReader implements PublicPageReader {
+  readonly calls: Handle[] = [];
+  constructor(private readonly result: PublicPage | null) {}
+
+  getByHandle(handle: Handle): Promise<PublicPage | null> {
+    this.calls.push(handle);
+    return Promise.resolve(this.result);
+  }
+}
+
+describe("getPublicPage", () => {
+  it("devuelve la página del handle, normalizado", async () => {
+    const pages = new FakeReader(page);
+    expect(await getPublicPage({ pages })("JuedSay")).toEqual({ ok: true, value: page });
+    expect(pages.calls).toEqual(["juedsay"]);
+  });
+
+  it("un perfil que no existe da not_found", async () => {
+    expect(await getPublicPage({ pages: new FakeReader(null) })("nadie")).toEqual({
+      ok: false,
+      error: "not_found",
+    });
+  });
+
+  it.each(["admin", "a", "con espacios", "../etc/passwd", "", null])(
+    "un handle inválido o reservado (%j) no llega a la base",
+    async (handle) => {
+      const pages = new FakeReader(page);
+      expect(await getPublicPage({ pages })(handle)).toEqual({ ok: false, error: "not_found" });
+      expect(pages.calls).toEqual([]);
+    },
+  );
+});

@@ -29,6 +29,11 @@ begin
 end;
 $$;
 
+-- Punto de partida propio, sin depender del seed (la transacción se descarta al final).
+delete from public.links where owner_id in ('11111111-1111-4111-8111-111111111111', '22222222-2222-4222-8222-222222222222');
+delete from public.sections where owner_id in ('11111111-1111-4111-8111-111111111111', '22222222-2222-4222-8222-222222222222');
+update public.profiles set bio = null;
+
 -- Dueño 1111…: secciones A, B, C. Links: a1, a2 en A; n1, n2 sin sección.
 -- Otro usuario 2222…: sección Z y link z1.
 insert into public.sections (id, owner_id, title) values

@@ -157,7 +157,37 @@ export type Database = {
       };
     };
     Views: {
-      [_ in never]: never;
+      public_page_v: {
+        Row: {
+          avatar_path: string | null;
+          bio: string | null;
+          display_name: string | null;
+          handle: string | null;
+          sections: Json | null;
+          theme: Database["public"]["Enums"]["profile_theme"] | null;
+          unsectioned_links: Json | null;
+        };
+        ComputedFields: never;
+        Insert: {
+          avatar_path?: string | null;
+          bio?: string | null;
+          display_name?: string | null;
+          handle?: string | null;
+          sections?: never;
+          theme?: Database["public"]["Enums"]["profile_theme"] | null;
+          unsectioned_links?: never;
+        };
+        Update: {
+          avatar_path?: string | null;
+          bio?: string | null;
+          display_name?: string | null;
+          handle?: string | null;
+          sections?: never;
+          theme?: Database["public"]["Enums"]["profile_theme"] | null;
+          unsectioned_links?: never;
+        };
+        Relationships: [];
+      };
     };
     Functions: {
       move_links: {
