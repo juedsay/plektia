@@ -80,6 +80,7 @@ export type Database = {
           handle: string;
           id: string;
           role: Database["public"]["Enums"]["user_role"];
+          show_handle: boolean;
           theme: Database["public"]["Enums"]["profile_theme"];
           updated_at: string;
         };
@@ -93,6 +94,7 @@ export type Database = {
           handle: string;
           id: string;
           role?: Database["public"]["Enums"]["user_role"];
+          show_handle?: boolean;
           theme?: Database["public"]["Enums"]["profile_theme"];
           updated_at?: string;
         };
@@ -105,6 +107,7 @@ export type Database = {
           handle?: string;
           id?: string;
           role?: Database["public"]["Enums"]["user_role"];
+          show_handle?: boolean;
           theme?: Database["public"]["Enums"]["profile_theme"];
           updated_at?: string;
         };
@@ -164,6 +167,7 @@ export type Database = {
           display_name: string | null;
           handle: string | null;
           sections: Json | null;
+          show_handle: boolean | null;
           theme: Database["public"]["Enums"]["profile_theme"] | null;
           unsectioned_links: Json | null;
         };
@@ -174,6 +178,7 @@ export type Database = {
           display_name?: string | null;
           handle?: string | null;
           sections?: never;
+          show_handle?: boolean | null;
           theme?: Database["public"]["Enums"]["profile_theme"] | null;
           unsectioned_links?: never;
         };
@@ -183,6 +188,7 @@ export type Database = {
           display_name?: string | null;
           handle?: string | null;
           sections?: never;
+          show_handle?: boolean | null;
           theme?: Database["public"]["Enums"]["profile_theme"] | null;
           unsectioned_links?: never;
         };

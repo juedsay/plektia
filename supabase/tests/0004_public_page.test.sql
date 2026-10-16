@@ -2,7 +2,7 @@
 begin;
 create extension if not exists pgtap with schema extensions;
 
-select plan(12);
+select plan(15);
 
 create function pg_temp.login(uid uuid)
 returns void language sql as $$
@@ -18,7 +18,7 @@ $$;
 -- Datos de prueba propios (no dependen del seed): el owner 1111… arma su página.
 delete from public.links where owner_id = '11111111-1111-4111-8111-111111111111';
 delete from public.sections where owner_id = '11111111-1111-4111-8111-111111111111';
-update public.profiles set bio = null;
+update public.profiles set bio = null, show_handle = true;
 insert into public.sections (id, owner_id, title, show_title, visible) values
   ('cccccccc-0000-4000-8000-000000000001', '11111111-1111-4111-8111-111111111111', 'Redes', true, true),
   ('cccccccc-0000-4000-8000-000000000002', '11111111-1111-4111-8111-111111111111', 'Oculta', true, false),
@@ -64,6 +64,8 @@ select is(
   '{"title": "Twitch", "url": "https://twitch.tv/juedsay", "description": null, "provider": "twitch", "providerHandle": "juedsay"}'::jsonb,
   'cada link expone solo lo que muestra la página (sin dueño ni versión)');
 select hasnt_column('public', 'public_page_v', 'owner_id', 'la vista no expone el dueño');
+select is((select show_handle from public.public_page_v where handle = 'juedsay'), true,
+  'el @handle se muestra por defecto');
 reset role;
 
 -- El dueño con sesión ve su página igual que un visitante.
@@ -72,7 +74,17 @@ select results_eq(
   $$ select s ->> 'title' from public.public_page_v, jsonb_array_elements(sections) s where handle = 'juedsay' $$,
   $$ values ('Redes'), ('Proyectos') $$,
   'el dueño con sesión no ve lo oculto en su página pública');
+update public.profiles set show_handle = false where id = auth.uid();
+select is((select show_handle from public.public_page_v where handle = 'juedsay'), false,
+  'el dueño puede ocultar su @handle');
 reset role;
+
+-- Nadie puede ocultar el @handle de otro.
+select pg_temp.login('22222222-2222-4222-8222-222222222222');
+update public.profiles set show_handle = true where id = '11111111-1111-4111-8111-111111111111';
+reset role;
+select is((select show_handle from public.profiles where id = '11111111-1111-4111-8111-111111111111'), false,
+  'un miembro no cambia el show_handle de otro');
 
 -- Un perfil dado de baja deja de tener página.
 update public.profiles set disabled = true where id = '11111111-1111-4111-8111-111111111111';

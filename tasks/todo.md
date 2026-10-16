@@ -147,11 +147,12 @@
 
 ## F4 · Public page → ENTREGA 1
 
-- [ ] **Tarea 14: Página `/{handle}` desde el prototipo** · M · Deps: 13
+- [x] **Tarea 14: Página `/{handle}` desde el prototipo** · M · Deps: 13
   - Portar tokens, estilos y componentes Astro (`ProfileHeader`, `Bank`, `Port`, `LatestVideo`, `Footer`). Rutas `[handle]`, `/` (`DEFAULT_HANDLE`) y 404.
   - Migración `profiles.show_handle` (por defecto `true`) expuesta en `public_page_v`; el encabezado muestra `@handle` según ese valor.
   - **Aceptación:** la comparación visual con el prototipo a 390 y 1440 px, con la semilla del hilo fija, pasa.
   - **Verificar:** `pnpm test:e2e` (capturas de referencia).
+  - **Hecho:** estructura, estilos, rutas, 404 y `show_handle`, con E2E de contenido, orden, `rel="me"`, canónica, 404 y cero pedidos a terceros. La comparación visual con semilla fija pasa a la tarea 15, junto con el hilo que la necesita. El avatar muestra la inicial hasta la tarea 22, y el bloque de "último video" llega con `live-status`.
   - **Archivos:** `src/pages/[handle].astro`, `src/pages/index.astro`, `src/pages/404.astro`, `src/ui/components/*.astro`, `src/ui/styles/*.css`.
 
 - [ ] **Tarea 15: Scripts del hilo, del video y de compartir en TypeScript** · M · Deps: 14

@@ -1,16 +1,12 @@
 ---
-// Página provisoria de la tarea 1: confirma que Astro corre en el Worker.
-// La reemplaza la página pública en la fase F4.
-const title = "Hola Plektia";
+import { getPublicPage } from "@/application/public/get-public-page";
+import { defaultHandle, publicPages } from "@/composition/runtime";
+import ProfilePage from "@/ui/components/ProfilePage.astro";
+
+// La raíz muestra el perfil de `DEFAULT_HANDLE` (SPEC-public-page, "Raíz del
+// dominio"); en la v2 la reemplaza la landing de Plektia.
+const result = await getPublicPage({ pages: publicPages() })(defaultHandle());
+if (!result.ok) return Astro.rewrite("/404");
 ---
 
-<html lang="es-AR">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>{title}</title>
-  </head>
-  <body>
-    <h1>{title}</h1>
-  </body>
-</html>
+<ProfilePage page={result.value} />
