@@ -149,6 +149,7 @@
 
 - [ ] **Tarea 14: Página `/{handle}` desde el prototipo** · M · Deps: 13
   - Portar tokens, estilos y componentes Astro (`ProfileHeader`, `Bank`, `Port`, `LatestVideo`, `Footer`). Rutas `[handle]`, `/` (`DEFAULT_HANDLE`) y 404.
+  - Migración `profiles.show_handle` (por defecto `true`) expuesta en `public_page_v`; el encabezado muestra `@handle` según ese valor.
   - **Aceptación:** la comparación visual con el prototipo a 390 y 1440 px, con la semilla del hilo fija, pasa.
   - **Verificar:** `pnpm test:e2e` (capturas de referencia).
   - **Archivos:** `src/pages/[handle].astro`, `src/pages/index.astro`, `src/pages/404.astro`, `src/ui/components/*.astro`, `src/ui/styles/*.css`.
@@ -163,14 +164,14 @@
   - **Archivos:** `src/ui/scripts/thread.ts`, `src/ui/scripts/disclosure.ts`, `src/ui/scripts/share.ts`, `tests/unit/ui/thread.test.ts`.
 
 - [ ] **Tarea 16: Fuente propia, SEO y páginas de Plektia** · M · Deps: 14
-  - `@fontsource-variable/bricolage-grotesque` (solo subset latino), métricas de respaldo, metadatos, OG, JSON-LD `ProfilePage`, sitemap, robots, y las páginas `/plektia` y `/plektia/privacidad`.
+  - `@fontsource-variable/bricolage-grotesque` (solo subset latino), métricas de respaldo, metadatos, OG, JSON-LD `ProfilePage`, sitemap, robots, y las páginas `/plektia` (página oficial con el diseño de perfil y contenido en `src/content/plektia.ts`, validado con los schemas del dominio) y `/plektia/privacidad`.
   - **Aceptación:**
     - Cero requests a Google al cargar.
     - Validadores de metadatos sin errores.
     - La política de privacidad refleja lo implementado.
     - La app de Google sale de "Prueba": se completa la información de la marca (página principal, política de privacidad y dominios autorizados) y se publica. Hasta entonces solo entran los usuarios de prueba.
   - **Verificar:** E2E de red; Rich Results Test manual.
-  - **Archivos:** `src/ui/styles/fonts.css`, `src/ui/components/Seo.astro`, `src/pages/plektia/index.astro`, `src/pages/plektia/privacidad.astro`, `src/pages/sitemap.xml.ts`.
+  - **Archivos:** `src/ui/styles/fonts.css`, `src/ui/components/Seo.astro`, `src/content/plektia.ts`, `src/pages/plektia/index.astro`, `src/pages/plektia/privacidad.astro`, `src/pages/sitemap.xml.ts`.
 
 - [ ] **Tarea 17: Caché, rendimiento y accesibilidad** · M · Deps: 15, 16
   - `Cache-Control` + `Cache-Tag` y el helper `purgeProfile(handle)`. Lighthouse CI con los presupuestos del spec, axe AAA en E2E, y tests de "sin cookies" y "sin terceros".
@@ -187,7 +188,7 @@
 ## F5 · Admin panel → ENTREGA 2
 
 - [ ] **Tarea 18: Estructura del panel y perfil** · M · Deps: 9, 12
-  - Layout y navegación de `/admin` (diseño con impeccable en modo *operate*), y `/admin/perfil` (nombre, bio, tema) con Actions.
+  - Layout y navegación de `/admin` (diseño con impeccable en modo *operate*), y `/admin/perfil` (nombre, bio, tema y mostrar u ocultar el `@handle`) con Actions.
   - **Aceptación:**
     - Editar el nombre se refleja en la página pública.
     - E2E de CSRF y axe AA.
