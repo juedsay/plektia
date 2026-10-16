@@ -7,22 +7,23 @@ import { profileJsonLd } from "@/ui/view/seo";
 
 interface Props {
   page: PublicPage;
+  brand?: boolean;
 }
-const { page } = Astro.props;
+const { page, brand = false } = Astro.props;
 // La raíz (`/`) también muestra un perfil, pero su URL canónica es siempre `/{handle}`.
 const canonical = new URL(`/${page.handle}`, Astro.url);
 const description = page.bio ?? `Todos los links de ${page.displayName} en un solo lugar.`;
 ---
 
 <PublicLayout
-  title={`${page.displayName} · Plektia`}
+  title={brand ? "Plektia · Página oficial" : `${page.displayName} · Plektia`}
   description={description}
   canonical={canonical}
   theme={page.theme}
   type="profile"
   structuredData={profileJsonLd(page, canonical)}
 >
-  <ProfileHeader page={page} />
+  <ProfileHeader page={page} brand={brand} />
   <div class="patchbay" data-patchbay>
     <svg class="thread" aria-hidden="true"></svg>
     {page.sections.map((section) => (

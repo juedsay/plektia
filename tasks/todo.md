@@ -180,7 +180,17 @@
   - **Parte 1 (hecha):**
     - Fuente propia con la API de fuentes de Astro: solo el subset latino con eje óptico, precarga y respaldo con métricas.
     - Open Graph, Twitter Card, JSON-LD `ProfilePage` (escapado contra inyección), favicon, ícono de iOS e imagen OG (`scripts/brand-images.ts`), sitemap y robots.
-  - **Parte 2:** landing en `/`, `/plektia`, `/plektia/privacidad` y la publicación de la app de Google.
+  - **Parte 2 (hecha):**
+    - Landing simple en `/`, con las salidas en un banco con hilo.
+    - `/plektia`, la página oficial: contenido en `src/content/` validado con `parseLinkInput` (lo que el panel rechazaría rompe el build); bio "Todos tus links, unidos por un hilo.".
+    - Se eliminó `DEFAULT_HANDLE`.
+    - Las páginas se renderizan en el Worker, no prerenderizadas, para que tengan las cabeceras de seguridad.
+  - **Parte 3:** formulario de contacto en `/plektia/contacto`.
+    - Tabla `contact_messages` con RLS: solo inserta el visitante; solo leen los owners.
+    - Caso de uso con validación, campo trampa, límite por IP (binding propio) y Turnstile verificado en el servidor (*sitekey* y *secret* se crean con un wizard).
+    - Aviso por mail cuando haya dominio propio.
+    - El correo de Plektia nunca aparece en el sitio.
+  - **Parte 4:** `/plektia/privacidad` (incluye Turnstile y el formulario para pedir el borrado) y la publicación de la app de Google.
   - **Archivos:** `src/ui/styles/fonts.css`, `src/ui/components/Seo.astro`, `src/content/plektia.ts`, `src/pages/plektia/index.astro`, `src/pages/plektia/privacidad.astro`, `src/pages/sitemap.xml.ts`.
 
 - [ ] **Tarea 16b: Ventana de compartir propia** · S · Deps: 16
