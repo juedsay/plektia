@@ -1,11 +1,23 @@
 ---
 import Isotype from "@/ui/components/Isotype.astro";
-// El botón de compartir llega con su script en la tarea 15: sin script, un
-// botón que no hace nada confunde.
 ---
 
 <header class="topbar">
   <a class="icon-button" href="/plektia" aria-label="Plektia: qué es y cómo tener tu página">
     <Isotype />
   </a>
+  <button class="icon-button" type="button" data-share aria-label="Compartir esta página">
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.8"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      aria-hidden="true"
+    >
+      <path d="M12 15V3M7.5 7.5 12 3l4.5 4.5"></path>
+      <path d="M8 11H6a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-8a1 1 0 0 0-1-1h-2"></path>
+    </svg>
+  </button>
 </header>

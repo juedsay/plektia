@@ -155,7 +155,7 @@
   - **Hecho:** estructura, estilos, rutas, 404 y `show_handle`, con E2E de contenido, orden, `rel="me"`, canónica, 404 y cero pedidos a terceros. La comparación visual con semilla fija pasa a la tarea 15, junto con el hilo que la necesita. El avatar muestra la inicial hasta la tarea 22, y el bloque de "último video" llega con `live-status`.
   - **Archivos:** `src/pages/[handle].astro`, `src/pages/index.astro`, `src/pages/404.astro`, `src/ui/components/*.astro`, `src/ui/styles/*.css`.
 
-- [ ] **Tarea 15: Scripts del hilo, del video y de compartir en TypeScript** · M · Deps: 14
+- [x] **Tarea 15: Scripts del hilo, del video y de compartir en TypeScript** · M · Deps: 14
   - `thread.ts`, `disclosure.ts` y `share.ts` tipados, con la semilla configurable solo en tests.
   - **Aceptación:**
     - Un test con 1.000 semillas confirma que el hilo nunca entra en la columna de texto.
@@ -163,8 +163,13 @@
     - El fallback de compartir copia el link.
   - **Verificar:** `pnpm test` + E2E.
   - **Archivos:** `src/ui/scripts/thread.ts`, `src/ui/scripts/disclosure.ts`, `src/ui/scripts/share.ts`, `tests/unit/ui/thread.test.ts`.
+  - **Hecho:**
+    - **Geometría del hilo:** quedó en `thread-geometry.ts`, que es puro. El test de 1.000 semillas detectó que el nudo del prototipo podía invadir la columna del texto; ahora el inicio se corre para que entre. Las dos mutaciones probadas hacen fallar el test.
+    - **Comparación visual:** las capturas pixel a pixel no se usan, porque cambian entre Windows (local) y Linux (CI), y otra vez cuando llegue la fuente propia (tarea 16). En su lugar hay un E2E en navegador real, a 390 y 1440 px y con semilla fija, que mide que el hilo no pasa el borde del texto y que la misma semilla da el mismo hilo.
+    - **Desplegable:** probado con unit, y al ser un `<button>` nativo funciona con teclado. Su E2E llega con el bloque "último video" de `live-status`, que es lo que lo usa.
 
 - [ ] **Tarea 16: Fuente propia, SEO y páginas de Plektia** · M · Deps: 14
+  - **Landing simple en `/`** (una pantalla: qué es Plektia, ejemplo de página, "por ahora, por invitación", links a `/plektia` y a entrar). Reemplaza el perfil de `DEFAULT_HANDLE` en la raíz, y la variable se elimina.
   - `@fontsource-variable/bricolage-grotesque` (solo subset latino), métricas de respaldo, metadatos, OG, JSON-LD `ProfilePage`, sitemap, robots, y las páginas `/plektia` (página oficial con el diseño de perfil y contenido en `src/content/plektia.ts`, validado con los schemas del dominio) y `/plektia/privacidad`.
   - **Aceptación:**
     - Cero requests a Google al cargar.

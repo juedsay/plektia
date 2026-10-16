@@ -9,7 +9,7 @@
 - **Versiones:** siempre la última estable (no `next`/`beta`/`canary`) al momento de instalar; las majors se suben con un PR propio.
 - **Calidad:** principios SOLID y arquitectura de puertos y adaptadores; la seguridad se revisa en cada spec, test y review.
 - **Login:** GitHub y Google OAuth. **Registro cerrado**: solo entra quien el admin da de alta.
-- **URLs:** `/{handle}` es la ruta canónica; la raíz del dominio muestra el perfil por defecto (`DEFAULT_HANDLE`).
+- **URLs:** `/{handle}` es la ruta canónica; la raíz del dominio es la landing de Plektia, y `/plektia`, la página oficial de la marca.
 - **Repo:** GitHub **público** ([juedsay/plektia](https://github.com/juedsay/plektia)); `main` solo acepta PRs con la CI en verde.
 
 ## Stack
@@ -61,7 +61,7 @@ platform → identity → links → public-page ┼→ click-analytics
 
 | Versión | Idea | Notas |
 |---|---|---|
-| v2 | **Homepage de Plektia en la raíz** (`plektia.app/`), con su propia landing y registro, como hace Linktree | La raíz deja de mostrar `DEFAULT_HANDLE`; `/plektia`, que en la v1 ya es la página oficial con contenido en el repo, pasa a la base para editarse desde el panel |
+| v2 | **Landing completa y registro abierto** en la raíz, como hace Linktree | La v1 ya tiene una landing simple de una pantalla. La v2 la amplía (beneficios, cómo funciona, ejemplos y preguntas frecuentes) y suma el registro. `/plektia`, que en la v1 tiene el contenido en el repo, pasa a la base para editarse desde el panel |
 | v2 | Kick en vivo, filtros por etiqueta, los otros 3 temas | Ya previstos en los specs |
 | v3 | **Sección Shop** separada de Links (pestañas Links / Shop) | Requiere un tipo de bloque nuevo; no es un link común |
 | v3 | **Avatar animado** (GIF o WebP animado) | Con pausa automática por `prefers-reduced-motion` y un control para detenerlo (AAA) |

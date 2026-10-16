@@ -37,5 +37,9 @@ const { title, description, canonical, theme = "tecnico" } = Astro.props;
       </main>
       <Footer />
     </div>
+    <p class="toast" role="status" aria-live="polite" data-toast></p>
+    <script>
+      import "@/ui/scripts/page";
+    </script>
   </body>
 </html>
