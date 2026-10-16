@@ -40,6 +40,14 @@ jobs:
       - run: pnpm lint
       - run: pnpm test:coverage
       - run: pnpm build
+      # SPEC-identity: la clave de servicio de Supabase nunca llega al Worker.
+      # Busca valores reales (no la palabra, que la librería menciona en su código).
+      - name: Sin claves de servicio en el build
+        run: |
+          if grep -rEl 'sb_secret_[A-Za-z0-9_-]{20,}|c2VydmljZV9yb2xl|"role":\s*"service_role"' dist/; then
+            echo "::error::El build contiene una clave de servicio de Supabase."
+            exit 1
+          fi
 
   database:
     name: Base de datos (pgTAP y asesores)

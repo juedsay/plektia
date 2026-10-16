@@ -125,12 +125,12 @@ Implementado en [`supabase/migrations/20261014180000_identity.sql`](supabase/mig
 
 ## Criterios de éxito
 
-- [ ] Con GitHub y con Google, un email de la allowlist entra al panel y obtiene su perfil con el `handle` asignado.
-- [ ] Un email fuera de la allowlist no crea ninguna fila en `auth.users` (pgTAP + prueba manual).
-- [ ] Todas las filas de la tabla de amenazas tienen su test y está en verde en CI.
-- [ ] `/admin/*` es inaccesible sin sesión (E2E).
-- [ ] El login con un proveedor y luego con el otro (mismo email) termina en la misma cuenta (prueba manual documentada).
-- [ ] La `service_role` key no aparece en el bundle del Worker (chequeo en CI con `grep` sobre `dist/`).
+- [x] Con GitHub y con Google, un email de la allowlist entra al panel y obtiene su perfil con el `handle` asignado. (Probado en producción el 2026-10-15.)
+- [ ] Un email fuera de la allowlist no crea ninguna fila en `auth.users` (pgTAP + prueba manual). pgTAP en verde; **falta la prueba manual** con una cuenta de GitHub no invitada.
+- [x] Todas las filas de la tabla de amenazas tienen su test y está en verde en CI.
+- [x] `/admin/*` es inaccesible sin sesión (E2E).
+- [x] El login con un proveedor y luego con el otro (mismo email) termina en la misma cuenta. Verificado en producción el 2026-10-15: 1 usuario con 2 identidades (github y google) y un solo perfil.
+- [x] La `service_role` key no aparece en el bundle del Worker (chequeo en CI con `grep` sobre `dist/`).
 
 ## Preguntas abiertas
 
