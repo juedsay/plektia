@@ -43,6 +43,8 @@ test.describe("página pública", () => {
       "/plektia",
     );
     await expect(start.getByRole("link", { name: /Entrar/ })).toHaveAttribute("href", "/login");
+    // Sin el repositorio: no se comparte desde el sitio.
+    await expect(page.locator('a[href*="github.com"]')).toHaveCount(0);
     await expect(page.locator('link[rel="canonical"]')).toHaveAttribute("href", /\/$/);
   });
 
@@ -52,6 +54,8 @@ test.describe("página pública", () => {
     // Pasa por el Worker: tiene las cabeceras de seguridad aunque no consulte la base.
     expect(response?.headers()["content-security-policy"]).toContain("frame-ancestors 'none'");
     await expect(page).toHaveTitle("Plektia · Página oficial");
+    await expect(page.getByRole("link", { name: "Plektia: inicio" })).toHaveAttribute("href", "/");
+    await expect(page.locator('a[href*="github.com"]')).toHaveCount(0);
     await expect(page.getByRole("heading", { level: 1 })).toHaveText("Plektia");
     await expect(page.getByText("@plektia", { exact: true })).toBeVisible();
     await expect(page.getByText("Todos tus links, unidos por un hilo.")).toBeVisible();

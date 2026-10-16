@@ -17,7 +17,7 @@ const SECTIONS: readonly SectionEntry[] = [
     links: [
       {
         title: "Ya está la página pública",
-        url: "https://github.com/juedsay/plektia/commits/main",
+        url: "/",
         description: "El diseño de la patchera, con el hilo",
       },
     ],
@@ -26,7 +26,6 @@ const SECTIONS: readonly SectionEntry[] = [
     title: "Sobre Plektia",
     links: [
       { title: "Qué es Plektia", url: "/", description: "Todos tus links, unidos por un hilo" },
-      { title: "Código abierto", url: "https://github.com/juedsay/plektia" },
       { title: "Entrar", url: "/login", description: "Si ya tenés tu invitación" },
     ],
   },

@@ -13,14 +13,10 @@ describe("página oficial de Plektia", () => {
     }
   });
 
-  it("las rutas propias quedan como rutas y las externas detectan su proveedor", () => {
-    // Un repositorio es de GitHub pero no es un perfil: sin handle, sin rel="me".
+  it("las rutas propias quedan como rutas y no se comparte el repositorio", () => {
     const links = buildPlektiaPage().sections.flatMap((s) => s.links);
     expect(links.find((l) => l.title === "Entrar")?.url).toBe("/login");
-    expect(links.find((l) => l.title === "Código abierto")).toMatchObject({
-      provider: "github",
-      providerHandle: null,
-    });
+    expect(links.some((l) => l.url.includes("github.com"))).toBe(false);
   });
 
   it.each([
@@ -34,12 +30,8 @@ describe("página oficial de Plektia", () => {
 });
 
 describe("landing", () => {
-  it("sus salidas son links válidos hacia /plektia, el login y el código", async () => {
+  it("sus salidas son links válidos hacia /plektia y el login", async () => {
     const { landingLinks } = await import("@/content/landing");
-    expect(landingLinks().map((l) => l.url)).toEqual([
-      "/plektia",
-      "/login",
-      "https://github.com/juedsay/plektia",
-    ]);
+    expect(landingLinks().map((l) => l.url)).toEqual(["/plektia", "/login"]);
   });
 });

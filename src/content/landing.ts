@@ -6,7 +6,6 @@ import { type Entry, toLink } from "@/content/links";
 const START: readonly Entry[] = [
   { title: "Conocé Plektia", url: "/plektia", description: "Novedades y cómo funciona" },
   { title: "Entrar", url: "/login", description: "Si ya tenés tu invitación" },
-  { title: "Código abierto", url: "https://github.com/juedsay/plektia" },
 ];
 
 export function landingLinks(entries: readonly Entry[] = START): PublicLink[] {
