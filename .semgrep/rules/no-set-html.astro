@@ -9,3 +9,7 @@ const bio = Astro.props.bio;
 <p>{bio}</p>
 <!-- ok: plektia-no-set-html -->
 <p set:text={bio} />
+<!-- ok: plektia-no-set-html -->
+<script type="application/ld+json" is:inline set:html={jsonLd(data)} />
+<!-- ruleid: plektia-no-set-html -->
+<script type="application/ld+json" is:inline set:html={JSON.stringify(data)} />

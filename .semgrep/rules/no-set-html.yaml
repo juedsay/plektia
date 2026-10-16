@@ -1,10 +1,12 @@
 rules:
   - id: plektia-no-set-html
     message: >-
-      `set:html` inyecta HTML sin escapar (XSS). Usá `{valor}` o `set:text`.
+      `set:html` inyecta HTML sin escapar (XSS). Usá `{valor}` o `set:text` (para JSON-LD, `set:html={jsonLd(...)}`).
       Ver SPEC-public-page, amenaza "XSS con título, bio o descripción".
     severity: ERROR
     languages: [generic]
     paths:
       include: ["*.astro"]
-    pattern-regex: 'set:html\s*='
+    # Única excepción: datos estructurados pasados por `jsonLd()` (src/ui/view/seo.ts),
+    # que escapa `<`, `>` y `&` y tiene tests contra el cierre de `</script>`.
+    pattern-regex: 'set:html\s*=\s*\{(?!jsonLd\()'
