@@ -16,7 +16,7 @@ Servir la página pública de cada usuario (`/{handle}`) tal como la define el p
 2. **En vivo.** Si el dueño está transmitiendo, el link correspondiente muestra "En vivo", el tiempo transcurrido y el título del stream, con el jack en lima latiendo. El dato llega de `live-status`; esta página solo lo muestra.
 3. **Último video.** El link de YouTube muestra una sub-fila plegada con el título y la antigüedad del último video. Al desplegarla aparece la miniatura, que **recién en ese momento** se pide a YouTube.
 4. **Compartir.** El botón de arriba a la derecha abre la hoja nativa de compartir. Si no existe, copia el link y lo avisa.
-5. **Sobre Plektia.** El isotipo de arriba a la izquierda y el pie llevan a `/plektia`, una página corta que explica qué es Plektia y que por ahora funciona por invitación.
+5. **Página oficial de Plektia.** El isotipo de arriba a la izquierda y el pie llevan a `/plektia`, la página de la marca (como `linktr.ee/linktr.ee`): el mismo diseño que la de un usuario, con el isotipo como avatar, una bio que explica qué es Plektia y que por ahora funciona por invitación, y secciones como "Novedades", "Sobre Plektia" y "Legal". Su contenido vive en el repo (`src/content/plektia.ts`) y se valida con los mismos schemas del dominio que los links de usuarios.
 6. **Privacidad.** El pie lleva a `/plektia/privacidad`, que explica en lenguaje simple qué se mide (clics por link, sin cookies ni datos personales) y qué terceros intervienen (YouTube, solo si el visitante despliega la miniatura).
 7. **Raíz del dominio.** `/` muestra la página de `DEFAULT_HANDLE`, con la URL canónica `/{handle}`.
 8. **Handle inexistente.** Devuelve una página 404 con el mismo diseño y un link a `/plektia`.
@@ -25,11 +25,11 @@ Servir la página pública de cada usuario (`/{handle}`) tal como la define el p
 
 Sigue [DESIGN.md](DESIGN.md) y el prototipo; acá solo se fija lo que el prototipo no resuelve.
 
-- **Encabezado:** isotipo (→ `/plektia`), compartir, avatar centrado, nombre (`display_name`), `@handle` si difiere del nombre, y la bio.
+- **Encabezado:** isotipo (→ `/plektia`), compartir, avatar centrado, nombre (`display_name`), `@handle` en chico debajo (salvo que el usuario lo oculte con `profiles.show_handle`) y la bio. Ocultarlo es solo de presentación: el handle sigue en la URL.
 - **Pie:** isotipo + "Hecho con Plektia" (→ `/plektia`) · "Privacidad". No hay "Reportar", "Legal" ni preferencias de cookies en la v1: la página no usa cookies, y el resto llega cuando abra el registro.
 - **Tema:** el atributo `data-theme` sale de `profiles.theme`. En la v1 solo existe `tecnico`.
 - **Links:** se abren en la misma pestaña, porque en los navegadores embebidos de las apps sociales una pestaña nueva confunde. Los links a perfiles propios llevan `rel="me"`, que sirve para verificación cruzada (por ejemplo en Mastodon).
-- **Datos que agrega este módulo** (migración propia): `profiles.theme` (enum, por defecto `tecnico`) y `profiles.avatar_path` (ruta en Supabase Storage; la subida pertenece a `admin-panel`). `plektia` se suma a los handles reservados de `identity`.
+- **Datos que agrega este módulo** (migración propia): `profiles.theme` (enum, por defecto `tecnico`) `profiles.avatar_path` (ruta en Supabase Storage; la subida pertenece a `admin-panel`) y `profiles.show_handle` (booleano, por defecto `true`; se edita en `/admin/perfil`). La vista `public_page_v` expone `show_handle`. `plektia` se suma a los handles reservados de `identity`.
 
 ## Render y caché
 

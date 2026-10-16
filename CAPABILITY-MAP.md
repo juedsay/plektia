@@ -61,7 +61,7 @@ platform → identity → links → public-page ┼→ click-analytics
 
 | Versión | Idea | Notas |
 |---|---|---|
-| v2 | **Homepage de Plektia en la raíz** (`plektia.app/`), con su propia landing y registro, como hace Linktree | La raíz deja de mostrar `DEFAULT_HANDLE`; `/plektia` pasa a ser el perfil propio de la marca (como `linktr.ee/linktr.ee`) |
+| v2 | **Homepage de Plektia en la raíz** (`plektia.app/`), con su propia landing y registro, como hace Linktree | La raíz deja de mostrar `DEFAULT_HANDLE`; `/plektia`, que en la v1 ya es la página oficial con contenido en el repo, pasa a la base para editarse desde el panel |
 | v2 | Kick en vivo, filtros por etiqueta, los otros 3 temas | Ya previstos en los specs |
 | v3 | **Sección Shop** separada de Links (pestañas Links / Shop) | Requiere un tipo de bloque nuevo; no es un link común |
 | v3 | **Avatar animado** (GIF o WebP animado) | Con pausa automática por `prefers-reduced-motion` y un control para detenerlo (AAA) |
