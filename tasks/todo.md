@@ -110,11 +110,11 @@
 
 ## F3 · Links
 
-- [ ] **Tarea 10: Dominio de links** · M · Deps: 2
+- [x] **Tarea 10: Dominio de links** · M · Deps: 2
   - `parseSafeUrl` (30 o más casos, incluidos los maliciosos), `detectProvider` (host exacto), schemas Zod de link y sección, y el mapa de errores en español.
   - **Aceptación:** cobertura ≥ 90 %; los casos de la tabla de amenazas están cubiertos.
   - **Verificar:** `pnpm test:coverage`.
-  - **Archivos:** `src/domain/safe-url.ts`, `src/domain/provider.ts`, `src/domain/link.ts`, `src/domain/section.ts`, `src/domain/errors.ts`.
+  - **Archivos:** `src/domain/safe-url.ts`, `src/domain/provider.ts`, `src/domain/link.ts`, `src/domain/section.ts`, `src/domain/errors.ts`, `src/domain/text.ts`.
 
 - [x] **Tarea 11: Esquema de links con RLS y operaciones atómicas** · M · Deps: 7
   - Tablas `sections` y `links`, índices, triggers (dueño de la sección, límites, recolocar al borrar), RPC `reorder_sections` y `move_links`, y políticas RLS (con la condición `client_id is null` en escrituras, preparada para el MCP).

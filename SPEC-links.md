@@ -27,7 +27,7 @@ Viven en `src/domain/link.ts` y `src/domain/section.ts` como schemas Zod. La bas
 | Campo | Regla |
 |---|---|
 | `url` | Esquema `https:` o `mailto:` y nada más. Máximo 2048 caracteres. Sin usuario ni contraseña embebidos (`https://user:pass@…`). Host obligatorio en https. Se guarda normalizada con `new URL()` |
-| `title` | 1 a 80 caracteres después de `trim`; sin caracteres de control |
+| `title` | 1 a 80 caracteres después de `trim`; sin caracteres de control, invisibles (U+200B…) ni de dirección del texto (U+202E…), que permiten disfrazar lo que se lee |
 | `description` | Opcional, hasta 120 caracteres |
 | `tags` | Hasta 5; cada una de 1 a 24 caracteres `[a-z0-9-]`, en minúsculas y sin repetir |
 | Título de sección | 1 a 40 caracteres |
@@ -42,7 +42,7 @@ La función pura `detectProvider(url)` devuelve `{ provider, handle }`:
 
 | Proveedor | URLs reconocidas | `handle` |
 |---|---|---|
-| `youtube` | `youtube.com/@x`, `youtube.com/channel/UC…`, `youtube.com/c/x` | `@x` o `UC…` |
+| `youtube` | `youtube.com/@x`, `youtube.com/channel/UC…`, `youtube.com/c/x` | `@x` o `UC…`; las URLs `/c/x` (formato viejo) se reconocen como YouTube pero sin `handle`: no hay forma confiable de vigilarlas |
 | `twitch` | `twitch.tv/x` | `x` |
 | `kick` | `kick.com/x` | `x` (vigilado desde v2) |
 | `whatsapp`, `github`, `instagram` | dominios oficiales | — |
