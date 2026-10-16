@@ -29,4 +29,9 @@ describe("página pública contra Supabase local (seed)", () => {
   it("un handle que no existe da not_found", async () => {
     expect(await getPage("nadie-existe")).toEqual({ ok: false, error: "not_found" });
   });
+
+  it("lista los handles activos para el sitemap", async () => {
+    const handles = await new SupabasePublicPageReader(anon).listHandles();
+    expect(handles).toContain("juedsay");
+  });
 });

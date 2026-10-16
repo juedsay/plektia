@@ -177,9 +177,26 @@
     - La política de privacidad refleja lo implementado.
     - La app de Google sale de "Prueba": se completa la información de la marca (página principal, política de privacidad y dominios autorizados) y se publica. Hasta entonces solo entran los usuarios de prueba.
   - **Verificar:** E2E de red; Rich Results Test manual.
+  - **Parte 1 (hecha):**
+    - Fuente propia con la API de fuentes de Astro: solo el subset latino con eje óptico, precarga y respaldo con métricas.
+    - Open Graph, Twitter Card, JSON-LD `ProfilePage` (escapado contra inyección), favicon, ícono de iOS e imagen OG (`scripts/brand-images.ts`), sitemap y robots.
+  - **Parte 2:** landing en `/`, `/plektia`, `/plektia/privacidad` y la publicación de la app de Google.
   - **Archivos:** `src/ui/styles/fonts.css`, `src/ui/components/Seo.astro`, `src/content/plektia.ts`, `src/pages/plektia/index.astro`, `src/pages/plektia/privacidad.astro`, `src/pages/sitemap.xml.ts`.
 
-- [ ] **Tarea 17: Caché, rendimiento y accesibilidad** · M · Deps: 15, 16
+- [ ] **Tarea 16b: Ventana de compartir propia** · S · Deps: 16
+  - `<dialog>` nativo con el diseño de Plektia, como la de Linktree:
+    - tarjeta de vista previa (avatar, nombre y `/handle`);
+    - Copiar link, WhatsApp, X, Facebook, LinkedIn, Telegram y Email, como links de intención que se abren al tocarlos (cero pedidos a terceros al cargar);
+    - "Más opciones", que abre la hoja del sistema si existe;
+    - aviso "Conocé Plektia" al pie.
+  - **Aceptación:**
+    - Se cierra con Esc y al tocar afuera, y el foco vuelve al botón.
+    - axe AAA sin errores.
+    - Cada destino arma su URL con el link codificado.
+  - **Verificar:** unit de las URLs de cada destino + E2E de teclado y foco.
+  - **Archivos:** `src/ui/components/ShareDialog.astro`, `src/ui/view/share-targets.ts`, `src/ui/scripts/share.ts`.
+
+- [ ] **Tarea 17: Caché, rendimiento y accesibilidad** · M · Deps: 15, 16, 16b
   - `Cache-Control` + `Cache-Tag` y el helper `purgeProfile(handle)`. Lighthouse CI con los presupuestos del spec, axe AAA en E2E, y tests de "sin cookies" y "sin terceros".
   - **Aceptación:** todos los presupuestos y AAA en verde en CI.
   - **Verificar:** CI.

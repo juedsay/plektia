@@ -61,4 +61,55 @@ test.describe("página pública", () => {
     await page.waitForLoadState("networkidle");
     expect([...origins]).toEqual([new URL(baseURL ?? "").origin]);
   });
+
+  test("la fuente de la marca se sirve desde el propio sitio y se aplica, sin errores de CSP", async ({
+    page,
+    baseURL,
+  }) => {
+    const errors: string[] = [];
+    page.on("console", (message) => {
+      if (message.type() === "error") errors.push(message.text());
+    });
+    const font = page.waitForResponse((response) => response.url().endsWith(".woff2"));
+    await page.goto("/juedsay");
+    const response = await font;
+    expect(new URL(response.url()).origin).toBe(new URL(baseURL ?? "").origin);
+    expect(response.ok()).toBe(true);
+
+    await page.evaluate(() => document.fonts.ready);
+    const family = await page
+      .getByRole("heading", { level: 1 })
+      .evaluate((h1) => getComputedStyle(h1).fontFamily);
+    expect(family).toContain("Bricolage Grotesque");
+    expect(await page.evaluate(() => document.fonts.check('500 16px "Bricolage Grotesque"'))).toBe(
+      true,
+    );
+    expect(errors).toEqual([]);
+  });
+
+  test("un perfil trae Open Graph, íconos y datos estructurados", async ({ page }) => {
+    await page.goto("/juedsay");
+    await expect(page.locator('meta[property="og:type"]')).toHaveAttribute("content", "profile");
+    await expect(page.locator('meta[property="og:image"]')).toHaveAttribute(
+      "content",
+      /\/og\.png$/,
+    );
+    await expect(page.locator('link[rel="icon"]')).toHaveAttribute("href", "/favicon.svg");
+    const data = JSON.parse(
+      (await page.locator('script[type="application/ld+json"]').textContent()) ?? "{}",
+    ) as { "@type"?: string; mainEntity?: { alternateName?: string } };
+    expect(data["@type"]).toBe("ProfilePage");
+    expect(data.mainEntity?.alternateName).toBe("@juedsay");
+  });
+
+  test("sitemap y robots", async ({ request }) => {
+    const sitemap = await request.get("/sitemap.xml");
+    expect(sitemap.headers()["content-type"]).toContain("application/xml");
+    expect(await sitemap.text()).toMatch(/<loc>[^<]+\/juedsay<\/loc>/);
+    const robots = await request.get("/robots.txt");
+    expect(await robots.text()).toContain("Disallow: /admin");
+    for (const path of ["/favicon.svg", "/og.png", "/apple-touch-icon.png"]) {
+      expect((await request.get(path)).ok(), path).toBe(true);
+    }
+  });
 });

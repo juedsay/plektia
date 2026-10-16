@@ -1,8 +1,11 @@
 ---
+import { Font } from "astro:assets";
+
 import "@/ui/styles/tokens.css";
 import "@/ui/styles/page.css";
 
 import Footer from "@/ui/components/Footer.astro";
+import Seo from "@/ui/components/Seo.astro";
 import Topbar from "@/ui/components/Topbar.astro";
 
 interface Props {
@@ -11,8 +14,10 @@ interface Props {
   /** URL canónica absoluta; se omite en páginas que no deben indexarse (404). */
   canonical?: URL;
   theme?: "tecnico";
+  type?: "website" | "profile";
+  structuredData?: Record<string, unknown>;
 }
-const { title, description, canonical, theme = "tecnico" } = Astro.props;
+const { title, description, canonical, theme = "tecnico", type, structuredData } = Astro.props;
 ---
 
 <!doctype html>
@@ -21,13 +26,14 @@ const { title, description, canonical, theme = "tecnico" } = Astro.props;
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#121315" />
-    <title>{title}</title>
-    <meta name="description" content={description} />
-    {canonical ? (
-      <link rel="canonical" href={canonical} />
-    ) : (
-      <meta name="robots" content="noindex" />
-    )}
+    <Font cssVariable="--font-brand" preload />
+    <Seo
+      title={title}
+      description={description}
+      canonical={canonical}
+      type={type}
+      structuredData={structuredData}
+    />
   </head>
   <body data-theme={theme}>
     <div class="page">

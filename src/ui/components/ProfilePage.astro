@@ -3,6 +3,7 @@ import type { PublicPage } from "@/application/ports/public-page-reader";
 import Bank from "@/ui/components/Bank.astro";
 import ProfileHeader from "@/ui/components/ProfileHeader.astro";
 import PublicLayout from "@/ui/layouts/PublicLayout.astro";
+import { profileJsonLd } from "@/ui/view/seo";
 
 interface Props {
   page: PublicPage;
@@ -18,6 +19,8 @@ const description = page.bio ?? `Todos los links de ${page.displayName} en un so
   description={description}
   canonical={canonical}
   theme={page.theme}
+  type="profile"
+  structuredData={profileJsonLd(page, canonical)}
 >
   <ProfileHeader page={page} />
   <div class="patchbay" data-patchbay>
