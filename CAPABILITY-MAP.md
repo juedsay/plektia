@@ -61,7 +61,7 @@ platform → identity → links → public-page ┼→ click-analytics
 
 | Versión | Idea | Notas |
 |---|---|---|
-| v2 | **Landing completa y registro abierto** en la raíz, como hace Linktree | La v1 ya tiene una landing simple de una pantalla. La v2 la amplía (beneficios, cómo funciona, ejemplos y preguntas frecuentes) y suma el registro. `/plektia`, que en la v1 tiene el contenido en el repo, pasa a la base para editarse desde el panel |
+| v2 | **Landing completa y registro abierto** en la raíz, como hace Linktree | La v1 ya tiene una landing simple de una pantalla. La v2 la amplía con un diseño propio, que no repita el de `/plektia` (beneficios, cómo funciona, ejemplos y preguntas frecuentes), y suma el registro. `/plektia`, que en la v1 tiene el contenido en el repo, pasa a la base para editarse desde el panel |
 | v2 | Kick en vivo, filtros por etiqueta, los otros 3 temas | Ya previstos en los specs |
 | v3 | **Sección Shop** separada de Links (pestañas Links / Shop) | Requiere un tipo de bloque nuevo; no es un link común |
 | v3 | **Avatar animado** (GIF o WebP animado) | Con pausa automática por `prefers-reduced-motion` y un control para detenerlo (AAA) |
