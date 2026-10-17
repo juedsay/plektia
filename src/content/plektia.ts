@@ -26,6 +26,11 @@ const SECTIONS: readonly SectionEntry[] = [
     title: "Sobre Plektia",
     links: [
       { title: "Qué es Plektia", url: "/", description: "Todos tus links, unidos por un hilo" },
+      {
+        title: "Contacto",
+        url: "/contacto",
+        description: "Pedí tu invitación o escribinos",
+      },
       { title: "Entrar", url: "/login", description: "Si ya tenés tu invitación" },
     ],
   },

@@ -196,6 +196,10 @@ export type Database = {
       };
     };
     Functions: {
+      ingest_contact_message: {
+        Args: { p_email: string; p_message: string; p_name: string };
+        Returns: undefined;
+      };
       move_links: {
         Args: { expected_versions: number[]; ids: string[]; target_section: string };
         Returns: undefined;

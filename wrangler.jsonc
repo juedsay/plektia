@@ -27,6 +27,8 @@
   "vars": {
     "SUPABASE_URL": "https://xggajfivycgttmgbvgys.supabase.co",
     "SUPABASE_PUBLISHABLE_KEY": "",
+    // Clave pública del widget de Turnstile (contacto). En local, la de prueba.
+    "TURNSTILE_SITE_KEY": "",
   },
   // Límite de las acciones de login (SPEC-identity): 10 por minuto por IP y ruta.
   "ratelimits": [
@@ -34,6 +36,12 @@
       "name": "AUTH_RATE_LIMITER",
       "namespace_id": "1001",
       "simple": { "limit": 10, "period": 60 },
+    },
+    // Formulario de contacto: 3 envíos por minuto por IP (SPEC-public-page, "Contacto").
+    {
+      "name": "CONTACT_RATE_LIMITER",
+      "namespace_id": "1002",
+      "simple": { "limit": 3, "period": 60 },
     },
   ],
   "observability": {

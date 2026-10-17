@@ -5,6 +5,7 @@ import { type Entry, toLink } from "@/content/links";
 // puertos de un banco, unidos por el mismo hilo. Es el ejemplo y el menú a la vez.
 const START: readonly Entry[] = [
   { title: "Conocé Plektia", url: "/plektia", description: "Novedades y cómo funciona" },
+  { title: "Pedí tu invitación", url: "/contacto", description: "Escribinos y te sumamos" },
   { title: "Entrar", url: "/login", description: "Si ya tenés tu invitación" },
 ];
 

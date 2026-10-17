@@ -30,8 +30,8 @@ describe("página oficial de Plektia", () => {
 });
 
 describe("landing", () => {
-  it("sus salidas son links válidos hacia /plektia y el login", async () => {
+  it("sus salidas son links válidos hacia /plektia, el contacto y el login", async () => {
     const { landingLinks } = await import("@/content/landing");
-    expect(landingLinks().map((l) => l.url)).toEqual(["/plektia", "/login"]);
+    expect(landingLinks().map((l) => l.url)).toEqual(["/plektia", "/contacto", "/login"]);
   });
 });
