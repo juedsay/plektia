@@ -1,0 +1,155 @@
+---
+import { contactSender, turnstileSiteKey } from "@/composition/runtime";
+import { CONTACT_LIMITS, HONEYPOT_FIELD } from "@/domain/contact";
+import { readForm } from "@/infrastructure/http/form";
+import PublicLayout from "@/ui/layouts/PublicLayout.astro";
+import { contactFeedback } from "@/ui/view/contact";
+
+// Contacto (SPEC-public-page, "Contacto"): el correo de Plektia nunca aparece
+// en la página. Turnstile carga un script de Cloudflare solo acá, por eso la
+// CSP se amplía solo en esta página.
+const TURNSTILE = "https://challenges.cloudflare.com";
+// Al sumar un origen, Astro deja de incluir 'self': hay que repetirlo para el
+// script propio de la página.
+Astro.csp?.insertScriptResource("'self'");
+Astro.csp?.insertScriptResource(TURNSTILE);
+Astro.csp?.insertDirective(`frame-src ${TURNSTILE}`);
+
+const values = { name: "", email: "", message: "" };
+let feedback = contactFeedback(null);
+
+if (Astro.request.method === "POST") {
+  const form = await readForm(Astro.request);
+  const field = (name: string) => {
+    const value = form.get(name);
+    return typeof value === "string" ? value : "";
+  };
+  values.name = field("name");
+  values.email = field("email");
+  values.message = field("message");
+
+  const result = await contactSender()({
+    fields: { ...values, [HONEYPOT_FIELD]: field(HONEYPOT_FIELD) },
+    turnstileToken: form.get("cf-turnstile-response"),
+    ip: Astro.clientAddress,
+  });
+  // Post/Redirect/Get: recargar la página no reenvía el mensaje.
+  if (result.ok) return Astro.redirect("/contacto?enviado", 303);
+  feedback = contactFeedback(result.error);
+  Astro.response.status = feedback.status;
+}
+
+const sent = Astro.request.method === "GET" && Astro.url.searchParams.has("enviado");
+const siteKey = turnstileSiteKey();
+const canonical = new URL("/contacto", Astro.url);
+const describedBy = (name: string) => (feedback.fields[name] ? `${name}-error` : undefined);
+---
+
+<PublicLayout
+  title="Contacto · Plektia"
+  description="Escribile a Plektia: pedí tu invitación o contanos lo que necesites."
+  canonical={canonical}
+>
+  <section class="identity" aria-labelledby="contact-title">
+    <h1 id="contact-title">Contacto</h1>
+    <p class="bio">Pedí tu invitación o contanos lo que necesites. Te respondemos por email.</p>
+  </section>
+
+  {sent ? (
+    <p class="form-notice" role="status">
+      Listo, tu mensaje llegó. Te vamos a responder al email que dejaste.
+    </p>
+  ) : (
+    <form class="contact-form" method="post" action="/contacto" novalidate>
+      {feedback.summary && (
+        <p class="form-notice is-error" role="alert">
+          {feedback.summary}
+        </p>
+      )}
+
+      <div class="field">
+        <label for="name">Tu nombre</label>
+        <input
+          id="name"
+          name="name"
+          type="text"
+          required
+          maxlength={CONTACT_LIMITS.name}
+          autocomplete="name"
+          value={values.name}
+          aria-invalid={feedback.fields["name"] ? "true" : undefined}
+          aria-describedby={describedBy("name")}
+        />
+        {feedback.fields["name"] && (
+          <p class="field-error" id="name-error">
+            {feedback.fields["name"]}
+          </p>
+        )}
+      </div>
+
+      <div class="field">
+        <label for="email">Tu email</label>
+        <input
+          id="email"
+          name="email"
+          type="email"
+          required
+          maxlength={CONTACT_LIMITS.email}
+          autocomplete="email"
+          value={values.email}
+          aria-invalid={feedback.fields["email"] ? "true" : undefined}
+          aria-describedby={describedBy("email")}
+        />
+        {feedback.fields["email"] && (
+          <p class="field-error" id="email-error">
+            {feedback.fields["email"]}
+          </p>
+        )}
+      </div>
+
+      <div class="field">
+        <label for="message">Mensaje</label>
+        <textarea
+          id="message"
+          name="message"
+          required
+          rows="6"
+          maxlength={CONTACT_LIMITS.message}
+          aria-invalid={feedback.fields["message"] ? "true" : undefined}
+          aria-describedby={describedBy("message")}
+        >{values.message}</textarea>
+        {feedback.fields["message"] && (
+          <p class="field-error" id="message-error">
+            {feedback.fields["message"]}
+          </p>
+        )}
+      </div>
+
+      {/* Campo trampa: fuera de la vista y del orden de foco; solo lo completan los bots. */}
+      <div class="trap" aria-hidden="true">
+        <label for={HONEYPOT_FIELD}>No completes este campo</label>
+        <input
+          id={HONEYPOT_FIELD}
+          name={HONEYPOT_FIELD}
+          type="text"
+          tabindex="-1"
+          autocomplete="off"
+        />
+      </div>
+
+      <div class="cf-turnstile" data-sitekey={siteKey} data-theme="dark" data-language="es"></div>
+      <script
+        is:inline
+        src="https://challenges.cloudflare.com/turnstile/v0/api.js"
+        async
+        defer
+      ></script>
+      <button class="submit" type="submit">
+        Enviar mensaje
+      </button>
+      <p class="form-help">
+        Usamos Turnstile de Cloudflare para frenar el spam. Tu IP no se guarda.
+      </p>
+    </form>
+  )}
+</PublicLayout>

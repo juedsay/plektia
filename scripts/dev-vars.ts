@@ -14,8 +14,8 @@ const status = JSON.parse(
   }),
 ) as Record<string, string | undefined>;
 
-const { API_URL, PUBLISHABLE_KEY } = status;
-if (!API_URL || !PUBLISHABLE_KEY) {
+const { API_URL, PUBLISHABLE_KEY, SECRET_KEY } = status;
+if (!API_URL || !PUBLISHABLE_KEY || !SECRET_KEY) {
   console.error("Supabase local no está levantado: corré `pnpm db:start`.");
   process.exit(1);
 }
@@ -23,6 +23,13 @@ if (!API_URL || !PUBLISHABLE_KEY) {
 const vars = {
   SUPABASE_URL: API_URL,
   SUPABASE_PUBLISHABLE_KEY: PUBLISHABLE_KEY,
+  // Clave de servicio de Supabase LOCAL (solo la usa `ingest-client.ts`).
+  SUPABASE_SECRET_KEY: SECRET_KEY,
+  // Claves de prueba públicas de Turnstile: siempre aprueban. Las reales van
+  // como secreto del Worker en producción.
+  // https://developers.cloudflare.com/turnstile/troubleshooting/testing/
+  TURNSTILE_SITE_KEY: "1x00000000000000000000AA",
+  TURNSTILE_SECRET_KEY: "1x0000000000000000000000000000000AA",
 };
 writeFileSync(
   ".dev.vars",

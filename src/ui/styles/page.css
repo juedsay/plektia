@@ -431,6 +431,100 @@ button {
   font-size: var(--text-sm);
 }
 
+/* Contacto: campos con el mismo trazo que los bancos, sin cajas pesadas. */
+.contact-form {
+  display: grid;
+  gap: var(--space-5);
+  margin-top: var(--space-6);
+}
+
+.field {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.field label {
+  font-family: var(--font-display);
+  font-weight: 500;
+}
+
+.field input,
+.field textarea {
+  width: 100%;
+  min-height: var(--target-min);
+  padding: var(--space-3);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  color: var(--color-fg);
+  font: inherit;
+}
+
+.field textarea {
+  resize: vertical;
+}
+
+.field input:focus-visible,
+.field textarea:focus-visible {
+  border-color: var(--color-fg);
+}
+
+.field [aria-invalid="true"] {
+  border-color: var(--color-fg);
+  border-width: 2px;
+}
+
+.field-error,
+.form-notice,
+.form-help {
+  margin: 0;
+  font-size: var(--text-sm);
+}
+
+.field-error {
+  color: var(--color-fg);
+}
+
+.field-error::before {
+  content: "⚠ ";
+}
+
+.form-notice {
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-md);
+}
+
+.form-notice.is-error {
+  border-color: var(--color-fg);
+}
+
+.form-help {
+  color: var(--color-fg-muted);
+}
+
+.submit {
+  justify-self: start;
+  min-height: var(--target-min);
+  padding: var(--space-2) var(--space-5);
+  border: 0;
+  border-radius: var(--radius-md);
+  background: var(--color-fg);
+  color: var(--color-bg);
+  font-family: var(--font-display);
+  font-weight: 500;
+  cursor: pointer;
+}
+
+/* Campo trampa: fuera de la pantalla (no `display: none`, que algunos bots detectan). */
+.trap {
+  position: absolute;
+  left: -10000px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
 /* 404: el mismo lenguaje, con un solo mensaje y la salida a /plektia. */
 .not-found {
   display: grid;

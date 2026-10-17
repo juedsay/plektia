@@ -20,6 +20,27 @@ export function safeLine(label: string, max: number) {
     });
 }
 
+// Igual que UNSAFE, pero admite saltos de línea y tabulaciones (texto de varios párrafos).
+const UNSAFE_MULTILINE =
+  // eslint-disable-next-line no-control-regex -- detectar caracteres de control es el objetivo.
+  /[\u0000-\u0008\u000b-\u001f\u007f\u200b-\u200f\u2028-\u202e\u2066-\u2069\ufeff]/;
+
+/** Texto de varias líneas (por ejemplo, un mensaje): normaliza los saltos a `\n`. */
+export function safeText(label: string, max: number) {
+  return z
+    .string({ error: `${label} tiene que ser un texto.` })
+    .transform((value) => value.replace(/\r\n?/g, "\n").trim())
+    .pipe(
+      z
+        .string()
+        .min(1, { error: `${label} no puede estar vacío.` })
+        .max(max, { error: `${label} puede tener hasta ${String(max)} caracteres.` })
+        .refine((value) => !UNSAFE_MULTILINE.test(value), {
+          error: `${label} tiene caracteres no permitidos (invisibles o de control).`,
+        }),
+    );
+}
+
 /** Valida con un schema y devuelve el primer mensaje de cada campo. */
 export function validate<T>(schema: z.ZodType<T>, raw: unknown): Result<T, InvalidInput> {
   const parsed = schema.safeParse(raw);
