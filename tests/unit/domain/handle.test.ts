@@ -54,7 +54,14 @@ describe("RESERVED_HANDLES", () => {
   // y la otra no, un handle podría pasar en un lado y fallar en el otro.
   it("coincide con la lista de la migración de identity", () => {
     const dir = join(import.meta.dirname, "../../../supabase/migrations");
-    const file = readdirSync(dir).find((name) => name.endsWith("_identity.sql"));
+    // La definición vigente es la de la migración más reciente que la (re)crea.
+    const file = readdirSync(dir)
+      .filter((name) => name.endsWith(".sql"))
+      .sort()
+      .filter((name) =>
+        readFileSync(join(dir, name), "utf8").includes("function private.is_reserved_handle"),
+      )
+      .at(-1);
     expect(file).toBeDefined();
     const sql = readFileSync(join(dir, file ?? ""), "utf8");
     const block = /is_reserved_handle[\s\S]*?array\[([\s\S]*?)\]/.exec(sql)?.[1] ?? "";

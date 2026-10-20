@@ -1,0 +1,51 @@
+import { createClient } from "@supabase/supabase-js";
+
+import type { Database } from "@/infrastructure/supabase/database.types";
+
+// Único módulo que conoce la clave de servicio de Supabase (SPEC-platform,
+// "Secretos"; una regla de Semgrep lo hace cumplir). Solo invoca funciones
+// `ingest_*`, que validan y acotan lo que escriben: nunca da acceso libre a tablas.
+
+declare global {
+  // eslint-disable-next-line @typescript-eslint/no-namespace -- así se amplían los tipos de Workers.
+  namespace Cloudflare {
+    interface Env {
+      /** Secreto del Worker (`wrangler secret put`); en local, `.dev.vars`. */
+      SUPABASE_SECRET_KEY: string;
+    }
+  }
+}
+
+type Functions = Database["public"]["Functions"];
+export type IngestFunction = Extract<keyof Functions, `ingest_${string}`>;
+
+export interface IngestError {
+  readonly code: string;
+  readonly message: string;
+}
+
+export interface IngestClient {
+  call<F extends IngestFunction>(
+    fn: F,
+    args: Functions[F]["Args"],
+  ): Promise<{ error: IngestError | null }>;
+}
+
+export function createIngestClient(env: {
+  SUPABASE_URL: string;
+  SUPABASE_SECRET_KEY?: string;
+}): IngestClient {
+  const key = env.SUPABASE_SECRET_KEY;
+  if (!env.SUPABASE_URL || !key) {
+    throw new Error("ingest: falta SUPABASE_URL o la clave de servicio");
+  }
+  const client = createClient<Database>(env.SUPABASE_URL, key, {
+    auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false },
+  });
+  return {
+    async call(fn, args) {
+      const { error } = await client.rpc(fn, args);
+      return { error: error ? { code: error.code, message: error.message } : null };
+    },
+  };
+}

@@ -10,6 +10,7 @@ describe("sitemapXml", () => {
     expect([...xml.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1])).toEqual([
       "https://app.plektia.workers.dev/",
       "https://app.plektia.workers.dev/plektia",
+      "https://app.plektia.workers.dev/contacto",
       "https://app.plektia.workers.dev/juedsay",
       "https://app.plektia.workers.dev/otra",
     ]);

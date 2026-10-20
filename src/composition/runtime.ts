@@ -11,9 +11,11 @@ import type {
 import type { RateLimiter } from "@/application/ports/rate-limiter";
 import type { SessionReader } from "@/application/ports/session-reader";
 import { createAuthGateway } from "@/composition/auth";
+import { createContactSender } from "@/composition/contact";
 import { createPublicPageReader } from "@/composition/public-page";
 import { createSessionReader } from "@/composition/session";
 import { CloudflareRateLimiter } from "@/infrastructure/cloudflare/cloudflare-rate-limiter";
+import { createIngestClient } from "@/infrastructure/supabase/ingest-client";
 
 const supabase = () => ({ url: env.SUPABASE_URL, publishableKey: env.SUPABASE_PUBLISHABLE_KEY });
 
@@ -28,3 +30,13 @@ export const authRateLimiter = (): RateLimiter => new CloudflareRateLimiter(env.
 export const publicPages = (): PublicPageReader => createPublicPageReader(supabase());
 
 export const publicProfiles = (): PublicProfileDirectory => createPublicPageReader(supabase());
+
+export const contactSender = () =>
+  createContactSender({
+    ingest: createIngestClient(env),
+    turnstileSecret: env.TURNSTILE_SECRET_KEY,
+    limiter: new CloudflareRateLimiter(env.CONTACT_RATE_LIMITER),
+  });
+
+/** Clave pública del widget de Turnstile (va en el HTML). */
+export const turnstileSiteKey = (): string => env.TURNSTILE_SITE_KEY;
