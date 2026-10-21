@@ -19,7 +19,7 @@ Que el dueño sepa cuántas visitas tiene su página, qué links se tocan, de qu
    - los orígenes principales: Instagram, TikTok, X, YouTube, Facebook, LinkedIn, WhatsApp, directo y otros;
    - la evolución diaria de visitas y clics.
 4. **Honestidad de los números.** El panel aclara que son **eventos, no personas**: una misma persona que recarga suma otra visita. Contar personas únicas requiere identificadores y está fuera de la política de privacidad.
-5. **Privacidad.** `/plektia/privacidad` explica exactamente esto: qué se cuenta, que no se guardan IPs ni identificadores y cuánto tiempo se conservan los agregados.
+5. **Privacidad.** `/legal/privacy` explica exactamente esto: qué se cuenta, que no se guardan IPs ni identificadores y cuánto tiempo se conservan los agregados.
 
 ## Cómo se mide
 

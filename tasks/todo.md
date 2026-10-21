@@ -170,7 +170,7 @@
 
 - [ ] **Tarea 16: Fuente propia, SEO y páginas de Plektia** · M · Deps: 14
   - **Landing simple en `/`** (una pantalla: qué es Plektia, ejemplo de página, "por ahora, por invitación", links a `/plektia` y a entrar). Reemplaza el perfil de `DEFAULT_HANDLE` en la raíz, y la variable se elimina.
-  - `@fontsource-variable/bricolage-grotesque` (solo subset latino), métricas de respaldo, metadatos, OG, JSON-LD `ProfilePage`, sitemap, robots, y las páginas `/plektia` (página oficial con el diseño de perfil y contenido en `src/content/plektia.ts`, validado con los schemas del dominio) y `/plektia/privacidad`.
+  - `@fontsource-variable/bricolage-grotesque` (solo subset latino), métricas de respaldo, metadatos, OG, JSON-LD `ProfilePage`, sitemap, robots, y las páginas `/plektia` (página oficial con el diseño de perfil y contenido en `src/content/plektia.ts`, validado con los schemas del dominio) y `/legal/privacy`.
   - **Aceptación:**
     - Cero requests a Google al cargar.
     - Validadores de metadatos sin errores.
@@ -191,8 +191,8 @@
     - Aviso por mail cuando haya dominio propio.
     - El correo de Plektia nunca aparece en el sitio.
   - **Mejoras del formulario (hechas):** validación en el navegador con las reglas del dominio, botón bloqueado al enviar, avisos que reciben el foco, borrador por pestaña y éxito con "Volver al inicio" / "Enviar otro mensaje" (sin redirección automática, por accesibilidad). El login pasa al diseño de Plektia, y un E2E revisa que ninguna página se desborde entre 360 y 1440 px.
-  - **Parte 4:** `/plektia/privacidad` (incluye Turnstile y el formulario para pedir el borrado) y la publicación de la app de Google.
-  - **Archivos:** `src/ui/styles/fonts.css`, `src/ui/components/Seo.astro`, `src/content/plektia.ts`, `src/pages/plektia/index.astro`, `src/pages/plektia/privacidad.astro`, `src/pages/sitemap.xml.ts`.
+  - **Parte 4:** política de privacidad en `/legal/privacy` (rutas propias en inglés; `/legal` agrupa los documentos legales que lleguen en v2: términos, uso aceptable, denuncias), enlazada en el pie de todas las páginas. Después, la publicación de la app de Google.
+  - **Archivos:** `src/ui/styles/fonts.css`, `src/ui/components/Seo.astro`, `src/content/plektia.ts`, `src/pages/plektia/index.astro`, `src/pages/legal/privacy.astro`, `src/pages/sitemap.xml.ts`.
 
 - [ ] **Tarea 16b: Ventana de compartir propia** · S · Deps: 16
   - `<dialog>` nativo con el diseño de Plektia, como la de Linktree:

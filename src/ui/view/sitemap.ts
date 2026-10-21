@@ -1,5 +1,5 @@
 /** Páginas propias de Plektia que siempre van al sitemap. */
-export const SITE_PAGES = ["/", "/plektia", "/contact"] as const;
+export const SITE_PAGES = ["/", "/plektia", "/contact", "/legal/privacy"] as const;
 
 const escapeXml = (text: string) =>
   text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");

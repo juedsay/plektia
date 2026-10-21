@@ -7,7 +7,7 @@ describe("página oficial de Plektia", () => {
     const page = buildPlektiaPage();
     expect(page.handle).toBe("plektia");
     expect(page.bio).toBe("Todos tus links, unidos por un hilo.");
-    expect(page.sections.map((s) => s.title)).toEqual(["Novedades", "Sobre Plektia"]);
+    expect(page.sections.map((s) => s.title)).toEqual(["Novedades", "Sobre Plektia", "Legal"]);
     for (const link of page.sections.flatMap((s) => s.links)) {
       expect(link.url).toMatch(/^(https:\/\/|\/(?!\/))/);
     }

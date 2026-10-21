@@ -1,0 +1,133 @@
+---
+import PublicLayout from "@/ui/layouts/PublicLayout.astro";
+
+// Política de privacidad (SPEC-public-page, "Privacidad"). Cuenta solo lo que
+// hoy es verdad: cada función nueva que toque datos personales (medición de
+// clics, miniaturas de YouTube, aviso por mail) la actualiza en el mismo PR.
+const UPDATED = "21 de octubre de 2026";
+const canonical = new URL("/legal/privacy", Astro.url);
+---
+
+<PublicLayout
+  title="Política de privacidad · Plektia"
+  description="Qué datos guarda Plektia, para qué, dónde y cómo pedir que los borremos."
+  canonical={canonical}
+>
+  <article class="prose" aria-labelledby="privacy-title">
+    <header>
+      <h1 id="privacy-title">Política de privacidad</h1>
+      <p class="prose-meta">Última actualización: {UPDATED}</p>
+    </header>
+
+    <p>
+      Plektia es una página de links. Esta política explica, en simple, qué datos guardamos, para
+      qué los usamos, dónde quedan y cómo podés pedir verlos, corregirlos o borrarlos. Lo que no
+      figura acá, no lo hacemos.
+    </p>
+
+    <h2>Quién es responsable</h2>
+    <p>
+      Plektia, desde Argentina, es responsable de los datos que se describen acá. Para cualquier
+      consulta sobre privacidad, escribinos desde el <a href="/contact">formulario de contacto</a>.
+    </p>
+
+    <h2>Si solo visitás una página</h2>
+    <ul>
+      <li>No usamos cookies ni guardamos nada en tu navegador.</li>
+      <li>No medimos visitas ni clics, y no hay publicidad ni rastreadores.</li>
+      <li>
+        La landing, la página de Plektia y las páginas de cada usuario no le piden nada a terceros:
+        todo se sirve desde Plektia.
+      </li>
+    </ul>
+    <p>
+      Como cualquier sitio, Cloudflare (que aloja Plektia) procesa la dirección IP de cada pedido
+      para entregar la página y frenar ataques. Nosotros no la guardamos.
+    </p>
+
+    <h2>Si nos escribís desde el formulario de contacto</h2>
+    <ul>
+      <li>Guardamos tu nombre, tu email y tu mensaje, solo para responderte.</li>
+      <li>
+        Para frenar el spam usamos Turnstile, de Cloudflare: comprueba que no sos un robot sin
+        pedirte que resuelvas nada. Recibe datos técnicos de tu navegador; más detalles en la{" "}
+        <a href="https://www.cloudflare.com/turnstile-privacy-policy/" rel="noopener">
+          política de Turnstile
+        </a>
+        .
+      </li>
+      <li>
+        Usamos tu dirección IP solo por un momento: para limitar los envíos seguidos (un contador de
+        Cloudflare que dura alrededor de un minuto) y para que Turnstile la verifique. No queda
+        guardada en nuestra base.
+      </li>
+      <li>
+        Si escribís sin terminar de enviar, el borrador queda solo en esa pestaña de tu navegador.
+      </li>
+      <li>
+        Guardamos el mensaje mientras haga falta para responderte, o hasta que pidas borrarlo.
+      </li>
+    </ul>
+
+    <h2>Si tenés una cuenta</h2>
+    <p>
+      Por ahora Plektia funciona por invitación. Cuando entrás con GitHub o Google, recibimos de ese
+      servicio tu email, tu nombre y tu foto de perfil. Con eso:
+    </p>
+    <ul>
+      <li>Creamos tu cuenta y tu página pública.</li>
+      <li>
+        Mostramos en tu página solo lo que vos publicás: tu nombre visible, tu <code>@usuario</code>{" "}
+        (podés ocultarlo), tu bio y tus links. Tu email nunca se muestra.
+      </li>
+      <li>
+        Al entrar, tu dirección IP se usa de la misma forma, solo para limitar los intentos seguidos
+        (un contador de Cloudflare que dura alrededor de un minuto).
+      </li>
+      <li>
+        Usamos cookies de sesión seguras para mantenerte dentro de tu cuenta. Se borran al salir o
+        cuando vencen, y no sirven para seguirte en otros sitios.
+      </li>
+    </ul>
+    <p>Los datos de la cuenta se guardan mientras la cuenta exista.</p>
+
+    <h2>Dónde se guardan</h2>
+    <ul>
+      <li>
+        Supabase guarda la base de datos (cuentas, páginas y mensajes) en servidores de Estados
+        Unidos.
+      </li>
+      <li>Cloudflare aloja el sitio y lo entrega desde su red global.</li>
+      <li>GitHub y Google intervienen solo si elegís entrar con ellos.</li>
+    </ul>
+    <p>
+      Estados Unidos no tiene una ley de protección de datos equivalente a la argentina. Al crear tu
+      cuenta o enviarnos un mensaje, aceptás que tus datos se guarden allí, con estos proveedores.
+      No vendemos ni compartimos tus datos con nadie más.
+    </p>
+
+    <h2>Tus derechos</h2>
+    <p>
+      Podés pedir ver, corregir, actualizar o borrar tus datos en cualquier momento, sin costo,
+      desde el <a href="/contact">formulario de contacto</a>. Te respondemos dentro de los plazos de
+      la Ley 25.326: 10 días corridos para darte acceso a tus datos y 5 días hábiles para
+      corregirlos o borrarlos.
+    </p>
+    <p>
+      Tenés derecho a acceder a tus datos en forma gratuita a intervalos no inferiores a seis meses,
+      salvo que acredites un interés legítimo (artículo 14, inciso 3, de la Ley 25.326).
+    </p>
+    <p>
+      La Agencia de Acceso a la Información Pública, en su carácter de órgano de control de la Ley
+      25.326, tiene la atribución de atender las denuncias y reclamos que interpongan quienes
+      resulten afectados en sus derechos por incumplimiento de las normas vigentes en materia de
+      protección de datos personales.
+    </p>
+
+    <h2>Cambios</h2>
+    <p>
+      Si cambia lo que hacemos con tus datos (por ejemplo, cuando empecemos a contar clics en los
+      links), actualizamos esta página antes de que el cambio esté en marcha, y la fecha de arriba.
+    </p>
+  </article>
+</PublicLayout>

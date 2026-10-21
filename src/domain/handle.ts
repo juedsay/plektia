@@ -17,6 +17,7 @@ export const RESERVED_HANDLES: ReadonlySet<string> = new Set([
   "contacto",
   "favicon.ico",
   "help",
+  "legal",
   "login",
   "logout",
   "mcp",

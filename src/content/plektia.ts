@@ -34,6 +34,16 @@ const SECTIONS: readonly SectionEntry[] = [
       { title: "Entrar", url: "/login", description: "Si ya tenés tu invitación" },
     ],
   },
+  {
+    title: "Legal",
+    links: [
+      {
+        title: "Política de privacidad",
+        url: "/legal/privacy",
+        description: "Qué datos guardamos y cómo pedir que los borremos",
+      },
+    ],
+  },
 ];
 
 /** Arma la página oficial; falla en el build si algún link no es válido. */

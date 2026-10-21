@@ -18,7 +18,7 @@ Servir la página pública de cada usuario (`/{handle}`) tal como la define el p
 4. **Compartir.** El botón de arriba a la derecha abre una ventana propia (tarea 16b): una tarjeta de vista previa, copiar el link, las redes principales como links que se abren al tocarlos y "Más opciones" para la hoja nativa. Mientras tanto usa la hoja nativa y, si no existe, copia el link y lo avisa.
 5. **Página oficial de Plektia.** El isotipo de arriba a la izquierda lleva a la landing (`/`) y el pie, a `/plektia`, la página de la marca (como `linktr.ee/linktr.ee`): el mismo diseño que la de un usuario, con el isotipo como avatar, una bio que explica qué es Plektia y que por ahora funciona por invitación, y secciones como "Novedades", "Sobre Plektia" y "Legal". Su contenido vive en el repo (`src/content/plektia.ts`) y se valida con los mismos schemas del dominio que los links de usuarios.
 6. **Contacto.** `/contact` tiene un formulario (nombre, email, mensaje) que nunca expone el correo de Plektia. Los mensajes se guardan en la base y se leen desde el panel; con dominio propio, además llega un aviso por mail. Contra el spam: un campo trampa invisible, un límite de envíos por IP y Turnstile (que carga un script de Cloudflare solo en esta página).
-7. **Privacidad.** El pie lleva a `/plektia/privacidad`, que explica en lenguaje simple qué se mide (clics por link, sin cookies ni datos personales) y qué terceros intervienen (YouTube, solo si el visitante despliega la miniatura).
+7. **Privacidad.** El pie lleva a `/legal/privacy`, que explica en lenguaje simple qué se mide (clics por link, sin cookies ni datos personales) y qué terceros intervienen (YouTube, solo si el visitante despliega la miniatura).
 8. **Raíz del dominio.** `/` es la landing de Plektia (como `linktr.ee/`): una sola pantalla que explica qué es, muestra un ejemplo de página, aclara que por ahora funciona por invitación y lleva a `/plektia` y a entrar.
 9. **Handle inexistente.** Devuelve una página 404 con el mismo diseño y un link a `/plektia`.
 
@@ -37,7 +37,7 @@ Sigue [DESIGN.md](DESIGN.md) y el prototipo; acá solo se fija lo que el prototi
 | Ruta | Render | Caché |
 |---|---|---|
 | `/{handle}` y `/` | On-demand en el Worker. Una sola consulta a `public_page_v`, que incluye el estado en vivo y el último video | [Workers Cache](https://developers.cloudflare.com/workers/cache/): `Cache-Control: public, max-age=60, stale-while-revalidate=300` y `Cache-Tag: profile:{handle}`. Al editar desde el panel o el MCP, y cuando el cron cambia el estado en vivo, el Worker llama a `ctx.cache.purge({ tags: ["profile:{handle}"] })` y el cambio se ve al instante. Funciona en `workers.dev` y no necesita token de API |
-| `/` (landing), `/plektia`, `/contact`, `/plektia/privacidad` | On-demand en el Worker, sin consultar la base. No se prerenderizan porque los archivos estáticos no pasan por el middleware y saldrían sin las cabeceras de seguridad | Las de la tarea 17 |
+| `/` (landing), `/plektia`, `/contact`, `/legal/privacy` | On-demand en el Worker, sin consultar la base. No se prerenderizan porque los archivos estáticos no pasan por el middleware y saldrían sin las cabeceras de seguridad | Las de la tarea 17 |
 | 404 | On-demand | `s-maxage=60` |
 
 - La clave de caché es solo la ruta: los query strings no generan variantes. Así se evita el envenenamiento de caché y se aprovecha mejor.
@@ -100,7 +100,7 @@ Se miden en CI con Lighthouse sobre perfil de celular y 4G lento:
 | ui/components | `ProfileHeader.astro`, `Bank.astro`, `Port.astro`, `LatestVideo.astro`, `Footer.astro` | Los componentes del prototipo |
 | ui/scripts | `thread.ts`, `disclosure.ts`, `share.ts` | Los tres scripts del prototipo, tipados |
 | ui/styles | `tokens.css`, `public-page.css` | Tokens de DESIGN.md |
-| pages | `[handle].astro`, `index.astro`, `plektia/index.astro`, `plektia/privacidad.astro`, `404.astro` | Rutas finas |
+| pages | `[handle].astro`, `index.astro`, `plektia/index.astro`, `contact.astro`, `legal/privacy.astro`, `login.astro`, `404.astro` | Rutas finas |
 
 ## Testing
 
@@ -132,7 +132,7 @@ Se miden en CI con Lighthouse sobre perfil de celular y 4G lento:
 - [ ] axe no reporta violaciones AAA, y el recorrido con teclado y lector de pantalla está documentado.
 - [ ] Al cargar no hay cookies ni requests a terceros.
 - [ ] Una edición desde el panel se ve en la página pública en menos de 5 segundos (purga de caché).
-- [ ] `/plektia` y `/plektia/privacidad` publicadas, y la política refleja lo que realmente se mide.
+- [ ] `/plektia` y `/legal/privacy` publicadas, y la política refleja lo que realmente se mide.
 
 ## Preguntas abiertas
 
