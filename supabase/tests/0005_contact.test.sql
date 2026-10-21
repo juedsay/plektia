@@ -2,7 +2,7 @@
 begin;
 create extension if not exists pgtap with schema extensions;
 
-select plan(13);
+select plan(16);
 
 create function pg_temp.as_anon()
 returns void language sql as $$
@@ -58,9 +58,22 @@ select throws_ok(
   'PL429', null, 'con 100 mensajes en la última hora rechaza el siguiente');
 reset role;
 
--- `/contacto` y `/privacidad` son páginas propias: no pueden ser el handle de nadie.
+-- `/contact`, `/contacto` (redirige) y `/privacidad` son rutas propias: no pueden ser el handle de nadie.
 select throws_ok($$ select 'contacto'::public.handle $$, '23514', null, 'contacto es un handle reservado');
+select throws_ok($$ select 'contact'::public.handle $$, '23514', null, 'contact es un handle reservado');
 select throws_ok($$ select 'privacidad'::public.handle $$, '23514', null, 'privacidad es un handle reservado');
+
+select lives_ok($$ select private.assert_no_reserved_handles_in_use() $$,
+  'ningún perfil ni invitación usa un handle reservado');
+
+-- Si una palabra recién reservada ya está en uso, el control frena (y dice cuál).
+-- Se simula reservando `juedsay`, el perfil del seed; el rollback lo deshace.
+create or replace function private.is_reserved_handle(value text)
+returns boolean language sql immutable set search_path = ''
+as $$ select lower(value) = 'juedsay' $$;
+select throws_like($$ select private.assert_no_reserved_handles_in_use() $$,
+  '%handles reservados en uso: juedsay%',
+  'con un handle reservado en uso, la migración se frena');
 
 select * from finish();
 rollback;

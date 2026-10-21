@@ -2,7 +2,7 @@ import { expect, test } from "@playwright/test";
 
 // Todas las páginas públicas se adaptan a la pantalla: sin scroll horizontal
 // desde un teléfono chico hasta un escritorio ancho.
-const PAGES = ["/", "/plektia", "/juedsay", "/contacto", "/login", "/no-existe"];
+const PAGES = ["/", "/plektia", "/juedsay", "/contact", "/login", "/no-existe"];
 const WIDTHS = [360, 390, 768, 1440];
 
 for (const width of WIDTHS) {

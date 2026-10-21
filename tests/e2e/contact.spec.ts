@@ -43,7 +43,7 @@ test.describe("contacto", () => {
     page.on("console", (m) => {
       if (m.type() === "error") errors.push(m.text());
     });
-    const response = await page.goto("/contacto");
+    const response = await page.goto("/contact");
     expect(response?.status()).toBe(200);
     expect(response?.headers()["content-security-policy"]).toContain(
       "https://challenges.cloudflare.com",
@@ -61,19 +61,19 @@ test.describe("contacto", () => {
     page,
   }) => {
     await asFreshVisitor(page);
-    await page.goto("/contacto");
+    await page.goto("/contact");
     await fill(page, valid);
     const submit = page.getByRole("button", { name: "Enviar mensaje" });
     await submit.click();
 
-    await expect(page).toHaveURL(/\/contacto\?enviado$/);
+    await expect(page).toHaveURL(/\/contact\?enviado$/);
     const done = page.getByRole("status").filter({ hasText: "tu mensaje llegó" });
     await expect(done).toBeVisible();
     await expect(done).toBeFocused();
     await expect(page.getByRole("link", { name: "Volver al inicio" })).toHaveAttribute("href", "/");
     await expect(page.getByRole("link", { name: "Enviar otro mensaje" })).toHaveAttribute(
       "href",
-      "/contacto",
+      "/contact",
     );
     // El borrador se borra al enviar: el formulario nuevo arranca vacío.
     await page.getByRole("link", { name: "Enviar otro mensaje" }).click();
@@ -82,7 +82,7 @@ test.describe("contacto", () => {
 
   test("con un email inválido no envía: marca el campo y le pasa el foco", async ({ page }) => {
     await asFreshVisitor(page);
-    await page.goto("/contacto");
+    await page.goto("/contact");
     await fill(page, { ...valid, email: "testmail.com" });
     let posted = false;
     page.on("request", (r) => {
@@ -103,7 +103,7 @@ test.describe("contacto", () => {
   });
 
   test("lo escrito sobrevive a una recarga (borrador de la pestaña)", async ({ page }) => {
-    await page.goto("/contacto");
+    await page.goto("/contact");
     await page.getByLabel("Tu nombre").fill("Ana");
     await page.getByLabel("Mensaje").fill("Borrador a medias");
     await page.reload();
@@ -112,7 +112,7 @@ test.describe("contacto", () => {
   });
 
   test("sin JavaScript, el servidor valida igual y conserva lo escrito", async ({ request }) => {
-    const response = await request.post("/contacto", {
+    const response = await request.post("/contact", {
       headers: {
         "cf-connecting-ip": `2001:db8:c3::${randomBytes(2).toString("hex")}`,
         origin: new URL(test.info().project.use.baseURL ?? "http://127.0.0.1").origin,
@@ -134,7 +134,7 @@ test.describe("contacto", () => {
     };
     const statuses: number[] = [];
     for (let i = 0; i < 4; i++) {
-      const response = await request.post("/contacto", {
+      const response = await request.post("/contact", {
         headers,
         form: { name: "", email: "", message: "" },
         maxRedirects: 0,
@@ -145,7 +145,7 @@ test.describe("contacto", () => {
   });
 
   test("un envío sin el token de Turnstile no se guarda", async ({ request }) => {
-    const response = await request.post("/contacto", {
+    const response = await request.post("/contact", {
       headers: {
         "cf-connecting-ip": `2001:db8:c2::${randomBytes(2).toString("hex")}`,
         origin: new URL(test.info().project.use.baseURL ?? "http://127.0.0.1").origin,
@@ -155,5 +155,11 @@ test.describe("contacto", () => {
     });
     expect(response.status()).toBe(400);
     expect(await response.text()).toContain("No pudimos confirmar que no sos un robot");
+  });
+
+  test("la ruta vieja /contacto redirige a /contact", async ({ request }) => {
+    const response = await request.get("/contacto", { maxRedirects: 0 });
+    expect(response.status()).toBe(308);
+    expect(response.headers()["location"]).toBe("/contact");
   });
 });
