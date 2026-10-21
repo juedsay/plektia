@@ -16,8 +16,17 @@ interface Props {
   theme?: "tecnico";
   type?: "website" | "profile";
   structuredData?: Record<string, unknown>;
+  share?: boolean;
 }
-const { title, description, canonical, theme = "tecnico", type, structuredData } = Astro.props;
+const {
+  title,
+  description,
+  canonical,
+  theme = "tecnico",
+  type,
+  structuredData,
+  share = true,
+} = Astro.props;
 ---
 
 <!doctype html>
@@ -37,7 +46,7 @@ const { title, description, canonical, theme = "tecnico", type, structuredData }
   </head>
   <body data-theme={theme}>
     <div class="page">
-      <Topbar />
+      <Topbar share={share} />
       <main>
         <slot />
       </main>

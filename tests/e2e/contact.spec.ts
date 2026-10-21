@@ -57,33 +57,74 @@ test.describe("contacto", () => {
     expect(errors.filter((e) => /Content Security Policy/i.test(e))).toEqual([]);
   });
 
-  test("un mensaje válido se envía y la página lo confirma (y recargar no reenvía)", async ({
+  test("un mensaje válido se envía: el botón se bloquea y el éxito ofrece cómo seguir", async ({
     page,
   }) => {
     await asFreshVisitor(page);
     await page.goto("/contacto");
     await fill(page, valid);
-    await page.getByRole("button", { name: "Enviar mensaje" }).click();
+    const submit = page.getByRole("button", { name: "Enviar mensaje" });
+    await submit.click();
 
     await expect(page).toHaveURL(/\/contacto\?enviado$/);
-    await expect(page.getByRole("status").filter({ hasText: "tu mensaje llegó" })).toBeVisible();
+    const done = page.getByRole("status").filter({ hasText: "tu mensaje llegó" });
+    await expect(done).toBeVisible();
+    await expect(done).toBeFocused();
+    await expect(page.getByRole("link", { name: "Volver al inicio" })).toHaveAttribute("href", "/");
+    await expect(page.getByRole("link", { name: "Enviar otro mensaje" })).toHaveAttribute(
+      "href",
+      "/contacto",
+    );
+    // El borrador se borra al enviar: el formulario nuevo arranca vacío.
+    await page.getByRole("link", { name: "Enviar otro mensaje" }).click();
+    await expect(page.getByLabel("Tu nombre")).toHaveValue("");
   });
 
-  test("con un email inválido marca el campo y conserva lo escrito", async ({ page }) => {
+  test("con un email inválido no envía: marca el campo y le pasa el foco", async ({ page }) => {
     await asFreshVisitor(page);
     await page.goto("/contacto");
-    await fill(page, { ...valid, email: "no-es-un-email" });
-    const [response] = await Promise.all([
-      page.waitForResponse((r) => r.request().method() === "POST"),
-      page.getByRole("button", { name: "Enviar mensaje" }).click(),
-    ]);
-    expect(response.status()).toBe(400);
+    await fill(page, { ...valid, email: "testmail.com" });
+    let posted = false;
+    page.on("request", (r) => {
+      if (r.method() === "POST") posted = true;
+    });
+    await page.getByRole("button", { name: "Enviar mensaje" }).click();
 
     const email = page.getByLabel("Tu email");
+    await expect(email).toBeFocused();
     await expect(email).toHaveAttribute("aria-invalid", "true");
-    await expect(page.locator("#email-error")).toContainText("email");
+    await expect(page.locator("#email-error")).toHaveText("Revisá tu email: no parece válido.");
+    await expect(page.getByRole("alert")).toContainText("Revisá los campos marcados.");
+    expect(posted).toBe(false);
+
+    // Al corregirlo, el error se va sin tener que reenviar.
+    await email.fill("ana@example.com");
+    await expect(page.locator("#email-error")).toBeHidden();
+  });
+
+  test("lo escrito sobrevive a una recarga (borrador de la pestaña)", async ({ page }) => {
+    await page.goto("/contacto");
+    await page.getByLabel("Tu nombre").fill("Ana");
+    await page.getByLabel("Mensaje").fill("Borrador a medias");
+    await page.reload();
     await expect(page.getByLabel("Tu nombre")).toHaveValue("Ana");
-    await expect(page.getByLabel("Mensaje")).toHaveValue("Quiero una invitación.");
+    await expect(page.getByLabel("Mensaje")).toHaveValue("Borrador a medias");
+  });
+
+  test("sin JavaScript, el servidor valida igual y conserva lo escrito", async ({ request }) => {
+    const response = await request.post("/contacto", {
+      headers: {
+        "cf-connecting-ip": `2001:db8:c3::${randomBytes(2).toString("hex")}`,
+        origin: new URL(test.info().project.use.baseURL ?? "http://127.0.0.1").origin,
+      },
+      form: { ...valid, email: "testmail.com" },
+      maxRedirects: 0,
+    });
+    expect(response.status()).toBe(400);
+    const html = await response.text();
+    expect(html).toContain("Revisá tu email: no parece válido.");
+    expect(html).toContain('value="Ana"');
+    expect(html).toContain("Quiero una invitación.");
   });
 
   test("al cuarto envío seguido desde la misma IP lo frena el límite", async ({ request }) => {
