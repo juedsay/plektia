@@ -100,7 +100,7 @@ Se miden en CI con Lighthouse sobre perfil de celular y 4G lento:
 | ui/components | `ProfileHeader.astro`, `Bank.astro`, `Port.astro`, `LatestVideo.astro`, `Footer.astro` | Los componentes del prototipo |
 | ui/scripts | `thread.ts`, `disclosure.ts`, `share.ts` | Los tres scripts del prototipo, tipados |
 | ui/styles | `tokens.css`, `public-page.css` | Tokens de DESIGN.md |
-| pages | `[handle].astro`, `index.astro`, `plektia/index.astro`, `plektia/privacidad.astro`, `404.astro` | Rutas finas |
+| pages | `[handle].astro`, `index.astro`, `plektia/index.astro`, `contact.astro`, `legal/privacy.astro`, `login.astro`, `404.astro` | Rutas finas |
 
 ## Testing
 
