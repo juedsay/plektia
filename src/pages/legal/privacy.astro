@@ -56,7 +56,11 @@ const canonical = new URL("/legal/privacy", Astro.url);
         </a>
         .
       </li>
-      <li>No guardamos tu dirección IP.</li>
+      <li>
+        Usamos tu dirección IP solo por un momento: para limitar los envíos seguidos (un contador de
+        Cloudflare que dura alrededor de un minuto) y para que Turnstile la verifique. No queda
+        guardada en nuestra base.
+      </li>
       <li>
         Si escribís sin terminar de enviar, el borrador queda solo en esa pestaña de tu navegador.
       </li>
@@ -75,6 +79,10 @@ const canonical = new URL("/legal/privacy", Astro.url);
       <li>
         Mostramos en tu página solo lo que vos publicás: tu nombre visible, tu <code>@usuario</code>{" "}
         (podés ocultarlo), tu bio y tus links. Tu email nunca se muestra.
+      </li>
+      <li>
+        Al entrar, tu dirección IP se usa de la misma forma, solo para limitar los intentos seguidos
+        (un contador de Cloudflare que dura alrededor de un minuto).
       </li>
       <li>
         Usamos cookies de sesión seguras para mantenerte dentro de tu cuenta. Se borran al salir o
