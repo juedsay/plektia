@@ -2,6 +2,7 @@
 import { contactSender, turnstileSiteKey } from "@/composition/runtime";
 import { CONTACT_LIMITS, HONEYPOT_FIELD } from "@/domain/contact";
 import { readForm } from "@/infrastructure/http/form";
+import Alert from "@/ui/components/Alert.astro";
 import PublicLayout from "@/ui/layouts/PublicLayout.astro";
 import { contactFeedback } from "@/ui/view/contact";
 
@@ -42,7 +43,10 @@ if (Astro.request.method === "POST") {
 const sent = Astro.request.method === "GET" && Astro.url.searchParams.has("enviado");
 const siteKey = turnstileSiteKey();
 const canonical = new URL("/contacto", Astro.url);
-const describedBy = (name: string) => (feedback.fields[name] ? `${name}-error` : undefined);
+const fields = [
+  { name: "name", label: "Tu nombre", type: "text", autocomplete: "name" },
+  { name: "email", label: "Tu email", type: "email", autocomplete: "email" },
+] as const;
 ---
 
 <PublicLayout
@@ -56,56 +60,44 @@ const describedBy = (name: string) => (feedback.fields[name] ? `${name}-error` :
   </section>
 
   {sent ? (
-    <p class="form-notice" role="status">
-      Listo, tu mensaje llegó. Te vamos a responder al email que dejaste.
-    </p>
+    <div class="contact-done" data-contact-sent>
+      <Alert
+        variant="success"
+        message="Listo, tu mensaje llegó. Te vamos a responder al email que dejaste."
+      >
+        <div class="alert-actions">
+          <a class="button" href="/">
+            Volver al inicio
+          </a>
+          <a class="button is-quiet" href="/contacto">
+            Enviar otro mensaje
+          </a>
+        </div>
+      </Alert>
+    </div>
   ) : (
-    <form class="contact-form" method="post" action="/contacto" novalidate>
-      {feedback.summary && (
-        <p class="form-notice is-error" role="alert">
-          {feedback.summary}
-        </p>
-      )}
+    <form class="contact-form" method="post" action="/contacto" novalidate data-contact-form>
+      <Alert variant="error" message={feedback.summary} id="form-alert" />
 
-      <div class="field">
-        <label for="name">Tu nombre</label>
-        <input
-          id="name"
-          name="name"
-          type="text"
-          required
-          maxlength={CONTACT_LIMITS.name}
-          autocomplete="name"
-          value={values.name}
-          aria-invalid={feedback.fields["name"] ? "true" : undefined}
-          aria-describedby={describedBy("name")}
-        />
-        {feedback.fields["name"] && (
-          <p class="field-error" id="name-error">
-            {feedback.fields["name"]}
+      {fields.map((field) => (
+        <div class="field">
+          <label for={field.name}>{field.label}</label>
+          <input
+            id={field.name}
+            name={field.name}
+            type={field.type}
+            required
+            maxlength={CONTACT_LIMITS[field.name]}
+            autocomplete={field.autocomplete}
+            value={values[field.name]}
+            aria-invalid={feedback.fields[field.name] ? "true" : undefined}
+            aria-describedby={`${field.name}-error`}
+          />
+          <p class="field-error" id={`${field.name}-error`} hidden={!feedback.fields[field.name]}>
+            {feedback.fields[field.name]}
           </p>
-        )}
-      </div>
-
-      <div class="field">
-        <label for="email">Tu email</label>
-        <input
-          id="email"
-          name="email"
-          type="email"
-          required
-          maxlength={CONTACT_LIMITS.email}
-          autocomplete="email"
-          value={values.email}
-          aria-invalid={feedback.fields["email"] ? "true" : undefined}
-          aria-describedby={describedBy("email")}
-        />
-        {feedback.fields["email"] && (
-          <p class="field-error" id="email-error">
-            {feedback.fields["email"]}
-          </p>
-        )}
-      </div>
+        </div>
+      ))}
 
       <div class="field">
         <label for="message">Mensaje</label>
@@ -116,13 +108,14 @@ const describedBy = (name: string) => (feedback.fields[name] ? `${name}-error` :
           rows="6"
           maxlength={CONTACT_LIMITS.message}
           aria-invalid={feedback.fields["message"] ? "true" : undefined}
-          aria-describedby={describedBy("message")}
+          aria-describedby="message-error message-count"
         >{values.message}</textarea>
-        {feedback.fields["message"] && (
-          <p class="field-error" id="message-error">
-            {feedback.fields["message"]}
-          </p>
-        )}
+        <p class="field-hint" id="message-count" data-count>
+          Hasta {CONTACT_LIMITS.message} caracteres.
+        </p>
+        <p class="field-error" id="message-error" hidden={!feedback.fields["message"]}>
+          {feedback.fields["message"]}
+        </p>
       </div>
 
       {/* Campo trampa: fuera de la vista y del orden de foco; solo lo completan los bots. */}
@@ -137,14 +130,9 @@ const describedBy = (name: string) => (feedback.fields[name] ? `${name}-error` :
         />
       </div>
 
-      <div class="cf-turnstile" data-sitekey={siteKey} data-theme="dark" data-language="es"></div>
-      <script
-        is:inline
-        src="https://challenges.cloudflare.com/turnstile/v0/api.js"
-        async
-        defer
-      ></script>
-      <button class="submit" type="submit">
+      <div class="cf-turnstile" data-sitekey={siteKey} data-theme="dark" data-language="es" />
+      <script is:inline src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer />
+      <button class="submit button" type="submit" data-submit>
         Enviar mensaje
       </button>
       <p class="form-help">
@@ -152,4 +140,8 @@ const describedBy = (name: string) => (feedback.fields[name] ? `${name}-error` :
       </p>
     </form>
   )}
+
+  <script>
+    import "@/ui/scripts/contact-form";
+  </script>
 </PublicLayout>

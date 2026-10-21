@@ -18,7 +18,12 @@ test.describe("login", () => {
 
   test("después de un rechazo muestra siempre el mismo aviso", async ({ page }) => {
     await page.goto("/login?error=1");
-    await expect(page.getByRole("alert")).toHaveText(DENIED);
+    const alert = page.getByRole("alert");
+    await expect(alert.locator("[data-alert-text]")).toHaveText(DENIED);
+    await expect(alert.getByRole("link", { name: "Pedir una invitación" })).toHaveAttribute(
+      "href",
+      "/contacto",
+    );
   });
 
   test("manda al proveedor con PKCE y guarda el verificador en una cookie segura", async ({

@@ -1,0 +1,38 @@
+---
+// Aviso del formulario: con ícono, anunciado por el lector de pantalla y
+// enfocable (el script le pasa el foco para que no pase desapercibido).
+interface Props {
+  variant: "success" | "error";
+  /** Vacío: el aviso existe pero oculto, para que el script lo complete. */
+  message?: string | null;
+  id?: string;
+}
+const { variant, message = null, id } = Astro.props;
+---
+
+<div
+  class:list={["alert", `is-${variant}`]}
+  role={variant === "error" ? "alert" : "status"}
+  tabindex="-1"
+  id={id}
+  hidden={!message && !Astro.slots.has("default")}
+  data-alert={variant}
+>
+  {variant === "success" ? (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+      <circle cx="12" cy="12" r="9" />
+      <path d="m8 12 3 3 5-6" />
+    </svg>
+  ) : (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+      <circle cx="12" cy="12" r="9" />
+      <path d="M12 7v6M12 16.5v.5" />
+    </svg>
+  )}
+  <div class="alert-body">
+    <p class="alert-text" data-alert-text>
+      {message}
+    </p>
+    <slot />
+  </div>
+</div>

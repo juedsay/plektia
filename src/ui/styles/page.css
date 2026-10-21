@@ -255,8 +255,26 @@ button {
 
 .port-meta {
   display: block;
+  overflow: hidden;
   color: var(--color-fg-muted);
   font-size: var(--text-xs);
+  /* Una URL larga es una sola "palabra": sin esto desborda la página en el celular. */
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* El texto del link puede achicarse por debajo de su contenido (si no, el
+   "…" de la línea de abajo nunca se activa). */
+.port-link > span {
+  min-width: 0;
+}
+
+/* Títulos, nombre y bio los escribe cada usuario: una palabra larga se corta
+   en vez de salirse de la columna. */
+.port-name,
+.identity h1,
+.bio {
+  overflow-wrap: anywhere;
 }
 
 .port-link:hover .port-name {
@@ -475,7 +493,7 @@ button {
 }
 
 .field-error,
-.form-notice,
+.field-hint,
 .form-help {
   margin: 0;
   font-size: var(--text-sm);
@@ -489,31 +507,119 @@ button {
   content: "⚠ ";
 }
 
-.form-notice {
-  padding: var(--space-3) var(--space-4);
-  border: 1px solid var(--color-line);
-  border-radius: var(--radius-md);
-}
-
-.form-notice.is-error {
-  border-color: var(--color-fg);
-}
-
+.field-hint,
 .form-help {
   color: var(--color-fg-muted);
 }
 
-.submit {
-  justify-self: start;
+/* Avisos: la lima es solo del en vivo (DESIGN.md), así que éxito y error se
+   distinguen por ícono y trazo, no por color. */
+.alert {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: var(--space-3);
+  align-items: start;
+  padding: var(--space-4);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+}
+
+.alert[hidden] {
+  display: none;
+}
+
+.alert.is-error {
+  border: 2px solid var(--color-fg);
+}
+
+.alert svg {
+  width: 22px;
+  height: 22px;
+  margin-top: 1px;
+}
+
+.alert-body {
+  display: grid;
+  gap: var(--space-4);
+}
+
+.alert-text {
+  margin: 0;
+}
+
+.alert-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+}
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   min-height: var(--target-min);
   padding: var(--space-2) var(--space-5);
-  border: 0;
+  border: 1px solid var(--color-fg);
   border-radius: var(--radius-md);
   background: var(--color-fg);
   color: var(--color-bg);
   font-family: var(--font-display);
   font-weight: 500;
+  text-decoration: none;
   cursor: pointer;
+}
+
+.button.is-quiet {
+  background: transparent;
+  color: var(--color-fg);
+}
+
+.button:disabled {
+  cursor: progress;
+  opacity: 0.7;
+}
+
+.submit {
+  justify-self: start;
+}
+
+.contact-done {
+  margin-top: var(--space-6);
+}
+
+/* En pantallas angostas los botones ocupan el ancho: más fáciles de tocar. */
+@media (max-width: 30rem) {
+  .submit,
+  .alert-actions .button {
+    justify-self: stretch;
+    flex: 1 1 100%;
+  }
+}
+
+/* Login: los dos proveedores, a lo ancho de la columna. */
+.login {
+  display: grid;
+  gap: var(--space-5);
+  margin-top: var(--space-6);
+}
+
+.login-options {
+  display: grid;
+  gap: var(--space-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.login-button {
+  gap: var(--space-3);
+  width: 100%;
+}
+
+.login-button svg {
+  width: 20px;
+  height: 20px;
 }
 
 /* Campo trampa: fuera de la pantalla (no `display: none`, que algunos bots detectan). */

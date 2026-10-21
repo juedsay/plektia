@@ -190,6 +190,7 @@
     - Caso de uso con validación, campo trampa, límite por IP (binding propio) y Turnstile verificado en el servidor (*sitekey* y *secret* se crean con un wizard).
     - Aviso por mail cuando haya dominio propio.
     - El correo de Plektia nunca aparece en el sitio.
+  - **Mejoras del formulario (hechas):** validación en el navegador con las reglas del dominio, botón bloqueado al enviar, avisos que reciben el foco, borrador por pestaña y éxito con "Volver al inicio" / "Enviar otro mensaje" (sin redirección automática, por accesibilidad). El login pasa al diseño de Plektia, y un E2E revisa que ninguna página se desborde entre 360 y 1440 px.
   - **Parte 4:** `/plektia/privacidad` (incluye Turnstile y el formulario para pedir el borrado) y la publicación de la app de Google.
   - **Archivos:** `src/ui/styles/fonts.css`, `src/ui/components/Seo.astro`, `src/content/plektia.ts`, `src/pages/plektia/index.astro`, `src/pages/plektia/privacidad.astro`, `src/pages/sitemap.xml.ts`.
 
@@ -355,6 +356,14 @@
 ---
 
 ## Cierre
+
+- [ ] **Tarea 32b: Aviso por mail de los mensajes de contacto** · S · Deps: 16 (parte 3)
+  - Cada mensaje nuevo de `/contacto` te llega por mail, sin exponer el correo en el sitio.
+  - Con dominio propio, se usa el servicio de email de Cloudflare (sin terceros). Si el dominio no llegó, se usa un servicio externo (por ejemplo Resend), que manda solo a tu correo.
+  - **Aceptación:**
+    - Un envío real llega al mail con nombre, email y mensaje, sin HTML del visitante (se manda solo texto).
+    - Si el mail falla, el mensaje queda guardado igual.
+  - **Verificar:** integración con el proveedor en modo prueba + un envío real.
 
 - [ ] **Tarea 33: Revisión final y publicación** · S · Deps: todas
   - `/security-review` sobre todo el repo, `/webperf` sobre la página pública, `/ship` (checklist de lanzamiento) y pasar el repo a público.
