@@ -62,6 +62,7 @@ test.describe("página pública", () => {
     await expect(page.getByRole("heading", { level: 2 })).toHaveText([
       "Novedades",
       "Sobre Plektia",
+      "Legal",
     ]);
     await expect(page.locator('meta[property="og:type"]')).toHaveAttribute("content", "profile");
   });
@@ -137,6 +138,29 @@ test.describe("página pública", () => {
     expect(await robots.text()).toContain("Disallow: /admin");
     for (const path of ["/favicon.svg", "/og.png", "/apple-touch-icon.png"]) {
       expect((await request.get(path)).ok(), path).toBe(true);
+    }
+  });
+
+  test("la política de privacidad está publicada y enlazada desde el pie de cada página", async ({
+    page,
+  }) => {
+    for (const path of ["/", "/plektia", "/juedsay", "/contact", "/login"]) {
+      await page.goto(path);
+      await expect(
+        page.getByRole("contentinfo").getByRole("link", { name: "Privacidad" }),
+        path,
+      ).toHaveAttribute("href", "/legal/privacy");
+    }
+    const response = await page.goto("/legal/privacy");
+    expect(response?.status()).toBe(200);
+    await expect(page.getByRole("heading", { level: 1 })).toHaveText("Política de privacidad");
+    await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
+      "href",
+      /\/legal\/privacy$/,
+    );
+    // Lo que Google revisa para publicar el login, y lo que exige la Ley 25.326.
+    for (const section of ["Quién es responsable", "Dónde se guardan", "Tus derechos"]) {
+      await expect(page.getByRole("heading", { level: 2, name: section })).toBeVisible();
     }
   });
 });

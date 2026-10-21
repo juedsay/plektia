@@ -11,6 +11,7 @@ describe("sitemapXml", () => {
       "https://app.plektia.workers.dev/",
       "https://app.plektia.workers.dev/plektia",
       "https://app.plektia.workers.dev/contact",
+      "https://app.plektia.workers.dev/legal/privacy",
       "https://app.plektia.workers.dev/juedsay",
       "https://app.plektia.workers.dev/otra",
     ]);

@@ -622,6 +622,61 @@ button {
   height: 20px;
 }
 
+/* Textos largos (legales): medida cómoda de lectura y títulos con la voz de la marca. */
+.prose {
+  margin-top: var(--space-6);
+  line-height: 1.65;
+}
+
+.prose header {
+  margin-bottom: var(--space-6);
+  text-align: center;
+}
+
+.prose h1 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--text-xl);
+  font-weight: 500;
+  line-height: 1.15;
+}
+
+.prose h2 {
+  margin: var(--space-8) 0 var(--space-3);
+  font-family: var(--font-display);
+  font-size: var(--text-section);
+  font-weight: 600;
+  line-height: 1.25;
+}
+
+.prose p,
+.prose ul {
+  margin: 0 0 var(--space-4);
+}
+
+.prose ul {
+  padding-left: var(--space-5);
+}
+
+.prose li + li {
+  margin-top: var(--space-2);
+}
+
+.prose a {
+  text-underline-offset: 3px;
+}
+
+.prose code {
+  font-family: var(--font-data);
+  font-size: 0.9em;
+}
+
+.prose-meta {
+  margin: var(--space-2) 0 0;
+  color: var(--color-fg-muted);
+  font-size: var(--text-sm);
+}
+
 /* Campo trampa: fuera de la pantalla (no `display: none`, que algunos bots detectan). */
 .trap {
   position: absolute;
