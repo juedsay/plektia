@@ -185,7 +185,7 @@
     - `/plektia`, la página oficial: contenido en `src/content/` validado con `parseLinkInput` (lo que el panel rechazaría rompe el build); bio "Todos tus links, unidos por un hilo.".
     - Se eliminó `DEFAULT_HANDLE`.
     - Las páginas se renderizan en el Worker, no prerenderizadas, para que tengan las cabeceras de seguridad.
-  - **Parte 3 (código hecho; falta el wizard de Turnstile y la clave de servicio en producción):** formulario de contacto en `/contacto`, en la raíz y no bajo `/plektia`, a pedido. `contacto` y `privacidad` pasan a ser handles reservados.
+  - **Parte 3 (código hecho; falta el wizard de Turnstile y la clave de servicio en producción):** formulario de contacto en `/contact`, en la raíz y no bajo `/plektia`, a pedido. `contacto` y `privacidad` pasan a ser handles reservados.
     - Tabla `contact_messages` con RLS: solo inserta el visitante; solo leen los owners.
     - Caso de uso con validación, campo trampa, límite por IP (binding propio) y Turnstile verificado en el servidor (*sitekey* y *secret* se crean con un wizard).
     - Aviso por mail cuando haya dominio propio.
@@ -358,7 +358,7 @@
 ## Cierre
 
 - [ ] **Tarea 32b: Aviso por mail de los mensajes de contacto** · S · Deps: 16 (parte 3)
-  - Cada mensaje nuevo de `/contacto` te llega por mail, sin exponer el correo en el sitio.
+  - Cada mensaje nuevo de `/contact` te llega por mail, sin exponer el correo en el sitio.
   - Con dominio propio, se usa el servicio de email de Cloudflare (sin terceros). Si el dominio no llegó, se usa un servicio externo (por ejemplo Resend), que manda solo a tu correo.
   - **Aceptación:**
     - Un envío real llega al mail con nombre, email y mensaje, sin HTML del visitante (se manda solo texto).

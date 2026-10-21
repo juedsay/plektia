@@ -22,7 +22,7 @@ test.describe("login", () => {
     await expect(alert.locator("[data-alert-text]")).toHaveText(DENIED);
     await expect(alert.getByRole("link", { name: "Pedir una invitación" })).toHaveAttribute(
       "href",
-      "/contacto",
+      "/contact",
     );
   });
 

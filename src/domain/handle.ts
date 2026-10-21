@@ -13,6 +13,7 @@ export const RESERVED_HANDLES: ReadonlySet<string> = new Set([
   "app",
   "assets",
   "auth",
+  "contact",
   "contacto",
   "favicon.ico",
   "help",

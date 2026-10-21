@@ -2,7 +2,7 @@
 begin;
 create extension if not exists pgtap with schema extensions;
 
-select plan(13);
+select plan(14);
 
 create function pg_temp.as_anon()
 returns void language sql as $$
@@ -58,8 +58,9 @@ select throws_ok(
   'PL429', null, 'con 100 mensajes en la última hora rechaza el siguiente');
 reset role;
 
--- `/contacto` y `/privacidad` son páginas propias: no pueden ser el handle de nadie.
+-- `/contact`, `/contacto` (redirige) y `/privacidad` son rutas propias: no pueden ser el handle de nadie.
 select throws_ok($$ select 'contacto'::public.handle $$, '23514', null, 'contacto es un handle reservado');
+select throws_ok($$ select 'contact'::public.handle $$, '23514', null, 'contact es un handle reservado');
 select throws_ok($$ select 'privacidad'::public.handle $$, '23514', null, 'privacidad es un handle reservado');
 
 select * from finish();
