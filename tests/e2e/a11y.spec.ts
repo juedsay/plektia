@@ -58,4 +58,45 @@ test.describe("accesibilidad (axe, WCAG 2.2 AAA)", () => {
     await page.goto("/login?error=1");
     expect(await violations(page)).toEqual([]);
   });
+
+  // axe no puede juzgar cómo se ve el foco (WCAG 2.4.13, AAA). Se recorre cada
+  // página con Tab y se mide el contorno de cada elemento enfocado: sólido, de
+  // al menos 2 px y con contraste ≥ 3:1 contra el fondo de la página.
+  for (const path of ["/", "/juedsay", "/contact", "/login", "/legal/privacy"]) {
+    test(`${path}: el foco se ve en cada elemento (2.4.13)`, async ({ page }) => {
+      await page.goto(path);
+      const problems: string[] = [];
+      for (let i = 0; i < 25; i++) {
+        await page.keyboard.press("Tab");
+        const focus = await page.evaluate(() => {
+          const el = document.activeElement;
+          if (!el || el === document.body) return null;
+          const style = getComputedStyle(el);
+          const bg = getComputedStyle(document.body).backgroundColor;
+          const parse = (c: string) => (c.match(/[\d.]+/g) ?? []).slice(0, 3).map(Number);
+          const lum = (rgb: number[]) => {
+            const [r = 0, g = 0, b = 0] = rgb.map((v) => {
+              const x = v / 255;
+              return x <= 0.03928 ? x / 12.92 : ((x + 0.055) / 1.055) ** 2.4;
+            });
+            return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+          };
+          const [a, b] = [lum(parse(style.outlineColor)), lum(parse(bg))];
+          return {
+            name: `${el.tagName.toLowerCase()} ${el.getAttribute("aria-label") ?? el.textContent.trim().slice(0, 30)}`,
+            outline: style.outlineStyle,
+            width: Number.parseFloat(style.outlineWidth),
+            contrast: (Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05),
+          };
+        });
+        if (!focus) continue;
+        if (focus.outline === "none" || focus.width < 2 || focus.contrast < 3) {
+          problems.push(
+            `${focus.name}: ${focus.outline} ${String(focus.width)}px ${focus.contrast.toFixed(1)}:1`,
+          );
+        }
+      }
+      expect(problems).toEqual([]);
+    });
+  }
 });
