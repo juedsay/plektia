@@ -1,9 +1,10 @@
 // Lo único que lee la configuración del Worker. Páginas y middlewares piden
 // sus dependencias acá, ya armadas.
 import type { AstroCookies } from "astro";
-import { env } from "cloudflare:workers";
+import { cache, env } from "cloudflare:workers";
 
 import type { AuthGateway } from "@/application/ports/auth-gateway";
+import type { PageCache } from "@/application/ports/page-cache";
 import type {
   PublicPageReader,
   PublicProfileDirectory,
@@ -14,6 +15,7 @@ import { createAuthGateway } from "@/composition/auth";
 import { createContactSender } from "@/composition/contact";
 import { createPublicPageReader } from "@/composition/public-page";
 import { createSessionReader } from "@/composition/session";
+import { WorkerPageCache } from "@/infrastructure/cache/purge";
 import { CloudflareRateLimiter } from "@/infrastructure/cloudflare/cloudflare-rate-limiter";
 import { createIngestClient } from "@/infrastructure/supabase/ingest-client";
 
@@ -40,3 +42,7 @@ export const contactSender = () =>
 
 /** Clave pública del widget de Turnstile (va en el HTML). */
 export const turnstileSiteKey = (): string => env.TURNSTILE_SITE_KEY;
+
+/** Purga de la caché de páginas. En local `cache` no existe: purgar no hace nada. */
+export const pageCache = (): PageCache =>
+  new WorkerPageCache(typeof cache === "undefined" ? undefined : (options) => cache.purge(options));

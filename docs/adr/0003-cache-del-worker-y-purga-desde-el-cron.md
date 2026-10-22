@@ -41,3 +41,19 @@ En local (`wrangler dev`) la caché del Worker no se emula: `ctx.cache` no exist
 - La purga usa los límites del plan gratuito de Cloudflare. El cron purga solo las etiquetas de los perfiles que cambiaron, no todo.
 - Los tests locales no pueden comprobar la caché. La política de caché se verifica con E2E contra producción después de cada deploy (`E2E_BASE_URL`).
 - Las rutas del panel nunca se cachean. Además, las respuestas con `Set-Cookie` y los pedidos con `Authorization` saltean la caché siempre.
+
+## Implementación (tarea 17, 2026-10-22)
+
+- **Política por respuesta** (`src/infrastructure/http/cache-policy.ts`, aplicada por un middleware):
+
+  | Rutas | Caché |
+  |---|---|
+  | Perfiles (`/{handle}`, 200) | 1 minuto, `stale-while-revalidate` 5 minutos, etiqueta `profile:{handle}` |
+  | 404 de un handle | 1 minuto, con la misma etiqueta, así crear el perfil lo purga |
+  | Landing, `/plektia`, `/legal/privacy`, sitemap y robots | 5 minutos, etiqueta `site` |
+  | Login, auth, panel y contacto; redirecciones, errores, POST y respuestas con cookie | `private, no-store` |
+  | Cualquier otra ruta | `private, no-store`: lo que no está en la política no se cachea |
+
+- **Purga:** `WorkerPageCache` (`src/infrastructure/cache/purge.ts`) usa `cache.purge` de `cloudflare:workers`, sin el contexto de la petición. Una purga fallida solo deja rastro en el log, porque lo cacheado vence solo.
+- **Desvío de la spec, por ahora:** los parámetros de la URL forman parte de la clave de caché, así que `/juedsay?utm_source=x` es una entrada aparte. Ignorarlos exige partir el Worker en una puerta de entrada sin caché y la app en otro *entrypoint* con `cf.cacheKey`, y mover la purga a ese *entrypoint*. Las páginas no cambian según los parámetros, así que el costo es solo alguna consulta de más.
+- **El host no está en la clave:** la caché es del Worker, no del dominio. **Al sumar un dominio propio**, las URLs absolutas de la página (la canónica, `og:url`, `og:image` y el sitemap) tienen que salir de una configuración fija y no del pedido. Si no, una página cacheada desde `workers.dev` se serviría con esas URLs en el dominio nuevo. Está en el checklist de apertura (CAPABILITY-MAP).

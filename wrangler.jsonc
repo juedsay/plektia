@@ -12,10 +12,11 @@
     "binding": "ASSETS",
     "directory": "./dist",
   },
-  // Caché del Worker apagada hasta que `public-page` (F4) defina qué se cachea y
-  // con qué etiquetas; el spike de la tarea 6 probó que funciona (ADR 0003).
+  // Caché del Worker (ADR 0003). Qué se cachea y con qué etiquetas lo decide
+  // cada respuesta: src/infrastructure/http/cache-policy.ts. Cada deploy
+  // arranca con la caché vacía (la versión es parte de la clave).
   "cache": {
-    "enabled": false,
+    "enabled": true,
   },
   "triggers": {
     // Cada 5 minutos: el cron de `live-status` refresca el estado en vivo.

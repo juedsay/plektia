@@ -3,6 +3,7 @@ import { describe, expect, it, vi } from "vitest";
 
 import type { SessionReader, SessionUser } from "@/application/ports/session-reader";
 import { adminGuardMiddleware } from "@/middleware/admin-guard";
+import { cacheMiddleware } from "@/middleware/cache";
 import { rateLimitMiddleware } from "@/middleware/rate-limit";
 import { securityHeadersMiddleware } from "@/middleware/security-headers";
 import { sessionMiddleware } from "@/middleware/session";
@@ -25,6 +26,31 @@ const ok: MiddlewareNext = () => Promise.resolve(new Response("ok"));
 function readerFor(user: SessionUser | null): SessionReader {
   return { getCurrentUser: () => Promise.resolve(user) };
 }
+
+describe("cacheMiddleware", () => {
+  it("marca un perfil como público y con su etiqueta", async () => {
+    const response = (await cacheMiddleware(contextFor("/juedsay"), ok)) as Response;
+    expect(response.headers.get("Cache-Control")).toBe(
+      "public, max-age=60, stale-while-revalidate=300",
+    );
+    expect(response.headers.get("Cache-Tag")).toBe("profile:juedsay");
+  });
+
+  it("una ruta de sesión queda privada y sin etiquetas", async () => {
+    const tagged: MiddlewareNext = () =>
+      Promise.resolve(new Response("ok", { headers: { "Cache-Tag": "x" } }));
+    const response = (await cacheMiddleware(contextFor("/login"), tagged)) as Response;
+    expect(response.headers.get("Cache-Control")).toBe("private, no-store");
+    expect(response.headers.has("Cache-Tag")).toBe(false);
+  });
+
+  it("si la respuesta pone una cookie, no se cachea", async () => {
+    const withCookie: MiddlewareNext = () =>
+      Promise.resolve(new Response("ok", { headers: { "Set-Cookie": "a=b" } }));
+    const response = (await cacheMiddleware(contextFor("/juedsay"), withCookie)) as Response;
+    expect(response.headers.get("Cache-Control")).toBe("private, no-store");
+  });
+});
 
 describe("securityHeadersMiddleware", () => {
   it("agrega las cabeceras de seguridad a la respuesta", async () => {
