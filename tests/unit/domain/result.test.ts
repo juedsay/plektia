@@ -28,14 +28,14 @@ describe("Result", () => {
 
   describe("map", () => {
     it("transforma el valor de un ok", () => {
-      expect(map(ok(2), (n) => n * 10)).toEqual(ok(20));
+      expect(map(ok(2), (value) => value * 10)).toEqual(ok(20));
     });
 
     it("deja pasar un err sin llamar a la función", () => {
       let called = false;
-      const result = map(err("conflict") as Result<number, "conflict">, (n) => {
+      const result = map(err("conflict") as Result<number, "conflict">, (value) => {
         called = true;
-        return n * 10;
+        return value * 10;
       });
 
       expect(result).toEqual(err("conflict"));

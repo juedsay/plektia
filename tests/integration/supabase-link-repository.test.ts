@@ -90,9 +90,11 @@ describe("SupabaseLinkRepository contra Supabase local", () => {
     await newLink("suelto");
 
     const own = await repo.listOwn();
-    expect(own.sections.map((s) => s.title)).toEqual(["Redes"]);
+    expect(own.sections.map((section) => section.title)).toEqual(["Redes"]);
     expect(
-      own.links.filter((l) => l.sectionId === sectionId).map((l) => [l.title, l.position]),
+      own.links
+        .filter((link) => link.sectionId === sectionId)
+        .map((link) => [link.title, link.position]),
     ).toEqual([
       ["a", 0],
       ["b", 1],
@@ -106,11 +108,11 @@ describe("SupabaseLinkRepository contra Supabase local", () => {
       repo.updateLink(link.id, link.version, { title: "desde el MCP" }),
     ]);
     const results = [panel, mcp];
-    expect(results.filter((r) => r.ok)).toHaveLength(1);
-    expect(results.filter((r) => !r.ok)).toEqual([{ ok: false, error: "conflict" }]);
+    expect(results.filter((result) => result.ok)).toHaveLength(1);
+    expect(results.filter((result) => !result.ok)).toEqual([{ ok: false, error: "conflict" }]);
 
     const { links } = await repo.listOwn();
-    const winner = results.find((r) => r.ok);
+    const winner = results.find((result) => result.ok);
     expect(links[0]?.title).toBe(winner?.ok ? winner.value.title : "?");
     expect(links[0]?.version).toBe(2);
   });
@@ -147,7 +149,7 @@ describe("SupabaseLinkRepository contra Supabase local", () => {
   it("no ve los links ocultos de otro usuario ni los suma a los suyos", async () => {
     const { data } = await client.from("links").select("id").eq("id", foreignLinkId);
     expect(data).toEqual([]);
-    expect((await repo.listOwn()).links.some((l) => l.id === foreignLinkId)).toBe(false);
+    expect((await repo.listOwn()).links.some((link) => link.id === foreignLinkId)).toBe(false);
   });
 
   it("reordena 20 links al azar 10 veces sin repetidos ni huecos", async () => {
@@ -159,23 +161,23 @@ describe("SupabaseLinkRepository contra Supabase local", () => {
       const shuffled = [...links].sort(() => Math.random() - 0.5);
       const moved = await repo.moveLinks(
         null,
-        shuffled.map((l) => ({ id: l.id, version: l.version })),
+        shuffled.map((link) => ({ id: link.id, version: link.version })),
       );
       expect(moved).toEqual({ ok: true, value: undefined });
 
       const after = (await repo.listOwn()).links;
-      expect(after.map((l) => l.id)).toEqual(shuffled.map((l) => l.id));
-      expect(after.map((l) => l.position)).toEqual([...Array(20).keys()]);
+      expect(after.map((link) => link.id)).toEqual(shuffled.map((link) => link.id));
+      expect(after.map((link) => link.position)).toEqual([...Array(20).keys()]);
     }
   });
 
   it("una lista de orden con versiones viejas da conflict", async () => {
-    const a = await newLink("a");
-    const b = await newLink("b");
-    await repo.updateLink(a.id, a.version, { title: "a2" });
+    const linkA = await newLink("a");
+    const linkB = await newLink("b");
+    await repo.updateLink(linkA.id, linkA.version, { title: "a2" });
     const result = await repo.moveLinks(null, [
-      { id: b.id, version: b.version },
-      { id: a.id, version: a.version },
+      { id: linkB.id, version: linkB.version },
+      { id: linkA.id, version: linkA.version },
     ]);
     expect(result).toEqual({ ok: false, error: "conflict" });
   });
@@ -192,25 +194,27 @@ describe("SupabaseLinkRepository contra Supabase local", () => {
     });
     const { links, sections } = await repo.listOwn();
     expect(sections).toHaveLength(0);
-    expect(links.map((l) => [l.title, l.sectionId, l.position])).toEqual([
+    expect(links.map((link) => [link.title, link.sectionId, link.position])).toEqual([
       ["suelto", null, 0],
       ["adentro", null, 1],
     ]);
   });
 
   it("reordena secciones y detecta conflictos", async () => {
-    const a = await repo.createSection({ title: "A", showTitle: true, visible: true });
-    const b = await repo.createSection({ title: "B", showTitle: true, visible: true });
-    if (!a.ok || !b.ok) throw new Error("sin secciones");
+    const sectionA = await repo.createSection({ title: "A", showTitle: true, visible: true });
+    const sectionB = await repo.createSection({ title: "B", showTitle: true, visible: true });
+    if (!sectionA.ok || !sectionB.ok) throw new Error("sin secciones");
     expect(
       await repo.reorderSections([
-        { id: b.value.id, version: b.value.version },
-        { id: a.value.id, version: a.value.version },
+        { id: sectionB.value.id, version: sectionB.value.version },
+        { id: sectionA.value.id, version: sectionA.value.version },
       ]),
     ).toEqual({ ok: true, value: undefined });
-    expect((await repo.listOwn()).sections.map((s) => s.title)).toEqual(["B", "A"]);
+    expect((await repo.listOwn()).sections.map((section) => section.title)).toEqual(["B", "A"]);
 
-    expect(await repo.updateSection(a.value.id, a.value.version, { title: "viejo" })).toEqual({
+    expect(
+      await repo.updateSection(sectionA.value.id, sectionA.value.version, { title: "viejo" }),
+    ).toEqual({
       ok: false,
       error: "conflict",
     });

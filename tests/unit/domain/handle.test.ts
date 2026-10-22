@@ -65,7 +65,7 @@ describe("RESERVED_HANDLES", () => {
     expect(file).toBeDefined();
     const sql = readFileSync(join(dir, file ?? ""), "utf8");
     const block = /is_reserved_handle[\s\S]*?array\[([\s\S]*?)\]/.exec(sql)?.[1] ?? "";
-    const fromSql = [...block.matchAll(/'([^']+)'/g)].map((m) => m[1]).sort();
+    const fromSql = [...block.matchAll(/'([^']+)'/g)].map((match) => match[1]).sort();
 
     expect(fromSql.length).toBeGreaterThan(0);
     expect([...RESERVED_HANDLES].sort()).toEqual(fromSql);

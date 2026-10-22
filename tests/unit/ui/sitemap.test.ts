@@ -7,7 +7,7 @@ const origin = "https://app.plektia.workers.dev";
 describe("sitemapXml", () => {
   it("lista la landing, la página oficial y un /{handle} por perfil", () => {
     const xml = sitemapXml(origin, ["juedsay", "otra"]);
-    expect([...xml.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1])).toEqual([
+    expect([...xml.matchAll(/<loc>([^<]+)<\/loc>/g)].map((match) => match[1])).toEqual([
       "https://app.plektia.workers.dev/",
       "https://app.plektia.workers.dev/plektia",
       "https://app.plektia.workers.dev/contact",
