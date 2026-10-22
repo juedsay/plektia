@@ -1,11 +1,14 @@
 ---
 import type { PublicLink } from "@/application/ports/public-page-reader";
+import NetworkIcon from "@/ui/components/NetworkIcon.astro";
 import { isProfileLink, linkMeta } from "@/ui/view/public-link";
+import { socialProfileFor } from "@/ui/view/social-profile";
 
 interface Props {
   link: PublicLink;
 }
 const { link } = Astro.props;
+const network = socialProfileFor(link.url)?.network ?? null;
 // Misma pestaña a propósito: en los navegadores de las apps sociales una
 // pestaña nueva confunde (SPEC-public-page). La URL ya viene validada.
 ---
@@ -15,7 +18,10 @@ const { link } = Astro.props;
   <div class="port-body">
     <a class="port-link" href={link.url} rel={isProfileLink(link) ? "me" : undefined}>
       <span>
-        <span class="port-name">{link.title}</span>
+        <span class="port-name">
+          <NetworkIcon network={network} />
+          {link.title}
+        </span>
         <span class="port-meta">{linkMeta(link)}</span>
       </span>
       <svg

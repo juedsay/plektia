@@ -1,4 +1,5 @@
 import type { PublicLink, PublicPage } from "@/application/ports/public-page-reader";
+import { isProfileLink } from "@/ui/view/public-link";
 
 /**
  * JSON para un `<script type="application/ld+json">`. Escapa `<`, `>` y `&`:
@@ -18,7 +19,7 @@ export function profileJsonLd(page: PublicPage, canonical: URL): Record<string, 
     ...page.unsectionedLinks,
   ];
   // `sameAs`: solo los perfiles propios en otras plataformas, no cualquier link.
-  const sameAs = links.filter((link) => link.providerHandle !== null).map((link) => link.url);
+  const sameAs = links.filter(isProfileLink).map((link) => link.url);
   return {
     "@context": "https://schema.org",
     "@type": "ProfilePage",
