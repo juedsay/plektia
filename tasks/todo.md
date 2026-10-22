@@ -175,7 +175,8 @@
     - Cero requests a Google al cargar.
     - Validadores de metadatos sin errores.
     - La política de privacidad refleja lo implementado.
-    - La app de Google sale de "Prueba": se completa la información de la marca (página principal, política de privacidad y dominios autorizados) y se publica. Hasta entonces solo entran los usuarios de prueba.
+    - La información de marca de Google está completa (página principal, política de privacidad y dominios autorizados: `plektia.workers.dev` y el de Supabase).
+    - La app de Google **sigue en "Prueba"** a propósito: la pantalla de consentimiento muestra el correo de asistencia, y aparece antes de que Plektia rechace a quien no está invitado. Cada persona invitada que entre con Google se carga como usuario de prueba (hasta 100). La publicación pasa a la apertura del registro (v2).
   - **Verificar:** E2E de red; Rich Results Test manual.
   - **Parte 1 (hecha):**
     - Fuente propia con la API de fuentes de Astro: solo el subset latino con eje óptico, precarga y respaldo con métricas.
