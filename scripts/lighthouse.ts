@@ -75,8 +75,9 @@ try {
       if (result && !result.lhr.runtimeError) runs.push(result.lhr);
     }
     const lhr = runs[0];
-    if (!lhr) {
-      fail("Lighthouse no pudo medir la página");
+    // Sin las tres corridas no hay mediana: mejor fallar que aprobar con una sola.
+    if (!lhr || runs.length < RUNS) {
+      fail(`Lighthouse midió ${String(runs.length)} de ${String(RUNS)} corridas`);
       continue;
     }
     const median = (values: number[]) => {
@@ -115,7 +116,15 @@ try {
       return sizes.reduce((a, b) => a + b, 0);
     };
     const js = await sizeOf("Script");
-    const css = await sizeOf("Stylesheet");
+    // El CSS va en línea (astro.config.mjs): se suma lo de los <style> del HTML,
+    // además de cualquier hoja externa, para que el presupuesto siga vigilándolo.
+    const document = await (await fetch(url)).text();
+    const inlineCss = [...document.matchAll(/<style[^>]*>([\s\S]*?)<\/style>/g)]
+      .map((m) => m[1] ?? "")
+      .join("");
+    const css =
+      (await sizeOf("Stylesheet")) +
+      (inlineCss ? gzipSync(new TextEncoder().encode(inlineCss), { level: 9 }).byteLength : 0);
     const html = await gzipped(url);
     if (js > BUDGETS.jsBytes) fail(`JS ${String(js)} B > ${String(BUDGETS.jsBytes)}`);
     if (css > BUDGETS.cssBytes) fail(`CSS ${String(css)} B > ${String(BUDGETS.cssBytes)}`);
