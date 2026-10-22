@@ -57,7 +57,7 @@ jobs:
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           SUPABASE_PUBLISHABLE_KEY: ${{ vars.SUPABASE_PUBLISHABLE_KEY }}
       - run: pnpm exec playwright install --with-deps chromium
-      - name: E2E de cabeceras y login contra producción
-        run: pnpm exec playwright test tests/e2e/security-headers.spec.ts tests/e2e/login-navegador.spec.ts
+      - name: E2E de cabeceras, login y caché contra producción
+        run: pnpm exec playwright test tests/e2e/security-headers.spec.ts tests/e2e/login-navegador.spec.ts tests/e2e/cache.spec.ts
         env:
           E2E_BASE_URL: ${{ vars.PRODUCTION_URL }}
