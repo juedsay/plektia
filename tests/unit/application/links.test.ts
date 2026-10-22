@@ -160,18 +160,18 @@ describe("deleteLink", () => {
 
 describe("moveLinks", () => {
   it("deja el grupo en el orden pedido", async () => {
-    const a = await created({ title: "A", url: "https://plektia.app/a" });
-    const b = await created({ title: "B", url: "https://plektia.app/b" });
+    const linkA = await created({ title: "A", url: "https://plektia.app/a" });
+    const linkB = await created({ title: "B", url: "https://plektia.app/b" });
     const result = await moveLinks(deps)({
       sectionId: null,
       items: [
-        { id: b.id, version: b.version },
-        { id: a.id, version: a.version },
+        { id: linkB.id, version: linkB.version },
+        { id: linkA.id, version: linkA.version },
       ],
     });
     expect(result.ok).toBe(true);
     const { links } = await repo.listOwn();
-    expect(links.map((l) => l.title)).toEqual(["B", "A"]);
+    expect(links.map((link) => link.title)).toEqual(["B", "A"]);
   });
 
   it.each([
@@ -192,11 +192,11 @@ describe("moveLinks", () => {
   });
 
   it("una lista incompleta la rechaza el repositorio", async () => {
-    const a = await created({ title: "A", url: "https://plektia.app/a" });
+    const linkA = await created({ title: "A", url: "https://plektia.app/a" });
     await created({ title: "B", url: "https://plektia.app/b" });
     const result = await moveLinks(deps)({
       sectionId: null,
-      items: [{ id: a.id, version: a.version }],
+      items: [{ id: linkA.id, version: linkA.version }],
     });
     expect(result).toEqual({ ok: false, error: "invalid_input" });
   });

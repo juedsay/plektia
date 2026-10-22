@@ -95,16 +95,16 @@ describe("deleteSection", () => {
 
 describe("reorderSections", () => {
   it("deja el orden pedido", async () => {
-    const a = await created("A");
-    const b = await created("B");
+    const sectionA = await created("A");
+    const sectionB = await created("B");
     const result = await reorderSections(deps)({
       items: [
-        { id: b.id, version: 1 },
-        { id: a.id, version: 1 },
+        { id: sectionB.id, version: 1 },
+        { id: sectionA.id, version: 1 },
       ],
     });
     expect(result.ok).toBe(true);
-    expect((await repo.listOwn()).sections.map((s) => s.title)).toEqual(["B", "A"]);
+    expect((await repo.listOwn()).sections.map((section) => section.title)).toEqual(["B", "A"]);
   });
 
   it("rechaza una lista que no es una lista", async () => {

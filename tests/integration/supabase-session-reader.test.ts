@@ -87,36 +87,36 @@ describe("SupabaseSessionReader contra Supabase local", () => {
   });
 
   it("con la firma del token alterada no hay sesión", async () => {
-    const jar = tamper(await cookiesFor(session), (s) => {
-      const token = String(s["access_token"]);
-      const last = token.at(-2) === "A" ? "B" : "A";
-      s["access_token"] = `${token.slice(0, -2)}${last}${token.slice(-1)}`;
-      s["refresh_token"] = "invalido";
+    const jar = tamper(await cookiesFor(session), (sessionData) => {
+      const token = String(sessionData["access_token"]);
+      const replacementChar = token.at(-2) === "A" ? "B" : "A";
+      sessionData["access_token"] = `${token.slice(0, -2)}${replacementChar}${token.slice(-1)}`;
+      sessionData["refresh_token"] = "invalido";
     });
     expect(await readerFor(jar).getCurrentUser()).toBeNull();
   });
 
   it("con el usuario cambiado en el token (sin volver a firmar) no hay sesión", async () => {
-    const jar = tamper(await cookiesFor(session), (s) => {
-      const [header, payload, signature] = String(s["access_token"]).split(".");
+    const jar = tamper(await cookiesFor(session), (sessionData) => {
+      const [header, payload, signature] = String(sessionData["access_token"]).split(".");
       const claims = JSON.parse(Buffer.from(payload ?? "", "base64url").toString("utf8")) as Record<
         string,
         unknown
       >;
       claims["sub"] = "22222222-2222-4222-8222-222222222222";
-      s["access_token"] = [
+      sessionData["access_token"] = [
         header,
         Buffer.from(JSON.stringify(claims)).toString("base64url"),
         signature,
       ].join(".");
-      s["refresh_token"] = "invalido";
+      sessionData["refresh_token"] = "invalido";
     });
     expect(await readerFor(jar).getCurrentUser()).toBeNull();
   });
 
   it("con el token vencido y sin poder renovarlo no hay sesión", async () => {
-    const jar = tamper(await cookiesFor(session), (s) => {
-      s["refresh_token"] = "invalido";
+    const jar = tamper(await cookiesFor(session), (sessionData) => {
+      sessionData["refresh_token"] = "invalido";
     });
     vi.useFakeTimers({ toFake: ["Date"] });
     vi.setSystemTime(Date.now() + 2 * 60 * 60 * 1000);

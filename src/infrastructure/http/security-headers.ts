@@ -44,11 +44,11 @@ const directiveName = (directive: string): string => directive.trim().split(/\s+
 function mergeCsp(current: string, base: string): string {
   const directives = current
     .split(";")
-    .map((d) => d.trim())
+    .map((directive) => directive.trim())
     .filter(Boolean);
   const present = new Set(directives.map(directiveName));
 
-  for (const directive of base.split(";").map((d) => d.trim())) {
+  for (const directive of base.split(";").map((directive) => directive.trim())) {
     if (directive && !present.has(directiveName(directive))) directives.push(directive);
   }
 

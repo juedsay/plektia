@@ -23,7 +23,7 @@ test.describe("hilo", () => {
 
       const { right, textLeft } = await page.evaluate(() => {
         const paths = [...document.querySelectorAll<SVGPathElement>(".thread path")];
-        const right = Math.max(...paths.map((p) => p.getBoundingClientRect().right));
+        const right = Math.max(...paths.map((path) => path.getBoundingClientRect().right));
         const body = document.querySelector(".port-body");
         return { right, textLeft: body?.getBoundingClientRect().left ?? 0 };
       });
@@ -58,7 +58,7 @@ test.describe("ventana de compartir", () => {
     baseURL,
   }) => {
     const origins = new Set<string>();
-    page.on("request", (r) => origins.add(new URL(r.url()).origin));
+    page.on("request", (request) => origins.add(new URL(request.url()).origin));
     await page.goto("/juedsay");
     await page.getByRole("button", { name: "Compartir esta página" }).click();
 

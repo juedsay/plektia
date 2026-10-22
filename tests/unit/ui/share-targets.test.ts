@@ -6,7 +6,9 @@ const url = "https://app.plektia.workers.dev/juedsay";
 const title = "Julián · Plektia";
 
 describe("shareTargets", () => {
-  const byId = Object.fromEntries(shareTargets(url, title).map((t) => [t.id, t.href]));
+  const byId = Object.fromEntries(
+    shareTargets(url, title).map((target) => [target.id, target.href]),
+  );
 
   it("arma la URL de cada destino con el link codificado", () => {
     const encoded = encodeURIComponent(url);

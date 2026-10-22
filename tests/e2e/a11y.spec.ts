@@ -18,10 +18,10 @@ const TAGS = [
 async function violations(page: Page) {
   const results = await new AxeBuilder({ page }).withTags(TAGS).exclude(".cf-turnstile").analyze();
   // Solo lo necesario para entender el error en el reporte.
-  return results.violations.map((v) => ({
-    id: v.id,
-    impact: v.impact,
-    nodes: v.nodes.map((n) => n.target.join(" ")),
+  return results.violations.map((violation) => ({
+    id: violation.id,
+    impact: violation.impact,
+    nodes: violation.nodes.map((node) => node.target.join(" ")),
   }));
 }
 
@@ -69,24 +69,32 @@ test.describe("accesibilidad (axe, WCAG 2.2 AAA)", () => {
       for (let i = 0; i < 25; i++) {
         await page.keyboard.press("Tab");
         const focus = await page.evaluate(() => {
-          const el = document.activeElement;
-          if (!el || el === document.body) return null;
-          const style = getComputedStyle(el);
-          const bg = getComputedStyle(document.body).backgroundColor;
-          const parse = (c: string) => (c.match(/[\d.]+/g) ?? []).slice(0, 3).map(Number);
-          const lum = (rgb: number[]) => {
-            const [r = 0, g = 0, b = 0] = rgb.map((v) => {
-              const x = v / 255;
-              return x <= 0.03928 ? x / 12.92 : ((x + 0.055) / 1.055) ** 2.4;
+          const focused = document.activeElement;
+          if (!focused || focused === document.body) return null;
+          const style = getComputedStyle(focused);
+          const backgroundColor = getComputedStyle(document.body).backgroundColor;
+          // "rgb(242, 242, 238)" → [242, 242, 238]
+          const parseRgb = (color: string) =>
+            (color.match(/[\d.]+/g) ?? []).slice(0, 3).map(Number);
+          // Luminancia relativa de WCAG: base de la fórmula de contraste.
+          const relativeLuminance = (rgb: number[]) => {
+            const [red = 0, green = 0, blue = 0] = rgb.map((channel) => {
+              const normalized = channel / 255;
+              return normalized <= 0.03928
+                ? normalized / 12.92
+                : ((normalized + 0.055) / 1.055) ** 2.4;
             });
-            return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+            return 0.2126 * red + 0.7152 * green + 0.0722 * blue;
           };
-          const [a, b] = [lum(parse(style.outlineColor)), lum(parse(bg))];
+          const outlineLuminance = relativeLuminance(parseRgb(style.outlineColor));
+          const backgroundLuminance = relativeLuminance(parseRgb(backgroundColor));
+          const lighter = Math.max(outlineLuminance, backgroundLuminance);
+          const darker = Math.min(outlineLuminance, backgroundLuminance);
           return {
-            name: `${el.tagName.toLowerCase()} ${el.getAttribute("aria-label") ?? el.textContent.trim().slice(0, 30)}`,
+            name: `${focused.tagName.toLowerCase()} ${focused.getAttribute("aria-label") ?? focused.textContent.trim().slice(0, 30)}`,
             outline: style.outlineStyle,
             width: Number.parseFloat(style.outlineWidth),
-            contrast: (Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05),
+            contrast: (lighter + 0.05) / (darker + 0.05),
           };
         });
         if (!focus) continue;

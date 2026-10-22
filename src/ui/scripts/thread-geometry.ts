@@ -22,9 +22,10 @@ export function mulberry32(seed: number): Random {
   let state = seed | 0;
   return () => {
     state = (state + 0x6d2b79f5) | 0;
-    let t = Math.imul(state ^ (state >>> 15), 1 | state);
-    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
-    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    // Mezcla de bits del algoritmo mulberry32 (no cambiar: define la secuencia).
+    let mixed = Math.imul(state ^ (state >>> 15), 1 | state);
+    mixed = (mixed + Math.imul(mixed ^ (mixed >>> 7), 61 | mixed)) ^ mixed;
+    return ((mixed ^ (mixed >>> 14)) >>> 0) / 4294967296;
   };
 }
 
@@ -115,16 +116,16 @@ export function buildThread(
 
   const segments: Cubic[] = [];
   for (let i = 1; i < points.length; i++) {
-    const a = points[i - 1] ?? first;
-    const b = points[i] ?? first;
-    const dy = b.y - a.y;
-    const [bendA, bendB] = shape.bends[i] ?? [1, 1];
-    const size = Math.min(1, 0.45 + dy / 220) * (tension[i] ?? 1);
+    const fromJack = points[i - 1] ?? first;
+    const toJack = points[i] ?? first;
+    const verticalGap = toJack.y - fromJack.y;
+    const [bendAtStart, bendAtEnd] = shape.bends[i] ?? [1, 1];
+    const size = Math.min(1, 0.45 + verticalGap / 220) * (tension[i] ?? 1);
     segments.push({
-      from: a,
-      c1: at(a.x + sway(bendA, size), a.y + dy * 0.35),
-      c2: at(b.x + sway(bendB, size), b.y - dy * 0.35),
-      to: b,
+      from: fromJack,
+      c1: at(fromJack.x + sway(bendAtStart, size), fromJack.y + verticalGap * 0.35),
+      c2: at(toJack.x + sway(bendAtEnd, size), toJack.y - verticalGap * 0.35),
+      to: toJack,
     });
   }
 
@@ -138,27 +139,40 @@ export function buildThread(
   return { start, lead, segments, tail };
 }
 
-/** Punto de la curva en `t` (0 a 1). */
-export function pointAt(curve: Cubic, t: number): Point {
-  const u = 1 - t;
-  const a = u * u * u;
-  const b = 3 * u * u * t;
-  const c = 3 * u * t * t;
-  const d = t * t * t;
+/** Punto de la curva al avanzar `progress` (de 0, el inicio, a 1, el final). */
+export function pointAt(curve: Cubic, progress: number): Point {
+  // Fórmula de Bézier cúbica: cada punto de la curva "pesa" según el avance.
+  const remaining = 1 - progress;
+  const weightFrom = remaining * remaining * remaining;
+  const weightControl1 = 3 * remaining * remaining * progress;
+  const weightControl2 = 3 * remaining * progress * progress;
+  const weightTo = progress * progress * progress;
   return {
-    x: a * curve.from.x + b * curve.c1.x + c * curve.c2.x + d * curve.to.x,
-    y: a * curve.from.y + b * curve.c1.y + c * curve.c2.y + d * curve.to.y,
+    x:
+      weightFrom * curve.from.x +
+      weightControl1 * curve.c1.x +
+      weightControl2 * curve.c2.x +
+      weightTo * curve.to.x,
+    y:
+      weightFrom * curve.from.y +
+      weightControl1 * curve.c1.y +
+      weightControl2 * curve.c2.y +
+      weightTo * curve.to.y,
   };
 }
 
-const n = (value: number) => String(Math.round(value * 100) / 100);
-const curveTo = (c: Cubic) =>
-  `C${n(c.c1.x)} ${n(c.c1.y)} ${n(c.c2.x)} ${n(c.c2.y)} ${n(c.to.x)} ${n(c.to.y)}`;
+/** Coordenada con dos decimales: alcanza para el trazo y achica el SVG. */
+const formatCoordinate = (value: number) => String(Math.round(value * 100) / 100);
+const curveTo = (curve: Cubic) =>
+  `C${formatCoordinate(curve.c1.x)} ${formatCoordinate(curve.c1.y)} ` +
+  `${formatCoordinate(curve.c2.x)} ${formatCoordinate(curve.c2.y)} ` +
+  `${formatCoordinate(curve.to.x)} ${formatCoordinate(curve.to.y)}`;
+const moveTo = (point: Point) => `M${formatCoordinate(point.x)} ${formatCoordinate(point.y)}`;
 
 /** Trazo continuo del hilo entero, para el atributo `d`. */
 export function threadPath(thread: Thread): string {
   const curves = [thread.lead, ...thread.segments, thread.tail];
-  return `M${n(thread.start.x)} ${n(thread.start.y)}${curves.map(curveTo).join("")}`;
+  return `${moveTo(thread.start)}${curves.map(curveTo).join("")}`;
 }
 
 /**
@@ -166,11 +180,11 @@ export function threadPath(thread: Thread): string {
  * un subtrazo propio, porque pueden no ser consecutivos.
  */
 export function livePath(thread: Thread, live: readonly boolean[]): string {
-  let d = live[0] ? `M${n(thread.start.x)} ${n(thread.start.y)}${curveTo(thread.lead)}` : "";
+  let pathData = live[0] ? `${moveTo(thread.start)}${curveTo(thread.lead)}` : "";
   thread.segments.forEach((segment, i) => {
-    if (live[i + 1]) d += `M${n(segment.from.x)} ${n(segment.from.y)}${curveTo(segment)}`;
+    if (live[i + 1]) pathData += `${moveTo(segment.from)}${curveTo(segment)}`;
   });
-  return d;
+  return pathData;
 }
 
 /** Curvas de los tramos encendidos (los que llegan a un jack en vivo). */
@@ -198,8 +212,8 @@ const SAMPLES_PER_CURVE = 48;
  * `getPointAtLength` cuesta cuadrático y trababa la página con muchos links.
  */
 export function twistPath(curves: readonly Cubic[], strokeWidth: number, spacing = 4.2): string {
-  const half = strokeWidth / 2;
-  let d = "";
+  const halfStroke = strokeWidth / 2;
+  let pathData = "";
   for (const curve of curves) {
     let previous = pointAt(curve, 0);
     let walked = 0;
@@ -208,15 +222,19 @@ export function twistPath(curves: readonly Cubic[], strokeWidth: number, spacing
       const point = pointAt(curve, i / SAMPLES_PER_CURVE);
       const length = Math.hypot(point.x - previous.x, point.y - previous.y);
       if (length > 0) {
-        const tx = (point.x - previous.x) / length;
-        const ty = (point.y - previous.y) / length;
+        // Dirección del trazo en este tramo (vector unitario).
+        const tangentX = (point.x - previous.x) / length;
+        const tangentY = (point.y - previous.y) / length;
         while (walked + length >= nextMark) {
-          const f = (nextMark - walked) / length;
-          const x = previous.x + (point.x - previous.x) * f;
-          const y = previous.y + (point.y - previous.y) * f;
+          const fraction = (nextMark - walked) / length;
+          const markX = previous.x + (point.x - previous.x) * fraction;
+          const markY = previous.y + (point.y - previous.y) * fraction;
           // Normal = tangente girada 90°; la marca se inclina 1.4 px a cada lado.
-          d += `M${n(x + ty * half - tx * 1.4)} ${n(y - tx * half - ty * 1.4)}`;
-          d += `L${n(x - ty * half + tx * 1.4)} ${n(y + tx * half + ty * 1.4)}`;
+          const startX = markX + tangentY * halfStroke - tangentX * 1.4;
+          const startY = markY - tangentX * halfStroke - tangentY * 1.4;
+          const endX = markX - tangentY * halfStroke + tangentX * 1.4;
+          const endY = markY + tangentX * halfStroke + tangentY * 1.4;
+          pathData += `${moveTo({ x: startX, y: startY })}L${formatCoordinate(endX)} ${formatCoordinate(endY)}`;
           nextMark += spacing;
         }
       }
@@ -224,13 +242,13 @@ export function twistPath(curves: readonly Cubic[], strokeWidth: number, spacing
       previous = point;
     }
   }
-  return d;
+  return pathData;
 }
 
 /** Nudo simple al inicio: un lazo cerrado sobre sí mismo y la punta deshilachada. */
 export function knotPath(start: Point): string {
-  const { x, y } = start;
-  return `M${n(x)} ${n(y)}c5 -7 11 -1 6 5c-4 5 -10 0 -6 -5M${n(x)} ${n(y)}l-4 -5M${n(x)} ${n(y)}l1 -6.5`;
+  const knotStart = moveTo(start);
+  return `${knotStart}c5 -7 11 -1 6 5c-4 5 -10 0 -6 -5${knotStart}l-4 -5${knotStart}l1 -6.5`;
 }
 
 function clamp(value: number, min: number, max: number): number {

@@ -37,17 +37,17 @@ export class InMemoryLinkRepository implements LinkReader, LinkWriter, SectionWr
 
   createLink(draft: LinkDraft): Promise<Result<Link, WriteError>> {
     if (this.links.length >= LIMITS.links) return Promise.resolve(err("limit_reached"));
-    if (draft.sectionId && !this.sections.some((s) => s.id === draft.sectionId)) {
+    if (draft.sectionId && !this.sections.some((section) => section.id === draft.sectionId)) {
       return Promise.resolve(err("not_found"));
     }
-    const group = this.links.filter((l) => l.sectionId === draft.sectionId);
+    const group = this.links.filter((link) => link.sectionId === draft.sectionId);
     const link: Link = { ...draft, id: this.id(), position: group.length, version: 1 };
     this.links.push(link);
     return Promise.resolve(ok(link));
   }
 
   updateLink(id: string, version: number, patch: LinkPatch): Promise<Result<Link, WriteError>> {
-    const index = this.links.findIndex((l) => l.id === id);
+    const index = this.links.findIndex((link) => link.id === id);
     const current = this.links[index];
     if (!current) return Promise.resolve(err("not_found"));
     if (current.version !== version) return Promise.resolve(err("conflict"));
@@ -57,10 +57,10 @@ export class InMemoryLinkRepository implements LinkReader, LinkWriter, SectionWr
   }
 
   deleteLink(id: string, version: number): Promise<Result<void, WriteError>> {
-    const current = this.links.find((l) => l.id === id);
+    const current = this.links.find((link) => link.id === id);
     if (!current) return Promise.resolve(err("not_found"));
     if (current.version !== version) return Promise.resolve(err("conflict"));
-    this.links = this.links.filter((l) => l.id !== id);
+    this.links = this.links.filter((link) => link.id !== id);
     return Promise.resolve(ok(undefined));
   }
 
@@ -68,16 +68,16 @@ export class InMemoryLinkRepository implements LinkReader, LinkWriter, SectionWr
     sectionId: string | null,
     items: readonly Versioned[],
   ): Promise<Result<void, WriteError>> {
-    const inGroup = this.links.filter((l) => l.sectionId === sectionId);
-    const ids = new Set(items.map((i) => i.id));
-    if (inGroup.some((l) => !ids.has(l.id))) return Promise.resolve(err("invalid_input"));
+    const inGroup = this.links.filter((link) => link.sectionId === sectionId);
+    const ids = new Set(items.map((item) => item.id));
+    if (inGroup.some((link) => !ids.has(link.id))) return Promise.resolve(err("invalid_input"));
     for (const item of items) {
-      const link = this.links.find((l) => l.id === item.id);
+      const link = this.links.find((link) => link.id === item.id);
       if (!link) return Promise.resolve(err("invalid_input"));
       if (link.version !== item.version) return Promise.resolve(err("conflict"));
     }
     items.forEach((item, position) => {
-      const index = this.links.findIndex((l) => l.id === item.id);
+      const index = this.links.findIndex((link) => link.id === item.id);
       const link = this.links[index];
       if (link) this.links[index] = { ...link, sectionId, position, version: link.version + 1 };
     });
@@ -101,7 +101,7 @@ export class InMemoryLinkRepository implements LinkReader, LinkWriter, SectionWr
     version: number,
     patch: SectionPatch,
   ): Promise<Result<Section, WriteError>> {
-    const index = this.sections.findIndex((s) => s.id === id);
+    const index = this.sections.findIndex((section) => section.id === id);
     const current = this.sections[index];
     if (!current) return Promise.resolve(err("not_found"));
     if (current.version !== version) return Promise.resolve(err("conflict"));
@@ -111,23 +111,25 @@ export class InMemoryLinkRepository implements LinkReader, LinkWriter, SectionWr
   }
 
   deleteSection(id: string, version: number): Promise<Result<void, WriteError>> {
-    const current = this.sections.find((s) => s.id === id);
+    const current = this.sections.find((section) => section.id === id);
     if (!current) return Promise.resolve(err("not_found"));
     if (current.version !== version) return Promise.resolve(err("conflict"));
-    this.sections = this.sections.filter((s) => s.id !== id);
-    this.links = this.links.map((l) => (l.sectionId === id ? { ...l, sectionId: null } : l));
+    this.sections = this.sections.filter((section) => section.id !== id);
+    this.links = this.links.map((link) =>
+      link.sectionId === id ? { ...link, sectionId: null } : link,
+    );
     return Promise.resolve(ok(undefined));
   }
 
   reorderSections(items: readonly Versioned[]): Promise<Result<void, WriteError>> {
     if (items.length !== this.sections.length) return Promise.resolve(err("invalid_input"));
     for (const item of items) {
-      const section = this.sections.find((s) => s.id === item.id);
+      const section = this.sections.find((section) => section.id === item.id);
       if (!section) return Promise.resolve(err("invalid_input"));
       if (section.version !== item.version) return Promise.resolve(err("conflict"));
     }
     this.sections = items.map((item, position) => {
-      const section = this.sections.find((s) => s.id === item.id);
+      const section = this.sections.find((section) => section.id === item.id);
       if (!section) throw new Error("validado arriba");
       return { ...section, position, version: section.version + 1 };
     });

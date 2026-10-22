@@ -40,8 +40,8 @@ test.describe("contacto", () => {
     page,
   }) => {
     const errors: string[] = [];
-    page.on("console", (m) => {
-      if (m.type() === "error") errors.push(m.text());
+    page.on("console", (message) => {
+      if (message.type() === "error") errors.push(message.text());
     });
     const response = await page.goto("/contact");
     expect(response?.status()).toBe(200);
@@ -55,7 +55,7 @@ test.describe("contacto", () => {
       timeout: 15_000,
     });
     // Sin errores de CSP: ni Turnstile ni el script propio de la página (compartir) quedan bloqueados.
-    expect(errors.filter((e) => /Content Security Policy/i.test(e))).toEqual([]);
+    expect(errors.filter((error) => /Content Security Policy/i.test(error))).toEqual([]);
   });
 
   test("un mensaje válido se envía: el botón se bloquea y el éxito ofrece cómo seguir", async ({
@@ -86,8 +86,8 @@ test.describe("contacto", () => {
     await page.goto("/contact");
     await fill(page, { ...valid, email: "testmail.com" });
     let posted = false;
-    page.on("request", (r) => {
-      if (r.method() === "POST") posted = true;
+    page.on("request", (request) => {
+      if (request.method() === "POST") posted = true;
     });
     await page.getByRole("button", { name: "Enviar mensaje" }).click();
 

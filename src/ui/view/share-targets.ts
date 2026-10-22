@@ -11,24 +11,32 @@ export interface ShareTarget {
 
 /** URL de cada destino con el link y el texto codificados (nada se interpola crudo). */
 export function shareTargets(url: string, title: string): ShareTarget[] {
-  const u = encodeURIComponent(url);
-  const t = encodeURIComponent(title);
-  const both = encodeURIComponent(`${title} ${url}`);
+  const encodedUrl = encodeURIComponent(url);
+  const encodedTitle = encodeURIComponent(title);
+  const encodedTitleAndUrl = encodeURIComponent(`${title} ${url}`);
   return [
-    { id: "whatsapp", label: "WhatsApp", href: `https://wa.me/?text=${both}` },
-    { id: "x", label: "X", href: `https://x.com/intent/post?text=${t}&url=${u}` },
+    { id: "whatsapp", label: "WhatsApp", href: `https://wa.me/?text=${encodedTitleAndUrl}` },
+    {
+      id: "x",
+      label: "X",
+      href: `https://x.com/intent/post?text=${encodedTitle}&url=${encodedUrl}`,
+    },
     {
       id: "facebook",
       label: "Facebook",
-      href: `https://www.facebook.com/sharer/sharer.php?u=${u}`,
+      href: `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`,
     },
     {
       id: "linkedin",
       label: "LinkedIn",
-      href: `https://www.linkedin.com/sharing/share-offsite/?url=${u}`,
+      href: `https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}`,
     },
-    { id: "telegram", label: "Telegram", href: `https://t.me/share/url?url=${u}&text=${t}` },
-    { id: "email", label: "Email", href: `mailto:?subject=${t}&body=${u}` },
+    {
+      id: "telegram",
+      label: "Telegram",
+      href: `https://t.me/share/url?url=${encodedUrl}&text=${encodedTitle}`,
+    },
+    { id: "email", label: "Email", href: `mailto:?subject=${encodedTitle}&body=${encodedUrl}` },
   ];
 }
 

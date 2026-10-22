@@ -7,16 +7,20 @@ describe("página oficial de Plektia", () => {
     const page = buildPlektiaPage();
     expect(page.handle).toBe("plektia");
     expect(page.bio).toBe("Todos tus links, unidos por un hilo.");
-    expect(page.sections.map((s) => s.title)).toEqual(["Novedades", "Sobre Plektia", "Legal"]);
-    for (const link of page.sections.flatMap((s) => s.links)) {
+    expect(page.sections.map((section) => section.title)).toEqual([
+      "Novedades",
+      "Sobre Plektia",
+      "Legal",
+    ]);
+    for (const link of page.sections.flatMap((section) => section.links)) {
       expect(link.url).toMatch(/^(https:\/\/|\/(?!\/))/);
     }
   });
 
   it("las rutas propias quedan como rutas y no se comparte el repositorio", () => {
-    const links = buildPlektiaPage().sections.flatMap((s) => s.links);
-    expect(links.find((l) => l.title === "Entrar")?.url).toBe("/login");
-    expect(links.some((l) => l.url.includes("github.com"))).toBe(false);
+    const links = buildPlektiaPage().sections.flatMap((section) => section.links);
+    expect(links.find((link) => link.title === "Entrar")?.url).toBe("/login");
+    expect(links.some((link) => link.url.includes("github.com"))).toBe(false);
   });
 
   it.each([
@@ -32,6 +36,6 @@ describe("página oficial de Plektia", () => {
 describe("landing", () => {
   it("sus salidas son links válidos hacia /plektia, el contacto y el login", async () => {
     const { landingLinks } = await import("@/content/landing");
-    expect(landingLinks().map((l) => l.url)).toEqual(["/plektia", "/contact", "/login"]);
+    expect(landingLinks().map((link) => link.url)).toEqual(["/plektia", "/contact", "/login"]);
   });
 });

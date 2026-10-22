@@ -239,8 +239,20 @@
 
 ## F5 · Admin panel → ENTREGA 2
 
-- [ ] **Tarea 18: Estructura del panel y perfil** · M · Deps: 9, 12
+- [ ] **Tarea 17c: Una cuenta, varias páginas** · M · Deps: 13
+  - Decisión del 2026-10-22: **una cuenta con varias páginas** (como Linktree), con un selector en el panel. Se descartó la variante de Instagram (varias cuentas con emails distintos y cambio de sesión), por complejidad y superficie de ataque.
+  - Se separa "usuario" de "página" en la base: `pages` (handle, nombre, bio, avatar, tema, `show_handle`) pasa a ser la dueña de secciones y links; `profiles` queda para la persona (rol, alta y baja). Hay que migrar los datos existentes y actualizar la vista pública, RLS, RPCs, casos de uso, invitaciones y el `user:allow`.
+  - Va antes de construir el panel, para no rehacerlo. La página pública sigue en `/{handle}`.
+  - **A definir al especificarla:** el límite de páginas por cuenta y qué página se abre al entrar.
+  - **Aceptación:**
+    - Una cuenta crea una segunda página con otro handle y cada una muestra solo sus links.
+    - RLS: nadie edita páginas que no son suyas.
+    - La migración conserva tu página actual sin cambios visibles.
+
+- [ ] **Tarea 18: Estructura del panel y perfil** · M · Deps: 9, 12, 17c
   - Layout y navegación de `/admin` (diseño con impeccable en modo *operate*), y `/admin/perfil` (nombre, bio, tema y mostrar u ocultar el `@handle`) con Actions.
+  - Incluye el selector de página (tarea 17c).
+  - Evaluar Tailwind (skill `tailwind-css-patterns`) para el panel: tiene muchas pantallas y formularios. La página pública sigue en CSS plano con tokens, porque pesa 3,4 KB y está en 100 en Lighthouse.
   - **Aceptación:**
     - Editar el nombre se refleja en la página pública.
     - E2E de CSRF y axe AA.

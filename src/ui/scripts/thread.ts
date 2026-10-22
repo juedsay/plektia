@@ -82,8 +82,11 @@ export function mountThread(patchbay: HTMLElement): void {
   function draw(): void {
     const box = patchbay.getBoundingClientRect();
     const points: Point[] = jacks.map((jack) => {
-      const r = jack.getBoundingClientRect();
-      return { x: r.left + r.width / 2 - box.left, y: r.top + r.height / 2 - box.top };
+      const jackBox = jack.getBoundingClientRect();
+      return {
+        x: jackBox.left + jackBox.width / 2 - box.left,
+        y: jackBox.top + jackBox.height / 2 - box.top,
+      };
     });
     const textLeft = (firstBody?.getBoundingClientRect().left ?? box.left) - box.left;
     const thread = buildThread(
@@ -125,10 +128,10 @@ export function mountThread(patchbay: HTMLElement): void {
     let startTime: number | undefined;
     const step = (now: number) => {
       startTime ??= now;
-      const k = Math.min(1, (now - startTime) / duration);
-      revealHeight = k < 1 ? total * (1 - Math.pow(2, -10 * k)) : null;
+      const progress = Math.min(1, (now - startTime) / duration);
+      revealHeight = progress < 1 ? total * (1 - Math.pow(2, -10 * progress)) : null;
       applyClip();
-      if (k < 1) requestAnimationFrame(step);
+      if (progress < 1) requestAnimationFrame(step);
       else patchbay.dataset["threadReady"] = "";
     };
     requestAnimationFrame(step);

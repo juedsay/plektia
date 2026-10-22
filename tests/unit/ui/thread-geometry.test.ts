@@ -21,14 +21,14 @@ const STROKE = 3.2;
 
 /** Layout plausible: jacks en una columna, separados como filas y bancos reales. */
 function layout(random: () => number, jackCol: number) {
-  const x = jackCol / 2;
+  const jackX = jackCol / 2;
   const points: Point[] = [];
-  let y = 40 + random() * 40;
+  let jackY = 40 + random() * 40;
   const count = 1 + Math.floor(random() * 14);
   for (let i = 0; i < count; i++) {
-    points.push({ x, y });
+    points.push({ x: jackX, y: jackY });
     // Fila común (~52 px), fila con descripción larga o salto de banco con título.
-    y += 52 + random() * (random() < 0.2 ? 160 : 40);
+    jackY += 52 + random() * (random() < 0.2 ? 160 : 40);
   }
   return { points, textLeft: jackCol };
 }
@@ -53,7 +53,9 @@ describe("hilo de la patchera", () => {
           violations.push(`semilla ${String(seed)}: sin hilo`);
           continue;
         }
-        const xs = [thread.lead, ...thread.segments, thread.tail].flatMap(samples).map((p) => p.x);
+        const xs = [thread.lead, ...thread.segments, thread.tail]
+          .flatMap(samples)
+          .map((point) => point.x);
         // El nudo asoma hasta 11 px a la derecha del inicio y 4 a la izquierda.
         const right = Math.max(...xs, thread.start.x + 11) + STROKE / 2;
         const left = Math.min(...xs, thread.start.x - 4) - STROKE / 2;
@@ -102,7 +104,7 @@ describe("hilo de la patchera", () => {
       [1, 1, 1],
     );
     expect(thread?.lead.to).toEqual(points[0]);
-    expect(thread?.segments.map((s) => [s.from, s.to])).toEqual([
+    expect(thread?.segments.map((segment) => [segment.from, segment.to])).toEqual([
       [points[0], points[1]],
       [points[1], points[2]],
     ]);
@@ -147,9 +149,9 @@ describe("trenzado", () => {
     c2: { x: 0, y: 67 },
     to: { x: 0, y: 100 },
   };
-  const marks = (d: string) =>
-    [...d.matchAll(/M(-?[\d.]+) (-?[\d.]+)L(-?[\d.]+) (-?[\d.]+)/g)].map((m) =>
-      m.slice(1).map(Number),
+  const marks = (pathData: string) =>
+    [...pathData.matchAll(/M(-?[\d.]+) (-?[\d.]+)L(-?[\d.]+) (-?[\d.]+)/g)].map((match) =>
+      match.slice(1).map(Number),
     );
 
   it("pone una marca cada 4.2 px a lo largo del trazo", () => {
@@ -174,9 +176,9 @@ describe("trenzado", () => {
     );
     if (!thread) throw new Error("sin hilo");
     const start = performance.now();
-    const d = twistPath(threadCurves(thread), STROKE);
+    const twist = twistPath(threadCurves(thread), STROKE);
     expect(performance.now() - start).toBeLessThan(200);
-    expect(marks(d).length).toBeGreaterThan(2000);
+    expect(marks(twist).length).toBeGreaterThan(2000);
   });
 
   it("los tramos encendidos son los que llegan a un jack en vivo", () => {

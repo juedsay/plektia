@@ -81,13 +81,13 @@ try {
       continue;
     }
     const median = (values: number[]) => {
-      const sorted = [...values].sort((a, b) => a - b);
+      const sorted = [...values].sort((smaller, larger) => smaller - larger);
       return sorted[Math.floor(sorted.length / 2)] ?? Number.POSITIVE_INFINITY;
     };
     const metric = (id: string) =>
-      median(runs.map((r) => r.audits[id]?.numericValue ?? Number.POSITIVE_INFINITY));
+      median(runs.map((request) => request.audits[id]?.numericValue ?? Number.POSITIVE_INFINITY));
     const scoreOf = (id: (typeof CATEGORIES)[number]) =>
-      median(runs.map((r) => r.categories[id]?.score ?? 0));
+      median(runs.map((request) => request.categories[id]?.score ?? 0));
 
     for (const id of CATEGORIES) {
       const score = scoreOf(id);
@@ -104,23 +104,25 @@ try {
       { items?: NetworkItem[] } | undefined;
     const requests = details?.items ?? [];
     const thirdParty = requests.filter(
-      (r) => !r.url.startsWith(origin) && !r.url.startsWith("data:"),
+      (request) => !request.url.startsWith(origin) && !request.url.startsWith("data:"),
     );
     if (thirdParty.length > BUDGETS.thirdPartyRequests) {
-      fail(`pedidos a terceros: ${thirdParty.map((r) => r.url).join(", ")}`);
+      fail(`pedidos a terceros: ${thirdParty.map((request) => request.url).join(", ")}`);
     }
 
     const sizeOf = async (type: string) => {
-      const urls = requests.filter((r) => r.resourceType === type).map((r) => r.url);
+      const urls = requests
+        .filter((request) => request.resourceType === type)
+        .map((request) => request.url);
       const sizes = await Promise.all(urls.map(gzipped));
-      return sizes.reduce((a, b) => a + b, 0);
+      return sizes.reduce((total, size) => total + size, 0);
     };
     const js = await sizeOf("Script");
     // El CSS va en línea (astro.config.mjs): se suma lo de los <style> del HTML,
     // además de cualquier hoja externa, para que el presupuesto siga vigilándolo.
     const document = await (await fetch(url)).text();
     const inlineCss = [...document.matchAll(/<style[^>]*>([\s\S]*?)<\/style>/g)]
-      .map((m) => m[1] ?? "")
+      .map((match) => match[1] ?? "")
       .join("");
     const css =
       (await sizeOf("Stylesheet")) +
