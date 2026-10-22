@@ -21,17 +21,40 @@ describe("linkMeta", () => {
     );
   });
 
-  it("sin descripción muestra la dirección en corto", () => {
-    expect(linkMeta({ description: null, url: "https://www.twitch.tv/juedsay" })).toBe(
-      "twitch.tv/juedsay",
+  it("sin descripción, un perfil de red social muestra @usuario", () => {
+    expect(linkMeta({ description: null, url: "https://www.instagram.com/juedsay/" })).toBe(
+      "@juedsay",
+    );
+    expect(linkMeta({ description: null, url: "https://www.linkedin.com/in/juedsay" })).toBe(
+      "@juedsay",
+    );
+  });
+
+  it("sin descripción ni perfil, muestra la dirección en corto", () => {
+    expect(linkMeta({ description: null, url: "https://jsimon.vercel.app/" })).toBe(
+      "jsimon.vercel.app",
+    );
+    expect(linkMeta({ description: null, url: "https://github.com/juedsay/plektia" })).toBe(
+      "github.com/juedsay/plektia",
     );
   });
 });
 
 describe("isProfileLink", () => {
-  it("solo los links con handle del proveedor llevan rel=me", () => {
-    expect(isProfileLink({ providerHandle: "juedsay" })).toBe(true);
-    expect(isProfileLink({ providerHandle: null })).toBe(false);
+  it("lleva rel=me un canal con handle del proveedor o un perfil de red social", () => {
+    expect(isProfileLink({ providerHandle: "juedsay", url: "https://www.twitch.tv/juedsay" })).toBe(
+      true,
+    );
+    expect(
+      isProfileLink({ providerHandle: null, url: "https://www.linkedin.com/in/juedsay" }),
+    ).toBe(true);
+  });
+
+  it("un contenido suelto (un repo, un sitio) no", () => {
+    expect(isProfileLink({ providerHandle: null, url: "https://github.com/juedsay/plektia" })).toBe(
+      false,
+    );
+    expect(isProfileLink({ providerHandle: null, url: "https://jsimon.vercel.app/" })).toBe(false);
   });
 });
 

@@ -8,7 +8,7 @@ test.describe("página pública", () => {
     expect(response?.status()).toBe(200);
 
     await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
-    await expect(page.getByText("@juedsay", { exact: true })).toBeVisible();
+    await expect(page.locator(".identity").getByText("@juedsay", { exact: true })).toBeVisible();
     await expect(page.getByText("Streams, código y diseño")).toBeVisible();
     await expect(page.getByRole("heading", { level: 2 })).toHaveText([
       "Redes",
@@ -20,8 +20,8 @@ test.describe("página pública", () => {
     await expect(redes.getByRole("link")).toHaveCount(3);
     const youtube = redes.getByRole("link", { name: /YouTube/ });
     await expect(youtube).toHaveAttribute("href", "https://www.youtube.com/@juedsay");
-    // Sin descripción, el link muestra su dirección en corto; y es un perfil propio.
-    await expect(youtube).toContainText("youtube.com/@juedsay");
+    // Sin descripción, un perfil de red social muestra "@usuario"; y lleva rel="me".
+    await expect(youtube).toContainText("@juedsay");
     await expect(youtube).toHaveAttribute("rel", "me");
     // Misma pestaña (SPEC-public-page).
     await expect(youtube).not.toHaveAttribute("target", /.+/);
@@ -57,7 +57,7 @@ test.describe("página pública", () => {
     await expect(page.getByRole("link", { name: "Plektia: inicio" })).toHaveAttribute("href", "/");
     await expect(page.locator('a[href*="github.com"]')).toHaveCount(0);
     await expect(page.getByRole("heading", { level: 1 })).toHaveText("Plektia");
-    await expect(page.getByText("@plektia", { exact: true })).toBeVisible();
+    await expect(page.locator(".identity").getByText("@plektia", { exact: true })).toBeVisible();
     await expect(page.getByText("Todos tus links, unidos por un hilo.")).toBeVisible();
     await expect(page.getByRole("heading", { level: 2 })).toHaveText([
       "Novedades",

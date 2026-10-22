@@ -1,0 +1,71 @@
+---
+import {
+  siBluesky,
+  siFacebook,
+  siGithub,
+  siInstagram,
+  siKick,
+  siThreads,
+  siTiktok,
+  siTwitch,
+  siX,
+  siYoutube,
+} from "simple-icons";
+
+import type { SocialNetwork } from "@/ui/view/social-profile";
+
+// Ícono de la red de un link (o uno genérico de link). Decorativo: el nombre
+// del link ya dice qué es. Logos de simple-icons (CC0); LinkedIn no está ahí
+// (lo retiraron a pedido de la marca) y usa un "in" genérico.
+interface Props {
+  network: SocialNetwork | null;
+}
+const { network } = Astro.props;
+const brandPaths: Partial<Record<SocialNetwork, string>> = {
+  instagram: siInstagram.path,
+  twitch: siTwitch.path,
+  github: siGithub.path,
+  youtube: siYoutube.path,
+  x: siX.path,
+  tiktok: siTiktok.path,
+  kick: siKick.path,
+  facebook: siFacebook.path,
+  threads: siThreads.path,
+  bluesky: siBluesky.path,
+};
+const brandPath = network ? brandPaths[network] : undefined;
+---
+
+{brandPath ? (
+  <svg class="port-icon" viewBox="0 0 24 24" aria-hidden="true">
+    <path fill="currentColor" d={brandPath} />
+  </svg>
+) : network === "linkedin" ? (
+  <svg class="port-icon" viewBox="0 0 24 24" aria-hidden="true">
+    <rect x="2" y="2" width="20" height="20" rx="4" fill="currentColor" />
+    <text
+      x="12"
+      y="17"
+      text-anchor="middle"
+      font-family="system-ui, sans-serif"
+      font-size="13"
+      font-weight="700"
+      fill="var(--color-bg)"
+    >
+      in
+    </text>
+  </svg>
+) : (
+  <svg
+    class="port-icon"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="1.8"
+    stroke-linecap="round"
+    aria-hidden="true"
+  >
+    <path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1" />
+    <path d="M14 10a4 4 0 0 0-5.7 0l-3 3A4 4 0 0 0 11 18.7l1-1" />
+  </svg>
+)}
