@@ -173,6 +173,60 @@ export function livePath(thread: Thread, live: readonly boolean[]): string {
   return d;
 }
 
+/** Curvas de los tramos encendidos (los que llegan a un jack en vivo). */
+export function liveCurves(thread: Thread, live: readonly boolean[]): Cubic[] {
+  const curves: Cubic[] = live[0] ? [thread.lead] : [];
+  thread.segments.forEach((segment, i) => {
+    if (live[i + 1]) curves.push(segment);
+  });
+  return curves;
+}
+
+/** Curvas del hilo entero, en orden. */
+export function threadCurves(thread: Thread): Cubic[] {
+  return [thread.lead, ...thread.segments, thread.tail];
+}
+
+// Muestras por curva para medir su largo: alcanza para que las marcas queden
+// parejas a simple vista, y el costo crece en forma lineal con la cantidad de links.
+const SAMPLES_PER_CURVE = 48;
+
+/**
+ * Trenzado: marcas diagonales que cruzan todo el ancho del trazo cada
+ * `spacing` píxeles, siguiendo la tangente, para que se lea como cordón torcido.
+ * Se calcula sobre las curvas (matemática pura): pedirle al navegador puntos con
+ * `getPointAtLength` cuesta cuadrático y trababa la página con muchos links.
+ */
+export function twistPath(curves: readonly Cubic[], strokeWidth: number, spacing = 4.2): string {
+  const half = strokeWidth / 2;
+  let d = "";
+  for (const curve of curves) {
+    let previous = pointAt(curve, 0);
+    let walked = 0;
+    let nextMark = 2;
+    for (let i = 1; i <= SAMPLES_PER_CURVE; i++) {
+      const point = pointAt(curve, i / SAMPLES_PER_CURVE);
+      const length = Math.hypot(point.x - previous.x, point.y - previous.y);
+      if (length > 0) {
+        const tx = (point.x - previous.x) / length;
+        const ty = (point.y - previous.y) / length;
+        while (walked + length >= nextMark) {
+          const f = (nextMark - walked) / length;
+          const x = previous.x + (point.x - previous.x) * f;
+          const y = previous.y + (point.y - previous.y) * f;
+          // Normal = tangente girada 90°; la marca se inclina 1.4 px a cada lado.
+          d += `M${n(x + ty * half - tx * 1.4)} ${n(y - tx * half - ty * 1.4)}`;
+          d += `L${n(x - ty * half + tx * 1.4)} ${n(y + tx * half + ty * 1.4)}`;
+          nextMark += spacing;
+        }
+      }
+      walked += length;
+      previous = point;
+    }
+  }
+  return d;
+}
+
 /** Nudo simple al inicio: un lazo cerrado sobre sí mismo y la punta deshilachada. */
 export function knotPath(start: Point): string {
   const { x, y } = start;

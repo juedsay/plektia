@@ -30,6 +30,7 @@
     "env:local": "node scripts/dev-vars.ts",
     "db:advisors": "supabase db advisors --local --fail-on warn",
     "test:e2e": "playwright test",
+    "perf": "node scripts/lighthouse.ts",
     "audit:deps": "pnpm audit --audit-level=high",
     "deploy:worker": "wrangler deploy"
   },
@@ -59,6 +60,7 @@
     "eslint-plugin-astro": "3.2.1",
     "eslint-plugin-jsx-a11y-x": "0.2.0",
     "globals": "17.13.0",
+    "lighthouse": "13.5.0",
     "prettier": "3.9.10",
     "prettier-plugin-astro": "1.1.1",
     "supabase": "2.120.0",

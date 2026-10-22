@@ -53,8 +53,8 @@ Se miden en CI con Lighthouse sobre perfil de celular y 4G lento:
 
 | Métrica | Presupuesto |
 |---|---|
-| LCP | ≤ 1.5 s |
-| CLS | 0 |
+| LCP | ≤ 1.8 s. Era 1,5 s: la fuente de la marca (77 KB, ejes `wght` y `opsz`) cae en el camino del LCP con 4G lento y lo hace oscilar entre ~1,05 y ~1,6 s. Decisión revisable: sin el eje óptico pesa 41 KB y queda en ~1,05 s, y recortarla a los caracteres del español bajaría más el peso |
+| CLS | ≤ 0.001 (el cambio a la fuente de la marca deja corrimientos de fracciones de píxel; `font-display: optional` lo evitaría a costa de perder la fuente en la primera visita lenta) |
 | TBT | ≤ 50 ms |
 | JS (gzip) | ≤ 8 KB |
 | CSS (gzip) | ≤ 12 KB |

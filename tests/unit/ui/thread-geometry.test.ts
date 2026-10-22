@@ -5,13 +5,16 @@ import {
   buildThread,
   type Cubic,
   knotPath,
+  liveCurves,
   livePath,
   mulberry32,
   type Point,
   pointAt,
   randomShape,
   TEXT_GAP,
+  threadCurves,
   threadPath,
+  twistPath,
 } from "@/ui/scripts/thread-geometry";
 
 const STROKE = 3.2;
@@ -134,5 +137,63 @@ describe("hilo de la patchera", () => {
 
   it("el nudo nace en el inicio del hilo", () => {
     expect(knotPath({ x: 30, y: 20 })).toMatch(/^M30 20c/);
+  });
+});
+
+describe("trenzado", () => {
+  const straight: Cubic = {
+    from: { x: 0, y: 0 },
+    c1: { x: 0, y: 33 },
+    c2: { x: 0, y: 67 },
+    to: { x: 0, y: 100 },
+  };
+  const marks = (d: string) =>
+    [...d.matchAll(/M(-?[\d.]+) (-?[\d.]+)L(-?[\d.]+) (-?[\d.]+)/g)].map((m) =>
+      m.slice(1).map(Number),
+    );
+
+  it("pone una marca cada 4.2 px a lo largo del trazo", () => {
+    // 100 px desde la primera marca en 2 px: (100 - 2) / 4.2 + 1 ≈ 24.
+    expect(marks(twistPath([straight], STROKE))).toHaveLength(24);
+  });
+
+  it("cada marca cruza el trazo de lado a lado, inclinada", () => {
+    for (const [x1 = 0, , x2 = 0] of marks(twistPath([straight], STROKE))) {
+      // En un trazo vertical, la marca va de un borde (x = ±1.6) al otro.
+      expect(Math.abs(x1 - x2)).toBeCloseTo(STROKE, 1);
+    }
+  });
+
+  it("con 200 links se calcula rápido (costo lineal)", () => {
+    const points = Array.from({ length: 200 }, (_, i) => ({ x: 36, y: 60 + i * 52 }));
+    const thread = buildThread(
+      points,
+      boundsFor(36, 72, STROKE),
+      randomShape(mulberry32(9), 200),
+      points.map(() => 1),
+    );
+    if (!thread) throw new Error("sin hilo");
+    const start = performance.now();
+    const d = twistPath(threadCurves(thread), STROKE);
+    expect(performance.now() - start).toBeLessThan(200);
+    expect(marks(d).length).toBeGreaterThan(2000);
+  });
+
+  it("los tramos encendidos son los que llegan a un jack en vivo", () => {
+    const points = [
+      { x: 36, y: 60 },
+      { x: 36, y: 112 },
+      { x: 36, y: 164 },
+    ];
+    const thread = buildThread(
+      points,
+      boundsFor(36, 72, STROKE),
+      randomShape(mulberry32(3), 3),
+      [1, 1, 1],
+    );
+    if (!thread) throw new Error("sin hilo");
+    expect(liveCurves(thread, [false, false, false])).toEqual([]);
+    expect(liveCurves(thread, [true, false, true])).toEqual([thread.lead, thread.segments[1]]);
+    expect(twistPath([], STROKE)).toBe("");
   });
 });
