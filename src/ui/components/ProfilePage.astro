@@ -22,6 +22,7 @@ const description = page.bio ?? `Todos los links de ${page.displayName} en un so
   theme={page.theme}
   type="profile"
   structuredData={profileJsonLd(page, canonical)}
+  sharePreview={{ name: page.displayName, brand }}
 >
   <ProfileHeader page={page} brand={brand} />
   <div class="patchbay" data-patchbay>

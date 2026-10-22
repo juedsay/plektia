@@ -48,7 +48,8 @@ test.describe("contacto", () => {
     expect(response?.headers()["content-security-policy"]).toContain(
       "https://challenges.cloudflare.com",
     );
-    await expect(page.locator('a[href^="mailto:"]')).toHaveCount(0);
+    // `mailto:?…` sin destinatario (compartir por email) sí puede estar: no expone ninguna dirección.
+    await expect(page.locator('a[href^="mailto:"]:not([href^="mailto:?"])')).toHaveCount(0);
     expect(await page.content()).not.toMatch(/[\w.+-]+@(gmail|plektia)\./);
     await expect(page.locator('input[name="cf-turnstile-response"]')).toBeAttached({
       timeout: 15_000,

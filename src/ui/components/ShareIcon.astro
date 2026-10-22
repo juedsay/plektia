@@ -1,0 +1,64 @@
+---
+import { siFacebook, siTelegram, siWhatsapp, siX } from "simple-icons";
+
+import type { ShareTargetId } from "@/ui/view/share-targets";
+
+// Íconos de la ventana de compartir. Las marcas salen de simple-icons (CC0);
+// LinkedIn no está ahí (lo retiraron a pedido de la marca), así que se usa un
+// "in" genérico. Los demás son trazos propios, en el estilo de la página.
+interface Props {
+  id: ShareTargetId | "copy" | "more";
+}
+const { id } = Astro.props;
+const brands: Partial<Record<ShareTargetId, string>> = {
+  whatsapp: siWhatsapp.path,
+  x: siX.path,
+  facebook: siFacebook.path,
+  telegram: siTelegram.path,
+};
+const brand = brands[id as ShareTargetId];
+---
+
+{brand ? (
+  <svg viewBox="0 0 24 24" aria-hidden="true">
+    <path fill="currentColor" d={brand} />
+  </svg>
+) : id === "linkedin" ? (
+  <svg viewBox="0 0 24 24" aria-hidden="true">
+    <rect x="2" y="2" width="20" height="20" rx="4" fill="currentColor" />
+    <text
+      x="12"
+      y="17"
+      text-anchor="middle"
+      font-family="system-ui, sans-serif"
+      font-size="13"
+      font-weight="700"
+      fill="var(--color-bg)"
+    >
+      in
+    </text>
+  </svg>
+) : id === "email" ? (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+    <rect x="3" y="5" width="18" height="14" rx="2" />
+    <path d="m3.5 6.5 8.5 6 8.5-6" />
+  </svg>
+) : id === "copy" ? (
+  <svg
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="1.8"
+    stroke-linecap="round"
+    aria-hidden="true"
+  >
+    <path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1" />
+    <path d="M14 10a4 4 0 0 0-5.7 0l-3 3A4 4 0 0 0 11 18.7l1-1" />
+  </svg>
+) : (
+  <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+    <circle cx="5" cy="12" r="2" />
+    <circle cx="12" cy="12" r="2" />
+    <circle cx="19" cy="12" r="2" />
+  </svg>
+)}

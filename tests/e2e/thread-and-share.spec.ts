@@ -52,21 +52,76 @@ test.describe("hilo", () => {
   });
 });
 
-test.describe("compartir", () => {
-  test("sin hoja nativa copia el link y lo avisa", async ({ page, context, browserName }) => {
-    test.skip(browserName !== "chromium", "permisos del portapapeles solo en Chromium");
-    await context.grantPermissions(["clipboard-read", "clipboard-write"]);
-    await page.addInitScript(() => {
-      Object.defineProperty(Navigator.prototype, "share", { value: undefined });
-    });
+test.describe("ventana de compartir", () => {
+  test("se abre con la vista previa y todos los destinos, sin pedir nada a terceros", async ({
+    page,
+    baseURL,
+  }) => {
+    const origins = new Set<string>();
+    page.on("request", (r) => origins.add(new URL(r.url()).origin));
     await page.goto("/juedsay");
-
     await page.getByRole("button", { name: "Compartir esta página" }).click();
-    await expect(page.getByRole("status")).toHaveText("Link copiado");
-    expect(await page.evaluate(() => navigator.clipboard.readText())).toBe(page.url());
+
+    const dialog = page.getByRole("dialog", { name: "Compartir" });
+    await expect(dialog).toBeVisible();
+    await expect(dialog.getByText("Julián (dev)")).toBeVisible();
+    await expect(dialog.getByText(/\/juedsay$/)).toBeVisible();
+
+    const url = encodeURIComponent(new URL("/juedsay", baseURL).href);
+    await expect(dialog.getByRole("link", { name: "WhatsApp" })).toHaveAttribute(
+      "href",
+      /^https:\/\/wa\.me\/\?text=/,
+    );
+    await expect(dialog.getByRole("link", { name: "Facebook" })).toHaveAttribute(
+      "href",
+      `https://www.facebook.com/sharer/sharer.php?u=${url}`,
+    );
+    for (const name of ["X", "LinkedIn", "Telegram", "Email"]) {
+      await expect(dialog.getByRole("link", { name })).toBeVisible();
+    }
+    await expect(dialog.getByRole("link", { name: "Conocé Plektia" })).toHaveAttribute(
+      "href",
+      "/plektia",
+    );
+    // Los destinos son links: abrir la ventana no le pide nada a ningún tercero.
+    expect([...origins]).toEqual([new URL(baseURL ?? "").origin]);
   });
 
-  test("con hoja nativa la usa y no muestra aviso", async ({ page }) => {
+  test("se cierra con Esc, con el botón y tocando afuera, y el foco vuelve al botón", async ({
+    page,
+  }) => {
+    await page.goto("/juedsay");
+    const trigger = page.getByRole("button", { name: "Compartir esta página" });
+    const dialog = page.getByRole("dialog", { name: "Compartir" });
+
+    await trigger.click();
+    await page.keyboard.press("Escape");
+    await expect(dialog).toBeHidden();
+    await expect(trigger).toBeFocused();
+
+    await trigger.click();
+    await dialog.getByRole("button", { name: "Cerrar" }).click();
+    await expect(dialog).toBeHidden();
+    await expect(trigger).toBeFocused();
+
+    await trigger.click();
+    await page.mouse.click(5, 5);
+    await expect(dialog).toBeHidden();
+  });
+
+  test("copiar el link lo copia y lo avisa", async ({ page, context, browserName }) => {
+    test.skip(browserName !== "chromium", "permisos del portapapeles solo en Chromium");
+    await context.grantPermissions(["clipboard-read", "clipboard-write"]);
+    await page.goto("/juedsay?utm_source=prueba");
+    await page.getByRole("button", { name: "Compartir esta página" }).click();
+    await page.getByRole("button", { name: "Copiar link" }).click();
+
+    await expect(page.getByRole("dialog").getByRole("status")).toHaveText("Link copiado");
+    // Se copia la URL canónica, sin los parámetros de la visita.
+    expect(await page.evaluate(() => navigator.clipboard.readText())).toMatch(/\/juedsay$/);
+  });
+
+  test('con hoja del sistema ofrece "Más opciones" y la usa', async ({ page }) => {
     await page.addInitScript(() => {
       Object.defineProperty(Navigator.prototype, "share", {
         value: (data: ShareData) => {
@@ -77,9 +132,27 @@ test.describe("compartir", () => {
     });
     await page.goto("/juedsay");
     await page.getByRole("button", { name: "Compartir esta página" }).click();
+    await page.getByRole("button", { name: "Más opciones" }).click();
     await expect
       .poll(() => page.evaluate(() => (window as unknown as { shared?: ShareData }).shared?.url))
-      .toBe(page.url());
-    await expect(page.getByRole("status")).toHaveText("");
+      .toMatch(/\/juedsay$/);
+    await expect(page.getByRole("dialog", { name: "Compartir" })).toBeHidden();
+  });
+
+  test('sin hoja del sistema no muestra "Más opciones"', async ({ page }) => {
+    await page.addInitScript(() => {
+      Object.defineProperty(Navigator.prototype, "share", { value: undefined });
+    });
+    await page.goto("/juedsay");
+    await page.getByRole("button", { name: "Compartir esta página" }).click();
+    await expect(page.getByRole("button", { name: "Más opciones" })).toBeHidden();
+  });
+
+  test("en /plektia la tarjeta muestra la marca", async ({ page }) => {
+    await page.goto("/plektia");
+    await page.getByRole("button", { name: "Compartir esta página" }).click();
+    const dialog = page.getByRole("dialog", { name: "Compartir" });
+    await expect(dialog.getByText("Plektia", { exact: true })).toBeVisible();
+    await expect(dialog.getByText(/\/plektia$/)).toBeVisible();
   });
 });
