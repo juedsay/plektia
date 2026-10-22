@@ -5,11 +5,14 @@ import {
   boundsFor,
   buildThread,
   knotPath,
+  liveCurves,
   livePath,
   mulberry32,
   type Point,
   randomShape,
+  threadCurves,
   threadPath,
+  twistPath,
 } from "@/ui/scripts/thread-geometry";
 
 declare global {
@@ -73,24 +76,6 @@ export function mountThread(patchbay: HTMLElement): void {
   svg.appendChild(defs);
   svg.appendChild(group);
 
-  // Trenzado: marcas diagonales que cruzan todo el ancho del trazo cada pocos
-  // píxeles, siguiendo la tangente. Así se lee como cordón torcido.
-  function twistFor(path: SVGPathElement): string {
-    const total = path.getTotalLength();
-    const half = width / 2;
-    let d = "";
-    for (let s = 2; s < total - 1; s += 4.2) {
-      const p = path.getPointAtLength(s);
-      const q = path.getPointAtLength(Math.min(total, s + 0.6));
-      const length = Math.hypot(q.x - p.x, q.y - p.y) || 1;
-      const t = { x: (q.x - p.x) / length, y: (q.y - p.y) / length };
-      const normal = { x: -t.y, y: t.x };
-      d += `M${String(p.x - normal.x * half - t.x * 1.4)} ${String(p.y - normal.y * half - t.y * 1.4)}`;
-      d += `L${String(p.x + normal.x * half + t.x * 1.4)} ${String(p.y + normal.y * half + t.y * 1.4)}`;
-    }
-    return d;
-  }
-
   // Alto visible del hilo mientras se enhebra; null = completo.
   let revealHeight: number | null = reduceMotion ? null : 0;
 
@@ -110,13 +95,20 @@ export function mountThread(patchbay: HTMLElement): void {
     if (!thread) return;
 
     base.setAttribute("d", threadPath(thread));
-    baseTwist.setAttribute("d", twistFor(base));
+    baseTwist.setAttribute("d", twistPath(threadCurves(thread), width));
     const liveD = livePath(thread, live);
     liveStrand.setAttribute("d", liveD);
-    liveTwist.setAttribute("d", liveD ? twistFor(liveStrand) : "");
+    liveTwist.setAttribute("d", twistPath(liveCurves(thread, live), width));
     knot.setAttribute("d", knotPath(thread.start));
+    applyClip();
+  }
+
+  // Recorte del enhebrado: lo único que cambia en cada cuadro de la animación.
+  // La forma (y su trenzado, que es lo caro) se calcula una vez en draw().
+  function applyClip(): void {
+    const height = revealHeight ?? patchbay.getBoundingClientRect().height;
     clipRect.setAttribute("y", "-60");
-    clipRect.setAttribute("height", String((revealHeight ?? box.height) + 120));
+    clipRect.setAttribute("height", String(height + 120));
   }
 
   // Enhebrado inicial: una sola vez por carga, de arriba hacia abajo.
@@ -129,12 +121,13 @@ export function mountThread(patchbay: HTMLElement): void {
     }
     const total = patchbay.getBoundingClientRect().height + 60;
     const duration = cssNumber(patchbay, "--dur-thread", 1200);
+    draw();
     let startTime: number | undefined;
     const step = (now: number) => {
       startTime ??= now;
       const k = Math.min(1, (now - startTime) / duration);
       revealHeight = k < 1 ? total * (1 - Math.pow(2, -10 * k)) : null;
-      draw();
+      applyClip();
       if (k < 1) requestAnimationFrame(step);
       else patchbay.dataset["threadReady"] = "";
     };

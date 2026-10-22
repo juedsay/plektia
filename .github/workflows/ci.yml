@@ -90,6 +90,13 @@ jobs:
         run: pnpm env:local
       - run: pnpm exec playwright install --with-deps chromium
       - run: pnpm test:e2e
+      # Mismo job (y mismo check requerido): reusa Supabase con el seed y el build
+      # que dejaron los E2E. Falla si alguna página excede un presupuesto.
+      - name: Presupuestos de rendimiento (Lighthouse)
+        run: |
+          pnpm exec astro preview --host 127.0.0.1 --port 4323 > preview.log 2>&1 &
+          curl -s --retry 30 --retry-delay 2 --retry-connrefused -o /dev/null http://127.0.0.1:4323/
+          pnpm perf http://127.0.0.1:4323
       - name: Guardar el reporte si fallan los E2E
         if: failure()
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2

@@ -38,3 +38,20 @@ insert into public.links (owner_id, section_id, title, url, description, provide
   ('11111111-1111-4111-8111-111111111111', '5e000000-0000-4000-8000-000000000002', 'Plektia', 'https://app.plektia.workers.dev/', 'Esta página: links, en vivo y MCP', 'generic', null),
   ('11111111-1111-4111-8111-111111111111', '5e000000-0000-4000-8000-000000000002', 'GitHub', 'https://github.com/juedsay', null, 'github', null),
   ('11111111-1111-4111-8111-111111111111', '5e000000-0000-4000-8000-000000000003', 'Cómo testeo RLS con pgTAP', 'https://github.com/juedsay/plektia/tree/main/supabase/tests', null, 'generic', null);
+
+-- Perfil con 50 links (5 secciones de 10, con descripción): el caso que mide el
+-- presupuesto de HTML de la página pública (SPEC-public-page: ≤ 30 KB con 50 links).
+update public.profiles set bio = 'Perfil de prueba con 50 links para medir el rendimiento.'
+where handle = 'miembro-demo';
+
+insert into public.sections (id, owner_id, title)
+select ('5e000000-0000-4000-8000-00000000010' || s)::uuid, '22222222-2222-4222-8222-222222222222', 'Sección ' || s
+from generate_series(1, 5) s;
+
+insert into public.links (owner_id, section_id, title, url, description)
+select '22222222-2222-4222-8222-222222222222',
+       ('5e000000-0000-4000-8000-00000000010' || ((n - 1) / 10 + 1))::uuid,
+       'Link de prueba número ' || n,
+       'https://plektia.app/demo/' || n,
+       'Descripción corta del link ' || n || ' para medir el peso real'
+from generate_series(1, 50) n;

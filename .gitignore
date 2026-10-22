@@ -32,3 +32,4 @@ Thumbs.db
 
 # Tipos generados por `wrangler types`
 worker-configuration.d.ts
+preview.log

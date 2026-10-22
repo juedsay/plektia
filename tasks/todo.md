@@ -214,14 +214,22 @@
     - El foco vuelve al botón también en Safari.
     - La prueba de axe AAA pasa a la tarea 17, que suma axe a los E2E de todas las páginas.
 
-- [ ] **Tarea 17: Caché, rendimiento y accesibilidad** · M · Deps: 15, 16, 16b
+- [x] **Tarea 17: Caché, rendimiento y accesibilidad** · M · Deps: 15, 16, 16b
   - `Cache-Control` + `Cache-Tag` y el helper `purgeProfile(handle)`. Lighthouse CI con los presupuestos del spec, axe AAA en E2E, y tests de "sin cookies" y "sin terceros".
   - **Aceptación:** todos los presupuestos y AAA en verde en CI.
   - **Verificar:** CI.
   - **Archivos:** `src/infrastructure/cache/purge.ts`, `lighthouserc.json`, `e2e/public-page.spec.ts`, `e2e/a11y.spec.ts`.
   - **Parte 1, caché (hecha):** política por respuesta con un middleware, `WorkerPageCache` para purgar por etiqueta, caché activada y E2E de cabeceras y "sin cookies". El `HIT` se prueba contra producción en cada deploy. Desvíos y notas en el ADR 0003.
   - **Parte 2, accesibilidad (hecha):** axe (`@axe-core/playwright` 4.13.0, auditado) con reglas WCAG 2.2 hasta AAA en las 7 páginas públicas y en 4 estados: compartir abierto, contacto con errores, envío exitoso y login rechazado. Cero violaciones; una prueba de mutación confirmó que axe detecta un contraste solo AA y un botón sin nombre. Turnstile (iframe de Cloudflare) queda afuera.
-  - **Parte 3:** Lighthouse CI con los presupuestos.
+  - **Parte 3, rendimiento (hecha):**
+    - `scripts/lighthouse.ts` (`pnpm perf`) corre Lighthouse 13.5.0 (auditado; sin `@lhci/cli`, que estaba abandonado y con dependencias viejas) sobre 5 páginas, incluido un perfil de 50 links del seed. Falla si se excede un presupuesto, y corre en el job de E2E.
+    - Optimizaciones que salieron de medir:
+      - CSS en línea (ya no bloquea el render);
+      - el enhebrado calcula la forma una sola vez y en cada cuadro solo mueve el recorte;
+      - el trenzado se calcula con matemática sobre las curvas en lugar de `getPointAtLength`, que tenía costo cuadrático: el TBT del perfil de 50 links bajó de 7,8 s a 0.
+    - Resultado: 100 en las cuatro categorías, LCP de alrededor de 1,1 s, TBT 0, JS 3,1 KB y HTML 7,6 KB con 50 links.
+    - El CLS queda en ≤ 0,001, por el cambio de fuente (documentado en la spec).
+    - El LCP pasa a ≤ 1,8 s para conservar la fuente con eje óptico (decisión revisable, documentada en la spec). Cada página se mide 3 veces y se usa la mediana, porque una sola medición varía demasiado.
 
 ### ✅ Checkpoint F4 · ENTREGA 1
 - [ ] `https://<tu-worker>.workers.dev/juedsay` online con tus links (cargados por seed). Ya la podés poner en tu bio.

@@ -55,5 +55,10 @@ export default defineConfig({
       },
     },
   ],
+  build: {
+    // El CSS de la página pública pesa ~3 KB comprimido: en línea no bloquea el
+    // primer render (Lighthouse, tarea 17). Astro lo agrega a la CSP con su hash.
+    inlineStylesheets: "always",
+  },
   integrations: [react()],
 });
