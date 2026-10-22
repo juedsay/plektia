@@ -220,7 +220,7 @@
   - **Verificar:** CI.
   - **Archivos:** `src/infrastructure/cache/purge.ts`, `lighthouserc.json`, `e2e/public-page.spec.ts`, `e2e/a11y.spec.ts`.
   - **Parte 1, caché (hecha):** política por respuesta con un middleware, `WorkerPageCache` para purgar por etiqueta, caché activada y E2E de cabeceras y "sin cookies". El `HIT` se prueba contra producción en cada deploy. Desvíos y notas en el ADR 0003.
-  - **Parte 2:** axe AAA en los E2E de todas las páginas.
+  - **Parte 2, accesibilidad (hecha):** axe (`@axe-core/playwright` 4.13.0, auditado) con reglas WCAG 2.2 hasta AAA en las 7 páginas públicas y en 4 estados: compartir abierto, contacto con errores, envío exitoso y login rechazado. Cero violaciones; una prueba de mutación confirmó que axe detecta un contraste solo AA y un botón sin nombre. Turnstile (iframe de Cloudflare) queda afuera.
   - **Parte 3:** Lighthouse CI con los presupuestos.
 
 ### ✅ Checkpoint F4 · ENTREGA 1
