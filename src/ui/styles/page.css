@@ -677,6 +677,144 @@ button {
   font-size: var(--text-sm);
 }
 
+/* Ventana de compartir: tarjeta centrada en pantallas anchas, hoja que sube
+   desde abajo en el celular (como la del sistema). */
+.share-dialog {
+  width: min(24rem, calc(100% - 2 * var(--space-5)));
+  max-height: calc(100dvh - 2 * var(--space-5));
+  padding: var(--space-4) var(--space-5) var(--space-5);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-md);
+  background: var(--color-bg);
+  color: var(--color-fg);
+  overflow-y: auto;
+}
+
+.share-dialog::backdrop {
+  background: rgb(0 0 0 / 0.6);
+}
+
+.share-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.share-head h2 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  font-weight: 500;
+}
+
+.share-head svg {
+  width: 20px;
+  height: 20px;
+}
+
+.share-card {
+  display: grid;
+  justify-items: center;
+  gap: var(--space-1);
+  margin: var(--space-3) 0 var(--space-5);
+  padding: var(--space-5) var(--space-4);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  text-align: center;
+}
+
+.share-avatar {
+  width: 56px;
+  height: 56px;
+  margin-bottom: var(--space-2);
+  font-size: 1.4rem;
+}
+
+.share-name {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  font-weight: 500;
+  overflow-wrap: anywhere;
+}
+
+.share-url {
+  margin: 0;
+  color: var(--color-fg-muted);
+  font-size: var(--text-sm);
+  overflow-wrap: anywhere;
+}
+
+.share-targets {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--space-3) var(--space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.share-target {
+  display: grid;
+  justify-items: center;
+  gap: var(--space-2);
+  width: 100%;
+  min-height: var(--target-min);
+  padding: var(--space-1) 0;
+  border: 0;
+  background: transparent;
+  color: var(--color-fg);
+  font-size: var(--text-xs);
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.share-icon {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border: 1px solid var(--color-line);
+  border-radius: 50%;
+  transition: background-color var(--dur-fast) var(--ease-out);
+}
+
+.share-icon svg {
+  width: 22px;
+  height: 22px;
+}
+
+.share-target:is(:hover, :focus-visible) .share-icon {
+  background: var(--color-surface);
+}
+
+.share-status {
+  min-height: 1.5em;
+  margin: var(--space-3) 0 0;
+  font-size: var(--text-sm);
+  text-align: center;
+}
+
+.share-cta {
+  margin: var(--space-2) 0 0;
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--color-line-soft);
+  color: var(--color-fg-muted);
+  font-size: var(--text-sm);
+  text-align: center;
+}
+
+@media (max-width: 30rem) {
+  .share-dialog {
+    width: 100%;
+    max-width: none;
+    margin: auto 0 0;
+    border-radius: var(--radius-md) var(--radius-md) 0 0;
+    border-bottom: 0;
+  }
+}
+
 /* Campo trampa: fuera de la pantalla (no `display: none`, que algunos bots detectan). */
 .trap {
   position: absolute;

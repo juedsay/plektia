@@ -195,7 +195,7 @@
   - **Parte 4:** política de privacidad en `/legal/privacy` (rutas propias en inglés; `/legal` agrupa los documentos legales que lleguen en v2: términos, uso aceptable, denuncias), enlazada en el pie de todas las páginas. Después, la publicación de la app de Google.
   - **Archivos:** `src/ui/styles/fonts.css`, `src/ui/components/Seo.astro`, `src/content/plektia.ts`, `src/pages/plektia/index.astro`, `src/pages/legal/privacy.astro`, `src/pages/sitemap.xml.ts`.
 
-- [ ] **Tarea 16b: Ventana de compartir propia** · S · Deps: 16
+- [x] **Tarea 16b: Ventana de compartir propia** · S · Deps: 16
   - `<dialog>` nativo con el diseño de Plektia, como la de Linktree:
     - tarjeta de vista previa (avatar, nombre y `/handle`);
     - Copiar link, WhatsApp, X, Facebook, LinkedIn, Telegram y Email, como links de intención que se abren al tocarlos (cero pedidos a terceros al cargar);
@@ -207,6 +207,12 @@
     - Cada destino arma su URL con el link codificado.
   - **Verificar:** unit de las URLs de cada destino + E2E de teclado y foco.
   - **Archivos:** `src/ui/components/ShareDialog.astro`, `src/ui/view/share-targets.ts`, `src/ui/scripts/share.ts`.
+  - **Hecho:**
+    - En el celular es una hoja que sube desde abajo, y en desktop una tarjeta centrada.
+    - Los logos de marca salen de `simple-icons` 16.34.0 (CC0, auditado). LinkedIn ya no está en ese paquete y usa un "in" genérico.
+    - Se comparte la URL canónica, sin los parámetros de la visita.
+    - El foco vuelve al botón también en Safari.
+    - La prueba de axe AAA pasa a la tarea 17, que suma axe a los E2E de todas las páginas.
 
 - [ ] **Tarea 17: Caché, rendimiento y accesibilidad** · M · Deps: 15, 16, 16b
   - `Cache-Control` + `Cache-Tag` y el helper `purgeProfile(handle)`. Lighthouse CI con los presupuestos del spec, axe AAA en E2E, y tests de "sin cookies" y "sin terceros".

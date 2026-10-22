@@ -1,0 +1,93 @@
+---
+import Isotype from "@/ui/components/Isotype.astro";
+import ShareIcon from "@/ui/components/ShareIcon.astro";
+import { initialOf } from "@/ui/view/public-link";
+import { displayUrl, shareTargets } from "@/ui/view/share-targets";
+
+// Ventana de compartir propia (tarea 16b), como la de Linktree. `<dialog>`
+// nativo: Esc la cierra, el foco queda adentro mientras está abierta y vuelve
+// al botón al cerrarse.
+interface Props {
+  /** URL absoluta que se comparte (la canónica de la página). */
+  url: string;
+  /** Texto que acompaña al link (el título de la página). */
+  title: string;
+  /** Nombre en la tarjeta de vista previa. */
+  name: string;
+  /** Página propia de Plektia: el avatar es el isotipo. */
+  brand?: boolean;
+}
+const { url, title, name, brand = false } = Astro.props;
+const targets = shareTargets(url, title);
+---
+
+<dialog
+  class="share-dialog"
+  aria-labelledby="share-title"
+  data-share-dialog
+  data-share-url={url}
+  data-share-title={title}
+>
+  <div class="share-head">
+    <h2 id="share-title">Compartir</h2>
+    <button class="icon-button" type="button" data-share-close aria-label="Cerrar">
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.8"
+        stroke-linecap="round"
+        aria-hidden="true"
+      >
+        <path d="M6 6l12 12M18 6 6 18"></path>
+      </svg>
+    </button>
+  </div>
+
+  <div class="share-card">
+    <div class="avatar share-avatar" aria-hidden="true">
+      {brand ? <Isotype size={28} /> : initialOf(name)}
+    </div>
+    <p class="share-name">{name}</p>
+    <p class="share-url">{displayUrl(url)}</p>
+  </div>
+
+  <ul class="share-targets">
+    <li>
+      <button class="share-target" type="button" data-share-copy>
+        <span class="share-icon">
+          <ShareIcon id="copy" />
+        </span>
+        <span>Copiar link</span>
+      </button>
+    </li>
+    {targets.map((target) => (
+      <li>
+        <a
+          class="share-target"
+          href={target.href}
+          {...(target.id === "email" ? {} : { target: "_blank", rel: "noopener noreferrer" })}
+        >
+          <span class="share-icon">
+            <ShareIcon id={target.id} />
+          </span>
+          <span>{target.label}</span>
+        </a>
+      </li>
+    ))}
+    <li hidden data-share-native>
+      <button class="share-target" type="button">
+        <span class="share-icon">
+          <ShareIcon id="more" />
+        </span>
+        <span>Más opciones</span>
+      </button>
+    </li>
+  </ul>
+
+  <p class="share-status" role="status" data-share-status></p>
+
+  <p class="share-cta">
+    ¿Querés una página así? <a href="/plektia">Conocé Plektia</a>
+  </p>
+</dialog>

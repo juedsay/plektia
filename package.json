@@ -43,6 +43,7 @@
     "astro": "7.3.8",
     "react": "19.3.0",
     "react-dom": "19.3.0",
+    "simple-icons": "16.34.0",
     "zod": "4.6.5"
   },
   "devDependencies": {

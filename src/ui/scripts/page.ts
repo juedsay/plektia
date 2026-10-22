@@ -33,18 +33,84 @@ function notify(message: string): void {
   }, 2400);
 }
 
+// APIs del navegador envueltas: sueltas pierden su `this` y fallan.
+// `typeof … === "function"` y no `in`: una propiedad puede existir sin ser usable.
+const nativeShare =
+  typeof navigator.share === "function"
+    ? { share: (d: ShareData) => navigator.share(d) }
+    : undefined;
+const clipboard =
+  "clipboard" in navigator
+    ? { writeText: (text: string) => navigator.clipboard.writeText(text) }
+    : undefined;
+
 const shareButton = document.querySelector<HTMLButtonElement>("[data-share]");
-shareButton?.addEventListener("click", () => {
-  const data = { title: document.title, url: location.href };
-  const api = {
-    // Se pasan envueltas: sueltas pierden su `this` y fallan.
-    ...("share" in navigator ? { share: (d: ShareData) => navigator.share(d) } : {}),
-    ...("clipboard" in navigator
-      ? { clipboard: { writeText: (text: string) => navigator.clipboard.writeText(text) } }
-      : {}),
+const dialog = document.querySelector<HTMLDialogElement>("[data-share-dialog]");
+if (shareButton && dialog) mountShareDialog(shareButton, dialog);
+
+/** Ventana de compartir propia: copiar, redes y, si existe, la hoja del sistema. */
+function mountShareDialog(trigger: HTMLButtonElement, dialog: HTMLDialogElement): void {
+  const data = {
+    title: dialog.dataset["shareTitle"] ?? document.title,
+    url: dialog.dataset["shareUrl"] ?? location.href,
   };
-  void shareOrCopy(data, api).then((outcome) => {
-    const message = shareMessage(outcome);
-    if (message) notify(message);
+  const status = dialog.querySelector<HTMLElement>("[data-share-status]");
+  const say = (message: string | null) => {
+    if (status) status.textContent = message ?? "";
+  };
+
+  // "Más opciones" solo si el navegador tiene hoja de compartir.
+  const native = dialog.querySelector<HTMLElement>("[data-share-native]");
+  if (native && nativeShare) native.hidden = false;
+
+  trigger.addEventListener("click", () => {
+    say(null);
+    // Safari no le da foco a un botón al tocarlo: sin esto, al cerrar el
+    // navegador devolvería el foco al <body>.
+    trigger.focus();
+    dialog.showModal();
   });
-});
+  // El foco vuelve al botón que la abrió (también al cerrar con Esc). En el
+  // próximo frame: el navegador restaura el foco después del evento `close`.
+  dialog.addEventListener("close", () => {
+    requestAnimationFrame(() => {
+      trigger.focus();
+    });
+  });
+  dialog.querySelector("[data-share-close]")?.addEventListener("click", () => {
+    dialog.close();
+  });
+  // Tocar el fondo (fuera de la ventana) la cierra.
+  dialog.addEventListener("click", (event) => {
+    if (event.target === dialog) dialog.close();
+  });
+
+  dialog.querySelector("[data-share-copy]")?.addEventListener("click", () => {
+    void shareOrCopy(data, clipboard ? { clipboard } : {}).then((outcome) => {
+      say(shareMessage(outcome));
+    });
+  });
+  native?.querySelector("button")?.addEventListener("click", () => {
+    if (!nativeShare) return;
+    // Si la hoja del sistema falla (no por cancelar), se copia el link y se avisa.
+    void shareOrCopy(data, { share: nativeShare.share, ...(clipboard ? { clipboard } : {}) }).then(
+      (outcome) => {
+        if (outcome === "shared") dialog.close();
+        else say(shareMessage(outcome));
+      },
+    );
+  });
+}
+
+// Sin la ventana (no debería pasar), el botón cae en la hoja del sistema o copiar.
+if (shareButton && !dialog) {
+  shareButton.addEventListener("click", () => {
+    const data = { title: document.title, url: location.href };
+    void shareOrCopy(data, { ...nativeShare, ...(clipboard ? { clipboard } : {}) }).then(
+      (outcome) => {
+        const message = shareMessage(outcome);
+        if (message) notify(message);
+      },
+    );
+  });
+}

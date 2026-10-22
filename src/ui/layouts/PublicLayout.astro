@@ -6,6 +6,7 @@ import "@/ui/styles/page.css";
 
 import Footer from "@/ui/components/Footer.astro";
 import Seo from "@/ui/components/Seo.astro";
+import ShareDialog from "@/ui/components/ShareDialog.astro";
 import Topbar from "@/ui/components/Topbar.astro";
 
 interface Props {
@@ -17,6 +18,8 @@ interface Props {
   type?: "website" | "profile";
   structuredData?: Record<string, unknown>;
   share?: boolean;
+  /** Tarjeta de la ventana de compartir; sin ella, se muestra la marca Plektia. */
+  sharePreview?: { name: string; brand?: boolean };
 }
 const {
   title,
@@ -26,7 +29,10 @@ const {
   type,
   structuredData,
   share = true,
+  sharePreview,
 } = Astro.props;
+// Se comparte la URL canónica (sin query strings); si no hay, la de la página.
+const shareUrl = canonical?.href ?? new URL(Astro.url.pathname, Astro.url).href;
 ---
 
 <!doctype html>
@@ -53,6 +59,14 @@ const {
       <Footer />
     </div>
     <p class="toast" role="status" aria-live="polite" data-toast></p>
+    {share && (
+      <ShareDialog
+        url={shareUrl}
+        title={title}
+        name={sharePreview?.name ?? "Plektia"}
+        brand={sharePreview?.brand ?? !sharePreview}
+      />
+    )}
     <script>
       import "@/ui/scripts/page";
     </script>
