@@ -70,6 +70,14 @@ function main(): void {
       stdio: "inherit",
     });
     console.warn(`Invitación creada: ${invite.email} → /${invite.handle} (${invite.role}).`);
+    if (invite.prod) {
+      // Mientras el registro esté cerrado, la app de Google sigue en "Prueba":
+      // solo entran con Google los usuarios de prueba cargados a mano.
+      console.warn(
+        "Si va a entrar con Google, agregalo como usuario de prueba en " +
+          "https://console.cloud.google.com/auth/audience",
+      );
+    }
   } catch {
     // La CLI ya mostró el motivo (handle reservado o repetido, email ya invitado…).
     console.error("No se creó la invitación: revisá el error de arriba.");
