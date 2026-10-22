@@ -52,6 +52,8 @@ Solo compara el **host exacto** (con o sin `www.`). `youtube.com.evil.com` es `g
 
 ## Modelo de datos
 
+> Desde la tarea 17c, secciones y links pertenecen a una **página** (`page_id`); el orden y los límites se cuentan por página. Ver [SPEC-pages.md](SPEC-pages.md).
+
 ```sql
 create table public.sections (
   id          uuid primary key default gen_random_uuid(),
