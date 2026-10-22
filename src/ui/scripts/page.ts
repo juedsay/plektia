@@ -92,9 +92,13 @@ function mountShareDialog(trigger: HTMLButtonElement, dialog: HTMLDialogElement)
   });
   native?.querySelector("button")?.addEventListener("click", () => {
     if (!nativeShare) return;
-    void shareOrCopy(data, { share: nativeShare.share }).then((outcome) => {
-      if (outcome === "shared") dialog.close();
-    });
+    // Si la hoja del sistema falla (no por cancelar), se copia el link y se avisa.
+    void shareOrCopy(data, { share: nativeShare.share, ...(clipboard ? { clipboard } : {}) }).then(
+      (outcome) => {
+        if (outcome === "shared") dialog.close();
+        else say(shareMessage(outcome));
+      },
+    );
   });
 }
 

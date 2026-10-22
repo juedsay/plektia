@@ -139,6 +139,24 @@ test.describe("ventana de compartir", () => {
     await expect(page.getByRole("dialog", { name: "Compartir" })).toBeHidden();
   });
 
+  test("si la hoja del sistema falla, copia el link y lo avisa", async ({
+    page,
+    context,
+    browserName,
+  }) => {
+    test.skip(browserName !== "chromium", "permisos del portapapeles solo en Chromium");
+    await context.grantPermissions(["clipboard-read", "clipboard-write"]);
+    await page.addInitScript(() => {
+      Object.defineProperty(Navigator.prototype, "share", {
+        value: () => Promise.reject(new DOMException("bloqueado", "NotAllowedError")),
+      });
+    });
+    await page.goto("/juedsay");
+    await page.getByRole("button", { name: "Compartir esta página" }).click();
+    await page.getByRole("button", { name: "Más opciones" }).click();
+    await expect(page.getByRole("dialog").getByRole("status")).toHaveText("Link copiado");
+  });
+
   test('sin hoja del sistema no muestra "Más opciones"', async ({ page }) => {
     await page.addInitScript(() => {
       Object.defineProperty(Navigator.prototype, "share", { value: undefined });
