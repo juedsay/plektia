@@ -37,16 +37,23 @@ describe("requiresSession", () => {
 });
 
 describe("usesSession", () => {
-  it.each(["/admin", "/admin/links", "/login", "/auth/callback", "/auth/logout"])(
-    "lee la sesión en %j",
+  it.each([
+    "/admin",
+    "/admin/links",
+    "/login",
+    "/auth/callback",
+    "/auth/logout",
+    "/_actions/links.create",
+  ])("lee la sesión en %j", (path) => {
+    expect(usesSession(path)).toBe(true);
+  });
+
+  it.each(["/", "/juedsay", "/loginx", "/authors", "/_actionsx"])(
+    "no la lee en la página pública %j",
     (path) => {
-      expect(usesSession(path)).toBe(true);
+      expect(usesSession(path)).toBe(false);
     },
   );
-
-  it.each(["/", "/juedsay", "/loginx", "/authors"])("no la lee en la página pública %j", (path) => {
-    expect(usesSession(path)).toBe(false);
-  });
 });
 
 describe("loginRedirect", () => {

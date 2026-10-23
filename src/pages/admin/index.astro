@@ -1,19 +1,17 @@
 ---
-// Inicio del panel: el resumen de la página con la que se trabaja. En la tarea
-// 19 lo reemplaza el editor de links.
+// Inicio del panel: el editor de links de la página con la que se trabaja
+// (SPEC-admin-panel, "Editor"). Es la única isla de React del panel.
 import { actions } from "astro:actions";
 
 import { loadWorkspace } from "@/ui/admin/workspace";
 import AdminLayout from "@/ui/layouts/AdminLayout.astro";
-import { describeCount, summarizePage } from "@/ui/view/page-summary";
+import EditorIsland from "@/ui/islands/Editor";
 
 const switched = Astro.getActionResult(actions.pages.select);
 if (switched?.data?.ok) return Astro.redirect(Astro.url.pathname, 303);
 
 const { repositories, pages, currentPage } = await loadWorkspace(Astro);
-const summary = currentPage
-  ? summarizePage(await repositories.linksOf(currentPage.id).listOwn())
-  : null;
+const content = currentPage ? await repositories.linksOf(currentPage.id).listOwn() : null;
 const publicUrl = currentPage ? new URL(`/${currentPage.handle}`, Astro.url) : null;
 const notice =
   switched?.data && !switched.data.ok
@@ -24,7 +22,7 @@ const notice =
 ---
 
 <AdminLayout title="Inicio" section="home" pages={pages} currentPage={currentPage} notice={notice}>
-  {currentPage && publicUrl && summary ? (
+  {currentPage && publicUrl && content ? (
     <>
       <header class="admin-heading">
         <h1>{currentPage.displayName}</h1>
@@ -47,35 +45,7 @@ const notice =
         {currentPage.bio && <p class="admin-bio">{currentPage.bio}</p>}
       </header>
 
-      <section class="admin-block" aria-labelledby="contenido-pagina">
-        <h2 id="contenido-pagina">
-          Contenido <span class="admin-count">{describeCount(summary.linkCount, 0)}</span>
-        </h2>
-        {summary.groups.length > 0 ? (
-          <ul class="admin-groups">
-            {summary.groups.map((group) => (
-              <li class="admin-group">
-                <span
-                  class:list={["admin-jack", { "is-hidden": !group.visible }]}
-                  aria-hidden="true"
-                />
-                <span class="admin-group-title">
-                  {group.title}
-                  {!group.visible && <span class="admin-tag">Oculta</span>}
-                </span>
-                <span class="admin-group-count">
-                  {describeCount(group.linkCount, group.hiddenCount)}
-                </span>
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <div class="admin-empty">
-            <p class="admin-empty-title">Esta página todavía no tiene links.</p>
-            <p>El editor de links es lo próximo que se suma al panel.</p>
-          </div>
-        )}
-      </section>
+      <EditorIsland client:load pageId={currentPage.id} initialContent={content} />
     </>
   ) : (
     <div class="admin-empty">

@@ -9,12 +9,13 @@ export default defineConfig({
     },
   },
   test: {
-    include: ["tests/unit/**/*.test.ts"],
+    // Los .tsx son tests de componentes: declaran `@vitest-environment jsdom`.
+    include: ["tests/unit/**/*.test.{ts,tsx}"],
     environment: "node",
     typecheck: {
       // Corre los `expectTypeOf` como chequeos reales de tipos.
       enabled: true,
-      include: ["tests/**/*.test.ts"],
+      include: ["tests/**/*.test.{ts,tsx}"],
     },
     coverage: {
       provider: "v8",

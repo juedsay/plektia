@@ -1,4 +1,4 @@
-import type { LinkReader } from "@/application/ports/link-repository";
+import type { LinkReader, LinkWriter, SectionWriter } from "@/application/ports/link-repository";
 import type { PageReader, PageWriter } from "@/application/ports/page-repository";
 import {
   type CookieWriter,
@@ -11,7 +11,7 @@ import { SupabasePageRepository } from "@/infrastructure/supabase/supabase-page-
 export interface AdminRepositories {
   readonly pages: PageReader & PageWriter;
   /** Secciones y links de una página de la cuenta. */
-  linksOf(pageId: string): LinkReader;
+  linksOf(pageId: string): LinkReader & LinkWriter & SectionWriter;
 }
 
 /**

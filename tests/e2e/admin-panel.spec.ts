@@ -1,7 +1,7 @@
 import AxeBuilder from "@axe-core/playwright";
 import { expect, type Page, test } from "@playwright/test";
 
-import { resetPagesOf, restorePageSettings, signIn } from "./support/session";
+import { deleteLinksTitled, resetPagesOf, restorePageSettings, signIn } from "./support/session";
 
 // Panel (SPEC-admin-panel, tarea 18a): marco, selector de página, alta de
 // páginas e inicio. Con sesión real del seed; WCAG 2.2 AA.
@@ -34,7 +34,7 @@ test.describe("panel: inicio", () => {
       "href",
       /\/juedsay$/,
     );
-    await expect(page.locator(".admin-group-title")).toHaveText([
+    await expect(page.locator(".editor-group-title")).toHaveText([
       "Redes",
       "Proyectos",
       "Artículos",
@@ -98,7 +98,7 @@ test.describe("panel: páginas de una cuenta", () => {
 
     await expect(page).toHaveURL(/\/admin$/);
     await expect(page.getByRole("heading", { level: 1 })).toHaveText("Mi segunda");
-    await expect(page.getByText("Esta página todavía no tiene links.")).toBeVisible();
+    await expect(page.getByText(/Todavía no hay links/)).toBeVisible();
     const publicPage = await page.request.get("/miembro-segunda");
     expect(publicPage.status()).toBe(200);
   });
@@ -191,5 +191,70 @@ test.describe("panel: presentación de la página (/admin/page)", () => {
     await expect(page.getByRole("heading", { level: 1 })).toHaveText("Miembro Editado");
     await expect(page.getByText("Bio nueva")).toBeVisible();
     await expect(page.locator(".identity").getByText("@miembro-demo")).toHaveCount(0);
+  });
+});
+
+test.describe("panel: editor de links", () => {
+  // Links de prueba en la página del miembro; se borran al terminar.
+  const TITLES = ["Canal de prueba", "Canal de prueba editado"];
+
+  test.beforeAll(async () => {
+    await resetPagesOf(MEMBER_ID);
+    await deleteLinksTitled(MEMBER_ID, TITLES);
+  });
+
+  test.afterAll(async () => {
+    await deleteLinksTitled(MEMBER_ID, TITLES);
+  });
+
+  test.beforeEach(async ({ context, baseURL }) => {
+    await signIn(context, baseURL ?? "", "member@plektia.test");
+  });
+
+  test("agrega un link, lo edita en el lugar y lo oculta; la página pública lo refleja", async ({
+    page,
+  }) => {
+    await page.goto("/admin");
+    const add = page.locator("form.add-link");
+    await add.getByLabel("URL").fill("https://www.twitch.tv/canal-de-prueba");
+    await expect(add.getByLabel("Título")).toHaveValue("Twitch");
+    await add.getByLabel("Título").fill("Canal de prueba");
+    await add.getByRole("button", { name: "Agregar link" }).click();
+
+    await expect(page.getByRole("status")).toHaveText("Canal de prueba: agregado");
+    await expect(add.getByLabel("URL")).toBeFocused();
+    expect(await (await page.request.get("/miembro-demo")).text()).toContain("Canal de prueba");
+
+    await page.getByRole("button", { name: "Editar Canal de prueba" }).click();
+    const title = page.locator(".editor-link-panel:not([hidden])").getByLabel("Título");
+    await expect(title).toBeFocused();
+    await title.fill("Canal de prueba editado");
+    await title.press("Tab");
+    await expect(page.getByRole("status")).toHaveText("Guardado");
+    expect(await violations(page)).toEqual([]);
+
+    await page.getByRole("button", { name: "Ocultar Canal de prueba editado" }).click();
+    await expect(
+      page.getByRole("button", { name: "Mostrar Canal de prueba editado" }),
+    ).toBeVisible();
+    const publicHtml = await (await page.request.get("/miembro-demo")).text();
+    expect(publicHtml).not.toContain("Canal de prueba");
+
+    // Al recargar, el editor muestra lo guardado.
+    await page.reload();
+    await expect(
+      page.getByRole("button", { name: "Mostrar Canal de prueba editado" }),
+    ).toBeVisible();
+  });
+
+  test("una URL insegura se rechaza junto al campo", async ({ page }) => {
+    await page.goto("/admin");
+    const add = page.locator("form.add-link");
+    await add.getByLabel("URL").fill("http://inseguro.test");
+    await add.getByLabel("Título").fill("Canal de prueba");
+    await add.getByRole("button", { name: "Agregar link" }).click();
+
+    await expect(add.getByRole("alert")).toBeVisible();
+    await expect(add.getByLabel("URL")).toHaveAttribute("aria-invalid", "true");
   });
 });

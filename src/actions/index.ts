@@ -1,7 +1,13 @@
 // Astro Actions del panel (SPEC-admin-panel): cada una llama a un caso de uso
 // con la sesión del usuario. Sin API paralela: panel, MCP y tests pasan por las
-// mismas funciones. Los formularios funcionan sin JavaScript.
+// mismas funciones. Los formularios funcionan sin JavaScript; las de links las
+// llama la isla del editor (JSON).
 import { ActionError, type ActionAPIContext, defineAction } from "astro:actions";
+import { z } from "zod";
+
+import { createLink } from "@/application/links/create-link";
+import { setLinkVisibility } from "@/application/links/set-link-visibility";
+import { updateLink } from "@/application/links/update-link";
 
 import { createPage } from "@/application/pages/create-page";
 import { selectPage } from "@/application/pages/select-page";
@@ -16,7 +22,71 @@ function repositoriesOf(context: ActionAPIContext) {
   return adminRepositoriesFor(context.request, context.cookies, user.id);
 }
 
+const PageTarget = z.object({ pageId: z.uuid() });
+
+/**
+ * Los links de una página de la sesión. El `pageId` llega del editor: si no es
+ * una página propia, la RLS y el trigger de dueño rechazan cada escritura.
+ */
+function linksOfPage(context: ActionAPIContext, input: unknown) {
+  const target = PageTarget.safeParse(input);
+  if (!target.success) {
+    throw new ActionError({ code: "BAD_REQUEST", message: "Falta la página." });
+  }
+  const repositories = repositoriesOf(context);
+  const { pageId } = target.data;
+  return {
+    links: repositories.linksOf(pageId),
+    /** Purga la página pública después de un cambio (se ve al instante). */
+    purge: async () => {
+      const page = (await repositories.pages.listOwn()).find(
+        (candidate) => candidate.id === pageId,
+      );
+      if (page) await pageCache().purgeProfile(page.handle);
+    },
+  };
+}
+
 export const server = {
+  links: {
+    /** Las secciones y los links de la página, en orden (para recargar tras un conflicto). */
+    list: defineAction({
+      accept: "json",
+      handler: async (input: unknown, context) => {
+        const { links } = linksOfPage(context, input);
+        return links.listOwn();
+      },
+    }),
+    create: defineAction({
+      accept: "json",
+      handler: async (input: unknown, context) => {
+        const { links, purge } = linksOfPage(context, input);
+        const created = await createLink({ links })(input);
+        if (created.ok) await purge();
+        return toFormResult(created);
+      },
+    }),
+    /** `{ pageId, id, version, changes }`: guarda lo que cambió de un link. */
+    update: defineAction({
+      accept: "json",
+      handler: async (input: unknown, context) => {
+        const { links, purge } = linksOfPage(context, input);
+        const updated = await updateLink({ links })(input);
+        if (updated.ok) await purge();
+        return toFormResult(updated);
+      },
+    }),
+    /** `{ pageId, id, version, visible }`: mostrar u ocultar en la página pública. */
+    setVisibility: defineAction({
+      accept: "json",
+      handler: async (input: unknown, context) => {
+        const { links, purge } = linksOfPage(context, input);
+        const updated = await setLinkVisibility({ links })(input);
+        if (updated.ok) await purge();
+        return toFormResult(updated);
+      },
+    }),
+  },
   pages: {
     /** Elige la página con la que se trabaja (queda como la última usada). */
     select: defineAction({
