@@ -10,6 +10,23 @@ import { Editor } from "@/ui/islands/editor/Editor";
 import type { EditorApi, LinkChanges, NewLink } from "@/ui/islands/editor/editor-api";
 import { UNDO_WINDOW_MS } from "@/ui/islands/editor/UndoToast";
 
+// jsdom no mide ni observa tamaños: dnd-kit usa ResizeObserver para ordenar.
+// Se define antes de los imports (vi.hoisted). El arrastre real (mouse, toque y
+// teclado) lo prueban los E2E en un navegador.
+vi.hoisted(() => {
+  globalThis.ResizeObserver = class {
+    observe() {
+      return undefined;
+    }
+    unobserve() {
+      return undefined;
+    }
+    disconnect() {
+      return undefined;
+    }
+  };
+});
+
 afterEach(() => {
   cleanup();
   vi.useRealTimers();
@@ -104,6 +121,38 @@ class FakeApi implements EditorApi {
     this.deletedOnExit.push(target.id);
   }
 
+  moves: { sectionId: string | null; order: string[] }[] = [];
+
+  /** Como la base: deja el grupo en ese orden y sube la versión de lo que se movió. */
+  move(sectionId: string | null, order: readonly { id: string; version: number }[]) {
+    this.moves.push({ sectionId, order: order.map((item) => item.id) });
+    const failed = this.takeFailure();
+    if (failed) return Promise.resolve(failed as unknown as FormResult<OwnLinks>);
+    const ids = order.map((item) => item.id);
+    this.content = {
+      ...this.content,
+      links: this.content.links.map((candidate) => {
+        const position = ids.indexOf(candidate.id);
+        return position === -1
+          ? candidate
+          : { ...candidate, sectionId, position, version: candidate.version + 1 };
+      }),
+    };
+    return Promise.resolve({ ok: true as const, value: this.content });
+  }
+
+  reorderSections(order: readonly { id: string; version: number }[]) {
+    const ids = order.map((item) => item.id);
+    this.content = {
+      ...this.content,
+      sections: this.content.sections.map((candidate) => ({
+        ...candidate,
+        position: ids.indexOf(candidate.id),
+      })),
+    };
+    return Promise.resolve({ ok: true as const, value: this.content });
+  }
+
   /** Como la base: si la versión leída no es la actual, da conflicto. */
   private save(target: { id: string; version: number }, changes: Partial<Link>): FormResult<Link> {
     const { id } = target;
@@ -164,7 +213,7 @@ describe("Editor · agregar", () => {
     expect(screen.getByLabelText("URL")).toHaveProperty("value", "");
     expect(document.activeElement).toBe(screen.getByLabelText("URL"));
     await waitFor(() => {
-      expect(screen.getByRole("status").textContent).toBe("Instagram: agregado");
+      expect(editorStatus()).toBe("Instagram: agregado");
     });
   });
 
@@ -212,7 +261,7 @@ describe("Editor · editar en el lugar", () => {
       { id: "twitch", version: 1, changes: { title: "Twitch en vivo" } },
     ]);
     await waitFor(() => {
-      expect(screen.getByRole("status").textContent).toBe("Guardado");
+      expect(editorStatus()).toBe("Guardado");
     });
     expect(screen.getAllByText("Twitch en vivo").length).toBeGreaterThan(0);
   });
@@ -319,7 +368,7 @@ describe("Editor · mostrar u ocultar", () => {
     expect(screen.getByText("Oculto")).toBeTruthy();
     expect(screen.getByRole("button", { name: "Mostrar Twitch" })).toBeTruthy();
     await waitFor(() => {
-      expect(screen.getByRole("status").textContent).toBe("Twitch: oculto");
+      expect(editorStatus()).toBe("Twitch: oculto");
     });
   });
 
@@ -452,5 +501,74 @@ describe("Editor · borrar y deshacer", () => {
       expect(api.content.links[0]).toMatchObject({ title: "Twitch", version: 3 });
     });
     expect(api.updates.at(-1)).toEqual({ id: "twitch", version: 2, changes: { title: "Twitch" } });
+  });
+});
+
+/** La región en vivo del editor (dnd-kit suma la suya para el arrastre). */
+function editorStatus(): string {
+  return document.querySelector("[data-editor-status]")?.textContent ?? "";
+}
+
+describe("Editor · mover sin arrastrar (botones)", () => {
+  const PROYECTOS: Section = { ...REDES, id: "s-proyectos", title: "Proyectos", position: 1 };
+  const THREE: OwnLinks = {
+    sections: [REDES, PROYECTOS],
+    links: [
+      link("twitch", { title: "Twitch" }),
+      link("youtube", { title: "YouTube", position: 1 }),
+      link("github", { title: "GitHub", sectionId: "s-proyectos" }),
+    ],
+  };
+  const titlesIn = (group: string) =>
+    [
+      ...(screen
+        .getByRole("heading", { name: group })
+        .closest("section")
+        ?.querySelectorAll(".editor-link-title") ?? []),
+    ].map((title) => title.textContent);
+
+  it("'Bajar' lo baja un lugar y manda el orden completo del grupo", async () => {
+    const { api, user } = setup(THREE, { fakeTimers: true });
+    await user.click(screen.getByRole("button", { name: "Editar Twitch" }));
+    expect(screen.getByRole("button", { name: "Subir Twitch" })).toHaveProperty("disabled", true);
+    await user.click(screen.getByRole("button", { name: "Bajar Twitch" }));
+
+    await waitFor(() => {
+      expect(titlesIn("Redes")).toEqual(["YouTube", "Twitch"]);
+    });
+    expect(api.moves).toEqual([{ sectionId: "s-redes", order: ["youtube", "twitch"] }]);
+    expect(document.querySelector(".undo-toast-message")?.textContent).toBe("Twitch movido");
+  });
+
+  it("la sección elegida lo lleva al final de esa sección; 'Deshacer' lo devuelve", async () => {
+    const { api, user } = setup(THREE, { fakeTimers: true });
+    await user.click(screen.getByRole("button", { name: "Editar Twitch" }));
+    await user.selectOptions(
+      screen.getByRole("combobox", { name: "Sección de Twitch" }),
+      "Proyectos",
+    );
+
+    await waitFor(() => {
+      expect(titlesIn("Proyectos")).toEqual(["GitHub", "Twitch"]);
+    });
+    expect(api.moves.at(-1)).toEqual({ sectionId: "s-proyectos", order: ["github", "twitch"] });
+
+    await user.click(screen.getByRole("button", { name: "Deshacer" }));
+    await waitFor(() => {
+      expect(titlesIn("Redes")).toEqual(["Twitch", "YouTube"]);
+    });
+    expect(api.moves.at(-1)).toEqual({ sectionId: "s-redes", order: ["twitch", "youtube"] });
+  });
+
+  it("si el servidor no lo acepta, vuelve a su lugar y lo anuncia", async () => {
+    const { api, user } = setup(THREE, { fakeTimers: true });
+    await user.click(screen.getByRole("button", { name: "Editar Twitch" }));
+    api.nextFailure = failure(errorMessage("conflict"));
+    await user.click(screen.getByRole("button", { name: "Bajar Twitch" }));
+
+    await waitFor(() => {
+      expect(editorStatus()).toContain("No pudimos mover Twitch");
+    });
+    expect(titlesIn("Redes")).toEqual(["Twitch", "YouTube"]);
   });
 });

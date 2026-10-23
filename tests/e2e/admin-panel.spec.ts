@@ -1,7 +1,13 @@
 import AxeBuilder from "@axe-core/playwright";
 import { expect, type Page, test } from "@playwright/test";
 
-import { deleteLinksTitled, resetPagesOf, restorePageSettings, signIn } from "./support/session";
+import {
+  deleteLinksTitled,
+  insertUnsectionedLinks,
+  resetPagesOf,
+  restorePageSettings,
+  signIn,
+} from "./support/session";
 
 // Panel (SPEC-admin-panel, tarea 18a): marco, selector de página, alta de
 // páginas e inicio. Con sesión real del seed; WCAG 2.2 AA.
@@ -221,7 +227,7 @@ test.describe("panel: editor de links", () => {
     await add.getByLabel("Título").fill("Canal de prueba");
     await add.getByRole("button", { name: "Agregar link" }).click();
 
-    await expect(page.getByRole("status")).toHaveText("Canal de prueba: agregado");
+    await expect(page.locator("[data-editor-status]")).toHaveText("Canal de prueba: agregado");
     await expect(add.getByLabel("URL")).toBeFocused();
     expect(await (await page.request.get("/miembro-demo")).text()).toContain("Canal de prueba");
 
@@ -230,7 +236,7 @@ test.describe("panel: editor de links", () => {
     await expect(title).toBeFocused();
     await title.fill("Canal de prueba editado");
     await title.press("Tab");
-    await expect(page.getByRole("status")).toHaveText("Guardado");
+    await expect(page.locator("[data-editor-status]")).toHaveText("Guardado");
     expect(await violations(page)).toEqual([]);
 
     await page.getByRole("button", { name: "Ocultar Canal de prueba editado" }).click();
@@ -311,6 +317,110 @@ test.describe("panel: editor de links", () => {
 
     await expect(add.getByRole("alert")).toBeVisible();
     await expect(add.getByLabel("URL")).toHaveAttribute("aria-invalid", "true");
+  });
+});
+
+test.describe("panel: ordenar links y secciones (tarea 20)", () => {
+  const TITLES = ["Orden A", "Orden B"];
+
+  test.beforeAll(async () => {
+    await resetPagesOf(MEMBER_ID);
+    await deleteLinksTitled(MEMBER_ID, TITLES);
+    await insertUnsectionedLinks(MEMBER_ID, MEMBER_ID, TITLES);
+  });
+
+  test.afterAll(async () => {
+    await deleteLinksTitled(MEMBER_ID, TITLES);
+  });
+
+  test.beforeEach(async ({ context, baseURL }) => {
+    await signIn(context, baseURL ?? "", "member@plektia.test");
+  });
+
+  /** Los títulos de un grupo del editor, en el orden en que se ven. */
+  const titlesIn = (page: Page, group: string) =>
+    page
+      .locator("section.editor-group")
+      .filter({ has: page.getByRole("heading", { name: group, exact: true }) })
+      .locator(".editor-link-title")
+      .allTextContents();
+
+  test("con el teclado: Espacio, flechas y Espacio, con anuncios", async ({ page }) => {
+    await page.goto("/admin");
+    expect(await titlesIn(page, "Sin sección")).toEqual(["Orden A", "Orden B"]);
+
+    const handle = page.getByRole("button", { name: "Mover Orden B" });
+    await expect(handle).toHaveAttribute("aria-roledescription", "draggable");
+    await handle.focus();
+    await page.keyboard.press("Space");
+    await page.keyboard.press("ArrowUp");
+    await expect(page.getByText(/Orden B: posición 1 en Sin sección/).first()).toBeAttached();
+    await page.keyboard.press("Space");
+
+    await expect(page.locator(".undo-toast")).toContainText("Orden B movido");
+    await expect.poll(() => titlesIn(page, "Sin sección")).toEqual(["Orden B", "Orden A"]);
+
+    await page.reload();
+    expect(await titlesIn(page, "Sin sección")).toEqual(["Orden B", "Orden A"]);
+    const publicHtml = await (await page.request.get("/miembro-demo")).text();
+    expect(publicHtml.indexOf("Orden B")).toBeLessThan(publicHtml.indexOf("Orden A"));
+  });
+
+  test("con el mouse: lleva un link a otra sección", async ({ page }) => {
+    // La CSP no se viola al arrastrar (los estilos de dnd-kit van por hash).
+    const cspViolations: string[] = [];
+    page.on("console", (message) => {
+      if (message.text().includes("Content Security Policy")) cspViolations.push(message.text());
+    });
+    await page.goto("/admin");
+    const handle = page.getByRole("button", { name: "Mover Orden A" });
+    const target = page
+      .locator("section.editor-group")
+      .filter({ has: page.getByRole("heading", { name: "Sección 5", exact: true }) })
+      .locator(".editor-link")
+      .last();
+    // La isla ya se hidrató cuando dnd-kit marca el asa como arrastrable.
+    await expect(handle).toHaveAttribute("aria-roledescription", "draggable");
+    // El destino (la última sección) queda justo arriba de "Sin sección": entran juntos.
+    await handle.scrollIntoViewIfNeeded();
+    const from = await handle.boundingBox();
+    const to = await target.boundingBox();
+    if (!from || !to) throw new Error("sin posiciones para arrastrar");
+
+    await page.mouse.move(from.x + from.width / 2, from.y + from.height / 2);
+    await page.mouse.down();
+    await page.mouse.move(to.x + 30, to.y + to.height / 2, { steps: 20 });
+    await page.mouse.move(to.x + 30, to.y + to.height / 3, { steps: 5 });
+    await page.mouse.up();
+
+    await expect(page.locator(".undo-toast")).toContainText("Orden A movido");
+    expect(cspViolations).toEqual([]);
+    await page.reload();
+    expect(await titlesIn(page, "Sección 5")).toContain("Orden A");
+    expect(await titlesIn(page, "Sin sección")).toEqual(["Orden B"]);
+    expect(await violations(page)).toEqual([]);
+  });
+
+  test("las secciones se ordenan con el teclado", async ({ page }) => {
+    await page.goto("/admin");
+    const sectionTitles = () => page.locator("section.editor-group h2").allTextContents();
+    expect((await sectionTitles()).slice(0, 2)).toEqual(["Sección 1", "Sección 2"]);
+
+    const handle = page.getByRole("button", { name: "Mover sección Sección 2" });
+    await expect(handle).toHaveAttribute("aria-roledescription", "draggable");
+    await handle.focus();
+    await page.keyboard.press("Space");
+    await page.keyboard.press("ArrowUp");
+    // Se suelta cuando el lector de pantalla ya anunció la posición nueva.
+    await expect(page.getByText("Sección Sección 2: posición 1 de 5").first()).toBeAttached();
+    await page.keyboard.press("Space");
+
+    await expect(page.locator(".undo-toast")).toContainText("Sección Sección 2 movida");
+    // "Deshacer" la deja como estaba (y así la página del seed no cambia).
+    await page.getByRole("button", { name: "Deshacer" }).click();
+    await expect
+      .poll(async () => (await sectionTitles()).slice(0, 2))
+      .toEqual(["Sección 1", "Sección 2"]);
   });
 });
 

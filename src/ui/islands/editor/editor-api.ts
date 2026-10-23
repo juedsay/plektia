@@ -30,6 +30,12 @@ export interface EditorApi {
   delete(target: { id: string; version: number }): Promise<FormResult<void>>;
   /** Borra al cerrar la pestaña: el pedido sigue aunque la página se descargue. */
   deleteOnExit(target: { id: string; version: number }): void;
+  /** Deja un grupo en ese orden (trayendo links de otros); devuelve el contenido nuevo. */
+  move(
+    sectionId: string | null,
+    order: readonly { id: string; version: number }[],
+  ): Promise<FormResult<OwnLinks>>;
+  reorderSections(order: readonly { id: string; version: number }[]): Promise<FormResult<OwnLinks>>;
 }
 
 /** Un resultado que salió mal: el mensaje general y el de cada campo. */

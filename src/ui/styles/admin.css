@@ -704,9 +704,17 @@
   border-color: var(--color-fg);
 }
 
-.editor-group-title {
-  padding-bottom: var(--space-3);
+/* El asa y el título comparten la línea; el filete va debajo de los dos. */
+.editor-group-header {
+  display: flex;
+  gap: var(--space-2);
+  align-items: center;
+  padding-bottom: var(--space-2);
   border-bottom: 1px solid var(--color-line);
+}
+
+.editor-group-header .drag-handle {
+  margin-left: calc(-1 * var(--space-3));
 }
 
 .editor-links {
@@ -721,7 +729,7 @@
 
 .editor-link-row {
   display: grid;
-  grid-template-columns: 1.5rem minmax(0, 1fr) auto;
+  grid-template-columns: var(--target-min) minmax(0, 1fr) auto;
   gap: var(--space-3);
   align-items: center;
   min-height: var(--row-min);
@@ -796,7 +804,7 @@
 .editor-link-panel {
   display: grid;
   gap: var(--space-4);
-  padding: var(--space-2) 0 var(--space-5) calc(1.5rem + var(--space-3));
+  padding: var(--space-2) 0 var(--space-5) calc(var(--target-min) + var(--space-3));
 }
 
 .editor-link-panel[hidden] {
@@ -902,4 +910,96 @@
     bottom: var(--space-6);
     left: calc(50% + var(--admin-sidebar) / 2);
   }
+}
+
+/* Ordenar: el asa se agarra con el mouse o el dedo, o se activa con Espacio. */
+.drag-handle {
+  display: inline-grid;
+  flex: none;
+  place-items: center;
+  width: var(--target-min);
+  height: var(--target-min);
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-md);
+  background: transparent;
+  color: var(--color-fg-muted);
+  cursor: grab;
+  touch-action: none;
+  transition:
+    background-color var(--dur-fast) var(--ease-out),
+    color var(--dur-fast) var(--ease-out);
+}
+
+.drag-handle:hover {
+  background: var(--color-surface);
+  color: var(--color-fg);
+}
+
+.drag-handle svg {
+  width: 20px;
+  height: 20px;
+}
+
+.editor-group-title {
+  align-items: center;
+}
+
+/* Lo que se está moviendo: fondo de superficie y un anillo hueso (sin sombra). */
+.editor-link.is-dragging,
+.editor-group.is-dragging {
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  box-shadow: 0 0 0 1px var(--color-fg);
+}
+
+.editor-link.is-dragging .drag-handle,
+.editor-group.is-dragging > .editor-group-header .drag-handle {
+  cursor: grabbing;
+}
+
+/* Lugar del link sin arrastrar: subir, bajar o pasar a otra sección. */
+.editor-link-place {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  align-items: end;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.editor-link-place legend {
+  margin-bottom: var(--space-2);
+  padding: 0;
+  font-family: var(--font-display);
+  font-weight: 500;
+}
+
+.editor-link-place .editor-action {
+  border: 1px solid var(--color-line);
+}
+
+.editor-link-place .editor-action:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.editor-link-section {
+  display: grid;
+  flex: 1 1 12rem;
+  gap: var(--space-1);
+  color: var(--color-fg-muted);
+  font-size: var(--text-sm);
+}
+
+.editor-link-section select {
+  min-height: var(--target-min);
+  padding: 0 var(--space-3);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  color: var(--color-fg);
+  font: inherit;
+  font-size: var(--text-md);
 }

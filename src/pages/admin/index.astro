@@ -6,6 +6,10 @@ import { actions } from "astro:actions";
 import { loadWorkspace } from "@/ui/admin/workspace";
 import AdminLayout from "@/ui/layouts/AdminLayout.astro";
 import EditorIsland from "@/ui/islands/Editor";
+import { DRAG_STYLE_HASHES } from "@/ui/islands/editor/drag-styles";
+
+// Los estilos que dnd-kit inyecta al arrastrar, habilitados por hash (ver drag-styles.ts).
+for (const hash of DRAG_STYLE_HASHES) Astro.csp?.insertStyleHash(hash);
 
 const switched = Astro.getActionResult(actions.pages.select);
 if (switched?.data?.ok) return Astro.redirect(Astro.url.pathname, 303);

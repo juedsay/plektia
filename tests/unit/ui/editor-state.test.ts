@@ -3,12 +3,18 @@ import { describe, expect, it } from "vitest";
 import type { Link, Section } from "@/application/ports/link-repository";
 import {
   addLink,
+  applyLinkOrder,
   changedFields,
   groupLinks,
   inverseChanges,
+  linkOrderOf,
+  placeInOrder,
+  planLinkMove,
+  planSectionMove,
   removeLink,
   replaceLink,
   suggestTitle,
+  UNSECTIONED_GROUP,
 } from "@/ui/view/editor-state";
 
 function section(id: string, position: number): Section {
@@ -137,5 +143,115 @@ describe("inverseChanges", () => {
 
   it("sin cambios, no hay nada que deshacer", () => {
     expect(inverseChanges(before, { ...before, version: 2 })).toEqual({});
+  });
+});
+
+describe("planLinkMove", () => {
+  const content = {
+    sections: [section("redes", 0), section("proyectos", 1)],
+    links: [
+      link("a", "redes", 0),
+      link("b", "redes", 1),
+      link("c", "redes", 2),
+      link("p", "proyectos", 0, { version: 4 }),
+    ],
+  };
+  const positions = (plan: ReturnType<typeof planLinkMove>) =>
+    plan?.content.links
+      .map((item) => [item.id, item.sectionId, item.position])
+      .sort((first, second) => String(first[0]).localeCompare(String(second[0])));
+
+  it("reordena dentro de la misma sección", () => {
+    const plan = planLinkMove(content, "c", "redes", 0);
+    expect(plan?.sectionId).toBe("redes");
+    expect(plan?.order.map((item) => item.id)).toEqual(["c", "a", "b"]);
+    expect(positions(plan)).toEqual([
+      ["a", "redes", 1],
+      ["b", "redes", 2],
+      ["c", "redes", 0],
+      ["p", "proyectos", 0],
+    ]);
+  });
+
+  it("pasa a otra sección; el destino lleva su lista completa y el origen queda compacto", () => {
+    const plan = planLinkMove(content, "a", "proyectos", 1);
+    expect(plan?.order).toEqual([
+      { id: "p", version: 4 },
+      { id: "a", version: 1 },
+    ]);
+    expect(positions(plan)).toEqual([
+      ["a", "proyectos", 1],
+      ["b", "redes", 0],
+      ["c", "redes", 1],
+      ["p", "proyectos", 0],
+    ]);
+  });
+
+  it("puede ir a 'Sin sección' (null)", () => {
+    const plan = planLinkMove(content, "b", null, 0);
+    expect(plan?.sectionId).toBeNull();
+    expect(plan?.order.map((item) => item.id)).toEqual(["b"]);
+  });
+
+  it("sin cambio de lugar, o con un link que no existe, no hay nada que hacer", () => {
+    expect(planLinkMove(content, "b", "redes", 1)).toBeNull();
+    expect(planLinkMove(content, "x", "redes", 0)).toBeNull();
+  });
+
+  it("un índice fuera de rango va al final", () => {
+    expect(planLinkMove(content, "a", "proyectos", 99)?.order.map((item) => item.id)).toEqual([
+      "p",
+      "a",
+    ]);
+  });
+});
+
+describe("planSectionMove", () => {
+  const content = {
+    sections: [section("redes", 0), section("proyectos", 1), section("articulos", 2)],
+    links: [],
+  };
+
+  it("mueve la sección y renumera las posiciones", () => {
+    const plan = planSectionMove(content, "articulos", 0);
+    expect(plan?.order.map((item) => item.id)).toEqual(["articulos", "redes", "proyectos"]);
+    expect(plan?.content.sections.map((item) => [item.id, item.position])).toEqual([
+      ["articulos", 0],
+      ["redes", 1],
+      ["proyectos", 2],
+    ]);
+  });
+
+  it("sin cambio de lugar no hay nada que hacer", () => {
+    expect(planSectionMove(content, "redes", 0)).toBeNull();
+    expect(planSectionMove(content, "x", 1)).toBeNull();
+  });
+});
+
+describe("orden durante el arrastre", () => {
+  const content = {
+    sections: [section("redes", 0)],
+    links: [link("a", "redes", 0), link("b", "redes", 1), link("suelto", null, 0)],
+  };
+
+  it("arma el orden por grupo, con 'Sin sección' como clave propia", () => {
+    expect(linkOrderOf(content)).toEqual({ redes: ["a", "b"], [UNSECTIONED_GROUP]: ["suelto"] });
+  });
+
+  it("dibuja los grupos con el orden del arrastre; sin arrastre, como están", () => {
+    const groups = groupLinks(content);
+    const moved = applyLinkOrder(groups, { redes: ["b", "suelto", "a"], [UNSECTIONED_GROUP]: [] });
+    expect(moved.map((group) => group.links.map((item) => item.id))).toEqual([
+      ["b", "suelto", "a"],
+      [],
+    ]);
+    expect(applyLinkOrder(groups, null)).toEqual(groups);
+  });
+
+  it("encuentra dónde quedó un link: su sección (o null) y su posición", () => {
+    const order = { redes: ["b", "a"], [UNSECTIONED_GROUP]: ["suelto"] };
+    expect(placeInOrder(order, "a")).toEqual({ sectionId: "redes", index: 1 });
+    expect(placeInOrder(order, "suelto")).toEqual({ sectionId: null, index: 0 });
+    expect(placeInOrder(order, "x")).toBeNull();
   });
 });

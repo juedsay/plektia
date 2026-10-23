@@ -6,14 +6,18 @@ import { ActionError, type ActionAPIContext, defineAction } from "astro:actions"
 import { z } from "zod";
 
 import { createLink } from "@/application/links/create-link";
+import type { OwnLinks } from "@/application/ports/link-repository";
 import { deleteLink } from "@/application/links/delete-link";
+import { moveLinks } from "@/application/links/move-links";
 import { setLinkVisibility } from "@/application/links/set-link-visibility";
 import { updateLink } from "@/application/links/update-link";
 
 import { createPage } from "@/application/pages/create-page";
+import { reorderSections } from "@/application/sections/reorder-sections";
 import { selectPage } from "@/application/pages/select-page";
 import { updatePageSettings } from "@/application/pages/update-page-settings";
 import { formFields, toFormResult } from "@/actions/form-result";
+import { ok } from "@/domain/result";
 import { actionsRateLimiter, adminRepositoriesFor, pageCache } from "@/composition/runtime";
 
 /**
@@ -100,6 +104,21 @@ export const server = {
         return toFormResult(deleted);
       },
     }),
+    /**
+     * `{ pageId, sectionId, items }`: deja un grupo (sección o "Sin sección") en
+     * ese orden, trayendo links de otros grupos. Devuelve el contenido nuevo:
+     * mover cambia la versión de cada link que se corrió.
+     */
+    move: defineAction({
+      accept: "json",
+      handler: async (input: unknown, context) => {
+        const { links, purge } = await linksOfPage(context, input);
+        const moved = await moveLinks({ links })(input);
+        if (!moved.ok) return toFormResult<OwnLinks>(moved);
+        await purge();
+        return toFormResult(ok(await links.listOwn()));
+      },
+    }),
     /** `{ pageId, id, version, visible }`: mostrar u ocultar en la página pública. */
     setVisibility: defineAction({
       accept: "json",
@@ -108,6 +127,19 @@ export const server = {
         const updated = await setLinkVisibility({ links })(input);
         if (updated.ok) await purge();
         return toFormResult(updated);
+      },
+    }),
+  },
+  sections: {
+    /** `{ pageId, items }`: el orden completo de las secciones. Devuelve el contenido nuevo. */
+    reorder: defineAction({
+      accept: "json",
+      handler: async (input: unknown, context) => {
+        const { links, purge } = await linksOfPage(context, input);
+        const reordered = await reorderSections({ sections: links })(input);
+        if (!reordered.ok) return toFormResult<OwnLinks>(reordered);
+        await purge();
+        return toFormResult(ok(await links.listOwn()));
       },
     }),
   },
