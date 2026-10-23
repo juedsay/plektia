@@ -24,7 +24,7 @@ URL pública (`/{handle}`).
 3. **Rutas protegidas.** Sin sesión, cualquier ruta bajo `/admin` redirige a `/login?next=<ruta>`. Después del login vuelvo a esa ruta, **solo si es interna**.
 4. **Logout.** Cierra la sesión del dispositivo actual y borra las cookies. Hay una opción "cerrar sesión en todos los dispositivos".
 5. **Alta de usuarios (v1).** El owner habilita un email con su `handle` mediante un comando (`pnpm user:allow <email> <handle>`). La UI para hacerlo se construye en `admin-panel`.
-6. **Perfil.** Cada usuario tiene `handle`, nombre visible, bio y avatar. El email nunca es público.
+6. **Perfil.** Cada usuario tiene `handle`, nombre visible, bio y avatar. El email nunca es público. Desde la tarea 17c, eso vive en cada **página** (una cuenta puede tener hasta 3): ver [SPEC-pages.md](SPEC-pages.md).
 
 ## Diseño
 
