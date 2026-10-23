@@ -6,6 +6,7 @@ import { ActionError, type ActionAPIContext, defineAction } from "astro:actions"
 import { z } from "zod";
 
 import { createLink } from "@/application/links/create-link";
+import { deleteLink } from "@/application/links/delete-link";
 import { setLinkVisibility } from "@/application/links/set-link-visibility";
 import { updateLink } from "@/application/links/update-link";
 
@@ -38,11 +39,12 @@ const PageTarget = z.object({ pageId: z.uuid() });
  * una página propia, la RLS y el trigger de dueño rechazan cada escritura.
  */
 async function linksOfPage(context: ActionAPIContext, input: unknown) {
+  // Primero la sesión y el límite: sin sesión, nada más se mira.
+  const repositories = await repositoriesOf(context);
   const target = PageTarget.safeParse(input);
   if (!target.success) {
     throw new ActionError({ code: "BAD_REQUEST", message: "Falta la página." });
   }
-  const repositories = await repositoriesOf(context);
   const { pageId } = target.data;
   return {
     links: repositories.linksOf(pageId),
@@ -83,6 +85,19 @@ export const server = {
         const updated = await updateLink({ links })(input);
         if (updated.ok) await purge();
         return toFormResult(updated);
+      },
+    }),
+    /**
+     * `{ pageId, id, version }`: borra un link. El editor la llama pasados los 6 s
+     * de "Deshacer" (o al cerrar la pestaña, con `keepalive`).
+     */
+    delete: defineAction({
+      accept: "json",
+      handler: async (input: unknown, context) => {
+        const { links, purge } = await linksOfPage(context, input);
+        const deleted = await deleteLink({ links })(input);
+        if (deleted.ok) await purge();
+        return toFormResult(deleted);
       },
     }),
     /** `{ pageId, id, version, visible }`: mostrar u ocultar en la página pública. */

@@ -272,7 +272,7 @@
   - Las páginas de links (`/{handle}` y `/plektia`) siguen siendo **solo vista mobile**: una columna de 30rem centrada en cualquier pantalla.
   - **Aceptación:** capturas a 390 y 1440 px de cada página; `responsive.spec.ts` sin desbordes; axe AAA y Lighthouse sin cambios en las páginas de links.
 
-- [ ] **Tarea 19: Editor, edición en el lugar con guardado instantáneo** · M · Deps: 18
+- [x] **Tarea 19: Editor, edición en el lugar con guardado instantáneo** · M · Deps: 18
   - Isla `Editor`: listar, crear, editar y ocultar links, y "Deshacer" de 6 s. Borrado diferido con `keepalive`. Aviso de conflicto por `version`.
   - **Aceptación:** tests de componentes y E2E de crear, editar, ocultar y deshacer.
   - **Verificar:** `pnpm test && pnpm test:e2e`.

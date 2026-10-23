@@ -1,15 +1,19 @@
 // @vitest-environment jsdom
 import { cleanup, render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { afterEach, describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 
 import type { FormResult } from "@/actions/form-result";
 import type { Link, OwnLinks, Section } from "@/application/ports/link-repository";
 import { errorMessage } from "@/domain/errors";
 import { Editor } from "@/ui/islands/editor/Editor";
 import type { EditorApi, LinkChanges, NewLink } from "@/ui/islands/editor/editor-api";
+import { UNDO_WINDOW_MS } from "@/ui/islands/editor/UndoToast";
 
-afterEach(cleanup);
+afterEach(() => {
+  cleanup();
+  vi.useRealTimers();
+});
 
 const REDES: Section = {
   id: "s-redes",
@@ -49,6 +53,8 @@ class FakeApi implements EditorApi {
   content: OwnLinks;
   created: NewLink[] = [];
   updates: { id: string; version: number; changes: LinkChanges }[] = [];
+  deleted: string[] = [];
+  deletedOnExit: string[] = [];
   /** Si está, la próxima escritura responde esto en lugar de guardar. */
   nextFailure: FormResult<Link> | null = null;
 
@@ -85,6 +91,19 @@ class FakeApi implements EditorApi {
     return Promise.resolve(this.save(target, { visible }));
   }
 
+  delete(target: { id: string; version: number }): Promise<FormResult<void>> {
+    this.deleted.push(target.id);
+    this.content = {
+      ...this.content,
+      links: this.content.links.filter((candidate) => candidate.id !== target.id),
+    };
+    return Promise.resolve({ ok: true, value: undefined });
+  }
+
+  deleteOnExit(target: { id: string; version: number }) {
+    this.deletedOnExit.push(target.id);
+  }
+
   /** Como la base: si la versión leída no es la actual, da conflicto. */
   private save(target: { id: string; version: number }, changes: Partial<Link>): FormResult<Link> {
     const { id } = target;
@@ -106,10 +125,25 @@ class FakeApi implements EditorApi {
   }
 }
 
-function setup(content: OwnLinks) {
+function setup(content: OwnLinks, { fakeTimers = false } = {}) {
+  if (fakeTimers) vi.useFakeTimers({ shouldAdvanceTime: true });
   const api = new FakeApi(content);
   render(<Editor api={api} initialContent={content} />);
-  return { api, user: userEvent.setup() };
+  const user = userEvent.setup(
+    fakeTimers ? { advanceTimers: (milliseconds) => vi.advanceTimersByTime(milliseconds) } : {},
+  );
+  return { api, user };
+}
+
+const TWO_LINKS: OwnLinks = {
+  sections: [REDES],
+  links: [link("twitch", { title: "Twitch" }), link("youtube", { title: "YouTube", position: 1 })],
+};
+
+/** Abre la edición de un link y toca "Borrar link". */
+async function deleteLink(user: ReturnType<typeof userEvent.setup>, title: string) {
+  await user.click(screen.getByRole("button", { name: `Editar ${title}` }));
+  await user.click(screen.getByRole("button", { name: `Borrar link ${title}` }));
 }
 
 describe("Editor · agregar", () => {
@@ -306,3 +340,117 @@ describe("Editor · mostrar u ocultar", () => {
 function focusedId(): string {
   return document.activeElement?.id ?? "";
 }
+
+describe("Editor · borrar y deshacer", () => {
+  it("borrar lo saca al instante, pasa el foco al siguiente y lo envía a los 6 s", async () => {
+    const { api, user } = setup(TWO_LINKS, { fakeTimers: true });
+    await deleteLink(user, "Twitch");
+
+    expect(screen.queryByText("Twitch")).toBeNull();
+    expect(screen.getByText("Twitch borrado")).toBeTruthy();
+    await waitFor(() => {
+      expect(document.activeElement).toBe(screen.getByRole("button", { name: "Editar YouTube" }));
+    });
+    expect(api.deleted).toEqual([]);
+
+    await vi.advanceTimersByTimeAsync(UNDO_WINDOW_MS);
+    expect(api.deleted).toEqual(["twitch"]);
+    await waitFor(() => {
+      expect(screen.queryByText("Twitch borrado")).toBeNull();
+    });
+  });
+
+  it("'Deshacer' lo devuelve a su lugar y no se borra", async () => {
+    const { api, user } = setup(TWO_LINKS, { fakeTimers: true });
+    await deleteLink(user, "Twitch");
+    await user.click(screen.getByRole("button", { name: "Deshacer" }));
+
+    const titles = [...document.querySelectorAll(".editor-link-title")].map(
+      (title) => title.textContent,
+    );
+    expect(titles).toEqual(["Twitch", "YouTube"]);
+    await vi.advanceTimersByTimeAsync(UNDO_WINDOW_MS * 2);
+    expect(api.deleted).toEqual([]);
+  });
+
+  it("con el foco en el aviso, la cuenta se pausa (tiempo ajustable)", async () => {
+    const { api, user } = setup(TWO_LINKS, { fakeTimers: true });
+    await deleteLink(user, "Twitch");
+    // Después de borrar, el foco pasa al link siguiente (en el próximo cuadro);
+    // recién ahí se lleva el foco al aviso, como haría una persona.
+    await waitFor(() => {
+      expect(document.activeElement).toBe(screen.getByRole("button", { name: "Editar YouTube" }));
+    });
+    screen.getByRole("button", { name: "Deshacer" }).focus();
+
+    await vi.advanceTimersByTimeAsync(UNDO_WINDOW_MS * 2);
+    expect(api.deleted).toEqual([]);
+    await user.click(screen.getByRole("button", { name: "Deshacer" }));
+    expect(screen.getByText("Twitch")).toBeTruthy();
+  });
+
+  it("si se cierra la pestaña durante los 6 s, el borrado sale igual (keepalive)", async () => {
+    const { api, user } = setup(TWO_LINKS, { fakeTimers: true });
+    await deleteLink(user, "Twitch");
+    window.dispatchEvent(new Event("pagehide"));
+    expect(api.deletedOnExit).toEqual(["twitch"]);
+  });
+
+  it("un cambio nuevo deja firme el borrado anterior", async () => {
+    const { api, user } = setup(TWO_LINKS, { fakeTimers: true });
+    await deleteLink(user, "Twitch");
+    await user.click(screen.getByRole("button", { name: "Ocultar YouTube" }));
+    await waitFor(() => {
+      expect(api.deleted).toEqual(["twitch"]);
+    });
+    expect(document.querySelector(".undo-toast-message")?.textContent).toBe("YouTube: oculto");
+  });
+
+  it("borrar justo después de editar espera el guardado y borra con la versión nueva", async () => {
+    const { api, user } = setup(TWO_LINKS, { fakeTimers: true });
+    // El servidor responde el guardado recién cuando el test lo libera.
+    let releaseSave: () => void = () => undefined;
+    const saveNow = api.update.bind(api);
+    api.update = (target, changes) =>
+      new Promise((resolve) => {
+        releaseSave = () => {
+          void saveNow(target, changes).then(resolve);
+        };
+      });
+
+    await user.click(screen.getByRole("button", { name: "Editar Twitch" }));
+    await user.type(document.activeElement as HTMLElement, " TV");
+    // Tocar "Borrar" saca el foco del título: arranca el guardado.
+    await user.click(screen.getByRole("button", { name: "Borrar link Twitch" }));
+    // Todavía no se borró: espera a que termine el guardado.
+    expect(document.querySelector('[data-link-id="twitch"]')).not.toBeNull();
+
+    releaseSave();
+    await waitFor(() => {
+      expect(document.querySelector(".undo-toast-message")?.textContent).toBe("Twitch TV borrado");
+    });
+    await vi.advanceTimersByTimeAsync(UNDO_WINDOW_MS);
+    await waitFor(() => {
+      expect(api.deleted).toEqual(["twitch"]);
+    });
+    // Sin conflicto: el link no vuelve.
+    expect(screen.queryByText("Twitch TV")).toBeNull();
+    expect(screen.queryByRole("alert")).toBeNull();
+  });
+
+  it("deshacer una edición vuelve a los valores anteriores con un cambio nuevo", async () => {
+    const { api, user } = setup(TWO_LINKS, { fakeTimers: true });
+    await user.click(screen.getByRole("button", { name: "Editar Twitch" }));
+    await user.type(document.activeElement as HTMLElement, " TV");
+    await user.tab();
+    await waitFor(() => {
+      expect(api.content.links[0]?.title).toBe("Twitch TV");
+    });
+
+    await user.click(screen.getByRole("button", { name: "Deshacer" }));
+    await waitFor(() => {
+      expect(api.content.links[0]).toMatchObject({ title: "Twitch", version: 3 });
+    });
+    expect(api.updates.at(-1)).toEqual({ id: "twitch", version: 2, changes: { title: "Twitch" } });
+  });
+});

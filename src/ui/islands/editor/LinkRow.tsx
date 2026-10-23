@@ -1,9 +1,10 @@
 import { useEffect, useId, useRef, useState } from "react";
 
 import type { Link } from "@/application/ports/link-repository";
-import { changedFields } from "@/ui/view/editor-state";
+import { changedFields, inverseChanges } from "@/ui/view/editor-state";
 import { linkMeta } from "@/ui/view/public-link";
 
+import type { OfferUndo } from "./Editor";
 import { CONFLICT_MESSAGE, type EditorApi, type Failure, UNREACHABLE } from "./editor-api";
 
 interface Props {
@@ -12,6 +13,9 @@ interface Props {
   readonly onSaved: (link: Link) => void;
   /** Otro lo cambió: el editor recarga los links para mostrar la última versión. */
   readonly onReload: () => Promise<void>;
+  /** Borrar: el editor lo saca de la lista y lo envía pasados los 6 s de "Deshacer". */
+  readonly onDelete: (link: Link) => void;
+  readonly offerUndo: OfferUndo;
   /** Mensaje para la región en vivo ("Guardado"). */
   readonly announce: (message: string) => void;
 }
@@ -20,7 +24,7 @@ interface Props {
  * Un link del editor: en reposo, el título y adónde lleva; al editarlo, la fila
  * se expande en el lugar (sin modal). Cada campo se guarda al salir de él.
  */
-export function LinkRow({ link, api, onSaved, onReload, announce }: Props) {
+export function LinkRow({ link, api, onSaved, onReload, onDelete, offerUndo, announce }: Props) {
   const idPrefix = useId();
   const editButton = useRef<HTMLButtonElement>(null);
   const titleInput = useRef<HTMLInputElement>(null);
@@ -37,6 +41,10 @@ export function LinkRow({ link, api, onSaved, onReload, announce }: Props) {
   const saving = useRef(false);
   const saveAgain = useRef(false);
   const pendingSave = () => saveAgain.current;
+  /** El guardado en curso: "Borrar" lo espera para borrar con la versión nueva. */
+  const runningSave = useRef<Promise<void> | null>(null);
+  /** Se pidió borrar: lo que termine de guardarse no ofrece su propio "Deshacer". */
+  const deleting = useRef(false);
 
   // Si el link cambió desde afuera (al recargar tras un conflicto) y no se está
   // editando, el formulario muestra la versión nueva. Mientras se edita, lo
@@ -59,12 +67,33 @@ export function LinkRow({ link, api, onSaved, onReload, announce }: Props) {
     setDraft(next);
   };
 
-  /** Guarda un resultado bueno: el link nuevo es la base del próximo guardado. */
+  /** Toma un resultado bueno: el link nuevo es la base del próximo guardado. */
   const accept = (saved: Link, message: string) => {
     latestLink.current = saved;
     setFailure(null);
     onSaved(saved);
     announce(message);
+  };
+
+  /** Acepta un cambio y ofrece deshacerlo: vuelve a `before` con un cambio nuevo. */
+  const acceptUndoable = (before: Link, saved: Link, message: string) => {
+    accept(saved, message);
+    if (deleting.current) return;
+    offerUndo(message, async () => {
+      const changes = inverseChanges(before, saved);
+      if (Object.keys(changes).length === 0) return;
+      const current = latestLink.current;
+      const result = await api
+        .update({ id: current.id, version: current.version }, changes)
+        .catch(() => UNREACHABLE);
+      if (result.ok) {
+        // Lo deshecho también se ve en el formulario, si está abierto.
+        const restored = draftOf(result.value);
+        latestDraft.current = restored;
+        setDraft(restored);
+        accept(result.value, `${result.value.title}: cambio deshecho`);
+      } else setFailure(result);
+    });
   };
 
   const save = async () => {
@@ -77,6 +106,12 @@ export function LinkRow({ link, api, onSaved, onReload, announce }: Props) {
     }
     saving.current = true;
     setBusy(true);
+    runningSave.current = saveInOrder();
+    await runningSave.current;
+  };
+
+  /** Guarda lo pendiente de a un pedido por vez, hasta que no quede nada. */
+  const saveInOrder = async () => {
     try {
       do {
         saveAgain.current = false;
@@ -90,13 +125,22 @@ export function LinkRow({ link, api, onSaved, onReload, announce }: Props) {
           setFailure(result);
           break;
         }
-        accept(result.value, "Guardado");
+        acceptUndoable(base, result.value, "Guardado");
         // Se lee de nuevo: otro campo pudo pedir guardar mientras se esperaba.
       } while (pendingSave());
     } finally {
       saving.current = false;
+      runningSave.current = null;
       setBusy(false);
     }
+  };
+
+  const requestDelete = async () => {
+    deleting.current = true;
+    // Si salir del campo disparó un guardado, se espera: el borrado sale con la
+    // versión que devuelva (si no, daría conflicto y volvería un link viejo).
+    await runningSave.current;
+    onDelete(latestLink.current);
   };
 
   const toggleVisibility = async () => {
@@ -106,8 +150,9 @@ export function LinkRow({ link, api, onSaved, onReload, announce }: Props) {
       .setVisibility({ id: base.id, version: base.version }, !base.visible)
       .catch(() => UNREACHABLE);
     setBusy(false);
-    if (result.ok) accept(result.value, `${base.title}: ${base.visible ? "oculto" : "visible"}`);
-    else setFailure(result);
+    if (result.ok) {
+      acceptUndoable(base, result.value, `${base.title}: ${base.visible ? "oculto" : "visible"}`);
+    } else setFailure(result);
   };
 
   const reload = async () => {
@@ -131,7 +176,11 @@ export function LinkRow({ link, api, onSaved, onReload, announce }: Props) {
   const meta = linkMeta(link);
 
   return (
-    <li className={`editor-link${link.visible ? "" : " is-hidden"}`} aria-busy={busy || undefined}>
+    <li
+      className={`editor-link${link.visible ? "" : " is-hidden"}`}
+      aria-busy={busy || undefined}
+      data-link-id={link.id}
+    >
       <div className="editor-link-row">
         <span className="admin-jack" aria-hidden="true" />
         <div className="editor-link-text">
@@ -155,6 +204,7 @@ export function LinkRow({ link, api, onSaved, onReload, announce }: Props) {
             ref={editButton}
             type="button"
             className="editor-action"
+            data-edit
             aria-label={`${editVerb} ${link.title}`}
             aria-expanded={editing}
             aria-controls={panelId}
@@ -245,6 +295,16 @@ export function LinkRow({ link, api, onSaved, onReload, announce }: Props) {
                   {fieldError("description")}
                 </p>
               )}
+            </div>
+            <div className="editor-link-danger">
+              <button
+                type="button"
+                className="button is-quiet"
+                aria-label={`Borrar link ${link.title}`}
+                onClick={() => void requestDelete()}
+              >
+                Borrar link
+              </button>
             </div>
           </>
         )}
