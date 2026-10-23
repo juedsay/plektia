@@ -401,6 +401,38 @@ describe("Editor · borrar y deshacer", () => {
     expect(document.querySelector(".undo-toast-message")?.textContent).toBe("YouTube: oculto");
   });
 
+  it("borrar justo después de editar espera el guardado y borra con la versión nueva", async () => {
+    const { api, user } = setup(TWO_LINKS, { fakeTimers: true });
+    // El servidor responde el guardado recién cuando el test lo libera.
+    let releaseSave: () => void = () => undefined;
+    const saveNow = api.update.bind(api);
+    api.update = (target, changes) =>
+      new Promise((resolve) => {
+        releaseSave = () => {
+          void saveNow(target, changes).then(resolve);
+        };
+      });
+
+    await user.click(screen.getByRole("button", { name: "Editar Twitch" }));
+    await user.type(document.activeElement as HTMLElement, " TV");
+    // Tocar "Borrar" saca el foco del título: arranca el guardado.
+    await user.click(screen.getByRole("button", { name: "Borrar link Twitch" }));
+    // Todavía no se borró: espera a que termine el guardado.
+    expect(document.querySelector('[data-link-id="twitch"]')).not.toBeNull();
+
+    releaseSave();
+    await waitFor(() => {
+      expect(document.querySelector(".undo-toast-message")?.textContent).toBe("Twitch TV borrado");
+    });
+    await vi.advanceTimersByTimeAsync(UNDO_WINDOW_MS);
+    await waitFor(() => {
+      expect(api.deleted).toEqual(["twitch"]);
+    });
+    // Sin conflicto: el link no vuelve.
+    expect(screen.queryByText("Twitch TV")).toBeNull();
+    expect(screen.queryByRole("alert")).toBeNull();
+  });
+
   it("deshacer una edición vuelve a los valores anteriores con un cambio nuevo", async () => {
     const { api, user } = setup(TWO_LINKS, { fakeTimers: true });
     await user.click(screen.getByRole("button", { name: "Editar Twitch" }));

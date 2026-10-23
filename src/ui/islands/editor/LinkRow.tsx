@@ -41,6 +41,10 @@ export function LinkRow({ link, api, onSaved, onReload, onDelete, offerUndo, ann
   const saving = useRef(false);
   const saveAgain = useRef(false);
   const pendingSave = () => saveAgain.current;
+  /** El guardado en curso: "Borrar" lo espera para borrar con la versión nueva. */
+  const runningSave = useRef<Promise<void> | null>(null);
+  /** Se pidió borrar: lo que termine de guardarse no ofrece su propio "Deshacer". */
+  const deleting = useRef(false);
 
   // Si el link cambió desde afuera (al recargar tras un conflicto) y no se está
   // editando, el formulario muestra la versión nueva. Mientras se edita, lo
@@ -74,6 +78,7 @@ export function LinkRow({ link, api, onSaved, onReload, onDelete, offerUndo, ann
   /** Acepta un cambio y ofrece deshacerlo: vuelve a `before` con un cambio nuevo. */
   const acceptUndoable = (before: Link, saved: Link, message: string) => {
     accept(saved, message);
+    if (deleting.current) return;
     offerUndo(message, async () => {
       const changes = inverseChanges(before, saved);
       if (Object.keys(changes).length === 0) return;
@@ -101,6 +106,12 @@ export function LinkRow({ link, api, onSaved, onReload, onDelete, offerUndo, ann
     }
     saving.current = true;
     setBusy(true);
+    runningSave.current = saveInOrder();
+    await runningSave.current;
+  };
+
+  /** Guarda lo pendiente de a un pedido por vez, hasta que no quede nada. */
+  const saveInOrder = async () => {
     try {
       do {
         saveAgain.current = false;
@@ -119,8 +130,17 @@ export function LinkRow({ link, api, onSaved, onReload, onDelete, offerUndo, ann
       } while (pendingSave());
     } finally {
       saving.current = false;
+      runningSave.current = null;
       setBusy(false);
     }
+  };
+
+  const requestDelete = async () => {
+    deleting.current = true;
+    // Si salir del campo disparó un guardado, se espera: el borrado sale con la
+    // versión que devuelva (si no, daría conflicto y volvería un link viejo).
+    await runningSave.current;
+    onDelete(latestLink.current);
   };
 
   const toggleVisibility = async () => {
@@ -281,9 +301,7 @@ export function LinkRow({ link, api, onSaved, onReload, onDelete, offerUndo, ann
                 type="button"
                 className="button is-quiet"
                 aria-label={`Borrar link ${link.title}`}
-                onClick={() => {
-                  onDelete(latestLink.current);
-                }}
+                onClick={() => void requestDelete()}
               >
                 Borrar link
               </button>
