@@ -183,6 +183,56 @@ describe("Editor · editar en el lugar", () => {
     expect(screen.getAllByText("Twitch en vivo").length).toBeGreaterThan(0);
   });
 
+  it("guarda de a uno: dos campos seguidos con el servidor lento no pierden lo escrito", async () => {
+    const { api, user } = setup({
+      sections: [REDES],
+      links: [link("twitch", { title: "Twitch" })],
+    });
+    // El servidor responde recién cuando el test lo libera.
+    const pending: (() => void)[] = [];
+    const sent: { version: number; changes: LinkChanges }[] = [];
+    const saveNow = api.update.bind(api);
+    api.update = (target, changes) => {
+      sent.push({ version: target.version, changes });
+      return new Promise((resolve) => {
+        pending.push(() => {
+          void saveNow(target, changes).then(resolve);
+        });
+      });
+    };
+
+    await user.click(screen.getByRole("button", { name: "Editar Twitch" }));
+    await user.type(document.activeElement as HTMLElement, " TV");
+    await user.tab(); // sale del título: primer guardado, todavía sin respuesta
+    await user.type(document.activeElement as HTMLElement, "/nuevo");
+    await user.tab(); // sale de la URL: queda en espera, no se manda en paralelo
+    expect(sent).toEqual([{ version: 1, changes: { title: "Twitch TV" } }]);
+
+    pending.shift()?.();
+    await waitFor(() => {
+      expect(sent).toHaveLength(2);
+    });
+    // El segundo sale con la versión que devolvió el primero.
+    expect(sent[1]).toEqual({
+      version: 2,
+      changes: { url: "https://plektia.app/twitch/nuevo" },
+    });
+    pending.shift()?.();
+    await waitFor(() => {
+      expect(api.content.links[0]).toMatchObject({
+        title: "Twitch TV",
+        url: "https://plektia.app/twitch/nuevo",
+        version: 3,
+      });
+    });
+    // Lo escrito sigue en el formulario.
+    const panel = document.querySelector(".editor-link-panel:not([hidden])");
+    expect(within(panel as HTMLElement).getByLabelText("URL")).toHaveProperty(
+      "value",
+      "https://plektia.app/twitch/nuevo",
+    );
+  });
+
   it("salir de un campo sin cambios no llama al servidor", async () => {
     const { api, user } = setup({
       sections: [REDES],

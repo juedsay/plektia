@@ -44,6 +44,12 @@
       "namespace_id": "1002",
       "simple": { "limit": 3, "period": 60 },
     },
+    // Actions del panel: 120 por minuto por usuario (SPEC-admin-panel, "Abuso de escritura").
+    {
+      "name": "ACTIONS_RATE_LIMITER",
+      "namespace_id": "1003",
+      "simple": { "limit": 120, "period": 60 },
+    },
   ],
   "observability": {
     "enabled": true,

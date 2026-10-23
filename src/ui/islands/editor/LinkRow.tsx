@@ -25,61 +25,89 @@ export function LinkRow({ link, api, onSaved, onReload, announce }: Props) {
   const editButton = useRef<HTMLButtonElement>(null);
   const titleInput = useRef<HTMLInputElement>(null);
   const [editing, setEditing] = useState(false);
-  const [draft, setDraft] = useState({
-    title: link.title,
-    url: link.url,
-    description: link.description ?? "",
-  });
+  const [draft, setDraft] = useState(() => draftOf(link));
   const [failure, setFailure] = useState<Failure | null>(null);
   const [busy, setBusy] = useState(false);
 
-  // Si el link cambió desde afuera (al recargar tras un conflicto), el
-  // formulario muestra la versión nueva.
+  // Los guardados van de a uno: si se sale de un campo mientras otro se está
+  // guardando, se guarda después, con la versión que devolvió el anterior. Las
+  // referencias tienen siempre lo último (el link guardado y lo escrito).
+  const latestLink = useRef(link);
+  const latestDraft = useRef(draft);
+  const saving = useRef(false);
+  const saveAgain = useRef(false);
+  const pendingSave = () => saveAgain.current;
+
+  // Si el link cambió desde afuera (al recargar tras un conflicto) y no se está
+  // editando, el formulario muestra la versión nueva. Mientras se edita, lo
+  // escrito no se pisa.
   useEffect(() => {
-    setDraft({ title: link.title, url: link.url, description: link.description ?? "" });
-  }, [link.version, link.title, link.url, link.description]);
+    latestLink.current = link;
+    if (editing) return;
+    const fresh = draftOf(link);
+    latestDraft.current = fresh;
+    setDraft(fresh);
+  }, [link, editing]);
 
   // Al abrir la edición, el foco va al primer campo.
   useEffect(() => {
     if (editing) titleInput.current?.focus();
   }, [editing]);
 
-  const handleResult = (result: Awaited<ReturnType<EditorApi["update"]>>, success: string) => {
-    if (result.ok) {
-      setFailure(null);
-      setDraft({
-        title: result.value.title,
-        url: result.value.url,
-        description: result.value.description ?? "",
-      });
-      onSaved(result.value);
-      announce(success);
-      return;
-    }
-    setFailure(result);
+  const updateDraft = (next: Draft) => {
+    latestDraft.current = next;
+    setDraft(next);
+  };
+
+  /** Guarda un resultado bueno: el link nuevo es la base del próximo guardado. */
+  const accept = (saved: Link, message: string) => {
+    latestLink.current = saved;
+    setFailure(null);
+    onSaved(saved);
+    announce(message);
   };
 
   const save = async () => {
     // Con un conflicto pendiente no se guarda nada hasta recargar: si no, el
     // cambio viejo pisaría la versión nueva.
     if (failure?.message === CONFLICT_MESSAGE) return;
-    const changes = changedFields(link, draft);
-    if (Object.keys(changes).length === 0) return;
+    if (saving.current) {
+      saveAgain.current = true;
+      return;
+    }
+    saving.current = true;
     setBusy(true);
-    const result = await api
-      .update({ id: link.id, version: link.version }, changes)
-      .catch(() => UNREACHABLE);
-    setBusy(false);
-    handleResult(result, "Guardado");
+    try {
+      do {
+        saveAgain.current = false;
+        const base = latestLink.current;
+        const changes = changedFields(base, latestDraft.current);
+        if (Object.keys(changes).length === 0) break;
+        const result = await api
+          .update({ id: base.id, version: base.version }, changes)
+          .catch(() => UNREACHABLE);
+        if (!result.ok) {
+          setFailure(result);
+          break;
+        }
+        accept(result.value, "Guardado");
+        // Se lee de nuevo: otro campo pudo pedir guardar mientras se esperaba.
+      } while (pendingSave());
+    } finally {
+      saving.current = false;
+      setBusy(false);
+    }
   };
 
   const toggleVisibility = async () => {
+    const base = latestLink.current;
     setBusy(true);
     const result = await api
-      .setVisibility({ id: link.id, version: link.version }, !link.visible)
+      .setVisibility({ id: base.id, version: base.version }, !base.visible)
       .catch(() => UNREACHABLE);
     setBusy(false);
-    handleResult(result, link.visible ? `${link.title}: oculto` : `${link.title}: visible`);
+    if (result.ok) accept(result.value, `${base.title}: ${base.visible ? "oculto" : "visible"}`);
+    else setFailure(result);
   };
 
   const reload = async () => {
@@ -162,7 +190,7 @@ export function LinkRow({ link, api, onSaved, onReload, announce }: Props) {
                 maxLength={80}
                 value={draft.title}
                 onChange={(event) => {
-                  setDraft({ ...draft, title: event.target.value });
+                  updateDraft({ ...draft, title: event.target.value });
                 }}
                 onBlur={() => void save()}
                 aria-invalid={fieldError("title") ? true : undefined}
@@ -182,7 +210,7 @@ export function LinkRow({ link, api, onSaved, onReload, announce }: Props) {
                 inputMode="url"
                 value={draft.url}
                 onChange={(event) => {
-                  setDraft({ ...draft, url: event.target.value });
+                  updateDraft({ ...draft, url: event.target.value });
                 }}
                 onBlur={() => void save()}
                 aria-invalid={fieldError("url") ? true : undefined}
@@ -201,7 +229,7 @@ export function LinkRow({ link, api, onSaved, onReload, announce }: Props) {
                 maxLength={120}
                 value={draft.description}
                 onChange={(event) => {
-                  setDraft({ ...draft, description: event.target.value });
+                  updateDraft({ ...draft, description: event.target.value });
                 }}
                 onBlur={() => void save()}
                 aria-invalid={fieldError("description") ? true : undefined}
@@ -223,4 +251,14 @@ export function LinkRow({ link, api, onSaved, onReload, announce }: Props) {
       </div>
     </li>
   );
+}
+
+interface Draft {
+  title: string;
+  url: string;
+  description: string;
+}
+
+function draftOf(link: Link): Draft {
+  return { title: link.title, url: link.url, description: link.description ?? "" };
 }

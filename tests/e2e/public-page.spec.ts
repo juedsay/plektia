@@ -154,6 +154,14 @@ test.describe("página pública", () => {
     expect(data.mainEntity?.alternateName).toBe("@juedsay");
   });
 
+  test('"Hecho con Plektia" lleva a la home de Plektia', async ({ page }) => {
+    await page.goto("/juedsay");
+    await expect(page.getByRole("link", { name: "Hecho con Plektia" })).toHaveAttribute(
+      "href",
+      "/",
+    );
+  });
+
   test("sitemap y robots", async ({ request }) => {
     const sitemap = await request.get("/sitemap.xml");
     expect(sitemap.headers()["content-type"]).toContain("application/xml");

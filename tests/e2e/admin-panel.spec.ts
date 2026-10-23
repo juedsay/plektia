@@ -258,3 +258,53 @@ test.describe("panel: editor de links", () => {
     await expect(add.getByLabel("URL")).toHaveAttribute("aria-invalid", "true");
   });
 });
+
+// `/_actions/*` son las Astro Actions del panel: solo POST, solo con sesión y
+// nunca en caché. Sin sesión no hacen nada, aunque se conozca el nombre.
+test.describe("Actions del panel (/_actions)", () => {
+  // Las de links reciben JSON (el editor); las de páginas, formularios.
+  const payload = { pageId: MEMBER_ID, title: "x", url: "https://plektia.app", handle: "x-x-x" };
+  for (const action of ["links.list", "links.create", "links.update", "pages.create"]) {
+    test(`${action} sin sesión responde 401 y no se cachea`, async ({ request, baseURL }) => {
+      const body = action.startsWith("pages.") ? { form: payload } : { data: payload };
+      const response = await request.post(`/_actions/${action}`, {
+        ...body,
+        headers: { origin: baseURL ?? "" },
+      });
+      expect(response.status()).toBe(401);
+      expect(response.headers()["cache-control"]).toBe("private, no-store");
+    });
+  }
+
+  test("por GET no se pueden llamar", async ({ request }) => {
+    const response = await request.get("/_actions/links.list");
+    expect(response.ok()).toBe(false);
+  });
+
+  test("una Action que no existe no revela nada", async ({ request, baseURL }) => {
+    const response = await request.post("/_actions/admin.deleteEverything", {
+      data: {},
+      headers: { origin: baseURL ?? "" },
+    });
+    expect(response.status()).toBe(404);
+  });
+
+  test("con sesión, la página de otra cuenta no se puede escribir", async ({
+    context,
+    baseURL,
+  }) => {
+    await signIn(context, baseURL ?? "", "member@plektia.test");
+    const OWNER_PAGE_ID = "11111111-1111-4111-8111-111111111111";
+    const response = await context.request.post("/_actions/links.create", {
+      data: { pageId: OWNER_PAGE_ID, title: "Colado", url: "https://plektia.app" },
+      headers: { origin: baseURL ?? "" },
+    });
+    // Astro serializa el resultado (devalue): `ok` es false, con el mensaje de "no existe".
+    const body = await response.text();
+    expect(body).toContain('{"ok":1,');
+    expect(body).toContain(",false,");
+    expect(body).toContain("No encontramos lo que buscabas");
+    const ownerPage = await context.request.get("/juedsay");
+    expect(await ownerPage.text()).not.toContain("Colado");
+  });
+});
