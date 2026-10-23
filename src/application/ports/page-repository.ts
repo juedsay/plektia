@@ -1,5 +1,5 @@
 import type { WriteError } from "@/application/ports/link-repository";
-import type { PageDraft } from "@/domain/page";
+import type { PageDraft, PageSettings, Theme } from "@/domain/page";
 import type { Result } from "@/domain/result";
 
 // Puertos de las páginas de una cuenta (SPEC-pages). Como en los links, el
@@ -10,6 +10,7 @@ export interface Page {
   readonly handle: string;
   readonly displayName: string;
   readonly bio: string | null;
+  readonly theme: Theme;
   readonly showHandle: boolean;
 }
 
@@ -25,6 +26,8 @@ export interface PageReader {
 
 export interface PageWriter {
   createPage(draft: PageDraft): Promise<Result<Page, PageWriteError>>;
+  /** Cambia el nombre, la bio, el tema y si se muestra el @handle de una página propia. */
+  updatePageSettings(pageId: string, settings: PageSettings): Promise<Result<Page, WriteError>>;
   /** Recuerda la página elegida para abrirla al volver al panel. */
   rememberLastPage(pageId: string): Promise<Result<void, WriteError>>;
 }

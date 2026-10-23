@@ -81,4 +81,32 @@ describe("SupabasePageRepository contra Supabase local", () => {
     expect(await repo.rememberLastPage(MEMBER_ID)).toEqual({ ok: false, error: "not_found" });
     expect(await repo.lastUsedPageId()).toBeNull();
   });
+
+  it("cambia la presentación de una página propia, no la de otra cuenta", async () => {
+    const settings = {
+      displayName: "Otro nombre",
+      bio: null,
+      theme: "tecnico",
+      showHandle: false,
+    } as const;
+    try {
+      expect(await repo.updatePageSettings(OWNER_SECOND_PAGE_ID, settings)).toMatchObject({
+        ok: true,
+        value: { handle: "demo-segunda", displayName: "Otro nombre", bio: null, showHandle: false },
+      });
+      expect(await repo.updatePageSettings(MEMBER_ID, settings)).toEqual({
+        ok: false,
+        error: "not_found",
+      });
+    } finally {
+      await ownerClient
+        .from("pages")
+        .update({
+          display_name: "Página de prueba",
+          bio: "Segunda página de la misma cuenta",
+          show_handle: true,
+        })
+        .eq("id", OWNER_SECOND_PAGE_ID);
+    }
+  });
 });

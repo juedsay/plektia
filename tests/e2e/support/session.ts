@@ -94,3 +94,14 @@ export async function resetPagesOf(ownerId: string) {
   const reset = await admin.from("profiles").update({ last_page_id: null }).eq("id", ownerId);
   if (reset.error) throw reset.error;
 }
+
+/** Restaura la presentación de una página (los tests que la editan la dejan como estaba). */
+export async function restorePageSettings(
+  pageId: string,
+  settings: { display_name: string; bio: string | null; show_handle: boolean },
+) {
+  const supabase = localSupabase();
+  const admin = createClient(supabase.url, supabase.secretKey, { auth: { persistSession: false } });
+  const { error } = await admin.from("pages").update(settings).eq("id", pageId);
+  if (error) throw error;
+}

@@ -3,25 +3,29 @@ import { beforeEach, describe, expect, it } from "vitest";
 import { createPage } from "@/application/pages/create-page";
 import { listPages } from "@/application/pages/list-pages";
 import { selectPage } from "@/application/pages/select-page";
+import { updatePageSettings } from "@/application/pages/update-page-settings";
 import { PAGE_LIMIT } from "@/domain/page";
 
 import { InMemoryPageRepository } from "./fakes/in-memory-page-repository";
+import { RecordingPageCache } from "./fakes/recording-page-cache";
 
 let repo: InMemoryPageRepository;
+let cache: RecordingPageCache;
 
 beforeEach(() => {
   repo = new InMemoryPageRepository();
+  cache = new RecordingPageCache();
 });
 
 async function created(handle: string): Promise<string> {
-  const result = await createPage({ pages: repo })({ handle, displayName: handle });
+  const result = await createPage({ pages: repo, cache })({ handle, displayName: handle });
   if (!result.ok) throw new Error(`no se pudo crear ${handle}`);
   return result.value.id;
 }
 
 describe("createPage", () => {
   it("valida y guarda", async () => {
-    const result = await createPage({ pages: repo })({
+    const result = await createPage({ pages: repo, cache })({
       handle: "  JuedSay-Pro ",
       displayName: " Juedsay Pro ",
     });
@@ -38,7 +42,7 @@ describe("createPage", () => {
     [{ handle: "valido", displayName: "" }, "displayName"],
     [{ handle: "valido", displayName: "Nombre‮" }, "displayName"],
   ])("rechaza %o sin tocar el repositorio", async (input, field) => {
-    const result = await createPage({ pages: repo })(input);
+    const result = await createPage({ pages: repo, cache })(input);
     expect(result).toMatchObject({ ok: false, error: { kind: "invalid_input" } });
     if (!result.ok && typeof result.error === "object") {
       expect(Object.keys(result.error.fields)).toEqual([field]);
@@ -47,7 +51,7 @@ describe("createPage", () => {
   });
 
   it("un handle reservado lo dice", async () => {
-    const result = await createPage({ pages: repo })({ handle: "Login", displayName: "x" });
+    const result = await createPage({ pages: repo, cache })({ handle: "Login", displayName: "x" });
     expect(result).toEqual({
       ok: false,
       error: { kind: "invalid_input", fields: { handle: "Ese nombre de usuario está reservado." } },
@@ -56,7 +60,10 @@ describe("createPage", () => {
 
   it("un handle usado por otra página es un error del campo", async () => {
     repo.takenHandles.add("ocupado");
-    const result = await createPage({ pages: repo })({ handle: "ocupado", displayName: "x" });
+    const result = await createPage({ pages: repo, cache })({
+      handle: "ocupado",
+      displayName: "x",
+    });
     expect(result).toEqual({
       ok: false,
       error: {
@@ -66,9 +73,21 @@ describe("createPage", () => {
     });
   });
 
+  it("al crearla purga su handle (pudo quedar un 404 en caché) y el sitio (sitemap)", async () => {
+    await created("nueva-pagina");
+    expect(cache.purged).toEqual(["profile:nueva-pagina", "site"]);
+  });
+
+  it("si no se crea, no purga nada", async () => {
+    await createPage({ pages: repo, cache })({ handle: "login", displayName: "x" });
+    expect(cache.purged).toEqual([]);
+  });
+
   it(`pasado el límite de ${String(PAGE_LIMIT)} devuelve limit_reached`, async () => {
     for (const handle of ["uno-1", "dos-2", "tres-3"]) await created(handle);
-    expect(await createPage({ pages: repo })({ handle: "cuatro", displayName: "x" })).toEqual({
+    expect(
+      await createPage({ pages: repo, cache })({ handle: "cuatro", displayName: "x" }),
+    ).toEqual({
       ok: false,
       error: "limit_reached",
     });
@@ -122,5 +141,50 @@ describe("selectPage", () => {
     expect(
       await selectPage({ pages: repo })({ pageId: "00000000-0000-4000-8000-999999999999" }),
     ).toEqual({ ok: false, error: "not_found" });
+  });
+});
+
+describe("updatePageSettings", () => {
+  const settings = { displayName: "Julián", bio: "QA", theme: "tecnico", showHandle: false };
+
+  it("guarda la presentación y purga la página pública", async () => {
+    const pageId = await created("primera");
+    cache.purged.length = 0;
+    expect(await updatePageSettings({ pages: repo, cache })({ pageId, ...settings })).toMatchObject(
+      {
+        ok: true,
+        value: { handle: "primera", displayName: "Julián", bio: "QA", showHandle: false },
+      },
+    );
+    expect(cache.purged).toEqual(["profile:primera"]);
+  });
+
+  it("valida antes de escribir y no purga", async () => {
+    const pageId = await created("primera");
+    cache.purged.length = 0;
+    const result = await updatePageSettings({ pages: repo, cache })({
+      pageId,
+      ...settings,
+      displayName: "",
+    });
+    expect(result).toMatchObject({ ok: false, error: { kind: "invalid_input" } });
+    expect(repo.pages[0]?.displayName).toBe("primera");
+    expect(cache.purged).toEqual([]);
+  });
+
+  it("una página que no es propia da not_found", async () => {
+    expect(
+      await updatePageSettings({ pages: repo, cache })({
+        pageId: "00000000-0000-4000-8000-999999999999",
+        ...settings,
+      }),
+    ).toEqual({ ok: false, error: "not_found" });
+  });
+
+  it("sin id de página es un error de validación", async () => {
+    expect(await updatePageSettings({ pages: repo, cache })(settings)).toMatchObject({
+      ok: false,
+      error: { kind: "invalid_input", fields: { pageId: expect.any(String) as string } },
+    });
   });
 });
