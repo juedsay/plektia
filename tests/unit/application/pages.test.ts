@@ -1,0 +1,126 @@
+import { beforeEach, describe, expect, it } from "vitest";
+
+import { createPage } from "@/application/pages/create-page";
+import { listPages } from "@/application/pages/list-pages";
+import { selectPage } from "@/application/pages/select-page";
+import { PAGE_LIMIT } from "@/domain/page";
+
+import { InMemoryPageRepository } from "./fakes/in-memory-page-repository";
+
+let repo: InMemoryPageRepository;
+
+beforeEach(() => {
+  repo = new InMemoryPageRepository();
+});
+
+async function created(handle: string): Promise<string> {
+  const result = await createPage({ pages: repo })({ handle, displayName: handle });
+  if (!result.ok) throw new Error(`no se pudo crear ${handle}`);
+  return result.value.id;
+}
+
+describe("createPage", () => {
+  it("valida y guarda", async () => {
+    const result = await createPage({ pages: repo })({
+      handle: "  JuedSay-Pro ",
+      displayName: " Juedsay Pro ",
+    });
+    expect(result).toMatchObject({
+      ok: true,
+      value: { handle: "juedsay-pro", displayName: "Juedsay Pro" },
+    });
+  });
+
+  it.each([
+    [{ handle: "ab", displayName: "x" }, "handle"],
+    [{ handle: "con--doble", displayName: "x" }, "handle"],
+    [{ handle: "-borde", displayName: "x" }, "handle"],
+    [{ handle: "valido", displayName: "" }, "displayName"],
+    [{ handle: "valido", displayName: "Nombre‮" }, "displayName"],
+  ])("rechaza %o sin tocar el repositorio", async (input, field) => {
+    const result = await createPage({ pages: repo })(input);
+    expect(result).toMatchObject({ ok: false, error: { kind: "invalid_input" } });
+    if (!result.ok && typeof result.error === "object") {
+      expect(Object.keys(result.error.fields)).toEqual([field]);
+    }
+    expect(repo.pages).toHaveLength(0);
+  });
+
+  it("un handle reservado lo dice", async () => {
+    const result = await createPage({ pages: repo })({ handle: "Login", displayName: "x" });
+    expect(result).toEqual({
+      ok: false,
+      error: { kind: "invalid_input", fields: { handle: "Ese nombre de usuario está reservado." } },
+    });
+  });
+
+  it("un handle usado por otra página es un error del campo", async () => {
+    repo.takenHandles.add("ocupado");
+    const result = await createPage({ pages: repo })({ handle: "ocupado", displayName: "x" });
+    expect(result).toEqual({
+      ok: false,
+      error: {
+        kind: "invalid_input",
+        fields: { handle: "Ese nombre de usuario ya lo usa otra página." },
+      },
+    });
+  });
+
+  it(`pasado el límite de ${String(PAGE_LIMIT)} devuelve limit_reached`, async () => {
+    for (const handle of ["uno-1", "dos-2", "tres-3"]) await created(handle);
+    expect(await createPage({ pages: repo })({ handle: "cuatro", displayName: "x" })).toEqual({
+      ok: false,
+      error: "limit_reached",
+    });
+    expect(repo.pages).toHaveLength(PAGE_LIMIT);
+  });
+});
+
+describe("listPages", () => {
+  it("sin última página usada, la actual es la primera que se creó", async () => {
+    const first = await created("primera");
+    await created("segunda");
+    expect(await listPages({ pages: repo })()).toMatchObject({ currentPageId: first });
+  });
+
+  it("abre la última página usada", async () => {
+    await created("primera");
+    const second = await created("segunda");
+    repo.lastUsed = second;
+    expect((await listPages({ pages: repo })()).currentPageId).toBe(second);
+  });
+
+  it("si la última usada ya no está, vuelve a la primera", async () => {
+    const first = await created("primera");
+    repo.lastUsed = "00000000-0000-4000-8000-999999999999";
+    expect((await listPages({ pages: repo })()).currentPageId).toBe(first);
+  });
+
+  it("sin páginas no hay actual", async () => {
+    expect(await listPages({ pages: repo })()).toEqual({ pages: [], currentPageId: null });
+  });
+});
+
+describe("selectPage", () => {
+  it("recuerda la página elegida", async () => {
+    await created("primera");
+    const second = await created("segunda");
+    expect(await selectPage({ pages: repo })({ pageId: second })).toEqual({
+      ok: true,
+      value: undefined,
+    });
+    expect((await listPages({ pages: repo })()).currentPageId).toBe(second);
+  });
+
+  it("rechaza un id inválido sin tocar el repositorio", async () => {
+    const result = await selectPage({ pages: repo })({ pageId: "no-es-un-uuid" });
+    expect(result.ok).toBe(false);
+    expect(repo.lastUsed).toBeNull();
+  });
+
+  it("una página que no es propia da not_found", async () => {
+    expect(
+      await selectPage({ pages: repo })({ pageId: "00000000-0000-4000-8000-999999999999" }),
+    ).toEqual({ ok: false, error: "not_found" });
+  });
+});

@@ -1,12 +1,13 @@
-import { createClient, type SupabaseClient } from "@supabase/supabase-js";
-import { afterAll, beforeAll, beforeEach, describe, expect, inject, it } from "vitest";
+import type { SupabaseClient } from "@supabase/supabase-js";
+import { afterAll, beforeAll, beforeEach, describe, expect, it } from "vitest";
 
 import type { Link } from "@/application/ports/link-repository";
 import { parseLinkInput } from "@/domain/link";
 import type { Database } from "@/infrastructure/supabase/database.types";
 import { SupabaseLinkRepository } from "@/infrastructure/supabase/supabase-link-repository";
 
-const supabase = inject("supabase");
+import { clientFor } from "./session-client";
+
 // El miembro del seed: así los tests no tocan los datos del owner. En el seed,
 // la primera página de cada usuario tiene su mismo id.
 const MEMBER_ID = "22222222-2222-4222-8222-222222222222";
@@ -18,25 +19,6 @@ let repo: SupabaseLinkRepository;
 let ownerClient: SupabaseClient<Database>;
 let foreignSectionId: string;
 let foreignLinkId: string;
-
-/** Cliente con la sesión real de un usuario del seed (API admin de Supabase local). */
-async function clientFor(email: string): Promise<SupabaseClient<Database>> {
-  const admin = createClient(supabase.url, supabase.secretKey, { auth: { persistSession: false } });
-  const link = await admin.auth.admin.generateLink({ type: "magiclink", email });
-  if (link.error) throw link.error;
-  const anon = createClient(supabase.url, supabase.publishableKey, {
-    auth: { persistSession: false },
-  });
-  const verified = await anon.auth.verifyOtp({
-    token_hash: link.data.properties.hashed_token,
-    type: "magiclink",
-  });
-  if (verified.error || !verified.data.session) throw verified.error ?? new Error("sin sesión");
-  return createClient<Database>(supabase.url, supabase.publishableKey, {
-    auth: { persistSession: false },
-    global: { headers: { Authorization: `Bearer ${verified.data.session.access_token}` } },
-  });
-}
 
 async function clean(): Promise<void> {
   await client.from("links").delete().eq("owner_id", MEMBER_ID);
@@ -273,6 +255,24 @@ describe("SupabaseLinkRepository contra Supabase local", () => {
         ["de-la-segunda", 0],
       ]);
       expect(second.sections.map((sectionOfPage) => sectionOfPage.title)).toEqual(["Trabajo"]);
+
+      // Atado a una página, el repositorio no edita ni borra lo de otra página
+      // de la misma cuenta, aunque la RLS (por dueño) lo permitiría.
+      const [linkOfFirstPage] = first.links;
+      if (!linkOfFirstPage) throw new Error("sin link en la primera página");
+      expect(
+        await secondRepo.updateLink(linkOfFirstPage.id, linkOfFirstPage.version, { title: "x" }),
+      ).toEqual({ ok: false, error: "not_found" });
+      expect(await secondRepo.deleteLink(linkOfFirstPage.id, linkOfFirstPage.version)).toEqual({
+        ok: false,
+        error: "not_found",
+      });
+      const [sectionOfSecondPage] = second.sections;
+      if (!sectionOfSecondPage) throw new Error("sin sección en la segunda página");
+      expect(await repo.deleteSection(sectionOfSecondPage.id, sectionOfSecondPage.version)).toEqual(
+        { ok: false, error: "not_found" },
+      );
+      expect((await repo.listOwn()).links.map((link) => link.title)).toEqual(["de-la-primera"]);
 
       // La sección de una página no sirve para un link de la otra.
       const crossed = parseLinkInput({

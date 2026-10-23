@@ -14,6 +14,7 @@ import type { LinkDraft, LinkPatch } from "@/domain/link";
 import { err, ok, type Result } from "@/domain/result";
 import type { SectionDraft, SectionPatch } from "@/domain/section";
 import type { Database, Tables, TablesUpdate } from "@/infrastructure/supabase/database.types";
+import { unexpectedDatabaseError, writeFailure } from "@/infrastructure/supabase/write-errors";
 
 type Client = SupabaseClient<Database>;
 type LinkRow = Tables<"links">;
@@ -22,18 +23,6 @@ type SectionRow = Tables<"sections">;
 const LINK_COLUMNS =
   "id, section_id, title, url, description, provider, provider_handle, tags, visible, position, version";
 const SECTION_COLUMNS = "id, title, show_title, visible, position, version";
-
-// SQLSTATE de la base (migración de links) → error del dominio.
-const KNOWN_ERRORS: Readonly<Record<string, WriteError>> = {
-  PL400: "invalid_input",
-  PL404: "not_found",
-  PL409: "conflict",
-  PL429: "limit_reached",
-  "42501": "forbidden", // RLS o privilegios
-  "23514": "invalid_input", // check
-  "23503": "not_found", // la sección se borró en el medio
-  "23P01": "conflict", // posición repetida por una escritura simultánea
-};
 
 /**
  * Secciones y links de una página, con el cliente de la sesión: la RLS decide
@@ -103,6 +92,7 @@ export class SupabaseLinkRepository implements LinkReader, LinkWriter, SectionWr
       .from("links")
       .update(changes)
       .eq("id", id)
+      .eq("page_id", this.pageId)
       .eq("version", version)
       .select(LINK_COLUMNS);
     if (error) return fail(error);
@@ -115,6 +105,7 @@ export class SupabaseLinkRepository implements LinkReader, LinkWriter, SectionWr
       .from("links")
       .delete()
       .eq("id", id)
+      .eq("page_id", this.pageId)
       .eq("version", version)
       .select("id");
     if (error) return fail(error);
@@ -165,6 +156,7 @@ export class SupabaseLinkRepository implements LinkReader, LinkWriter, SectionWr
       .from("sections")
       .update(changes)
       .eq("id", id)
+      .eq("page_id", this.pageId)
       .eq("version", version)
       .select(SECTION_COLUMNS);
     if (error) return fail(error);
@@ -177,6 +169,7 @@ export class SupabaseLinkRepository implements LinkReader, LinkWriter, SectionWr
       .from("sections")
       .delete()
       .eq("id", id)
+      .eq("page_id", this.pageId)
       .eq("version", version)
       .select("id");
     if (error) return fail(error);
@@ -206,13 +199,11 @@ export class SupabaseLinkRepository implements LinkReader, LinkWriter, SectionWr
 }
 
 function fail(error: PostgrestError): Result<never, WriteError> {
-  const known = KNOWN_ERRORS[error.code];
-  if (known) return err(known);
-  throw unexpected(error);
+  return writeFailure("links", error);
 }
 
 function unexpected(error: PostgrestError): Error {
-  return new Error(`links: error inesperado de la base (${error.code}): ${error.message}`);
+  return unexpectedDatabaseError("links", error);
 }
 
 function toLink(row: Omit<LinkRow, "owner_id" | "page_id" | "created_at" | "updated_at">): Link {

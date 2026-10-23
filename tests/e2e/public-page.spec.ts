@@ -27,6 +27,30 @@ test.describe("página pública", () => {
     await expect(youtube).not.toHaveAttribute("target", /.+/);
   });
 
+  test("una segunda página de la misma cuenta tiene su /{handle} y solo sus links", async ({
+    page,
+  }) => {
+    const response = await page.goto("/demo-segunda");
+    expect(response?.status()).toBe(200);
+    await expect(page.getByRole("heading", { level: 1 })).toHaveText("Página de prueba");
+    await expect(
+      page.locator(".identity").getByText("@demo-segunda", { exact: true }),
+    ).toBeVisible();
+    await expect(page.getByText("Segunda página de la misma cuenta")).toBeVisible();
+    const links = page
+      .locator("main")
+      .getByRole("link", { name: /Documentación|Novedades|Twitch/ });
+    await expect(links).toHaveCount(2);
+    await expect(page.getByRole("link", { name: /Documentación/ })).toHaveAttribute(
+      "href",
+      "https://plektia.app/docs",
+    );
+
+    // Y la primera página no muestra los links de la segunda.
+    await page.goto("/juedsay");
+    await expect(page.getByRole("link", { name: /Documentación/ })).toHaveCount(0);
+  });
+
   test("el handle no distingue mayúsculas y la URL canónica es /{handle}", async ({ page }) => {
     await page.goto("/JuedSay");
     await expect(page.locator('link[rel="canonical"]')).toHaveAttribute("href", /\/juedsay$/);
@@ -133,7 +157,9 @@ test.describe("página pública", () => {
   test("sitemap y robots", async ({ request }) => {
     const sitemap = await request.get("/sitemap.xml");
     expect(sitemap.headers()["content-type"]).toContain("application/xml");
-    expect(await sitemap.text()).toMatch(/<loc>[^<]+\/juedsay<\/loc>/);
+    const sitemapText = await sitemap.text();
+    expect(sitemapText).toMatch(/<loc>[^<]+\/juedsay<\/loc>/);
+    expect(sitemapText).toMatch(/<loc>[^<]+\/demo-segunda<\/loc>/);
     const robots = await request.get("/robots.txt");
     expect(await robots.text()).toContain("Disallow: /admin");
     for (const path of ["/favicon.svg", "/og.png", "/apple-touch-icon.png"]) {
