@@ -247,7 +247,7 @@
   - **Entregas:**
     1. Spec (#36).
     2. Migración + pgTAP + vista pública + tipos; el repositorio de links pasa a trabajar por página (#37).
-    3. Repositorio y casos de uso de páginas (`createPage`, `listPages`, `selectPage`); seed con una segunda página (`/juedsay-qa`).
+    3. Repositorio y casos de uso de páginas (`createPage`, `listPages`, `selectPage`); seed con una segunda página (`/demo-segunda`, con datos ficticios).
   - **Para la tarea 18:** el panel resuelve la página actual con `listPages` y arma `SupabaseLinkRepository(client, pageId)` con ella; elegir otra página llama a `selectPage`.
   - **Aceptación:**
     - Una cuenta crea una segunda página con otro handle y cada una muestra solo sus links.

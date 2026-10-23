@@ -36,7 +36,7 @@ update public.links set provider = 'twitch', provider_handle = 'juedsay' where t
 insert into public.pages (id, owner_id, handle, display_name) values
   ('55555555-5555-4555-8555-555555555555', '11111111-1111-4111-8111-111111111111', 'juedsay-pro', 'Juedsay Pro');
 insert into public.links (owner_id, page_id, title, url) values
-  ('11111111-1111-4111-8111-111111111111', '55555555-5555-4555-8555-555555555555', 'Portfolio', 'https://jsimon.vercel.app/');
+  ('11111111-1111-4111-8111-111111111111', '55555555-5555-4555-8555-555555555555', 'Portfolio', 'https://plektia.app/portfolio');
 
 select pg_temp.as_anon();
 

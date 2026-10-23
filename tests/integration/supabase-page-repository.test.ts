@@ -9,7 +9,7 @@ import { SupabasePageRepository } from "@/infrastructure/supabase/supabase-page-
 
 import { clientFor } from "./session-client";
 
-// El owner del seed tiene dos páginas: /juedsay (con su mismo id) y /juedsay-qa.
+// El owner del seed tiene dos páginas: /juedsay (con su mismo id) y /demo-segunda.
 const OWNER_ID = "11111111-1111-4111-8111-111111111111";
 const OWNER_SECOND_PAGE_ID = "9a9e0000-0000-4000-8000-000000000002";
 const MEMBER_ID = "22222222-2222-4222-8222-222222222222";
@@ -44,7 +44,7 @@ describe("SupabasePageRepository contra Supabase local", () => {
 
   it("lista solo las páginas propias, de la más vieja a la más nueva", async () => {
     const pages = await repo.listOwn();
-    expect(pages.map((page) => page.handle)).toEqual(["juedsay", "juedsay-qa"]);
+    expect(pages.map((page) => page.handle)).toEqual(["juedsay", "demo-segunda"]);
     expect(pages.some((page) => page.id === MEMBER_ID)).toBe(false);
   });
 

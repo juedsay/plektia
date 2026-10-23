@@ -30,21 +30,25 @@ test.describe("página pública", () => {
   test("una segunda página de la misma cuenta tiene su /{handle} y solo sus links", async ({
     page,
   }) => {
-    const response = await page.goto("/juedsay-qa");
+    const response = await page.goto("/demo-segunda");
     expect(response?.status()).toBe(200);
-    await expect(page.getByRole("heading", { level: 1 })).toHaveText("Julián · QA");
-    await expect(page.locator(".identity").getByText("@juedsay-qa", { exact: true })).toBeVisible();
-    await expect(page.getByText("Testing, accesibilidad y rendimiento")).toBeVisible();
-    const links = page.locator("main").getByRole("link", { name: /Portfolio|LinkedIn|Twitch/ });
+    await expect(page.getByRole("heading", { level: 1 })).toHaveText("Página de prueba");
+    await expect(
+      page.locator(".identity").getByText("@demo-segunda", { exact: true }),
+    ).toBeVisible();
+    await expect(page.getByText("Segunda página de la misma cuenta")).toBeVisible();
+    const links = page
+      .locator("main")
+      .getByRole("link", { name: /Documentación|Novedades|Twitch/ });
     await expect(links).toHaveCount(2);
-    await expect(page.getByRole("link", { name: /Portfolio/ })).toHaveAttribute(
+    await expect(page.getByRole("link", { name: /Documentación/ })).toHaveAttribute(
       "href",
-      "https://jsimon.vercel.app/",
+      "https://plektia.app/docs",
     );
 
     // Y la primera página no muestra los links de la segunda.
     await page.goto("/juedsay");
-    await expect(page.getByRole("link", { name: /Portfolio/ })).toHaveCount(0);
+    await expect(page.getByRole("link", { name: /Documentación/ })).toHaveCount(0);
   });
 
   test("el handle no distingue mayúsculas y la URL canónica es /{handle}", async ({ page }) => {
@@ -155,7 +159,7 @@ test.describe("página pública", () => {
     expect(sitemap.headers()["content-type"]).toContain("application/xml");
     const sitemapText = await sitemap.text();
     expect(sitemapText).toMatch(/<loc>[^<]+\/juedsay<\/loc>/);
-    expect(sitemapText).toMatch(/<loc>[^<]+\/juedsay-qa<\/loc>/);
+    expect(sitemapText).toMatch(/<loc>[^<]+\/demo-segunda<\/loc>/);
     const robots = await request.get("/robots.txt");
     expect(await robots.text()).toContain("Disallow: /admin");
     for (const path of ["/favicon.svg", "/og.png", "/apple-touch-icon.png"]) {
