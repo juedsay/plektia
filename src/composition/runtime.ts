@@ -11,6 +11,7 @@ import type {
 } from "@/application/ports/public-page-reader";
 import type { RateLimiter } from "@/application/ports/rate-limiter";
 import type { SessionReader } from "@/application/ports/session-reader";
+import { type AdminRepositories, createAdminRepositories } from "@/composition/admin";
 import { createAuthGateway } from "@/composition/auth";
 import { createContactSender } from "@/composition/contact";
 import { createPublicPageReader } from "@/composition/public-page";
@@ -26,6 +27,13 @@ export const sessionReaderFor = (request: Request, cookies: AstroCookies): Sessi
 
 export const authGatewayFor = (request: Request, cookies: AstroCookies): AuthGateway =>
   createAuthGateway(supabase(), request, cookies);
+
+/** Repositorios del panel con la sesión del usuario que hace el pedido. */
+export const adminRepositoriesFor = (
+  request: Request,
+  cookies: AstroCookies,
+  ownerId: string,
+): AdminRepositories => createAdminRepositories(supabase(), request, cookies, ownerId);
 
 export const authRateLimiter = (): RateLimiter => new CloudflareRateLimiter(env.AUTH_RATE_LIMITER);
 

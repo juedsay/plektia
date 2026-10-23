@@ -1,0 +1,88 @@
+---
+// Selector de página: una fila de jacks, uno por página; el de la página con la
+// que se trabaja está conectado. Es un <details> nativo, así que funciona sin
+// JavaScript; cada página es un formulario que la elige (SPEC-pages).
+import { actions } from "astro:actions";
+
+import type { Page } from "@/application/ports/page-repository";
+import { PAGE_LIMIT } from "@/domain/page";
+
+interface Props {
+  pages: readonly Page[];
+  currentPage: Page | null;
+}
+const { pages, currentPage } = Astro.props;
+const canCreate = pages.length < PAGE_LIMIT;
+---
+
+<details class="switcher" data-switcher>
+  <summary class="switcher-current">
+    <span class="switcher-jack is-connected" aria-hidden="true"></span>
+    <span class="switcher-text">
+      <span class="visually-hidden">Página actual:</span>
+      <span class="switcher-name">{currentPage?.displayName ?? "Sin página"}</span>
+      {currentPage && <span class="switcher-handle">/{currentPage.handle}</span>}
+    </span>
+    <svg
+      class="switcher-chevron"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.8"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      aria-hidden="true"
+    >
+      <path d="m6 9 6 6 6-6"></path>
+    </svg>
+    <span class="visually-hidden">Cambiar de página</span>
+  </summary>
+  <div class="switcher-panel">
+    <p class="switcher-caption" id="switcher-caption">
+      Tus páginas · {pages.length} de {PAGE_LIMIT}
+    </p>
+    <ul class="switcher-list" aria-labelledby="switcher-caption">
+      {pages.map((page) => {
+        const isCurrent = page.id === currentPage?.id;
+        return (
+          <li>
+            <form method="post" action={actions.pages.select}>
+              <input type="hidden" name="pageId" value={page.id} />
+              <button
+                type="submit"
+                class="switcher-option"
+                aria-current={isCurrent ? "true" : undefined}
+              >
+                <span
+                  class:list={["switcher-jack", { "is-connected": isCurrent }]}
+                  aria-hidden="true"
+                />
+                <span class="switcher-text">
+                  <span class="switcher-name">{page.displayName}</span>
+                  <span class="switcher-handle">/{page.handle}</span>
+                </span>
+              </button>
+            </form>
+          </li>
+        );
+      })}
+    </ul>
+    {canCreate ? (
+      <a class="switcher-new" href="/admin/pages/new">
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.8"
+          stroke-linecap="round"
+          aria-hidden="true"
+        >
+          <path d="M12 5v14M5 12h14" />
+        </svg>
+        Nueva página
+      </a>
+    ) : (
+      <p class="switcher-limit">Llegaste al máximo de {PAGE_LIMIT} páginas.</p>
+    )}
+  </div>
+</details>
