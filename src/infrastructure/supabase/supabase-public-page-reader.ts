@@ -69,13 +69,9 @@ export class SupabasePublicPageReader implements PublicPageReader, PublicProfile
   }
 
   async listHandles(): Promise<string[]> {
-    // De `profiles` y no de la vista: no hace falta armar los links de cada uno.
-    // Como visitante, la RLS ya deja afuera los perfiles dados de baja.
-    const { data, error } = await this.client
-      .from("profiles")
-      .select("handle")
-      .eq("disabled", false)
-      .order("handle");
+    // De `pages` y no de la vista: no hace falta armar los links de cada una.
+    // Como visitante, la RLS ya deja afuera las páginas de cuentas dadas de baja.
+    const { data, error } = await this.client.from("pages").select("handle").order("handle");
     if (error) throw new Error(`public-page: error de la base (${error.code}): ${error.message}`);
     return data.map((row) => row.handle);
   }

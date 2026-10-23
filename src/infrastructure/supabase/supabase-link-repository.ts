@@ -36,14 +36,15 @@ const KNOWN_ERRORS: Readonly<Record<string, WriteError>> = {
 };
 
 /**
- * Secciones y links con el cliente de la sesión: la RLS decide qué puede ver y
- * cambiar cada usuario (nunca la `service_role`). `ownerId` solo filtra las
- * lecturas, porque la RLS también devuelve lo público de otros.
+ * Secciones y links de una página, con el cliente de la sesión: la RLS decide
+ * qué puede ver y cambiar cada usuario (nunca la `service_role`). `pageId` es
+ * la página sobre la que se trabaja (SPEC-pages); en una página ajena la RLS
+ * solo deja leer lo público y la base rechaza las escrituras.
  */
 export class SupabaseLinkRepository implements LinkReader, LinkWriter, SectionWriter {
   constructor(
     private readonly client: Client,
-    private readonly ownerId: string,
+    private readonly pageId: string,
   ) {}
 
   async listOwn(): Promise<OwnLinks> {
@@ -51,12 +52,12 @@ export class SupabaseLinkRepository implements LinkReader, LinkWriter, SectionWr
       this.client
         .from("sections")
         .select(SECTION_COLUMNS)
-        .eq("owner_id", this.ownerId)
+        .eq("page_id", this.pageId)
         .order("position"),
       this.client
         .from("links")
         .select(LINK_COLUMNS)
-        .eq("owner_id", this.ownerId)
+        .eq("page_id", this.pageId)
         .order("section_id", { nullsFirst: false })
         .order("position"),
     ]);
@@ -69,6 +70,7 @@ export class SupabaseLinkRepository implements LinkReader, LinkWriter, SectionWr
     const { data, error } = await this.client
       .from("links")
       .insert({
+        page_id: this.pageId,
         section_id: draft.sectionId,
         title: draft.title,
         url: draft.url,
@@ -126,6 +128,7 @@ export class SupabaseLinkRepository implements LinkReader, LinkWriter, SectionWr
     // La RPC acepta `null` en `target_section` ("Sin sección"), pero el generador de
     // tipos declara los parámetros de una función como no nulos.
     const args = {
+      target_page: this.pageId,
       target_section: sectionId,
       ids: items.map((item) => item.id),
       expected_versions: items.map((item) => item.version),
@@ -137,7 +140,12 @@ export class SupabaseLinkRepository implements LinkReader, LinkWriter, SectionWr
   async createSection(draft: SectionDraft): Promise<Result<Section, WriteError>> {
     const { data, error } = await this.client
       .from("sections")
-      .insert({ title: draft.title, show_title: draft.showTitle, visible: draft.visible })
+      .insert({
+        page_id: this.pageId,
+        title: draft.title,
+        show_title: draft.showTitle,
+        visible: draft.visible,
+      })
       .select(SECTION_COLUMNS)
       .single();
     return error ? fail(error) : ok(toSection(data));
@@ -177,19 +185,20 @@ export class SupabaseLinkRepository implements LinkReader, LinkWriter, SectionWr
 
   async reorderSections(items: readonly Versioned[]): Promise<Result<void, WriteError>> {
     const { error } = await this.client.rpc("reorder_sections", {
+      target_page: this.pageId,
       ids: items.map((item) => item.id),
       expected_versions: items.map((item) => item.version),
     });
     return error ? fail(error) : ok(undefined);
   }
 
-  /** Si no cambió ninguna fila: existe (y es mía) → conflicto de versión; si no, no existe. */
+  /** Si no cambió ninguna fila: existe (en esta página) → conflicto de versión; si no, no existe. */
   private async missing(table: "links" | "sections", id: string): Promise<WriteError> {
     const { data, error } = await this.client
       .from(table)
       .select("id")
       .eq("id", id)
-      .eq("owner_id", this.ownerId)
+      .eq("page_id", this.pageId)
       .maybeSingle();
     if (error) throw unexpected(error);
     return data ? "conflict" : "not_found";
@@ -206,7 +215,7 @@ function unexpected(error: PostgrestError): Error {
   return new Error(`links: error inesperado de la base (${error.code}): ${error.message}`);
 }
 
-function toLink(row: Omit<LinkRow, "owner_id" | "created_at" | "updated_at">): Link {
+function toLink(row: Omit<LinkRow, "owner_id" | "page_id" | "created_at" | "updated_at">): Link {
   return {
     id: row.id,
     sectionId: row.section_id,
@@ -222,7 +231,9 @@ function toLink(row: Omit<LinkRow, "owner_id" | "created_at" | "updated_at">): L
   };
 }
 
-function toSection(row: Omit<SectionRow, "owner_id" | "created_at" | "updated_at">): Section {
+function toSection(
+  row: Omit<SectionRow, "owner_id" | "page_id" | "created_at" | "updated_at">,
+): Section {
   return {
     id: row.id,
     title: row.title,

@@ -2,7 +2,7 @@
 begin;
 create extension if not exists pgtap with schema extensions;
 
-select plan(15);
+select plan(17);
 
 create function pg_temp.login(uid uuid)
 returns void language sql as $$
@@ -18,24 +18,30 @@ $$;
 -- Datos de prueba propios (no dependen del seed): el owner 1111… arma su página.
 delete from public.links where owner_id = '11111111-1111-4111-8111-111111111111';
 delete from public.sections where owner_id = '11111111-1111-4111-8111-111111111111';
-update public.profiles set bio = null, show_handle = true;
-insert into public.sections (id, owner_id, title, show_title, visible) values
-  ('cccccccc-0000-4000-8000-000000000001', '11111111-1111-4111-8111-111111111111', 'Redes', true, true),
-  ('cccccccc-0000-4000-8000-000000000002', '11111111-1111-4111-8111-111111111111', 'Oculta', true, false),
-  ('cccccccc-0000-4000-8000-000000000003', '11111111-1111-4111-8111-111111111111', 'Proyectos', false, true);
-insert into public.links (owner_id, section_id, title, url, visible) values
-  ('11111111-1111-4111-8111-111111111111', 'cccccccc-0000-4000-8000-000000000001', 'Twitch', 'https://twitch.tv/juedsay', true),
-  ('11111111-1111-4111-8111-111111111111', 'cccccccc-0000-4000-8000-000000000001', 'Borrador', 'https://plektia.app/b', false),
-  ('11111111-1111-4111-8111-111111111111', 'cccccccc-0000-4000-8000-000000000001', 'YouTube', 'https://youtube.com/@juedsay', true),
-  ('11111111-1111-4111-8111-111111111111', 'cccccccc-0000-4000-8000-000000000002', 'En oculta', 'https://plektia.app/o', true),
-  ('11111111-1111-4111-8111-111111111111', 'cccccccc-0000-4000-8000-000000000003', 'Plektia', 'https://plektia.app', true),
-  ('11111111-1111-4111-8111-111111111111', null, 'Mail', 'mailto:hola@plektia.app', true);
+update public.pages set bio = null, show_handle = true;
+insert into public.sections (id, owner_id, page_id, title, show_title, visible) values
+  ('cccccccc-0000-4000-8000-000000000001', '11111111-1111-4111-8111-111111111111', '11111111-1111-4111-8111-111111111111', 'Redes', true, true),
+  ('cccccccc-0000-4000-8000-000000000002', '11111111-1111-4111-8111-111111111111', '11111111-1111-4111-8111-111111111111', 'Oculta', true, false),
+  ('cccccccc-0000-4000-8000-000000000003', '11111111-1111-4111-8111-111111111111', '11111111-1111-4111-8111-111111111111', 'Proyectos', false, true);
+insert into public.links (owner_id, page_id, section_id, title, url, visible) values
+  ('11111111-1111-4111-8111-111111111111', '11111111-1111-4111-8111-111111111111', 'cccccccc-0000-4000-8000-000000000001', 'Twitch', 'https://twitch.tv/juedsay', true),
+  ('11111111-1111-4111-8111-111111111111', '11111111-1111-4111-8111-111111111111', 'cccccccc-0000-4000-8000-000000000001', 'Borrador', 'https://plektia.app/b', false),
+  ('11111111-1111-4111-8111-111111111111', '11111111-1111-4111-8111-111111111111', 'cccccccc-0000-4000-8000-000000000001', 'YouTube', 'https://youtube.com/@juedsay', true),
+  ('11111111-1111-4111-8111-111111111111', '11111111-1111-4111-8111-111111111111', 'cccccccc-0000-4000-8000-000000000002', 'En oculta', 'https://plektia.app/o', true),
+  ('11111111-1111-4111-8111-111111111111', '11111111-1111-4111-8111-111111111111', 'cccccccc-0000-4000-8000-000000000003', 'Plektia', 'https://plektia.app', true),
+  ('11111111-1111-4111-8111-111111111111', '11111111-1111-4111-8111-111111111111', null, 'Mail', 'mailto:hola@plektia.app', true);
 update public.links set provider = 'twitch', provider_handle = 'juedsay' where title = 'Twitch';
+
+-- Segunda página del mismo dueño, con su propio link (SPEC-pages).
+insert into public.pages (id, owner_id, handle, display_name) values
+  ('55555555-5555-4555-8555-555555555555', '11111111-1111-4111-8111-111111111111', 'juedsay-pro', 'Juedsay Pro');
+insert into public.links (owner_id, page_id, title, url) values
+  ('11111111-1111-4111-8111-111111111111', '55555555-5555-4555-8555-555555555555', 'Portfolio', 'https://jsimon.vercel.app/');
 
 select pg_temp.as_anon();
 
 select is((select count(*)::int from public.public_page_v where handle = 'juedsay'), 1,
-  'anon: hay una fila por perfil');
+  'anon: hay una fila por página');
 select is((select count(*)::int from public.public_page_v where handle = 'JuedSay'), 1,
   'el handle se busca sin importar mayúsculas');
 select results_eq(
@@ -64,6 +70,14 @@ select is(
   '{"title": "Twitch", "url": "https://twitch.tv/juedsay", "description": null, "provider": "twitch", "providerHandle": "juedsay"}'::jsonb,
   'cada link expone solo lo que muestra la página (sin dueño ni versión)');
 select hasnt_column('public', 'public_page_v', 'owner_id', 'la vista no expone el dueño');
+select results_eq(
+  $$ select l ->> 'title' from public.public_page_v, jsonb_array_elements(unsectioned_links) l where handle = 'juedsay-pro' $$,
+  $$ values ('Portfolio') $$,
+  'una segunda página muestra solo sus links');
+select is(
+  (select count(*)::int from public.public_page_v, jsonb_array_elements(unsectioned_links) l
+   where handle = 'juedsay' and l ->> 'title' = 'Portfolio'), 0,
+  'los links de una página no aparecen en otra del mismo dueño');
 select is((select show_handle from public.public_page_v where handle = 'juedsay'), true,
   'el @handle se muestra por defecto');
 reset role;
@@ -74,16 +88,16 @@ select results_eq(
   $$ select s ->> 'title' from public.public_page_v, jsonb_array_elements(sections) s where handle = 'juedsay' $$,
   $$ values ('Redes'), ('Proyectos') $$,
   'el dueño con sesión no ve lo oculto en su página pública');
-update public.profiles set show_handle = false where id = auth.uid();
+update public.pages set show_handle = false where id = '11111111-1111-4111-8111-111111111111';
 select is((select show_handle from public.public_page_v where handle = 'juedsay'), false,
   'el dueño puede ocultar su @handle');
 reset role;
 
 -- Nadie puede ocultar el @handle de otro.
 select pg_temp.login('22222222-2222-4222-8222-222222222222');
-update public.profiles set show_handle = true where id = '11111111-1111-4111-8111-111111111111';
+update public.pages set show_handle = true where id = '11111111-1111-4111-8111-111111111111';
 reset role;
-select is((select show_handle from public.profiles where id = '11111111-1111-4111-8111-111111111111'), false,
+select is((select show_handle from public.pages where id = '11111111-1111-4111-8111-111111111111'), false,
   'un miembro no cambia el show_handle de otro');
 
 -- Un perfil dado de baja deja de tener página.

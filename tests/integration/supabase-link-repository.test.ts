@@ -7,8 +7,10 @@ import type { Database } from "@/infrastructure/supabase/database.types";
 import { SupabaseLinkRepository } from "@/infrastructure/supabase/supabase-link-repository";
 
 const supabase = inject("supabase");
-// El miembro del seed: así los tests no tocan los datos del owner.
+// El miembro del seed: así los tests no tocan los datos del owner. En el seed,
+// la primera página de cada usuario tiene su mismo id.
 const MEMBER_ID = "22222222-2222-4222-8222-222222222222";
+const OWNER_ID = "11111111-1111-4111-8111-111111111111";
 
 let client: SupabaseClient<Database>;
 let repo: SupabaseLinkRepository;
@@ -57,12 +59,17 @@ describe("SupabaseLinkRepository contra Supabase local", () => {
     ownerClient = await clientFor("owner@plektia.test");
     const section = await ownerClient
       .from("sections")
-      .insert({ title: "Del owner" })
+      .insert({ page_id: OWNER_ID, title: "Del owner" })
       .select("id")
       .single();
     const link = await ownerClient
       .from("links")
-      .insert({ title: "Del owner", url: "https://plektia.app/owner", visible: false })
+      .insert({
+        page_id: OWNER_ID,
+        title: "Del owner",
+        url: "https://plektia.app/owner",
+        visible: false,
+      })
       .select("id")
       .single();
     if (section.error || link.error) {
@@ -232,5 +239,61 @@ describe("SupabaseLinkRepository contra Supabase local", () => {
       providerHandle: null,
     });
     expect(result).toEqual({ ok: false, error: "invalid_input" });
+  });
+
+  it("dos páginas de la misma cuenta: cada una con sus secciones y sus links", async () => {
+    const page = await client
+      .from("pages")
+      .insert({ handle: "miembro-demo-dos", display_name: "Segunda" })
+      .select("id")
+      .single();
+    if (page.error) throw new Error(`no se pudo crear la página: ${page.error.message}`);
+    const secondRepo = new SupabaseLinkRepository(client, page.data.id);
+    try {
+      await newLink("de-la-primera");
+      const section = await secondRepo.createSection({
+        title: "Trabajo",
+        showTitle: true,
+        visible: true,
+      });
+      if (!section.ok) throw new Error("sin sección");
+      const draft = parseLinkInput({
+        title: "de-la-segunda",
+        url: "https://plektia.app/segunda",
+        sectionId: section.value.id,
+      });
+      if (!draft.ok) throw new Error("draft inválido");
+      expect((await secondRepo.createLink(draft.value)).ok).toBe(true);
+
+      const first = await repo.listOwn();
+      const second = await secondRepo.listOwn();
+      expect(first.links.map((link) => link.title)).toEqual(["de-la-primera"]);
+      expect(first.sections).toEqual([]);
+      expect(second.links.map((link) => [link.title, link.position])).toEqual([
+        ["de-la-segunda", 0],
+      ]);
+      expect(second.sections.map((sectionOfPage) => sectionOfPage.title)).toEqual(["Trabajo"]);
+
+      // La sección de una página no sirve para un link de la otra.
+      const crossed = parseLinkInput({
+        title: "cruzado",
+        url: "https://plektia.app/cruzado",
+        sectionId: section.value.id,
+      });
+      if (!crossed.ok) throw new Error("draft inválido");
+      expect(await repo.createLink(crossed.value)).toEqual({ ok: false, error: "not_found" });
+    } finally {
+      await client.from("pages").delete().eq("id", page.data.id);
+    }
+  });
+
+  it("no puede escribir en la página de otro usuario", async () => {
+    const foreignRepo = new SupabaseLinkRepository(client, OWNER_ID);
+    expect(
+      await foreignRepo.createSection({ title: "Colada", showTitle: true, visible: true }),
+    ).toEqual({ ok: false, error: "not_found" });
+    expect((await foreignRepo.listOwn()).links.some((link) => link.id === foreignLinkId)).toBe(
+      false,
+    );
   });
 });

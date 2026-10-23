@@ -40,7 +40,7 @@ function repoAnswering(...responses: Response[]) {
     from: () => query(next()),
     rpc: () => Promise.resolve(next()),
   } as unknown as SupabaseClient<Database>;
-  return new SupabaseLinkRepository(client, "owner-id");
+  return new SupabaseLinkRepository(client, "page-id");
 }
 
 const ok = (data: unknown): Response => ({ data, error: null });

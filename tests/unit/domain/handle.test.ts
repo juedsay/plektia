@@ -59,7 +59,9 @@ describe("RESERVED_HANDLES", () => {
       .filter((name) => name.endsWith(".sql"))
       .sort()
       .filter((name) =>
-        readFileSync(join(dir, name), "utf8").includes("function private.is_reserved_handle"),
+        /create (or replace )?function private\.is_reserved_handle/.test(
+          readFileSync(join(dir, name), "utf8"),
+        ),
       )
       .at(-1);
     expect(file).toBeDefined();

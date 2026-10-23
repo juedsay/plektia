@@ -34,7 +34,7 @@ $$;
 -- Punto de partida propio, sin depender del seed (la transacción se descarta al final).
 delete from public.links where owner_id in ('11111111-1111-4111-8111-111111111111', '22222222-2222-4222-8222-222222222222');
 delete from public.sections where owner_id in ('11111111-1111-4111-8111-111111111111', '22222222-2222-4222-8222-222222222222');
-update public.profiles set bio = null;
+update public.pages set bio = null;
 
 -- Usuarios del seed: owner 1111…, miembro 2222….
 
@@ -72,9 +72,10 @@ select is(private.before_user_created(pg_temp.event('intruso@plektia.test', 'git
 
 -- ── Trigger de perfil ────────────────────────────────────────────────────────
 select results_eq(
-  $$ select handle::text, role::text, display_name from public.profiles order by handle $$,
+  $$ select pg.handle::text, pr.role::text, pg.display_name
+     from public.pages pg join public.profiles pr on pr.id = pg.owner_id order by pg.handle $$,
   $$ values ('juedsay', 'owner', 'Julián (dev)'), ('miembro-demo', 'member', 'Miembro Demo') $$,
-  'trigger: cada usuario invitado tiene su perfil con el handle y el rol de la invitación');
+  'trigger: cada usuario invitado tiene su perfil con el rol y su primera página con el handle');
 
 select throws_ok(
   $$ insert into auth.users (instance_id, id, aud, role, email)
@@ -85,7 +86,7 @@ select throws_ok(
 insert into private.allowed_emails (email, handle) values ('sin-nombre@plektia.test', 'sin-nombre');
 insert into auth.users (instance_id, id, aud, role, email)
 values ('00000000-0000-0000-0000-000000000000', '33333333-3333-4333-8333-333333333333', 'authenticated', 'authenticated', 'sin-nombre@plektia.test');
-select is((select display_name from public.profiles where id = '33333333-3333-4333-8333-333333333333'),
+select is((select display_name from public.pages where owner_id = '33333333-3333-4333-8333-333333333333'),
   'sin-nombre', 'trigger: sin nombre del proveedor, el nombre visible es el handle');
 
 -- ── Handles ──────────────────────────────────────────────────────────────────
@@ -102,7 +103,7 @@ select throws_ok($$ select 'JuedSay'::public.handle $$, '23514', null, 'handle: 
 select throws_ok(
   $$ insert into private.allowed_emails (email, handle) values ('otra@plektia.test', 'juedsay') $$,
   '23505', null, 'handle: es único');
-select ok((select exists (select 1 from public.profiles where handle = 'JUEDSAY')),
+select ok((select exists (select 1 from public.pages where handle = 'JUEDSAY')),
   'handle: se busca sin importar mayúsculas (/JuedSay encuentra a juedsay)');
 
 -- ── Allowlist privada ────────────────────────────────────────────────────────
@@ -122,42 +123,42 @@ update public.profiles set disabled = true where id = '33333333-3333-4333-8333-3
 
 select pg_temp.as_anon();
 select is((select count(*)::int from public.profiles), 2, 'perfiles: anon ve los activos y no los dados de baja');
-select throws_ok($$ update public.profiles set bio = 'x' $$, '42501', null, 'perfiles: anon no puede editar');
+select throws_ok($$ update public.pages set bio = 'x' $$, '42501', null, 'páginas: anon no puede editar');
 reset role;
 
 select pg_temp.login('22222222-2222-4222-8222-222222222222');
-update public.profiles set bio = 'Hola' where id = '22222222-2222-4222-8222-222222222222';
-update public.profiles set bio = 'hackeado' where id = '11111111-1111-4111-8111-111111111111';
+update public.pages set bio = 'Hola' where owner_id = '22222222-2222-4222-8222-222222222222';
+update public.pages set bio = 'hackeado' where owner_id = '11111111-1111-4111-8111-111111111111';
 reset role;
-select is((select bio from public.profiles where id = '22222222-2222-4222-8222-222222222222'),
-  'Hola', 'perfiles: el dueño edita su bio');
-select is((select bio from public.profiles where id = '11111111-1111-4111-8111-111111111111'),
-  null, 'perfiles: nadie edita el perfil de otro usuario');
+select is((select bio from public.pages where owner_id = '22222222-2222-4222-8222-222222222222'),
+  'Hola', 'páginas: el dueño edita su bio');
+select is((select bio from public.pages where owner_id = '11111111-1111-4111-8111-111111111111'),
+  null, 'páginas: nadie edita la página de otro usuario');
 
 select pg_temp.login('22222222-2222-4222-8222-222222222222');
 select throws_ok($$ update public.profiles set role = 'owner' where id = auth.uid() $$,
   '42501', null, 'perfiles: un miembro no se puede dar rol de owner');
-select throws_ok($$ update public.profiles set handle = 'nuevo' where id = auth.uid() $$,
-  '42501', null, 'perfiles: nadie se cambia el handle');
+select throws_ok($$ update public.pages set handle = 'nuevo' where owner_id = auth.uid() $$,
+  '42501', null, 'páginas: nadie se cambia el handle');
 select throws_ok($$ update public.profiles set disabled = false where id = auth.uid() $$,
   '42501', null, 'perfiles: nadie se reactiva solo');
-select throws_ok($$ insert into public.profiles (id, handle, display_name) values (auth.uid(), 'otro', 'x') $$,
+select throws_ok($$ insert into public.profiles (id) values (auth.uid()) $$,
   '42501', null, 'perfiles: nadie crea perfiles por la API');
 reset role;
 
 -- Un cliente MCP (JWT con client_id) no escribe directo en las tablas.
 select pg_temp.login('22222222-2222-4222-8222-222222222222', 'cliente-mcp');
-update public.profiles set bio = 'desde MCP' where id = '22222222-2222-4222-8222-222222222222';
+update public.pages set bio = 'desde MCP' where owner_id = '22222222-2222-4222-8222-222222222222';
 reset role;
-select is((select bio from public.profiles where id = '22222222-2222-4222-8222-222222222222'),
-  'Hola', 'perfiles: un token de cliente MCP no edita por la API directa');
+select is((select bio from public.pages where owner_id = '22222222-2222-4222-8222-222222222222'),
+  'Hola', 'páginas: un token de cliente MCP no edita por la API directa');
 
 -- Un usuario dado de baja no puede editar.
 select pg_temp.login('33333333-3333-4333-8333-333333333333');
-update public.profiles set bio = 'sigo acá' where id = '33333333-3333-4333-8333-333333333333';
+update public.pages set bio = 'sigo acá' where owner_id = '33333333-3333-4333-8333-333333333333';
 reset role;
-select is((select bio from public.profiles where id = '33333333-3333-4333-8333-333333333333'),
-  null, 'perfiles: un usuario dado de baja no edita su perfil');
+select is((select bio from public.pages where owner_id = '33333333-3333-4333-8333-333333333333'),
+  null, 'páginas: un usuario dado de baja no edita su página');
 
 select * from finish();
 rollback;
