@@ -10,7 +10,7 @@ export interface LinkGroup {
   readonly links: readonly Link[];
 }
 
-/** Los grupos en el orden de la página pública: las secciones y, al final, "Sin sección". */
+/** Los grupos en el orden de la página pública: las secciones y, al final, "Sin sección" (siempre). */
 export function groupLinks({ sections, links }: OwnLinks): LinkGroup[] {
   const byPosition = (first: Link, second: Link) => first.position - second.position;
   const groups: LinkGroup[] = [...sections]
@@ -19,10 +19,12 @@ export function groupLinks({ sections, links }: OwnLinks): LinkGroup[] {
       section,
       links: links.filter((link) => link.sectionId === section.id).sort(byPosition),
     }));
-  const unsectioned = links.filter((link) => link.sectionId === null).sort(byPosition);
-  if (unsectioned.length > 0 || sections.length === 0) {
-    groups.push({ section: null, links: unsectioned });
-  }
+  // "Sin sección" está siempre, aunque esté vacía: es donde se suelta un link
+  // para sacarlo de su sección.
+  groups.push({
+    section: null,
+    links: links.filter((link) => link.sectionId === null).sort(byPosition),
+  });
   return groups;
 }
 

@@ -67,10 +67,12 @@ describe("groupLinks", () => {
     expect(groupLinks({ sections: [], links: [] })).toEqual([{ section: null, links: [] }]);
   });
 
-  it("con secciones y sin links sueltos, no muestra 'Sin sección'", () => {
+  it("con secciones y sin links sueltos, 'Sin sección' sigue (vacía) para poder soltar ahí", () => {
     expect(
-      groupLinks({ sections: [section("redes", 0)], links: [] }).map((group) => group.section?.id),
-    ).toEqual(["redes"]);
+      groupLinks({ sections: [section("redes", 0)], links: [] }).map(
+        (group) => group.section?.id ?? null,
+      ),
+    ).toEqual(["redes", null]);
   });
 });
 

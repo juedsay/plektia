@@ -40,10 +40,12 @@ test.describe("panel: inicio", () => {
       "href",
       /\/juedsay$/,
     );
+    // "Sin sección" está siempre (vacía también): ahí se suelta un link para sacarlo de su sección.
     await expect(page.locator(".editor-group-title")).toHaveText([
       "Redes",
       "Proyectos",
       "Artículos",
+      "Sin sección",
     ]);
     await expect(
       page.getByRole("navigation", { name: "Panel" }).getByRole("link", { name: "Inicio" }),
@@ -399,6 +401,37 @@ test.describe("panel: ordenar links y secciones (tarea 20)", () => {
     expect(await titlesIn(page, "Sección 5")).toContain("Orden A");
     expect(await titlesIn(page, "Sin sección")).toEqual(["Orden B"]);
     expect(await violations(page)).toEqual([]);
+  });
+
+  test("con 'Sin sección' vacía, se puede soltar ahí un link para sacarlo de su sección", async ({
+    page,
+  }) => {
+    await page.goto("/admin");
+    // Primero se lleva el último link suelto a una sección, con el selector.
+    await page.getByRole("button", { name: "Editar Orden B" }).click();
+    await page
+      .getByRole("combobox", { name: "Sección de Orden B" })
+      .selectOption({ label: "Sección 5" });
+    await expect.poll(() => titlesIn(page, "Sin sección")).toEqual([]);
+    await expect(page.getByText(/Sin links sueltos/)).toBeVisible();
+
+    // Después se arrastra de vuelta a "Sin sección", que quedó vacía.
+    const handle = page.getByRole("button", { name: "Mover Orden B" });
+    await expect(handle).toHaveAttribute("aria-roledescription", "draggable");
+    await handle.scrollIntoViewIfNeeded();
+    const target = page.getByText(/Sin links sueltos/);
+    const from = await handle.boundingBox();
+    const to = await target.boundingBox();
+    if (!from || !to) throw new Error("sin posiciones para arrastrar");
+    await page.mouse.move(from.x + from.width / 2, from.y + from.height / 2);
+    await page.mouse.down();
+    await page.mouse.move(to.x + 20, to.y + to.height / 2, { steps: 20 });
+    await page.mouse.move(to.x + 30, to.y + to.height / 2, { steps: 5 });
+    await page.mouse.up();
+
+    await expect.poll(() => titlesIn(page, "Sin sección")).toEqual(["Orden B"]);
+    await page.reload();
+    expect(await titlesIn(page, "Sin sección")).toEqual(["Orden B"]);
   });
 
   test("las secciones se ordenan con el teclado", async ({ page }) => {

@@ -269,7 +269,13 @@ export function Editor({ api, initialContent }: Props) {
     },
   });
 
-  const groups = applyLinkOrder(groupLinks(content), dragOrder);
+  const savedGroups = groupLinks(content);
+  const savedEmptyGroups = new Set(
+    savedGroups
+      .filter((group) => group.links.length === 0)
+      .map((group) => group.section?.id ?? UNSECTIONED_GROUP),
+  );
+  const groups = applyLinkOrder(savedGroups, dragOrder);
   const sortedSections = groups.flatMap((group) => (group.section ? [group.section] : []));
 
   return (
@@ -302,43 +308,54 @@ export function Editor({ api, initialContent }: Props) {
           if (place) void moveLink(id, place.sectionId, place.index);
         }}
       >
-        {groups.map((group, groupIndex) => (
-          <EditorGroup
-            key={group.section?.id ?? UNSECTIONED_GROUP}
-            section={group.section}
-            index={groupIndex}
-          >
-            {group.links.length > 0 ? (
-              <ul className="editor-links">
-                {group.links.map((link, linkIndex) => (
-                  <LinkRow
-                    key={link.id}
-                    link={link}
-                    index={linkIndex}
-                    groupKey={groupKeyOf(link)}
-                    api={api}
-                    onSaved={saved}
-                    onReload={reload}
-                    onDelete={requestDelete}
-                    offerUndo={offerUndo}
-                    announce={announce}
-                    groupSize={group.links.length}
-                    sections={sortedSections}
-                    onMove={(moved, sectionId, index) => {
-                      void moveLink(moved.id, sectionId, index);
-                    }}
-                  />
-                ))}
-              </ul>
-            ) : (
-              <p className="editor-empty">
-                {content.links.length === 0
-                  ? "Todavía no hay links: agregá el primero con la URL de arriba."
-                  : "Sin links en esta sección: podés traer uno arrastrándolo."}
-              </p>
-            )}
-          </EditorGroup>
-        ))}
+        {groups.map((group, groupIndex) => {
+          const groupKey = group.section?.id ?? UNSECTIONED_GROUP;
+          // Vacío según lo guardado (no según el arrastre): así no cambia a mitad
+          // de un arrastre. La key lo incluye porque dnd-kit 0.5.0 no toma un
+          // cambio de prioridad después del primer render: el grupo se vuelve a
+          // montar al vaciarse o llenarse.
+          const isEmpty = savedEmptyGroups.has(groupKey);
+          return (
+            <EditorGroup
+              key={`${groupKey}:${isEmpty ? "vacio" : "con-links"}`}
+              section={group.section}
+              index={groupIndex}
+              isEmpty={isEmpty}
+            >
+              {group.links.length > 0 ? (
+                <ul className="editor-links">
+                  {group.links.map((link, linkIndex) => (
+                    <LinkRow
+                      key={link.id}
+                      link={link}
+                      index={linkIndex}
+                      groupKey={groupKeyOf(link)}
+                      api={api}
+                      onSaved={saved}
+                      onReload={reload}
+                      onDelete={requestDelete}
+                      offerUndo={offerUndo}
+                      announce={announce}
+                      groupSize={group.links.length}
+                      sections={sortedSections}
+                      onMove={(moved, sectionId, index) => {
+                        void moveLink(moved.id, sectionId, index);
+                      }}
+                    />
+                  ))}
+                </ul>
+              ) : (
+                <p className="editor-empty">
+                  {content.links.length === 0
+                    ? "Todavía no hay links: agregá el primero con la URL de arriba."
+                    : group.section
+                      ? "Sin links en esta sección: podés traer uno arrastrándolo."
+                      : "Sin links sueltos: soltá acá un link para sacarlo de su sección."}
+                </p>
+              )}
+            </EditorGroup>
+          );
+        })}
       </DragDropProvider>
 
       <UndoToast offer={offer} onUndo={undoOffer} onExpire={expireOffer} />

@@ -5,34 +5,44 @@ import type { ReactNode } from "react";
 import type { Section } from "@/application/ports/link-repository";
 import { UNSECTIONED_GROUP } from "@/ui/view/editor-state";
 
-/** Los grupos reciben links aunque estén vacíos; los links ganan si se superponen. */
-const GROUP_COLLISION_PRIORITY = 1;
+/**
+ * Prioridad del grupo como destino: baja si tiene links (ganan sus links, para
+ * ordenar entre ellos); alta si está vacío, así gana incluso al link que se
+ * arrastra y se puede soltar ahí.
+ */
+function groupCollisionPriority(isEmpty: boolean): number {
+  return isEmpty ? 10 : 1;
+}
 
 interface Props {
   /** `null` es "Sin sección": no se ordena entre las secciones, pero recibe links. */
   readonly section: Section | null;
   readonly index: number;
+  /** Sin links: es el destino al soltar (ver `groupCollisionPriority`). */
+  readonly isEmpty: boolean;
   readonly children: ReactNode;
 }
 
 /** Un grupo del editor: una sección (que se puede ordenar) o "Sin sección". */
-export function EditorGroup({ section, index, children }: Props) {
+export function EditorGroup({ section, index, isEmpty, children }: Props) {
   return section ? (
-    <SortableSection section={section} index={index}>
+    <SortableSection section={section} index={index} isEmpty={isEmpty}>
       {children}
     </SortableSection>
   ) : (
-    <UnsectionedGroup>{children}</UnsectionedGroup>
+    <UnsectionedGroup isEmpty={isEmpty}>{children}</UnsectionedGroup>
   );
 }
 
 function SortableSection({
   section,
   index,
+  isEmpty,
   children,
 }: {
   readonly section: Section;
   readonly index: number;
+  readonly isEmpty: boolean;
   readonly children: ReactNode;
 }) {
   const { ref, handleRef, isDragging } = useSortable({
@@ -40,7 +50,7 @@ function SortableSection({
     index,
     type: "section",
     accept: ["link", "section"],
-    collisionPriority: GROUP_COLLISION_PRIORITY,
+    collisionPriority: groupCollisionPriority(isEmpty),
     data: { title: section.title, kind: "section" },
   });
   const headingId = `editor-group-${section.id}`;
@@ -70,12 +80,18 @@ function SortableSection({
   );
 }
 
-function UnsectionedGroup({ children }: { readonly children: ReactNode }) {
+function UnsectionedGroup({
+  isEmpty,
+  children,
+}: {
+  readonly isEmpty: boolean;
+  readonly children: ReactNode;
+}) {
   const { ref } = useDroppable({
     id: UNSECTIONED_GROUP,
     type: "group",
     accept: "link",
-    collisionPriority: GROUP_COLLISION_PRIORITY,
+    collisionPriority: groupCollisionPriority(isEmpty),
   });
   const headingId = `editor-group-${UNSECTIONED_GROUP}`;
   return (
