@@ -4,14 +4,35 @@ import Isotype from "@/ui/components/Isotype.astro";
 interface Props {
   /** Las páginas de un solo uso (login) no tienen nada que compartir. */
   share?: boolean;
+  /** En las páginas del sitio, enlaces de texto (se ven desde tablet). */
+  siteNav?: boolean;
 }
-const { share = true } = Astro.props;
+const { share = true, siteNav = false } = Astro.props;
+const SITE_LINKS = [
+  { href: "/plektia", label: "Plektia" },
+  { href: "/contact", label: "Contacto" },
+  { href: "/login", label: "Entrar" },
+] as const;
+const currentPath = Astro.url.pathname;
 ---
 
 <header class="topbar">
   <a class="icon-button" href="/" aria-label="Plektia: inicio">
     <Isotype />
   </a>
+  {siteNav && (
+    <nav class="site-nav" aria-label="Sitio">
+      <ul>
+        {SITE_LINKS.map((link) => (
+          <li>
+            <a href={link.href} aria-current={currentPath === link.href ? "page" : undefined}>
+              {link.label}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+  )}
   {share && (
     <button class="icon-button" type="button" data-share aria-label="Compartir esta página">
       <svg

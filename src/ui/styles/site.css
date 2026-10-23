@@ -1,0 +1,256 @@
+/*
+ * Páginas del sitio (landing, contacto, login, legal y 404) en pantallas
+ * anchas. En el celular son iguales a las páginas de links: una columna de
+ * 30rem. Las páginas de links no cargan este archivo: siempre son de celular.
+ * Mismo mundo (DESIGN.md): plano, filetes, hueso para foco y lima solo en vivo.
+ */
+
+/* Navegación de texto en la barra: aparece cuando hay lugar. */
+.site-nav {
+  display: none;
+}
+
+.site-nav ul {
+  display: flex;
+  gap: var(--space-1);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.site-nav a {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--target-min);
+  padding: 0 var(--space-3);
+  border-radius: var(--radius-md);
+  color: var(--color-fg-muted);
+  font-size: var(--text-sm);
+  text-decoration: none;
+  transition:
+    background-color var(--dur-fast) var(--ease-out),
+    color var(--dur-fast) var(--ease-out);
+}
+
+.site-nav a:hover {
+  background: var(--color-surface);
+  color: var(--color-fg);
+}
+
+.site-nav a[aria-current="page"] {
+  color: var(--color-fg);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 6px;
+}
+
+/* El índice de la política se ve solo con lugar al costado. */
+.legal-index {
+  display: none;
+}
+
+@media (min-width: 48rem) {
+  .page.is-wide {
+    max-width: 72rem;
+    padding-inline: var(--space-8);
+  }
+
+  .is-wide .topbar {
+    gap: var(--space-4);
+    padding-top: var(--space-5);
+  }
+
+  .site-nav {
+    display: block;
+    margin-left: auto;
+  }
+
+  .is-wide .footer {
+    justify-content: flex-start;
+    margin-top: var(--space-10);
+    padding-top: var(--space-4);
+    border-top: 1px solid var(--color-line-soft);
+  }
+}
+
+/* Tablet: la barra y el pie usan el ancho; el contenido, una columna cómoda. */
+@media (min-width: 48rem) and (max-width: 63.99rem) {
+  .is-wide main {
+    max-width: 36rem;
+    margin-inline: auto;
+  }
+}
+
+@media (min-width: 64rem) {
+  /*
+   * Dos columnas: a la izquierda quién habla y qué ofrece; a la derecha, la
+   * acción (la patchera, el formulario, los botones de entrada).
+   */
+  .split {
+    display: grid;
+    grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+    gap: var(--space-10) 6rem;
+    align-items: start;
+    padding-block: 5rem 2rem;
+  }
+
+  .split > .identity {
+    position: sticky;
+    top: var(--space-10);
+    justify-items: start;
+    padding: 0;
+    text-align: start;
+  }
+
+  .split .identity h1 {
+    font-size: 3rem;
+    letter-spacing: -0.02em;
+    text-wrap: balance;
+  }
+
+  .split .bio {
+    max-width: 38ch;
+    font-size: var(--text-lg);
+  }
+
+  /* La acción arranca alineada con el título, sin el margen de celular. */
+  .split .contact-form,
+  .split .contact-done,
+  .split .login {
+    margin-top: 0;
+  }
+
+  .split .contact-form {
+    max-width: 32rem;
+  }
+
+  /* Login: tarea corta, columnas más angostas y centradas en el alto. */
+  .split-compact {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 24rem);
+    max-width: 56rem;
+    margin-inline: auto;
+    align-items: center;
+    min-height: calc(100dvh - 14rem);
+    padding-block: 0;
+  }
+
+  /* Landing: la marca a la izquierda, la patchera "Empezá acá" a la derecha. */
+  .split-landing {
+    grid-template-areas:
+      "intro patchbay"
+      "invite patchbay";
+    grid-template-rows: auto auto;
+    align-content: center;
+    min-height: calc(100dvh - 12rem);
+    padding-block: var(--space-10);
+  }
+
+  .split-landing > .identity {
+    position: static;
+    grid-area: intro;
+  }
+
+  .split-landing > .patchbay {
+    grid-area: patchbay;
+    width: 100%;
+    max-width: 30rem;
+    margin-top: 0;
+    justify-self: end;
+  }
+
+  .split-landing .avatar {
+    margin-bottom: var(--space-5);
+  }
+
+  .split-landing.split .identity h1 {
+    font-size: 5rem;
+    letter-spacing: -0.03em;
+    line-height: 1;
+  }
+
+  .split-landing .handle {
+    font-family: var(--font-display);
+    font-size: var(--text-section);
+    color: var(--color-fg);
+  }
+
+  .split-landing > .invite {
+    grid-area: invite;
+    margin: 0;
+    align-self: start;
+  }
+
+  /* Legal: índice fijo al costado y texto a medida de lectura. */
+  .legal {
+    display: grid;
+    /* 13 + 4 + 42 = 59rem: entra en los 60rem que quedan a 1024 px. */
+    grid-template-columns: 13rem minmax(0, 42rem);
+    gap: 4rem;
+    justify-content: center;
+    padding-top: var(--space-10);
+  }
+
+  .legal-index {
+    position: sticky;
+    top: var(--space-10);
+    display: block;
+    align-self: start;
+    padding-top: var(--space-1);
+  }
+
+  .legal-index-title {
+    margin: 0 0 var(--space-3);
+    color: var(--color-fg-muted);
+    font-size: var(--text-xs);
+  }
+
+  .legal-index ol {
+    display: grid;
+    margin: 0;
+    padding: 0;
+    border-left: 1px solid var(--color-line);
+    list-style: none;
+  }
+
+  .legal-index a {
+    display: block;
+    padding: var(--space-2) var(--space-4);
+    color: var(--color-fg-muted);
+    font-size: var(--text-sm);
+    line-height: 1.35;
+    text-decoration: none;
+    transition: color var(--dur-fast) var(--ease-out);
+  }
+
+  .legal-index a:hover {
+    color: var(--color-fg);
+  }
+
+  .legal .prose {
+    margin-top: 0;
+  }
+
+  .legal .prose header {
+    text-align: start;
+  }
+
+  .legal .prose h1 {
+    font-size: 2.5rem;
+    letter-spacing: -0.02em;
+  }
+
+  .legal .prose h2 {
+    scroll-margin-top: var(--space-10);
+  }
+
+  /* 404: más aire y el mensaje a la escala de la pantalla. */
+  .is-wide .not-found {
+    min-height: calc(100dvh - 14rem);
+    align-content: center;
+  }
+
+  .is-wide .not-found h1 {
+    font-size: 3rem;
+    letter-spacing: -0.02em;
+  }
+}

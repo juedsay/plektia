@@ -21,6 +21,11 @@ interface Props {
   share?: boolean;
   /** Tarjeta de la ventana de compartir; sin ella, se muestra la marca Plektia. */
   sharePreview?: { name: string; brand?: boolean };
+  /**
+   * `column`: una columna de celular en cualquier pantalla (páginas de links).
+   * `wide`: las páginas del sitio, que en escritorio usan el ancho (site.css).
+   */
+  width?: "column" | "wide";
 }
 const {
   title,
@@ -31,6 +36,7 @@ const {
   structuredData,
   share = true,
   sharePreview,
+  width = "column",
 } = Astro.props;
 // Se comparte la URL canónica (sin query strings); si no hay, la de la página.
 const shareUrl = canonical?.href ?? new URL(Astro.url.pathname, Astro.url).href;
@@ -52,8 +58,8 @@ const shareUrl = canonical?.href ?? new URL(Astro.url.pathname, Astro.url).href;
     />
   </head>
   <body data-theme={theme}>
-    <div class="page">
-      <Topbar share={share} />
+    <div class:list={["page", { "is-wide": width === "wide" }]}>
+      <Topbar share={share} siteNav={width === "wide"} />
       <main>
         <slot />
       </main>
