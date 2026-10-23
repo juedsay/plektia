@@ -239,15 +239,16 @@
 
 ## F5 · Admin panel → ENTREGA 2
 
-- [ ] **Tarea 17c: Una cuenta, varias páginas** · M · Deps: 13
+- [x] **Tarea 17c: Una cuenta, varias páginas** · M · Deps: 13
   - Decisión del 2026-10-22: **una cuenta con varias páginas** (como Linktree), con un selector en el panel. Se descartó la variante de Instagram (varias cuentas con emails distintos y cambio de sesión), por complejidad y superficie de ataque.
   - Se separa "usuario" de "página" en la base: `pages` (handle, nombre, bio, avatar, tema, `show_handle`) pasa a ser la dueña de secciones y links; `profiles` queda para la persona (rol, alta y baja). Hay que migrar los datos existentes y actualizar la vista pública, RLS, RPCs, casos de uso, invitaciones y el `user:allow`.
   - Va antes de construir el panel, para no rehacerlo. La página pública sigue en `/{handle}`.
   - **Decidido (2026-10-22):** hasta **3 páginas por cuenta**, y el panel abre **la última página usada**. Los managers con permisos delegados quedan para la v2. Spec: [SPEC-pages.md](../SPEC-pages.md).
   - **Entregas:**
-    1. Spec (este PR).
-    2. Migración + pgTAP + vista pública + tipos.
-    3. Repositorios y casos de uso de páginas; el de links pasa a trabajar por página; seed con una segunda página.
+    1. Spec (#36).
+    2. Migración + pgTAP + vista pública + tipos; el repositorio de links pasa a trabajar por página (#37).
+    3. Repositorio y casos de uso de páginas (`createPage`, `listPages`, `selectPage`); seed con una segunda página (`/juedsay-qa`).
+  - **Para la tarea 18:** el panel resuelve la página actual con `listPages` y arma `SupabaseLinkRepository(client, pageId)` con ella; elegir otra página llama a `selectPage`.
   - **Aceptación:**
     - Una cuenta crea una segunda página con otro handle y cada una muestra solo sus links.
     - RLS: nadie edita páginas que no son suyas.
