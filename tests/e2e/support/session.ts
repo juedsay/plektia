@@ -1,6 +1,7 @@
 import { execFileSync } from "node:child_process";
 import { join } from "node:path";
 
+import type { BrowserContext } from "@playwright/test";
 import { createClient } from "@supabase/supabase-js";
 
 import { createSupabaseServerClient } from "../../../src/infrastructure/supabase/server-client";
@@ -30,21 +31,30 @@ function localSupabase(): LocalSupabase {
   return { url: API_URL, publishableKey: PUBLISHABLE_KEY, secretKey: SECRET_KEY };
 }
 
-/** Header `Cookie` con una sesión válida del usuario del seed. */
-export async function sessionCookieFor(email: string): Promise<string> {
-  const supabase = localSupabase();
+/** Sesión del usuario por magic link (API admin de Supabase local). */
+async function verifiedSession(supabase: LocalSupabase, email: string) {
   const admin = createClient(supabase.url, supabase.secretKey, { auth: { persistSession: false } });
-  const link = await admin.auth.admin.generateLink({ type: "magiclink", email });
-  if (link.error) throw link.error;
-
   const anon = createClient(supabase.url, supabase.publishableKey, {
     auth: { persistSession: false },
   });
-  const verified = await anon.auth.verifyOtp({
-    token_hash: link.data.properties.hashed_token,
-    type: "magiclink",
-  });
-  if (verified.error || !verified.data.session) throw verified.error ?? new Error("sin sesión");
+  // Generar un link invalida el anterior del mismo usuario: si otra prueba en
+  // paralelo pidió uno en el medio, se reintenta con uno nuevo.
+  for (let attempt = 1; ; attempt++) {
+    const link = await admin.auth.admin.generateLink({ type: "magiclink", email });
+    if (link.error) throw link.error;
+    const verified = await anon.auth.verifyOtp({
+      token_hash: link.data.properties.hashed_token,
+      type: "magiclink",
+    });
+    if (verified.data.session) return verified.data.session;
+    if (attempt === 5) throw verified.error ?? new Error("sin sesión");
+  }
+}
+
+/** Header `Cookie` con una sesión válida del usuario del seed. */
+export async function sessionCookieFor(email: string): Promise<string> {
+  const supabase = localSupabase();
+  const session = await verifiedSession(supabase, email);
 
   // Las mismas cookies que escribe la app al terminar el login.
   const jar = new Map<string, string>();
@@ -53,7 +63,34 @@ export async function sessionCookieFor(email: string): Promise<string> {
     null,
     { set: (name, value) => jar.set(name, value) },
   );
-  const { error } = await client.auth.setSession(verified.data.session);
+  const { error } = await client.auth.setSession(session);
   if (error) throw error;
   return [...jar].map(([name, value]) => `${name}=${value}`).join("; ");
+}
+
+/** Inicia sesión en el navegador de la prueba con un usuario del seed. */
+export async function signIn(context: BrowserContext, baseURL: string, email: string) {
+  const cookie = await sessionCookieFor(email);
+  await context.addCookies(
+    cookie.split("; ").map((pair) => {
+      const separator = pair.indexOf("=");
+      return {
+        name: pair.slice(0, separator),
+        value: pair.slice(separator + 1),
+        url: baseURL,
+        httpOnly: true,
+        sameSite: "Lax" as const,
+      };
+    }),
+  );
+}
+
+/** Deja una cuenta del seed con su única página (la de su mismo id) y sin última elegida. */
+export async function resetPagesOf(ownerId: string) {
+  const supabase = localSupabase();
+  const admin = createClient(supabase.url, supabase.secretKey, { auth: { persistSession: false } });
+  const removed = await admin.from("pages").delete().eq("owner_id", ownerId).neq("id", ownerId);
+  if (removed.error) throw removed.error;
+  const reset = await admin.from("profiles").update({ last_page_id: null }).eq("id", ownerId);
+  if (reset.error) throw reset.error;
 }

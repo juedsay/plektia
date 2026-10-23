@@ -1,0 +1,105 @@
+---
+// Alta de una página (SPEC-pages): handle y nombre. Al crearla, pasa a ser la
+// página con la que se trabaja.
+import { actions } from "astro:actions";
+
+import { PAGE_LIMIT } from "@/domain/page";
+import { loadWorkspace } from "@/ui/admin/workspace";
+import Alert from "@/ui/components/Alert.astro";
+import AdminLayout from "@/ui/layouts/AdminLayout.astro";
+
+const switched = Astro.getActionResult(actions.pages.select);
+if (switched?.data?.ok) return Astro.redirect("/admin", 303);
+const created = Astro.getActionResult(actions.pages.create);
+if (created?.data?.ok) return Astro.redirect("/admin", 303);
+
+const { pages, currentPage } = await loadWorkspace(Astro);
+const atLimit = pages.length >= PAGE_LIMIT;
+const failure = created?.data && !created.data.ok ? created.data : null;
+const fields = failure?.fields ?? {};
+const values = failure?.values ?? {};
+const message = failure
+  ? failure.message
+  : created?.error
+    ? "No pudimos crear la página. Probá de nuevo."
+    : null;
+const origin = Astro.url.host;
+---
+
+<AdminLayout title="Nueva página" section="new-page" pages={pages} currentPage={currentPage}>
+  <header class="admin-heading">
+    <h1>Nueva página</h1>
+    <p class="admin-bio">
+      Otra página con su propia dirección, su nombre y sus links. Podés tener hasta {PAGE_LIMIT}.
+    </p>
+  </header>
+
+  {atLimit ? (
+    <Alert variant="error" message={`Llegaste al máximo de ${String(PAGE_LIMIT)} páginas.`}>
+      <div class="alert-actions">
+        <a class="button is-quiet" href="/admin">
+          Volver al inicio
+        </a>
+      </div>
+    </Alert>
+  ) : (
+    <form class="admin-form" method="post" action={actions.pages.create} novalidate>
+      {message && <Alert variant="error" message={message} />}
+      <div class="field">
+        <label for="handle">Dirección</label>
+        <div class="handle-input">
+          <span class="handle-prefix" aria-hidden="true">
+            <span class="handle-host">{origin}</span>/
+          </span>
+          <input
+            id="handle"
+            name="handle"
+            required
+            minlength="3"
+            maxlength="30"
+            autocomplete="off"
+            autocapitalize="none"
+            spellcheck="false"
+            value={values.handle ?? ""}
+            aria-describedby={fields.handle ? "handle-error handle-hint" : "handle-hint"}
+            aria-invalid={fields.handle ? "true" : undefined}
+          />
+        </div>
+        <p class="field-hint" id="handle-hint">
+          De 3 a 30 caracteres: minúsculas, números y guiones. No se puede cambiar después.
+        </p>
+        {fields.handle && (
+          <p class="field-error" id="handle-error">
+            {fields.handle}
+          </p>
+        )}
+      </div>
+      <div class="field">
+        <label for="displayName">Nombre</label>
+        <input
+          id="displayName"
+          name="displayName"
+          required
+          maxlength="60"
+          autocomplete="off"
+          value={values.displayName ?? ""}
+          aria-describedby={fields.displayName ? "displayName-error" : undefined}
+          aria-invalid={fields.displayName ? "true" : undefined}
+        />
+        {fields.displayName && (
+          <p class="field-error" id="displayName-error">
+            {fields.displayName}
+          </p>
+        )}
+      </div>
+      <div class="admin-form-actions">
+        <button type="submit" class="button">
+          Crear página
+        </button>
+        <a class="button is-quiet" href="/admin">
+          Cancelar
+        </a>
+      </div>
+    </form>
+  )}
+</AdminLayout>

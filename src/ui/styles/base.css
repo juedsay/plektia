@@ -1,0 +1,182 @@
+/*
+ * Base compartida por la página pública y el panel: reset, foco, selección,
+ * campos, avisos y botones. Solo lee tokens (tokens.css).
+ */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scrollbar-color: var(--color-line) var(--color-bg);
+}
+
+body {
+  margin: 0;
+  background: var(--color-bg);
+  color: var(--color-fg);
+  font-family: var(--font-body);
+  font-size: var(--text-md);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background: var(--color-selection-bg);
+  color: var(--color-selection-fg);
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 4px;
+  border-radius: var(--radius-sm);
+}
+
+a {
+  color: inherit;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.field {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.field label {
+  font-family: var(--font-display);
+  font-weight: 500;
+}
+
+.field input,
+.field textarea {
+  width: 100%;
+  min-height: var(--target-min);
+  padding: var(--space-3);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  color: var(--color-fg);
+  font: inherit;
+}
+
+.field textarea {
+  resize: vertical;
+}
+
+.field input:focus-visible,
+.field textarea:focus-visible {
+  border-color: var(--color-fg);
+}
+
+.field [aria-invalid="true"] {
+  border-color: var(--color-fg);
+  border-width: 2px;
+}
+
+.field-error,
+.field-hint,
+.form-help {
+  margin: 0;
+  font-size: var(--text-sm);
+}
+
+.field-error {
+  color: var(--color-fg);
+}
+
+.field-error::before {
+  content: "⚠ ";
+}
+
+.field-hint,
+.form-help {
+  color: var(--color-fg-muted);
+}
+
+/* Avisos: la lima es solo del en vivo (DESIGN.md), así que éxito y error se
+   distinguen por ícono y trazo, no por color. */
+.alert {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: var(--space-3);
+  align-items: start;
+  padding: var(--space-4);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+}
+
+.alert[hidden] {
+  display: none;
+}
+
+.alert.is-error {
+  border: 2px solid var(--color-fg);
+}
+
+.alert svg {
+  width: 22px;
+  height: 22px;
+  margin-top: 1px;
+}
+
+.alert-body {
+  display: grid;
+  gap: var(--space-4);
+}
+
+.alert-text {
+  margin: 0;
+}
+
+.alert-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+}
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--target-min);
+  padding: var(--space-2) var(--space-5);
+  border: 1px solid var(--color-fg);
+  border-radius: var(--radius-md);
+  background: var(--color-fg);
+  color: var(--color-bg);
+  font-family: var(--font-display);
+  font-weight: 500;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.button.is-quiet {
+  background: transparent;
+  color: var(--color-fg);
+}
+
+.button:disabled {
+  cursor: progress;
+  opacity: 0.7;
+}
+
+.submit {
+  justify-self: start;
+}

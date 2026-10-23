@@ -255,14 +255,22 @@
     - La migración conserva tu página actual sin cambios visibles.
 
 - [ ] **Tarea 18: Estructura del panel y perfil** · M · Deps: 9, 12, 17c
-  - Layout y navegación de `/admin` (diseño con impeccable en modo *operate*), y `/admin/perfil` (nombre, bio, tema y mostrar u ocultar el `@handle`) con Actions.
+  - Layout y navegación de `/admin` (diseño con impeccable en modo *operate*), y `/admin/page` (nombre, bio, tema y mostrar u ocultar el `@handle` de la página elegida) con Actions.
   - Incluye el selector de página (tarea 17c).
-  - Evaluar Tailwind (skill `tailwind-css-patterns`) para el panel: tiene muchas pantallas y formularios. La página pública sigue en CSS plano con tokens, porque pesa 3,4 KB y está en 100 en Lighthouse.
+  - **Decidido (2026-10-22):**
+    - La pantalla se llama `/admin/page` ("Página" en la navegación), porque desde la 17c el nombre, la bio y el tema son de cada página. Ruta en inglés, como `/contact`.
+    - Estilos: CSS plano con los tokens de `tokens.css`, igual que la página pública. **Tailwind se integra más adelante** para optimizar y agilizar el panel; queda anotado en la hoja de ruta.
+  - **Entregas:** (a) layout, navegación y selector de página; (b) `/admin/page` con su Action y purga de caché.
   - **Aceptación:**
     - Editar el nombre se refleja en la página pública.
     - E2E de CSRF y axe AA.
   - **Verificar:** `pnpm test:e2e`.
-  - **Archivos:** `src/ui/layouts/AdminLayout.astro`, `src/pages/admin/perfil.astro`, `src/actions/profile.ts`, `src/application/profile/update-profile.ts`.
+  - **Archivos:** `src/ui/layouts/AdminLayout.astro`, `src/pages/admin/page.astro`, `src/actions/pages.ts`, `src/application/pages/update-page.ts`.
+
+- [ ] **Tarea 18c: Vista de escritorio para las páginas del sitio** · S · Deps: 16
+  - Pedido del 2026-10-23: la landing (`/`), contacto, login, `/legal/*` y la 404 se adaptan a escritorio (más ancho, composición de dos columnas donde sirva) además del celular.
+  - Las páginas de links (`/{handle}` y `/plektia`) siguen siendo **solo vista mobile**: una columna de 30rem centrada en cualquier pantalla.
+  - **Aceptación:** capturas a 390 y 1440 px de cada página; `responsive.spec.ts` sin desbordes; axe AAA y Lighthouse sin cambios en las páginas de links.
 
 - [ ] **Tarea 19: Editor, edición en el lugar con guardado instantáneo** · M · Deps: 18
   - Isla `Editor`: listar, crear, editar y ocultar links, y "Deshacer" de 6 s. Borrado diferido con `keepalive`. Aviso de conflicto por `version`.

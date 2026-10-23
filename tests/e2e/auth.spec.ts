@@ -93,7 +93,7 @@ test.describe("con sesión", () => {
   test("entra al panel", async ({ request }) => {
     const response = await request.get("/admin", { headers: { cookie }, maxRedirects: 0 });
     expect(response.status()).toBe(200);
-    expect(await response.text()).toContain("Sesión iniciada");
+    expect(await response.text()).toContain("Cerrar sesión");
     expect(response.headers()["cache-control"]).toBe("private, no-store");
   });
 

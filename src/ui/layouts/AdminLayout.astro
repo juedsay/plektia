@@ -1,0 +1,119 @@
+---
+// Marco del panel (SPEC-admin-panel): en escritorio, una columna lateral con la
+// marca, el selector de página, la navegación y la sesión; en el celular, una
+// barra arriba con el selector y la navegación fija abajo, al alcance del pulgar.
+import { Font } from "astro:assets";
+
+import "@/ui/styles/tokens.css";
+import "@/ui/styles/base.css";
+import "@/ui/styles/admin.css";
+
+import type { Page } from "@/application/ports/page-repository";
+import Alert from "@/ui/components/Alert.astro";
+import Isotype from "@/ui/components/Isotype.astro";
+import PageSwitcher from "@/ui/components/admin/PageSwitcher.astro";
+
+type Section = "home" | "new-page";
+
+interface Props {
+  title: string;
+  section: Section;
+  pages: readonly Page[];
+  currentPage: Page | null;
+  /** Error de una acción del marco (por ejemplo, al cambiar de página). */
+  notice?: string | null;
+}
+const { title, section, pages, currentPage, notice = null } = Astro.props;
+const publicUrl = currentPage ? new URL(`/${currentPage.handle}`, Astro.url).href : null;
+---
+
+<!doctype html>
+<html lang="es-AR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#121315" />
+    <meta name="robots" content="noindex" />
+    <Font cssVariable="--font-brand" />
+    <title>{title} · Panel · Plektia</title>
+  </head>
+  <body data-theme="tecnico" class="admin">
+    <a class="skip-link" href="#contenido">
+      Saltar al contenido
+    </a>
+    <div class="admin-shell">
+      <header class="admin-bar">
+        <a class="admin-brand" href="/admin">
+          <Isotype size={28} />
+          <span class="admin-wordmark">plektia</span>
+          <span class="visually-hidden">: inicio del panel</span>
+        </a>
+        <PageSwitcher pages={pages} currentPage={currentPage} />
+        <nav class="admin-nav" aria-label="Panel">
+          <ul>
+            <li>
+              <a href="/admin" aria-current={section === "home" ? "page" : undefined}>
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <path d="M4 10.5 12 4l8 6.5V19a1 1 0 0 1-1 1h-4.5v-6h-5v6H5a1 1 0 0 1-1-1z"></path>
+                </svg>
+                <span>Inicio</span>
+              </a>
+            </li>
+            {publicUrl && (
+              <li>
+                <a href={publicUrl} target="_blank" rel="noopener">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.8"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                  >
+                    <path d="M7 17 17 7M9 7h8v8" />
+                  </svg>
+                  <span>
+                    Ver página<span class="visually-hidden"> (se abre en otra pestaña)</span>
+                  </span>
+                </a>
+              </li>
+            )}
+          </ul>
+        </nav>
+        <form class="admin-session" method="post" action="/auth/logout">
+          <button type="submit" class="admin-session-button">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <path d="M15 4h3a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-3M10 17l5-5-5-5M15 12H4"></path>
+            </svg>
+            <span class="admin-session-label">Cerrar sesión</span>
+          </button>
+        </form>
+      </header>
+
+      <main class="admin-main" id="contenido" tabindex="-1">
+        {notice && <Alert variant="error" message={notice} />}
+        <slot />
+      </main>
+    </div>
+    <script>
+      import "@/ui/scripts/admin";
+    </script>
+  </body>
+</html>
