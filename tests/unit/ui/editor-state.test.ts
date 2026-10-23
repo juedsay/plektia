@@ -5,6 +5,8 @@ import {
   addLink,
   changedFields,
   groupLinks,
+  inverseChanges,
+  removeLink,
   replaceLink,
   suggestTitle,
 } from "@/ui/view/editor-state";
@@ -111,5 +113,29 @@ describe("changedFields", () => {
         { title: "Canal nuevo", url: "https://plektia.app", description: "" },
       ),
     ).toEqual({ title: "Canal nuevo", description: null });
+  });
+});
+
+describe("removeLink", () => {
+  it("saca solo el link con ese id", () => {
+    const content = { sections: [], links: [link("a", null, 0), link("b", null, 1)] };
+    expect(removeLink(content, "a").links.map((item) => item.id)).toEqual(["b"]);
+  });
+});
+
+describe("inverseChanges", () => {
+  const before = link("a", null, 0, { title: "Canal", description: "vieja", visible: true });
+
+  it("devuelve los valores anteriores de lo que cambió", () => {
+    const after = { ...before, title: "Canal nuevo", description: null, version: 2 };
+    expect(inverseChanges(before, after)).toEqual({ title: "Canal", description: "vieja" });
+  });
+
+  it("deshace mostrar u ocultar", () => {
+    expect(inverseChanges(before, { ...before, visible: false })).toEqual({ visible: true });
+  });
+
+  it("sin cambios, no hay nada que deshacer", () => {
+    expect(inverseChanges(before, { ...before, version: 2 })).toEqual({});
   });
 });

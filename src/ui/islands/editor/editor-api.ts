@@ -15,6 +15,8 @@ export interface LinkChanges {
   readonly title?: string;
   readonly url?: string;
   readonly description?: string | null;
+  /** Solo para "Deshacer" un mostrar u ocultar. */
+  readonly visible?: boolean;
 }
 
 export interface EditorApi {
@@ -25,6 +27,9 @@ export interface EditorApi {
     target: { id: string; version: number },
     visible: boolean,
   ): Promise<FormResult<Link>>;
+  delete(target: { id: string; version: number }): Promise<FormResult<void>>;
+  /** Borra al cerrar la pestaña: el pedido sigue aunque la página se descargue. */
+  deleteOnExit(target: { id: string; version: number }): void;
 }
 
 /** Un resultado que salió mal: el mensaje general y el de cada campo. */

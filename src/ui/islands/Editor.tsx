@@ -23,6 +23,16 @@ function resultOf(response: {
   return response.data ?? UNREACHABLE;
 }
 
+/** Un borrado que tiene que salir aunque la pestaña se esté cerrando. */
+function deleteWithKeepalive(pageId: string, target: { id: string; version: number }) {
+  void fetch("/_actions/links.delete", {
+    method: "POST",
+    keepalive: true,
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ pageId, ...target }),
+  }).catch(() => undefined);
+}
+
 function actionsApi(pageId: string): EditorApi {
   return {
     list: async () => (await actions.links.list({ pageId })).data ?? null,
@@ -31,6 +41,11 @@ function actionsApi(pageId: string): EditorApi {
       resultOf(await actions.links.update({ pageId, ...target, changes })),
     setVisibility: async (target, visible) =>
       resultOf(await actions.links.setVisibility({ pageId, ...target, visible })),
+    delete: async (target) =>
+      (await actions.links.delete({ pageId, ...target })).data ?? UNREACHABLE,
+    deleteOnExit: (target) => {
+      deleteWithKeepalive(pageId, target);
+    },
   };
 }
 

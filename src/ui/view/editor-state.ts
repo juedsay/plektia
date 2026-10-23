@@ -68,3 +68,28 @@ export function changedFields(
   if (description !== (link.description ?? "")) changes.description = description || null;
   return changes;
 }
+
+export function removeLink(content: OwnLinks, id: string): OwnLinks {
+  return { ...content, links: content.links.filter((link) => link.id !== id) };
+}
+
+/**
+ * Lo que hay que mandar para volver un link a como estaba antes de un cambio
+ * ("Deshacer"): solo los campos que cambiaron, con sus valores anteriores.
+ */
+export function inverseChanges(
+  before: Link,
+  after: Link,
+): Partial<{ title: string; url: string; description: string | null; visible: boolean }> {
+  const changes: Partial<{
+    title: string;
+    url: string;
+    description: string | null;
+    visible: boolean;
+  }> = {};
+  if (before.title !== after.title) changes.title = before.title;
+  if (before.url !== after.url) changes.url = before.url;
+  if (before.description !== after.description) changes.description = before.description;
+  if (before.visible !== after.visible) changes.visible = before.visible;
+  return changes;
+}

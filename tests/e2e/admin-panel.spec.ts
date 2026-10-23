@@ -196,7 +196,7 @@ test.describe("panel: presentación de la página (/admin/page)", () => {
 
 test.describe("panel: editor de links", () => {
   // Links de prueba en la página del miembro; se borran al terminar.
-  const TITLES = ["Canal de prueba", "Canal de prueba editado"];
+  const TITLES = ["Canal de prueba", "Canal de prueba editado", "Para borrar", "Para salir"];
 
   test.beforeAll(async () => {
     await resetPagesOf(MEMBER_ID);
@@ -245,6 +245,61 @@ test.describe("panel: editor de links", () => {
     await expect(
       page.getByRole("button", { name: "Mostrar Canal de prueba editado" }),
     ).toBeVisible();
+  });
+
+  /** Agrega un link desde el editor y espera que quede guardado. */
+  async function addLinkTitled(page: Page, title: string) {
+    const add = page.locator("form.add-link");
+    await add
+      .getByLabel("URL")
+      .fill(`https://plektia.app/${title.toLowerCase().replace(/ /g, "-")}`);
+    await add.getByLabel("Título").fill(title);
+    await add.getByRole("button", { name: "Agregar link" }).click();
+    await expect(page.getByRole("button", { name: `Editar ${title}` })).toBeVisible();
+  }
+
+  test("borrar ofrece deshacer durante 6 s; deshacer lo deja como estaba", async ({ page }) => {
+    await page.goto("/admin");
+    await addLinkTitled(page, "Para borrar");
+
+    await page.getByRole("button", { name: "Editar Para borrar" }).click();
+    await page.getByRole("button", { name: "Borrar link Para borrar" }).click();
+    await expect(page.getByRole("button", { name: "Editar Para borrar" })).toHaveCount(0);
+    await expect(page.locator(".undo-toast")).toContainText("Para borrar borrado");
+    expect(await violations(page)).toEqual([]);
+
+    await page.getByRole("button", { name: "Deshacer" }).click();
+    await expect(page.getByRole("button", { name: "Editar Para borrar" })).toBeVisible();
+    await page.waitForTimeout(6500);
+    await page.reload();
+    await expect(page.getByRole("button", { name: "Editar Para borrar" })).toBeVisible();
+  });
+
+  test("pasados los 6 s se borra de verdad y deja de verse en la página pública", async ({
+    page,
+  }) => {
+    await page.goto("/admin");
+    await page.getByRole("button", { name: "Editar Para borrar" }).click();
+    await page.getByRole("button", { name: "Borrar link Para borrar" }).click();
+    await expect(page.locator(".undo-toast")).toBeHidden({ timeout: 10_000 });
+
+    await expect
+      .poll(async () => (await page.request.get("/miembro-demo")).text())
+      .not.toContain("Para borrar");
+    await page.reload();
+    await expect(page.getByRole("button", { name: "Editar Para borrar" })).toHaveCount(0);
+  });
+
+  test("si se sale de la página durante los 6 s, el borrado se envía igual", async ({ page }) => {
+    await page.goto("/admin");
+    await addLinkTitled(page, "Para salir");
+    await page.getByRole("button", { name: "Editar Para salir" }).click();
+    await page.getByRole("button", { name: "Borrar link Para salir" }).click();
+    await page.goto("/admin/page");
+
+    await expect
+      .poll(async () => (await page.request.get("/miembro-demo")).text())
+      .not.toContain("Para salir");
   });
 
   test("una URL insegura se rechaza junto al campo", async ({ page }) => {
