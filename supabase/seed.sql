@@ -22,34 +22,40 @@ values
    'member@plektia.test', now(), '{"provider":"google","providers":["google"]}', '{"full_name":"Miembro Demo"}',
    '', '', '', '', '', '', '', '', now(), now());
 
+-- La primera página de cada cuenta del seed toma el id de su dueño, como las
+-- páginas migradas en producción (SPEC-pages): los datos de abajo los usan.
+update public.pages set id = owner_id
+where owner_id in ('11111111-1111-4111-8111-111111111111', '22222222-2222-4222-8222-222222222222');
+
 -- Página de ejemplo del owner (como el prototipo de public-page). Datos de
 -- desarrollo: en producción cada uno carga los suyos desde el panel.
-update public.profiles set bio = 'Streams, código y diseño' where handle = 'juedsay';
+update public.pages set bio = 'Streams, código y diseño' where handle = 'juedsay';
 
-insert into public.sections (id, owner_id, title) values
-  ('5e000000-0000-4000-8000-000000000001', '11111111-1111-4111-8111-111111111111', 'Redes'),
-  ('5e000000-0000-4000-8000-000000000002', '11111111-1111-4111-8111-111111111111', 'Proyectos'),
-  ('5e000000-0000-4000-8000-000000000003', '11111111-1111-4111-8111-111111111111', 'Artículos');
+insert into public.sections (id, owner_id, page_id, title) values
+  ('5e000000-0000-4000-8000-000000000001', '11111111-1111-4111-8111-111111111111', '11111111-1111-4111-8111-111111111111', 'Redes'),
+  ('5e000000-0000-4000-8000-000000000002', '11111111-1111-4111-8111-111111111111', '11111111-1111-4111-8111-111111111111', 'Proyectos'),
+  ('5e000000-0000-4000-8000-000000000003', '11111111-1111-4111-8111-111111111111', '11111111-1111-4111-8111-111111111111', 'Artículos');
 
-insert into public.links (owner_id, section_id, title, url, description, provider, provider_handle) values
-  ('11111111-1111-4111-8111-111111111111', '5e000000-0000-4000-8000-000000000001', 'Twitch', 'https://www.twitch.tv/juedsay', 'Streams de código en vivo', 'twitch', 'juedsay'),
-  ('11111111-1111-4111-8111-111111111111', '5e000000-0000-4000-8000-000000000001', 'YouTube', 'https://www.youtube.com/@juedsay', null, 'youtube', '@juedsay'),
-  ('11111111-1111-4111-8111-111111111111', '5e000000-0000-4000-8000-000000000001', 'Instagram', 'https://www.instagram.com/juedsay', null, 'instagram', null),
-  ('11111111-1111-4111-8111-111111111111', '5e000000-0000-4000-8000-000000000002', 'Plektia', 'https://app.plektia.workers.dev/', 'Esta página: links, en vivo y MCP', 'generic', null),
-  ('11111111-1111-4111-8111-111111111111', '5e000000-0000-4000-8000-000000000002', 'GitHub', 'https://github.com/juedsay', null, 'github', null),
-  ('11111111-1111-4111-8111-111111111111', '5e000000-0000-4000-8000-000000000003', 'Cómo testeo RLS con pgTAP', 'https://github.com/juedsay/plektia/tree/main/supabase/tests', null, 'generic', null);
+insert into public.links (owner_id, page_id, section_id, title, url, description, provider, provider_handle) values
+  ('11111111-1111-4111-8111-111111111111', '11111111-1111-4111-8111-111111111111', '5e000000-0000-4000-8000-000000000001', 'Twitch', 'https://www.twitch.tv/juedsay', 'Streams de código en vivo', 'twitch', 'juedsay'),
+  ('11111111-1111-4111-8111-111111111111', '11111111-1111-4111-8111-111111111111', '5e000000-0000-4000-8000-000000000001', 'YouTube', 'https://www.youtube.com/@juedsay', null, 'youtube', '@juedsay'),
+  ('11111111-1111-4111-8111-111111111111', '11111111-1111-4111-8111-111111111111', '5e000000-0000-4000-8000-000000000001', 'Instagram', 'https://www.instagram.com/juedsay', null, 'instagram', null),
+  ('11111111-1111-4111-8111-111111111111', '11111111-1111-4111-8111-111111111111', '5e000000-0000-4000-8000-000000000002', 'Plektia', 'https://app.plektia.workers.dev/', 'Esta página: links, en vivo y MCP', 'generic', null),
+  ('11111111-1111-4111-8111-111111111111', '11111111-1111-4111-8111-111111111111', '5e000000-0000-4000-8000-000000000002', 'GitHub', 'https://github.com/juedsay', null, 'github', null),
+  ('11111111-1111-4111-8111-111111111111', '11111111-1111-4111-8111-111111111111', '5e000000-0000-4000-8000-000000000003', 'Cómo testeo RLS con pgTAP', 'https://github.com/juedsay/plektia/tree/main/supabase/tests', null, 'generic', null);
 
 -- Perfil con 50 links (5 secciones de 10, con descripción): el caso que mide el
 -- presupuesto de HTML de la página pública (SPEC-public-page: ≤ 30 KB con 50 links).
-update public.profiles set bio = 'Perfil de prueba con 50 links para medir el rendimiento.'
+update public.pages set bio = 'Perfil de prueba con 50 links para medir el rendimiento.'
 where handle = 'miembro-demo';
 
-insert into public.sections (id, owner_id, title)
-select ('5e000000-0000-4000-8000-00000000010' || s)::uuid, '22222222-2222-4222-8222-222222222222', 'Sección ' || s
+insert into public.sections (id, owner_id, page_id, title)
+select ('5e000000-0000-4000-8000-00000000010' || s)::uuid, '22222222-2222-4222-8222-222222222222',
+       '22222222-2222-4222-8222-222222222222', 'Sección ' || s
 from generate_series(1, 5) s;
 
-insert into public.links (owner_id, section_id, title, url, description)
-select '22222222-2222-4222-8222-222222222222',
+insert into public.links (owner_id, page_id, section_id, title, url, description)
+select '22222222-2222-4222-8222-222222222222', '22222222-2222-4222-8222-222222222222',
        ('5e000000-0000-4000-8000-00000000010' || ((n - 1) / 10 + 1))::uuid,
        'Link de prueba número ' || n,
        'https://plektia.app/demo/' || n,

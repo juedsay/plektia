@@ -9,6 +9,7 @@ export type Database = {
           description: string | null;
           id: string;
           owner_id: string;
+          page_id: string;
           position: number;
           provider: Database["public"]["Enums"]["link_provider"];
           provider_handle: string | null;
@@ -26,6 +27,7 @@ export type Database = {
           description?: string | null;
           id?: string;
           owner_id?: string;
+          page_id: string;
           position?: number;
           provider?: Database["public"]["Enums"]["link_provider"];
           provider_handle?: string | null;
@@ -42,6 +44,7 @@ export type Database = {
           description?: string | null;
           id?: string;
           owner_id?: string;
+          page_id?: string;
           position?: number;
           provider?: Database["public"]["Enums"]["link_provider"];
           provider_handle?: string | null;
@@ -62,6 +65,13 @@ export type Database = {
             referencedColumns: ["id"];
           },
           {
+            foreignKeyName: "links_page_id_fkey";
+            columns: ["page_id"];
+            isOneToOne: false;
+            referencedRelation: "pages";
+            referencedColumns: ["id"];
+          },
+          {
             foreignKeyName: "links_section_id_fkey";
             columns: ["section_id"];
             isOneToOne: false;
@@ -70,16 +80,15 @@ export type Database = {
           },
         ];
       };
-      profiles: {
+      pages: {
         Row: {
           avatar_path: string | null;
           bio: string | null;
           created_at: string;
-          disabled: boolean;
           display_name: string;
           handle: string;
           id: string;
-          role: Database["public"]["Enums"]["user_role"];
+          owner_id: string;
           show_handle: boolean;
           theme: Database["public"]["Enums"]["profile_theme"];
           updated_at: string;
@@ -89,11 +98,10 @@ export type Database = {
           avatar_path?: string | null;
           bio?: string | null;
           created_at?: string;
-          disabled?: boolean;
           display_name: string;
           handle: string;
-          id: string;
-          role?: Database["public"]["Enums"]["user_role"];
+          id?: string;
+          owner_id?: string;
           show_handle?: boolean;
           theme?: Database["public"]["Enums"]["profile_theme"];
           updated_at?: string;
@@ -102,22 +110,66 @@ export type Database = {
           avatar_path?: string | null;
           bio?: string | null;
           created_at?: string;
-          disabled?: boolean;
           display_name?: string;
           handle?: string;
           id?: string;
-          role?: Database["public"]["Enums"]["user_role"];
+          owner_id?: string;
           show_handle?: boolean;
           theme?: Database["public"]["Enums"]["profile_theme"];
           updated_at?: string;
         };
-        Relationships: [];
+        Relationships: [
+          {
+            foreignKeyName: "pages_owner_id_fkey";
+            columns: ["owner_id"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      profiles: {
+        Row: {
+          created_at: string;
+          disabled: boolean;
+          id: string;
+          last_page_id: string | null;
+          role: Database["public"]["Enums"]["user_role"];
+          updated_at: string;
+        };
+        ComputedFields: never;
+        Insert: {
+          created_at?: string;
+          disabled?: boolean;
+          id: string;
+          last_page_id?: string | null;
+          role?: Database["public"]["Enums"]["user_role"];
+          updated_at?: string;
+        };
+        Update: {
+          created_at?: string;
+          disabled?: boolean;
+          id?: string;
+          last_page_id?: string | null;
+          role?: Database["public"]["Enums"]["user_role"];
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "profiles_last_page_id_fkey";
+            columns: ["last_page_id"];
+            isOneToOne: false;
+            referencedRelation: "pages";
+            referencedColumns: ["id"];
+          },
+        ];
       };
       sections: {
         Row: {
           created_at: string;
           id: string;
           owner_id: string;
+          page_id: string;
           position: number;
           show_title: boolean;
           title: string;
@@ -130,6 +182,7 @@ export type Database = {
           created_at?: string;
           id?: string;
           owner_id?: string;
+          page_id: string;
           position?: number;
           show_title?: boolean;
           title: string;
@@ -141,6 +194,7 @@ export type Database = {
           created_at?: string;
           id?: string;
           owner_id?: string;
+          page_id?: string;
           position?: number;
           show_title?: boolean;
           title?: string;
@@ -154,6 +208,13 @@ export type Database = {
             columns: ["owner_id"];
             isOneToOne: false;
             referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "sections_page_id_fkey";
+            columns: ["page_id"];
+            isOneToOne: false;
+            referencedRelation: "pages";
             referencedColumns: ["id"];
           },
         ];
@@ -172,26 +233,6 @@ export type Database = {
           unsectioned_links: Json | null;
         };
         ComputedFields: never;
-        Insert: {
-          avatar_path?: string | null;
-          bio?: string | null;
-          display_name?: string | null;
-          handle?: string | null;
-          sections?: never;
-          show_handle?: boolean | null;
-          theme?: Database["public"]["Enums"]["profile_theme"] | null;
-          unsectioned_links?: never;
-        };
-        Update: {
-          avatar_path?: string | null;
-          bio?: string | null;
-          display_name?: string | null;
-          handle?: string | null;
-          sections?: never;
-          show_handle?: boolean | null;
-          theme?: Database["public"]["Enums"]["profile_theme"] | null;
-          unsectioned_links?: never;
-        };
         Relationships: [];
       };
     };
@@ -201,11 +242,16 @@ export type Database = {
         Returns: undefined;
       };
       move_links: {
-        Args: { expected_versions: number[]; ids: string[]; target_section: string };
+        Args: {
+          expected_versions: number[];
+          ids: string[];
+          target_page: string;
+          target_section: string;
+        };
         Returns: undefined;
       };
       reorder_sections: {
-        Args: { expected_versions: number[]; ids: string[] };
+        Args: { expected_versions: number[]; ids: string[]; target_page: string };
         Returns: undefined;
       };
     };
