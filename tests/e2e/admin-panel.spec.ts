@@ -331,6 +331,17 @@ test.describe("Actions del panel (/_actions)", () => {
     });
   }
 
+  test("sin sesión, la sesión se revisa antes que los datos (401, no 400)", async ({
+    request,
+    baseURL,
+  }) => {
+    const response = await request.post("/_actions/links.delete", {
+      data: {},
+      headers: { origin: baseURL ?? "" },
+    });
+    expect(response.status()).toBe(401);
+  });
+
   test("por GET no se pueden llamar", async ({ request }) => {
     const response = await request.get("/_actions/links.list");
     expect(response.ok()).toBe(false);

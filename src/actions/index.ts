@@ -39,11 +39,12 @@ const PageTarget = z.object({ pageId: z.uuid() });
  * una página propia, la RLS y el trigger de dueño rechazan cada escritura.
  */
 async function linksOfPage(context: ActionAPIContext, input: unknown) {
+  // Primero la sesión y el límite: sin sesión, nada más se mira.
+  const repositories = await repositoriesOf(context);
   const target = PageTarget.safeParse(input);
   if (!target.success) {
     throw new ActionError({ code: "BAD_REQUEST", message: "Falta la página." });
   }
-  const repositories = await repositoriesOf(context);
   const { pageId } = target.data;
   return {
     links: repositories.linksOf(pageId),
