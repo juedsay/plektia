@@ -376,6 +376,11 @@ describe("Editor · borrar y deshacer", () => {
   it("con el foco en el aviso, la cuenta se pausa (tiempo ajustable)", async () => {
     const { api, user } = setup(TWO_LINKS, { fakeTimers: true });
     await deleteLink(user, "Twitch");
+    // Después de borrar, el foco pasa al link siguiente (en el próximo cuadro);
+    // recién ahí se lleva el foco al aviso, como haría una persona.
+    await waitFor(() => {
+      expect(document.activeElement).toBe(screen.getByRole("button", { name: "Editar YouTube" }));
+    });
     screen.getByRole("button", { name: "Deshacer" }).focus();
 
     await vi.advanceTimersByTimeAsync(UNDO_WINDOW_MS * 2);
