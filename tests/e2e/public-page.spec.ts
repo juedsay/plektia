@@ -27,6 +27,26 @@ test.describe("página pública", () => {
     await expect(youtube).not.toHaveAttribute("target", /.+/);
   });
 
+  test("una segunda página de la misma cuenta tiene su /{handle} y solo sus links", async ({
+    page,
+  }) => {
+    const response = await page.goto("/juedsay-qa");
+    expect(response?.status()).toBe(200);
+    await expect(page.getByRole("heading", { level: 1 })).toHaveText("Julián · QA");
+    await expect(page.locator(".identity").getByText("@juedsay-qa", { exact: true })).toBeVisible();
+    await expect(page.getByText("Testing, accesibilidad y rendimiento")).toBeVisible();
+    const links = page.locator("main").getByRole("link", { name: /Portfolio|LinkedIn|Twitch/ });
+    await expect(links).toHaveCount(2);
+    await expect(page.getByRole("link", { name: /Portfolio/ })).toHaveAttribute(
+      "href",
+      "https://jsimon.vercel.app/",
+    );
+
+    // Y la primera página no muestra los links de la segunda.
+    await page.goto("/juedsay");
+    await expect(page.getByRole("link", { name: /Portfolio/ })).toHaveCount(0);
+  });
+
   test("el handle no distingue mayúsculas y la URL canónica es /{handle}", async ({ page }) => {
     await page.goto("/JuedSay");
     await expect(page.locator('link[rel="canonical"]')).toHaveAttribute("href", /\/juedsay$/);
@@ -133,7 +153,9 @@ test.describe("página pública", () => {
   test("sitemap y robots", async ({ request }) => {
     const sitemap = await request.get("/sitemap.xml");
     expect(sitemap.headers()["content-type"]).toContain("application/xml");
-    expect(await sitemap.text()).toMatch(/<loc>[^<]+\/juedsay<\/loc>/);
+    const sitemapText = await sitemap.text();
+    expect(sitemapText).toMatch(/<loc>[^<]+\/juedsay<\/loc>/);
+    expect(sitemapText).toMatch(/<loc>[^<]+\/juedsay-qa<\/loc>/);
     const robots = await request.get("/robots.txt");
     expect(await robots.text()).toContain("Disallow: /admin");
     for (const path of ["/favicon.svg", "/og.png", "/apple-touch-icon.png"]) {

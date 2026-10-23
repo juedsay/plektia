@@ -44,6 +44,16 @@ insert into public.links (owner_id, page_id, section_id, title, url, description
   ('11111111-1111-4111-8111-111111111111', '11111111-1111-4111-8111-111111111111', '5e000000-0000-4000-8000-000000000002', 'GitHub', 'https://github.com/juedsay', null, 'github', null),
   ('11111111-1111-4111-8111-111111111111', '11111111-1111-4111-8111-111111111111', '5e000000-0000-4000-8000-000000000003', 'Cómo testeo RLS con pgTAP', 'https://github.com/juedsay/plektia/tree/main/supabase/tests', null, 'generic', null);
 
+-- Segunda página del owner (SPEC-pages): otra presentación, con sus propios
+-- links, en su propio /{handle}.
+insert into public.pages (id, owner_id, handle, display_name, bio) values
+  ('9a9e0000-0000-4000-8000-000000000002', '11111111-1111-4111-8111-111111111111', 'juedsay-qa',
+   'Julián · QA', 'Testing, accesibilidad y rendimiento');
+
+insert into public.links (owner_id, page_id, title, url, description) values
+  ('11111111-1111-4111-8111-111111111111', '9a9e0000-0000-4000-8000-000000000002', 'Portfolio', 'https://jsimon.vercel.app/', 'Proyectos de QA'),
+  ('11111111-1111-4111-8111-111111111111', '9a9e0000-0000-4000-8000-000000000002', 'LinkedIn', 'https://www.linkedin.com/in/juedsay', null);
+
 -- Perfil con 50 links (5 secciones de 10, con descripción): el caso que mide el
 -- presupuesto de HTML de la página pública (SPEC-public-page: ≤ 30 KB con 50 links).
 update public.pages set bio = 'Perfil de prueba con 50 links para medir el rendimiento.'

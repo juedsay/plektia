@@ -25,6 +25,9 @@ $$;
 
 -- En el seed, la primera página de cada usuario tiene el id del usuario.
 -- Dueño 1111…; otro usuario 2222…
+-- Punto de partida propio: el dueño con una sola página (el seed le da dos).
+delete from public.pages
+where owner_id = '11111111-1111-4111-8111-111111111111' and id <> '11111111-1111-4111-8111-111111111111';
 
 -- ── Alta y límite ────────────────────────────────────────────────────────────
 select pg_temp.login('11111111-1111-4111-8111-111111111111');

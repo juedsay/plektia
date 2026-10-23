@@ -5,6 +5,10 @@ create extension if not exists pgtap with schema extensions;
 
 select plan(39);
 
+-- Una página por cuenta, como al migrar: la segunda página del seed la prueba 0006.
+delete from public.pages
+where owner_id = '11111111-1111-4111-8111-111111111111' and id <> '11111111-1111-4111-8111-111111111111';
+
 -- Evento de prueba del hook, con la forma de auth.users.
 create function pg_temp.event(email text, provider text, verified boolean)
 returns jsonb language sql as $$
