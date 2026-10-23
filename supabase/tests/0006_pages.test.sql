@@ -3,7 +3,7 @@
 begin;
 create extension if not exists pgtap with schema extensions;
 
-select plan(26);
+select plan(29);
 
 create function pg_temp.login(uid uuid)
 returns void language sql as $$
@@ -137,6 +137,20 @@ select throws_ok(
   $$ delete from public.pages where owner_id = auth.uid() $$,
   'PL409', null, 'la única página de una cuenta no se borra');
 reset role;
+
+-- Una cuenta dada de baja: su sesión (el JWT dura hasta una hora) no cambia nada.
+update public.profiles set disabled = true where id = '22222222-2222-4222-8222-222222222222';
+select pg_temp.login('22222222-2222-4222-8222-222222222222');
+update public.pages set bio = 'después de la baja' where owner_id = auth.uid();
+delete from public.pages where owner_id = auth.uid();
+select throws_ok(
+  $$ insert into public.pages (handle, display_name) values ('tras-la-baja', 'Baja') $$,
+  '42501', null, 'una cuenta dada de baja no crea páginas');
+reset role;
+select isnt((select bio from public.pages where id = '22222222-2222-4222-8222-222222222222'),
+  'después de la baja', 'una cuenta dada de baja no edita sus páginas');
+select is((select count(*)::int from public.pages where owner_id = '22222222-2222-4222-8222-222222222222'), 1,
+  'una cuenta dada de baja no borra sus páginas');
 
 -- Si se borra la cuenta entera, sus páginas se van con ella.
 select lives_ok(
