@@ -37,6 +37,10 @@ export const adminRepositoriesFor = (
 
 export const authRateLimiter = (): RateLimiter => new CloudflareRateLimiter(env.AUTH_RATE_LIMITER);
 
+/** Límite de las Actions del panel, por usuario. */
+export const actionsRateLimiter = (): RateLimiter =>
+  new CloudflareRateLimiter(env.ACTIONS_RATE_LIMITER);
+
 export const publicPages = (): PublicPageReader => createPublicPageReader(supabase());
 
 export const publicProfiles = (): PublicProfileDirectory => createPublicPageReader(supabase());

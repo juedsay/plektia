@@ -40,6 +40,8 @@ jobs:
       - run: pnpm lint
       - run: pnpm test:coverage
       - run: pnpm build
+      - name: Presupuesto de la isla del editor
+        run: node scripts/island-budget.ts
       # SPEC-identity: la clave de servicio de Supabase nunca llega al Worker.
       # Busca valores reales (no la palabra, que la librería menciona en su código).
       - name: Sin claves de servicio en el build

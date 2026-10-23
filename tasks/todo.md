@@ -290,6 +290,14 @@
   - **Verificar:** E2E.
   - **Archivos:** `src/pages/admin/vista-previa.astro`, `src/actions/*.ts`.
 
+- [ ] **Tarea 21b: /plektia en la base y la cuenta Admin** · M · Deps: 21
+  - Decisión del 2026-10-23: el sitio lo administra una **cuenta Admin propia de Plektia** (rol `owner`), separada de la cuenta personal.
+  - **Admin:** edita las novedades del sitio y la página `/plektia` desde el panel, con el mismo editor de links. `/plektia` pasa del repo (`src/content/plektia.ts`) a ser una página en la base de esa cuenta; el handle reservado `plektia` se le permite solo a ella.
+  - **Cuenta personal (juedsay):** pasa a `member` y conserva `/juedsay` con sus links; puede sumar hasta 3 páginas (por ejemplo, stream o contenido, y profesional).
+  - **Pasos en producción** (con confirmación): invitar al email de Plektia como `owner` con `/plektia` como su primera página, migrar el contenido y bajar la cuenta personal a `member`. El email nuevo se agrega como usuario de prueba en la app de Google (sigue en "Prueba").
+  - **Usuario de prueba:** ya invitado el 2026-10-23 como `member` con `/user-test`.
+  - **Aceptación:** la Admin edita `/plektia` desde el panel y se ve al instante; la cuenta personal ya no ve funciones de owner; pgTAP de que `plektia` solo lo puede usar la Admin.
+
 - [ ] **Tarea 22: Avatar** · M · Deps: 18
   - Recorte y WebP en el navegador; validación en el servidor (*magic bytes*, tamaño y peso); bucket `avatars` con sus políticas.
   - **Aceptación:**

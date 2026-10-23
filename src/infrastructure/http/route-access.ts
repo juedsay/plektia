@@ -1,8 +1,9 @@
 // Qué rutas leen o exigen sesión (SPEC-identity). Regla de HTTP, pura: la aplican los middlewares.
 
 // Rutas que leen la sesión. El resto (la página pública) no la toca: así nunca
-// responde con `Set-Cookie` y se puede cachear (ADR 0003).
-const SESSION_PREFIXES = ["/admin", "/login", "/auth"] as const;
+// responde con `Set-Cookie` y se puede cachear (ADR 0003). `/_actions` son las
+// Astro Actions que llama el editor del panel: cada una exige sesión.
+const SESSION_PREFIXES = ["/admin", "/login", "/auth", "/_actions"] as const;
 const PROTECTED_PREFIXES = ["/admin"] as const;
 // Acciones de login: las que un atacante repetiría para abusar del proveedor.
 const RATE_LIMITED_PREFIXES = ["/auth"] as const;

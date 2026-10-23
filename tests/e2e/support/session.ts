@@ -105,3 +105,11 @@ export async function restorePageSettings(
   const { error } = await admin.from("pages").update(settings).eq("id", pageId);
   if (error) throw error;
 }
+
+/** Borra los links de prueba de una página por su título (para dejar todo como estaba). */
+export async function deleteLinksTitled(pageId: string, titles: readonly string[]) {
+  const supabase = localSupabase();
+  const admin = createClient(supabase.url, supabase.secretKey, { auth: { persistSession: false } });
+  const { error } = await admin.from("links").delete().eq("page_id", pageId).in("title", titles);
+  if (error) throw error;
+}
