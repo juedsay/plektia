@@ -254,7 +254,7 @@
     - RLS: nadie edita páginas que no son suyas.
     - La migración conserva tu página actual sin cambios visibles.
 
-- [ ] **Tarea 18: Estructura del panel y perfil** · M · Deps: 9, 12, 17c
+- [x] **Tarea 18: Estructura del panel y perfil** · M · Deps: 9, 12, 17c
   - Layout y navegación de `/admin` (diseño con impeccable en modo *operate*), y `/admin/page` (nombre, bio, tema y mostrar u ocultar el `@handle` de la página elegida) con Actions.
   - Incluye el selector de página (tarea 17c).
   - **Decidido (2026-10-22):**
@@ -267,7 +267,7 @@
   - **Verificar:** `pnpm test:e2e`.
   - **Archivos:** `src/ui/layouts/AdminLayout.astro`, `src/pages/admin/page.astro`, `src/actions/pages.ts`, `src/application/pages/update-page.ts`.
 
-- [ ] **Tarea 18c: Vista de escritorio para las páginas del sitio** · S · Deps: 16
+- [x] **Tarea 18c: Vista de escritorio para las páginas del sitio** · S · Deps: 16
   - Pedido del 2026-10-23: la landing (`/`), contacto, login, `/legal/*` y la 404 se adaptan a escritorio (más ancho, composición de dos columnas donde sirva) además del celular.
   - Las páginas de links (`/{handle}` y `/plektia`) siguen siendo **solo vista mobile**: una columna de 30rem centrada en cualquier pantalla.
   - **Aceptación:** capturas a 390 y 1440 px de cada página; `responsive.spec.ts` sin desbordes; axe AAA y Lighthouse sin cambios en las páginas de links.

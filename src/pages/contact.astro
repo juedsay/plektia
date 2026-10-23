@@ -6,6 +6,8 @@ import Alert from "@/ui/components/Alert.astro";
 import PublicLayout from "@/ui/layouts/PublicLayout.astro";
 import { contactFeedback } from "@/ui/view/contact";
 
+import "@/ui/styles/site.css";
+
 // Contacto (SPEC-public-page, "Contacto"): el correo de Plektia nunca aparece
 // en la página. Turnstile carga un script de Cloudflare solo acá, por eso la
 // CSP se amplía solo en esta página.
@@ -53,95 +55,98 @@ const fields = [
   title="Contacto · Plektia"
   description="Escribile a Plektia: pedí tu invitación o contanos lo que necesites."
   canonical={canonical}
+  width="wide"
 >
-  <section class="identity" aria-labelledby="contact-title">
-    <h1 id="contact-title">Contacto</h1>
-    <p class="bio">Pedí tu invitación o contanos lo que necesites. Te respondemos por email.</p>
-  </section>
+  <div class="split">
+    <section class="identity" aria-labelledby="contact-title">
+      <h1 id="contact-title">Contacto</h1>
+      <p class="bio">Pedí tu invitación o contanos lo que necesites. Te respondemos por email.</p>
+    </section>
 
-  {sent ? (
-    <div class="contact-done" data-contact-sent>
-      <Alert
-        variant="success"
-        message="Listo, tu mensaje llegó. Te vamos a responder al email que dejaste."
-      >
-        <div class="alert-actions">
-          <a class="button" href="/">
-            Volver al inicio
-          </a>
-          <a class="button is-quiet" href="/contact">
-            Enviar otro mensaje
-          </a>
-        </div>
-      </Alert>
-    </div>
-  ) : (
-    <form class="contact-form" method="post" action="/contact" novalidate data-contact-form>
-      <Alert variant="error" message={feedback.summary} id="form-alert" />
+    {sent ? (
+      <div class="contact-done" data-contact-sent>
+        <Alert
+          variant="success"
+          message="Listo, tu mensaje llegó. Te vamos a responder al email que dejaste."
+        >
+          <div class="alert-actions">
+            <a class="button" href="/">
+              Volver al inicio
+            </a>
+            <a class="button is-quiet" href="/contact">
+              Enviar otro mensaje
+            </a>
+          </div>
+        </Alert>
+      </div>
+    ) : (
+      <form class="contact-form" method="post" action="/contact" novalidate data-contact-form>
+        <Alert variant="error" message={feedback.summary} id="form-alert" />
 
-      {fields.map((field) => (
+        {fields.map((field) => (
+          <div class="field">
+            <label for={field.name}>{field.label}</label>
+            <input
+              id={field.name}
+              name={field.name}
+              type={field.type}
+              required
+              maxlength={CONTACT_LIMITS[field.name]}
+              autocomplete={field.autocomplete}
+              value={values[field.name]}
+              aria-invalid={feedback.fields[field.name] ? "true" : undefined}
+              aria-describedby={`${field.name}-error`}
+            />
+            <p class="field-error" id={`${field.name}-error`} hidden={!feedback.fields[field.name]}>
+              {feedback.fields[field.name]}
+            </p>
+          </div>
+        ))}
+
         <div class="field">
-          <label for={field.name}>{field.label}</label>
-          <input
-            id={field.name}
-            name={field.name}
-            type={field.type}
+          <label for="message">Mensaje</label>
+          <textarea
+            id="message"
+            name="message"
             required
-            maxlength={CONTACT_LIMITS[field.name]}
-            autocomplete={field.autocomplete}
-            value={values[field.name]}
-            aria-invalid={feedback.fields[field.name] ? "true" : undefined}
-            aria-describedby={`${field.name}-error`}
-          />
-          <p class="field-error" id={`${field.name}-error`} hidden={!feedback.fields[field.name]}>
-            {feedback.fields[field.name]}
+            rows="6"
+            maxlength={CONTACT_LIMITS.message}
+            aria-invalid={feedback.fields["message"] ? "true" : undefined}
+            aria-describedby="message-error message-count"
+          >{values.message}</textarea>
+          <p class="field-hint" id="message-count" data-count>
+            Hasta {CONTACT_LIMITS.message} caracteres.
+          </p>
+          <p class="field-error" id="message-error" hidden={!feedback.fields["message"]}>
+            {feedback.fields["message"]}
           </p>
         </div>
-      ))}
 
-      <div class="field">
-        <label for="message">Mensaje</label>
-        <textarea
-          id="message"
-          name="message"
-          required
-          rows="6"
-          maxlength={CONTACT_LIMITS.message}
-          aria-invalid={feedback.fields["message"] ? "true" : undefined}
-          aria-describedby="message-error message-count"
-        >{values.message}</textarea>
-        <p class="field-hint" id="message-count" data-count>
-          Hasta {CONTACT_LIMITS.message} caracteres.
+        {/* Campo trampa: fuera de la vista y del orden de foco; solo lo completan los bots. */}
+        <div class="trap" aria-hidden="true">
+          <label for={HONEYPOT_FIELD}>No completes este campo</label>
+          <input
+            id={HONEYPOT_FIELD}
+            name={HONEYPOT_FIELD}
+            type="text"
+            tabindex="-1"
+            autocomplete="off"
+          />
+        </div>
+
+        <div class="cf-turnstile" data-sitekey={siteKey} data-theme="dark" data-language="es" />
+        <script is:inline src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer />
+        <button class="submit button" type="submit" data-submit>
+          Enviar mensaje
+        </button>
+        <p class="form-help">
+          Usamos Turnstile de Cloudflare para frenar el spam. Tu IP no se guarda.
         </p>
-        <p class="field-error" id="message-error" hidden={!feedback.fields["message"]}>
-          {feedback.fields["message"]}
-        </p>
-      </div>
+      </form>
+    )}
 
-      {/* Campo trampa: fuera de la vista y del orden de foco; solo lo completan los bots. */}
-      <div class="trap" aria-hidden="true">
-        <label for={HONEYPOT_FIELD}>No completes este campo</label>
-        <input
-          id={HONEYPOT_FIELD}
-          name={HONEYPOT_FIELD}
-          type="text"
-          tabindex="-1"
-          autocomplete="off"
-        />
-      </div>
-
-      <div class="cf-turnstile" data-sitekey={siteKey} data-theme="dark" data-language="es" />
-      <script is:inline src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer />
-      <button class="submit button" type="submit" data-submit>
-        Enviar mensaje
-      </button>
-      <p class="form-help">
-        Usamos Turnstile de Cloudflare para frenar el spam. Tu IP no se guarda.
-      </p>
-    </form>
-  )}
-
-  <script>
-    import "@/ui/scripts/contact-form";
-  </script>
+    <script>
+      import "@/ui/scripts/contact-form";
+    </script>
+  </div>
 </PublicLayout>

@@ -4,6 +4,8 @@ import Bank from "@/ui/components/Bank.astro";
 import Isotype from "@/ui/components/Isotype.astro";
 import PublicLayout from "@/ui/layouts/PublicLayout.astro";
 
+import "@/ui/styles/site.css";
+
 // Landing de Plektia (como `linktr.ee/`): una sola pantalla, honesta. La versión
 // completa (beneficios, ejemplos, preguntas) llega con el registro abierto (v2).
 const canonical = new URL("/", Astro.url);
@@ -23,21 +25,24 @@ const structuredData = {
   description={description}
   canonical={canonical}
   structuredData={structuredData}
+  width="wide"
 >
-  <section class="identity hero" aria-labelledby="hero-title">
-    <div class="avatar" aria-hidden="true">
-      <Isotype size={44} />
+  <div class="split split-landing">
+    <section class="identity hero" aria-labelledby="hero-title">
+      <div class="avatar" aria-hidden="true">
+        <Isotype size={44} />
+      </div>
+      <h1 id="hero-title">plektia</h1>
+      <p class="handle">Todo tejido.</p>
+      <p class="bio">
+        Todos tus links en una sola página, unidos por un hilo: tus redes, tus proyectos y tus
+        streams.
+      </p>
+    </section>
+    <div class="patchbay" data-patchbay>
+      <svg class="thread" aria-hidden="true"></svg>
+      <Bank id="empezar" title="Empezá acá" links={landingLinks()} />
     </div>
-    <h1 id="hero-title">plektia</h1>
-    <p class="handle">Todo tejido.</p>
-    <p class="bio">
-      Todos tus links en una sola página, unidos por un hilo: tus redes, tus proyectos y tus
-      streams.
-    </p>
-  </section>
-  <div class="patchbay" data-patchbay>
-    <svg class="thread" aria-hidden="true"></svg>
-    <Bank id="empezar" title="Empezá acá" links={landingLinks()} />
+    <p class="invite">Por ahora Plektia funciona por invitación.</p>
   </div>
-  <p class="invite">Por ahora Plektia funciona por invitación.</p>
 </PublicLayout>
