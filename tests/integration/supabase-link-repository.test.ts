@@ -256,6 +256,24 @@ describe("SupabaseLinkRepository contra Supabase local", () => {
       ]);
       expect(second.sections.map((sectionOfPage) => sectionOfPage.title)).toEqual(["Trabajo"]);
 
+      // Atado a una página, el repositorio no edita ni borra lo de otra página
+      // de la misma cuenta, aunque la RLS (por dueño) lo permitiría.
+      const [linkOfFirstPage] = first.links;
+      if (!linkOfFirstPage) throw new Error("sin link en la primera página");
+      expect(
+        await secondRepo.updateLink(linkOfFirstPage.id, linkOfFirstPage.version, { title: "x" }),
+      ).toEqual({ ok: false, error: "not_found" });
+      expect(await secondRepo.deleteLink(linkOfFirstPage.id, linkOfFirstPage.version)).toEqual({
+        ok: false,
+        error: "not_found",
+      });
+      const [sectionOfSecondPage] = second.sections;
+      if (!sectionOfSecondPage) throw new Error("sin sección en la segunda página");
+      expect(await repo.deleteSection(sectionOfSecondPage.id, sectionOfSecondPage.version)).toEqual(
+        { ok: false, error: "not_found" },
+      );
+      expect((await repo.listOwn()).links.map((link) => link.title)).toEqual(["de-la-primera"]);
+
       // La sección de una página no sirve para un link de la otra.
       const crossed = parseLinkInput({
         title: "cruzado",

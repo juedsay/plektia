@@ -92,6 +92,7 @@ export class SupabaseLinkRepository implements LinkReader, LinkWriter, SectionWr
       .from("links")
       .update(changes)
       .eq("id", id)
+      .eq("page_id", this.pageId)
       .eq("version", version)
       .select(LINK_COLUMNS);
     if (error) return fail(error);
@@ -104,6 +105,7 @@ export class SupabaseLinkRepository implements LinkReader, LinkWriter, SectionWr
       .from("links")
       .delete()
       .eq("id", id)
+      .eq("page_id", this.pageId)
       .eq("version", version)
       .select("id");
     if (error) return fail(error);
@@ -154,6 +156,7 @@ export class SupabaseLinkRepository implements LinkReader, LinkWriter, SectionWr
       .from("sections")
       .update(changes)
       .eq("id", id)
+      .eq("page_id", this.pageId)
       .eq("version", version)
       .select(SECTION_COLUMNS);
     if (error) return fail(error);
@@ -166,6 +169,7 @@ export class SupabaseLinkRepository implements LinkReader, LinkWriter, SectionWr
       .from("sections")
       .delete()
       .eq("id", id)
+      .eq("page_id", this.pageId)
       .eq("version", version)
       .select("id");
     if (error) return fail(error);
