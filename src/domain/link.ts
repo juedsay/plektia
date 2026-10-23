@@ -36,12 +36,13 @@ const Tag = z
     error: "Cada etiqueta tiene hasta 24 caracteres: letras sin tilde, números y guiones.",
   });
 
+// El límite va con `.max()` nativo y antes de todo: así zod rechaza una lista
+// enorme sin recorrer sus elementos (GHSA-mrhx-c7xc-m3w5; con solo un `refine`
+// posterior, cada elemento inválido sumaba un error y agotaba la memoria).
 const Tags = z
   .array(Tag, { error: "Las etiquetas tienen que ser una lista." })
-  .transform((tags) => [...new Set(tags)])
-  .refine((tags) => tags.length <= LIMITS.tags, {
-    error: `Un link puede tener hasta ${String(LIMITS.tags)} etiquetas.`,
-  });
+  .max(LIMITS.tags, { error: `Un link puede tener hasta ${String(LIMITS.tags)} etiquetas.` })
+  .transform((tags) => [...new Set(tags)]);
 
 const SectionId = z.uuid({ error: "La sección no es válida." }).nullable();
 const Visible = z.boolean({ error: "La visibilidad tiene que ser sí o no." });
