@@ -49,8 +49,8 @@ Que una misma persona tenga varias páginas públicas (por ejemplo, una personal
 |---|---|---|
 | `pages` | `select` | Cualquiera, si la cuenta dueña está activa (la página pública); el dueño ve las suyas siempre |
 | `pages` | `insert` | `owner_id = auth.uid()`, cuenta activa y sin `client_id` (MCP). El límite de 3 lo aplica el trigger |
-| `pages` | `update` | Solo el dueño, sin `client_id`. Por columna: `display_name`, `bio`, `theme` y `show_handle`. El `handle` y el dueño no se cambian |
-| `pages` | `delete` | Solo el dueño, sin `client_id`; un trigger impide borrar la última página |
+| `pages` | `update` | Solo el dueño, con la cuenta activa y sin `client_id`. Por columna: `display_name`, `bio`, `theme` y `show_handle`. El `handle` y el dueño no se cambian |
+| `pages` | `delete` | Solo el dueño, con la cuenta activa y sin `client_id`; un trigger impide borrar la última página |
 | `profiles` | `update` | Solo `last_page_id` (además de lo que ya permitía), y solo con una página propia |
 
 ### Operaciones atómicas (RPC)
@@ -75,6 +75,7 @@ Que una misma persona tenga varias páginas públicas (por ejemplo, una personal
 | Meter secciones o links en la página de otro | Trigger: el `owner_id` tiene que ser el dueño de la página; RLS por `owner_id` | pgTAP: con el id de una página ajena, falla |
 | Quedarse sin página (estado inválido) | Trigger que impide borrar la última | pgTAP |
 | Apuntar `last_page_id` a una página ajena | Check en el `update`: la página tiene que ser propia | pgTAP |
+| Una sesión de una cuenta dada de baja (el JWT dura hasta una hora) sigue editando | Las políticas de `insert`, `update` y `delete` exigen la cuenta activa | pgTAP |
 | Un handle reservado usado por una página | El dominio `public.handle` y el control de handles en uso | pgTAP |
 
 ## Testing
