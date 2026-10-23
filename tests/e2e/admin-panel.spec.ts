@@ -1,13 +1,17 @@
 import AxeBuilder from "@axe-core/playwright";
 import { expect, type Page, test } from "@playwright/test";
 
-import { resetPagesOf, signIn } from "./support/session";
+import { resetPagesOf, restorePageSettings, signIn } from "./support/session";
 
 // Panel (SPEC-admin-panel, tarea 18a): marco, selector de página, alta de
 // páginas e inicio. Con sesión real del seed; WCAG 2.2 AA.
 const AA_TAGS = ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa", "best-practice"];
 // El miembro del seed arranca con una sola página: las altas se prueban con él.
 const MEMBER_ID = "22222222-2222-4222-8222-222222222222";
+
+// Varias pruebas cambian datos del miembro (páginas, nombre): todo el archivo va
+// en orden, y cada bloque deja todo como estaba.
+test.describe.configure({ mode: "serial" });
 
 async function violations(page: Page) {
   const results = await new AxeBuilder({ page }).withTags(AA_TAGS).analyze();
@@ -61,9 +65,6 @@ test.describe("panel: inicio", () => {
 });
 
 test.describe("panel: páginas de una cuenta", () => {
-  // Cambian datos del miembro: van en orden y dejan todo como estaba.
-  test.describe.configure({ mode: "serial" });
-
   test.beforeAll(async () => {
     await resetPagesOf(MEMBER_ID);
   });
@@ -79,20 +80,20 @@ test.describe("panel: páginas de una cuenta", () => {
   test("un handle reservado se rechaza junto al campo, sin perder lo escrito", async ({ page }) => {
     await page.goto("/admin/pages/new");
     await page.getByLabel("Dirección").fill("login");
-    await page.getByLabel("Nombre").fill("Mi segunda");
+    await page.getByLabel("Nombre", { exact: true }).fill("Mi segunda");
     await page.getByRole("button", { name: "Crear página" }).click();
 
     await expect(page.getByRole("alert")).toBeFocused();
     await expect(page.getByText("Ese nombre de usuario está reservado.")).toBeVisible();
     await expect(page.getByLabel("Dirección")).toHaveAttribute("aria-invalid", "true");
-    await expect(page.getByLabel("Nombre")).toHaveValue("Mi segunda");
+    await expect(page.getByLabel("Nombre", { exact: true })).toHaveValue("Mi segunda");
     expect(await violations(page)).toEqual([]);
   });
 
   test("crea una página, pasa a trabajar con ella y se ve en su /{handle}", async ({ page }) => {
     await page.goto("/admin/pages/new");
     await page.getByLabel("Dirección").fill("miembro-segunda");
-    await page.getByLabel("Nombre").fill("Mi segunda");
+    await page.getByLabel("Nombre", { exact: true }).fill("Mi segunda");
     await page.getByRole("button", { name: "Crear página" }).click();
 
     await expect(page).toHaveURL(/\/admin$/);
@@ -116,7 +117,7 @@ test.describe("panel: páginas de una cuenta", () => {
   test("con 3 páginas, el alta avisa el límite en lugar del formulario", async ({ page }) => {
     await page.goto("/admin/pages/new");
     await page.getByLabel("Dirección").fill("miembro-tercera");
-    await page.getByLabel("Nombre").fill("Mi tercera");
+    await page.getByLabel("Nombre", { exact: true }).fill("Mi tercera");
     await page.getByRole("button", { name: "Crear página" }).click();
     await expect(page.getByRole("heading", { level: 1 })).toHaveText("Mi tercera");
 
@@ -125,5 +126,70 @@ test.describe("panel: páginas de una cuenta", () => {
     await expect(page.getByLabel("Dirección")).toHaveCount(0);
     await page.locator("summary", { hasText: "Cambiar de página" }).click();
     await expect(page.getByRole("link", { name: "Nueva página" })).toHaveCount(0);
+  });
+});
+
+test.describe("panel: presentación de la página (/admin/page)", () => {
+  // La página del miembro tiene su mismo id; se restaura como en el seed.
+  const restore = () =>
+    restorePageSettings(MEMBER_ID, {
+      display_name: "Miembro Demo",
+      bio: "Perfil de prueba con 50 links para medir el rendimiento.",
+      show_handle: true,
+    });
+
+  test.beforeAll(async () => {
+    await resetPagesOf(MEMBER_ID);
+    await restore();
+  });
+
+  test.afterAll(restore);
+
+  test.beforeEach(async ({ context, baseURL }) => {
+    await signIn(context, baseURL ?? "", "member@plektia.test");
+  });
+
+  test("muestra lo guardado y los temas que todavía no están", async ({ page }) => {
+    await page.goto("/admin/page");
+    await expect(page.getByLabel("Nombre", { exact: true })).toHaveValue("Miembro Demo");
+    await expect(page.getByLabel("Bio")).toHaveValue(
+      "Perfil de prueba con 50 links para medir el rendimiento.",
+    );
+    await expect(page.getByRole("radio", { name: /Técnico/ })).toBeChecked();
+    await expect(page.getByRole("radio", { name: /Cercano/ })).toBeDisabled();
+    await expect(page.getByRole("checkbox", { name: /Mostrar @miembro-demo/ })).toBeChecked();
+    expect(await violations(page)).toEqual([]);
+  });
+
+  test("un nombre vacío se rechaza junto al campo y no se guarda", async ({ page }) => {
+    await page.goto("/admin/page");
+    await page.getByLabel("Nombre", { exact: true }).fill("");
+    await page.getByRole("button", { name: "Guardar cambios" }).click();
+
+    await expect(page.getByRole("alert")).toBeFocused();
+    await expect(page.getByLabel("Nombre", { exact: true })).toHaveAttribute(
+      "aria-invalid",
+      "true",
+    );
+    expect(await violations(page)).toEqual([]);
+    await page.goto("/miembro-demo");
+    await expect(page.getByRole("heading", { level: 1 })).toHaveText("Miembro Demo");
+  });
+
+  test("guardar cambia la página pública al instante", async ({ page }) => {
+    await page.goto("/admin/page");
+    await page.getByLabel("Nombre", { exact: true }).fill("Miembro Editado");
+    await page.getByLabel("Bio").fill("Bio nueva");
+    await page.getByRole("checkbox", { name: /Mostrar @miembro-demo/ }).uncheck();
+    await page.getByRole("button", { name: "Guardar cambios" }).click();
+
+    await expect(page).toHaveURL(/\/admin\/page\?guardado$/);
+    await expect(page.getByRole("status")).toContainText("Guardado");
+    await expect(page.getByLabel("Nombre", { exact: true })).toHaveValue("Miembro Editado");
+
+    await page.goto("/miembro-demo");
+    await expect(page.getByRole("heading", { level: 1 })).toHaveText("Miembro Editado");
+    await expect(page.getByText("Bio nueva")).toBeVisible();
+    await expect(page.locator(".identity").getByText("@miembro-demo")).toHaveCount(0);
   });
 });

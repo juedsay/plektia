@@ -5,7 +5,7 @@ import type {
   PageWriteError,
   PageWriter,
 } from "@/application/ports/page-repository";
-import { PAGE_LIMIT, type PageDraft } from "@/domain/page";
+import { PAGE_LIMIT, type PageDraft, type PageSettings } from "@/domain/page";
 import { err, ok, type Result } from "@/domain/result";
 
 /**
@@ -39,10 +39,20 @@ export class InMemoryPageRepository implements PageReader, PageWriter {
       handle: draft.handle,
       displayName: draft.displayName,
       bio: null,
+      theme: "tecnico",
       showHandle: true,
     };
     this.pages.push(page);
     return Promise.resolve(ok(page));
+  }
+
+  updatePageSettings(pageId: string, settings: PageSettings): Promise<Result<Page, WriteError>> {
+    const index = this.pages.findIndex((page) => page.id === pageId);
+    const current = this.pages[index];
+    if (!current) return Promise.resolve(err("not_found"));
+    const updated: Page = { ...current, ...settings };
+    this.pages[index] = updated;
+    return Promise.resolve(ok(updated));
   }
 
   rememberLastPage(pageId: string): Promise<Result<void, WriteError>> {

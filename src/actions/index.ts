@@ -5,8 +5,9 @@ import { ActionError, type ActionAPIContext, defineAction } from "astro:actions"
 
 import { createPage } from "@/application/pages/create-page";
 import { selectPage } from "@/application/pages/select-page";
+import { updatePageSettings } from "@/application/pages/update-page-settings";
 import { formFields, toFormResult } from "@/actions/form-result";
-import { adminRepositoriesFor } from "@/composition/runtime";
+import { adminRepositoriesFor, pageCache } from "@/composition/runtime";
 
 /** Los repositorios del usuario con sesión; sin sesión, la Action no corre. */
 function repositoriesOf(context: ActionAPIContext) {
@@ -31,9 +32,20 @@ export const server = {
       handler: async (form, context) => {
         const { pages } = repositoriesOf(context);
         const values = formFields(form);
-        const created = await createPage({ pages })(values);
+        const created = await createPage({ pages, cache: pageCache() })(values);
         if (created.ok) await selectPage({ pages })({ pageId: created.value.id });
         return toFormResult(created, values);
+      },
+    }),
+    /** Guarda el nombre, la bio, el tema y si se muestra el @handle. */
+    update: defineAction({
+      accept: "form",
+      handler: async (form, context) => {
+        const { pages } = repositoriesOf(context);
+        const values = formFields(form);
+        // Un checkbox sin marcar no viaja en el formulario.
+        const input = { ...values, showHandle: values["showHandle"] === "on" };
+        return toFormResult(await updatePageSettings({ pages, cache: pageCache() })(input), values);
       },
     }),
   },

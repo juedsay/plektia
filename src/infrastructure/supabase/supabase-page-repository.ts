@@ -7,15 +7,18 @@ import type {
   PageWriteError,
   PageWriter,
 } from "@/application/ports/page-repository";
-import type { PageDraft } from "@/domain/page";
+import type { PageDraft, PageSettings } from "@/domain/page";
 import { err, ok, type Result } from "@/domain/result";
 import type { Database, Tables } from "@/infrastructure/supabase/database.types";
 import { unexpectedDatabaseError, writeFailure } from "@/infrastructure/supabase/write-errors";
 
 type Client = SupabaseClient<Database>;
-type PageRow = Pick<Tables<"pages">, "id" | "handle" | "display_name" | "bio" | "show_handle">;
+type PageRow = Pick<
+  Tables<"pages">,
+  "id" | "handle" | "display_name" | "bio" | "theme" | "show_handle"
+>;
 
-const PAGE_COLUMNS = "id, handle, display_name, bio, show_handle";
+const PAGE_COLUMNS = "id, handle, display_name, bio, theme, show_handle";
 const UNIQUE_VIOLATION = "23505";
 
 /**
@@ -61,6 +64,27 @@ export class SupabasePageRepository implements PageReader, PageWriter {
     return error ? writeFailure("pages", error) : ok(toPage(data));
   }
 
+  async updatePageSettings(
+    pageId: string,
+    settings: PageSettings,
+  ): Promise<Result<Page, WriteError>> {
+    const { data, error } = await this.client
+      .from("pages")
+      .update({
+        display_name: settings.displayName,
+        bio: settings.bio,
+        theme: settings.theme,
+        show_handle: settings.showHandle,
+      })
+      .eq("id", pageId)
+      .eq("owner_id", this.ownerId)
+      .select(PAGE_COLUMNS);
+    if (error) return writeFailure("pages", error);
+    const [row] = data;
+    // Sin filas: no es una página propia (o la RLS no dejó editarla).
+    return row ? ok(toPage(row)) : err("not_found");
+  }
+
   async rememberLastPage(pageId: string): Promise<Result<void, WriteError>> {
     const { data, error } = await this.client
       .from("profiles")
@@ -79,6 +103,7 @@ function toPage(row: PageRow): Page {
     handle: row.handle,
     displayName: row.display_name,
     bio: row.bio,
+    theme: row.theme,
     showHandle: row.show_handle,
   };
 }

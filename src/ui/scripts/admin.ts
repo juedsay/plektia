@@ -19,3 +19,20 @@ for (const switcher of document.querySelectorAll<HTMLDetailsElement>("[data-swit
     }
   });
 }
+
+// La bio es de una línea: Enter no agrega un salto (el servidor lo rechazaría).
+for (const field of document.querySelectorAll<HTMLTextAreaElement>("[data-single-line]")) {
+  field.addEventListener("keydown", (event) => {
+    if (event.key === "Enter") event.preventDefault();
+  });
+}
+
+// Contador de caracteres junto al campo ("12 de 160").
+for (const field of document.querySelectorAll<HTMLTextAreaElement>("[data-counter]")) {
+  const counter = document.getElementById(field.dataset["counter"] ?? "");
+  if (!counter) continue;
+  const update = () => {
+    counter.textContent = `${String(field.value.length)} de ${String(field.maxLength)}`;
+  };
+  field.addEventListener("input", update);
+}
