@@ -183,8 +183,9 @@
   /* Legal: índice fijo al costado y texto a medida de lectura. */
   .legal {
     display: grid;
-    grid-template-columns: 14rem minmax(0, 42rem);
-    gap: 5rem;
+    /* 13 + 4 + 42 = 59rem: entra en los 60rem que quedan a 1024 px. */
+    grid-template-columns: 13rem minmax(0, 42rem);
+    gap: 4rem;
     justify-content: center;
     padding-top: var(--space-10);
   }
