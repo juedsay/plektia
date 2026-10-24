@@ -20,13 +20,32 @@ interface Props {
   readonly index: number;
   /** Sin links: es el destino al soltar (ver `groupCollisionPriority`). */
   readonly isEmpty: boolean;
+  /** Opciones de la sección (solo secciones): si están abiertas y el panel. */
+  readonly settingsOpen?: boolean;
+  readonly onToggleSettings?: () => void;
+  readonly settings?: ReactNode;
   readonly children: ReactNode;
 }
 
 /** Un grupo del editor: una sección (que se puede ordenar) o "Sin sección". */
-export function EditorGroup({ section, index, isEmpty, children }: Props) {
+export function EditorGroup({
+  section,
+  index,
+  isEmpty,
+  settingsOpen = false,
+  onToggleSettings,
+  settings,
+  children,
+}: Props) {
   return section ? (
-    <SortableSection section={section} index={index} isEmpty={isEmpty}>
+    <SortableSection
+      section={section}
+      index={index}
+      isEmpty={isEmpty}
+      settingsOpen={settingsOpen}
+      onToggleSettings={onToggleSettings}
+      settings={settings}
+    >
       {children}
     </SortableSection>
   ) : (
@@ -38,11 +57,17 @@ function SortableSection({
   section,
   index,
   isEmpty,
+  settingsOpen,
+  onToggleSettings,
+  settings,
   children,
 }: {
   readonly section: Section;
   readonly index: number;
   readonly isEmpty: boolean;
+  readonly settingsOpen: boolean;
+  readonly onToggleSettings: (() => void) | undefined;
+  readonly settings: ReactNode;
   readonly children: ReactNode;
 }) {
   const { ref, handleRef, isDragging } = useSortable({
@@ -74,7 +99,20 @@ function SortableSection({
           {section.title}
           {!section.visible && <span className="admin-tag">Oculta</span>}
         </h2>
+        {onToggleSettings && (
+          <button
+            type="button"
+            className="editor-action section-options"
+            aria-expanded={settingsOpen}
+            aria-label={`Opciones de la sección ${section.title}`}
+            data-section-options
+            onClick={onToggleSettings}
+          >
+            Opciones
+          </button>
+        )}
       </div>
+      {settingsOpen && settings}
       {children}
     </section>
   );

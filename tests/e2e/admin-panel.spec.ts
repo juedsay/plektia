@@ -3,6 +3,7 @@ import { expect, type Page, test } from "@playwright/test";
 
 import {
   deleteLinksTitled,
+  deleteSectionsTitled,
   insertUnsectionedLinks,
   resetPagesOf,
   restorePageSettings,
@@ -454,6 +455,70 @@ test.describe("panel: ordenar links y secciones (tarea 20)", () => {
     await expect
       .poll(async () => (await sectionTitles()).slice(0, 2))
       .toEqual(["Sección 1", "Sección 2"]);
+  });
+});
+
+test.describe("panel: gestionar secciones (tarea 20b)", () => {
+  const TITLES = ["Prueba de sección", "Sección renombrada"];
+
+  test.beforeAll(async () => {
+    await resetPagesOf(MEMBER_ID);
+    await deleteSectionsTitled(MEMBER_ID, TITLES);
+  });
+
+  test.afterAll(async () => {
+    await deleteSectionsTitled(MEMBER_ID, TITLES);
+  });
+
+  test.beforeEach(async ({ context, baseURL }) => {
+    await signIn(context, baseURL ?? "", "member@plektia.test");
+  });
+
+  test("crear, renombrar, ocultar y volver a mostrar", async ({ page }) => {
+    await page.goto("/admin");
+    await page.getByLabel("Nueva sección").fill("Prueba de sección");
+    await page.getByRole("button", { name: "Crear sección" }).click();
+    await expect(
+      page.getByRole("heading", { name: "Prueba de sección", exact: true }),
+    ).toBeVisible();
+
+    await page.getByRole("button", { name: "Opciones de la sección Prueba de sección" }).click();
+    const name = page.getByLabel("Nombre de la sección");
+    await expect(name).toBeFocused();
+    await name.fill("Sección renombrada");
+    await name.press("Tab");
+    await expect(
+      page.getByRole("heading", { name: "Sección renombrada", exact: true }),
+    ).toBeVisible();
+    expect(await violations(page)).toEqual([]);
+
+    await page.getByRole("button", { name: "Ocultar sección" }).click();
+    const tag = page
+      .locator(".editor-group")
+      .filter({ hasText: "Sección renombrada" })
+      .locator(".editor-group-title .admin-tag");
+    await expect(tag).toHaveText("Oculta");
+    await page.getByRole("button", { name: "Mostrar sección" }).click();
+    await expect(tag).toHaveCount(0);
+  });
+
+  test("borrar ofrece deshacer; pasados los 6 s se borra y sus links quedan", async ({ page }) => {
+    await page.goto("/admin");
+    await page.getByRole("button", { name: "Opciones de la sección Sección renombrada" }).click();
+    await page.getByRole("button", { name: "Borrar sección" }).click();
+    await expect(page.locator(".undo-toast")).toContainText("Sección renombrada borrada");
+    await page.getByRole("button", { name: "Deshacer" }).click();
+    await expect(
+      page.getByRole("heading", { name: "Sección renombrada", exact: true }),
+    ).toBeVisible();
+
+    await page.getByRole("button", { name: "Opciones de la sección Sección renombrada" }).click();
+    await page.getByRole("button", { name: "Borrar sección" }).click();
+    await expect(page.locator(".undo-toast")).toBeHidden({ timeout: 10_000 });
+    await page.reload();
+    await expect(
+      page.getByRole("heading", { name: "Sección renombrada", exact: true }),
+    ).toHaveCount(0);
   });
 });
 

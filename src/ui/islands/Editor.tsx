@@ -50,6 +50,12 @@ function actionsApi(pageId: string): EditorApi {
       (await actions.links.move({ pageId, sectionId, items: order })).data ?? UNREACHABLE,
     reorderSections: async (order) =>
       (await actions.sections.reorder({ pageId, items: order })).data ?? UNREACHABLE,
+    createSection: async (title) =>
+      (await actions.sections.create({ pageId, title })).data ?? UNREACHABLE,
+    updateSection: async (target, changes) =>
+      (await actions.sections.update({ pageId, ...target, changes })).data ?? UNREACHABLE,
+    deleteSection: async (target) =>
+      (await actions.sections.delete({ pageId, ...target })).data ?? UNREACHABLE,
   };
 }
 

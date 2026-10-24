@@ -7,7 +7,12 @@ import type { FormResult } from "@/actions/form-result";
 import type { Link, OwnLinks, Section } from "@/application/ports/link-repository";
 import { errorMessage } from "@/domain/errors";
 import { Editor } from "@/ui/islands/editor/Editor";
-import type { EditorApi, LinkChanges, NewLink } from "@/ui/islands/editor/editor-api";
+import type {
+  EditorApi,
+  LinkChanges,
+  NewLink,
+  SectionChanges,
+} from "@/ui/islands/editor/editor-api";
 import { UNDO_WINDOW_MS } from "@/ui/islands/editor/UndoToast";
 
 // jsdom no mide ni observa tamaños: dnd-kit usa ResizeObserver para ordenar.
@@ -139,6 +144,59 @@ class FakeApi implements EditorApi {
       }),
     };
     return Promise.resolve({ ok: true as const, value: this.content });
+  }
+
+  sectionsDeleted: string[] = [];
+
+  createSection(title: string): Promise<FormResult<Section>> {
+    if (title.trim() === "") {
+      return Promise.resolve({
+        ok: false,
+        message: errorMessage("invalid_input"),
+        fields: { title: "El título no puede estar vacío." },
+        values: {},
+      });
+    }
+    const created: Section = {
+      id: `s-${title.toLowerCase()}`,
+      title: title.trim(),
+      showTitle: true,
+      visible: true,
+      position: this.content.sections.length,
+      version: 1,
+    };
+    this.content = { ...this.content, sections: [...this.content.sections, created] };
+    return Promise.resolve({ ok: true, value: created });
+  }
+
+  updateSection(
+    target: { id: string; version: number },
+    changes: SectionChanges,
+  ): Promise<FormResult<Section>> {
+    const current = this.content.sections.find((candidate) => candidate.id === target.id);
+    if (!current) return Promise.resolve(failure(errorMessage("not_found")) as never);
+    if (current.version !== target.version) {
+      return Promise.resolve(failure(errorMessage("conflict")) as never);
+    }
+    const saved = { ...current, ...changes, version: current.version + 1 };
+    this.content = {
+      ...this.content,
+      sections: this.content.sections.map((candidate) =>
+        candidate.id === target.id ? saved : candidate,
+      ),
+    };
+    return Promise.resolve({ ok: true, value: saved });
+  }
+
+  deleteSection(target: { id: string; version: number }): Promise<FormResult<OwnLinks>> {
+    this.sectionsDeleted.push(target.id);
+    this.content = {
+      sections: this.content.sections.filter((candidate) => candidate.id !== target.id),
+      links: this.content.links.map((candidate) =>
+        candidate.sectionId === target.id ? { ...candidate, sectionId: null } : candidate,
+      ),
+    };
+    return Promise.resolve({ ok: true, value: this.content });
   }
 
   reorderSections(order: readonly { id: string; version: number }[]) {
@@ -570,5 +628,98 @@ describe("Editor · mover sin arrastrar (botones)", () => {
       expect(editorStatus()).toContain("No pudimos mover Twitch");
     });
     expect(titlesIn("Redes")).toEqual(["Twitch", "YouTube"]);
+  });
+});
+
+describe("Editor · secciones", () => {
+  const PROYECTOS: Section = { ...REDES, id: "s-proyectos", title: "Proyectos", position: 1 };
+  const CONTENT: OwnLinks = {
+    sections: [REDES, PROYECTOS],
+    links: [link("twitch", { title: "Twitch" })],
+  };
+  const sectionTitles = () =>
+    [...document.querySelectorAll(".editor-group-title")].map((title) => title.textContent);
+
+  it("crea una sección al final; un nombre vacío se rechaza junto al campo", async () => {
+    const { user } = setup(CONTENT);
+    await user.click(screen.getByRole("button", { name: "Crear sección" }));
+    expect(screen.getByText("El título no puede estar vacío.")).toBeTruthy();
+
+    await user.type(screen.getByLabelText("Nueva sección"), "Artículos");
+    await user.click(screen.getByRole("button", { name: "Crear sección" }));
+    await waitFor(() => {
+      expect(sectionTitles()).toEqual(["Redes", "Proyectos", "Artículos", "Sin sección"]);
+    });
+    expect(screen.getByLabelText("Nueva sección")).toHaveProperty("value", "");
+  });
+
+  it("renombra al salir del campo, oculta y deshace", async () => {
+    const { api, user } = setup(CONTENT, { fakeTimers: true });
+    await user.click(screen.getByRole("button", { name: "Opciones de la sección Redes" }));
+    const name = screen.getByLabelText("Nombre de la sección");
+    expect(document.activeElement).toBe(name);
+    await user.clear(name);
+    await user.type(name, "Mis redes");
+    await user.tab();
+    await waitFor(() => {
+      expect(sectionTitles()[0]).toBe("Mis redes");
+    });
+
+    await user.click(screen.getByRole("button", { name: "Ocultar sección" }));
+    await waitFor(() => {
+      expect(screen.getByText("Oculta")).toBeTruthy();
+    });
+    await user.click(screen.getByRole("button", { name: "Deshacer" }));
+    await waitFor(() => {
+      expect(api.content.sections[0]?.visible).toBe(true);
+    });
+  });
+
+  it("'Mostrar el nombre en la página' se guarda al tildar", async () => {
+    const { api, user } = setup(CONTENT);
+    await user.click(screen.getByRole("button", { name: "Opciones de la sección Redes" }));
+    await user.click(screen.getByRole("checkbox", { name: /Mostrar el nombre en la página/ }));
+    await waitFor(() => {
+      expect(api.content.sections[0]?.showTitle).toBe(false);
+    });
+  });
+
+  it("'Bajar sección' la mueve y manda el orden completo", async () => {
+    const { user } = setup(CONTENT);
+    await user.click(screen.getByRole("button", { name: "Opciones de la sección Redes" }));
+    expect(screen.getByRole("button", { name: "Subir sección" })).toHaveProperty("disabled", true);
+    await user.click(screen.getByRole("button", { name: "Bajar sección" }));
+    await waitFor(() => {
+      expect(sectionTitles()).toEqual(["Proyectos", "Redes", "Sin sección"]);
+    });
+  });
+
+  it("borrar la saca al instante, sus links pasan a 'Sin sección' y se envía a los 6 s", async () => {
+    const { api, user } = setup(CONTENT, { fakeTimers: true });
+    await user.click(screen.getByRole("button", { name: "Opciones de la sección Redes" }));
+    await user.click(screen.getByRole("button", { name: "Borrar sección" }));
+
+    expect(sectionTitles()).toEqual(["Proyectos", "Sin sección"]);
+    expect(
+      screen
+        .getByRole("heading", { name: "Sin sección" })
+        .closest("section")
+        ?.textContent?.includes("Twitch"),
+    ).toBe(true);
+    expect(api.sectionsDeleted).toEqual([]);
+
+    await vi.advanceTimersByTimeAsync(UNDO_WINDOW_MS);
+    expect(api.sectionsDeleted).toEqual(["s-redes"]);
+  });
+
+  it("'Deshacer' la devuelve con sus links y no se borra", async () => {
+    const { api, user } = setup(CONTENT, { fakeTimers: true });
+    await user.click(screen.getByRole("button", { name: "Opciones de la sección Redes" }));
+    await user.click(screen.getByRole("button", { name: "Borrar sección" }));
+    await user.click(screen.getByRole("button", { name: "Deshacer" }));
+
+    expect(sectionTitles()).toEqual(["Redes", "Proyectos", "Sin sección"]);
+    await vi.advanceTimersByTimeAsync(UNDO_WINDOW_MS * 2);
+    expect(api.sectionsDeleted).toEqual([]);
   });
 });
