@@ -704,7 +704,7 @@ describe("Editor · secciones", () => {
       screen
         .getByRole("heading", { name: "Sin sección" })
         .closest("section")
-        ?.textContent?.includes("Twitch"),
+        ?.textContent.includes("Twitch"),
     ).toBe(true);
     expect(api.sectionsDeleted).toEqual([]);
 
