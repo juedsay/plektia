@@ -1,10 +1,40 @@
+import {
+  Accessibility,
+  type DragEndEvent,
+  type DragOverEvent,
+  type DragStartEvent,
+} from "@dnd-kit/dom";
+import { move } from "@dnd-kit/helpers";
+import { DragDropProvider } from "@dnd-kit/react";
+import { isSortable } from "@dnd-kit/react/sortable";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 import type { Link, OwnLinks } from "@/application/ports/link-repository";
-import { addLink, groupLinks, removeLink, replaceLink } from "@/ui/view/editor-state";
+import {
+  addLink,
+  applyLinkOrder,
+  groupLinks,
+  type LinkOrder,
+  linkOrderOf,
+  placeInOrder,
+  planLinkMove,
+  planSectionMove,
+  removeLink,
+  replaceLink,
+  UNSECTIONED_GROUP,
+} from "@/ui/view/editor-state";
 
 import { AddLinkForm } from "./AddLinkForm";
 import { type EditorApi, UNREACHABLE } from "./editor-api";
+import {
+  cancelText,
+  DRAG_INSTRUCTIONS,
+  dragKind,
+  positionText,
+  startText,
+} from "@/ui/view/drag-announcements";
+
+import { EditorGroup } from "./EditorGroup";
 import { LinkRow } from "./LinkRow";
 import { type UndoOffer, UndoToast } from "./UndoToast";
 
@@ -33,6 +63,16 @@ export type OfferUndo = (message: string, undo: () => void | Promise<void>) => v
  */
 export function Editor({ api, initialContent }: Props) {
   const [content, setContent] = useState(initialContent);
+  /** Lo último que se ve: los movimientos y "Deshacer" parten de acá. */
+  const latestContent = useRef(content);
+  latestContent.current = content;
+  /**
+   * Orden de los links mientras se arrastra uno (como en la guía de listas
+   * múltiples de dnd-kit): React dibuja cada paso, así el DOM es siempre suyo.
+   */
+  const [dragOrder, setDragOrder] = useState<LinkOrder | null>(null);
+  /** El mismo orden, para leerlo sin esperar al render (anuncios y al soltar). */
+  const latestDragOrder = useRef<LinkOrder | null>(null);
   const [announcement, setAnnouncement] = useState("");
   const [offer, setOffer] = useState<UndoOffer | null>(null);
   const pendingUndo = useRef<PendingUndo | null>(null);
@@ -145,48 +185,181 @@ export function Editor({ api, initialContent }: Props) {
     };
   }, [api]);
 
-  const groups = groupLinks(content);
+  /** El nombre de un grupo para los anuncios ("Redes", "Sin sección"). */
+  const groupName = (groupKey: string) =>
+    groupKey === UNSECTIONED_GROUP
+      ? "Sin sección"
+      : (latestContent.current.sections.find((section) => section.id === groupKey)?.title ??
+        "la sección");
+
+  const groupKeyOf = (link: Link) => link.sectionId ?? UNSECTIONED_GROUP;
+
+  /** Posición de un link dentro de su grupo, en el orden en que se ve. */
+  const placeOf = (linkId: string) => {
+    for (const group of groupLinks(latestContent.current)) {
+      const index = group.links.findIndex((link) => link.id === linkId);
+      if (index !== -1) return { sectionId: group.section?.id ?? null, index };
+    }
+    return null;
+  };
+
+  const moveLink = async (linkId: string, sectionId: string | null, index: number) => {
+    const before = latestContent.current;
+    const moved = before.links.find((link) => link.id === linkId);
+    const origin = placeOf(linkId);
+    const plan = planLinkMove(before, linkId, sectionId, index);
+    if (!moved || !origin || !plan) return;
+    setContent(plan.content);
+    const result = await api.move(plan.sectionId, plan.order).catch(() => UNREACHABLE);
+    if (!result.ok) {
+      setContent(before);
+      announce(`No pudimos mover ${moved.title}: ${result.message}`);
+      return;
+    }
+    setContent(result.value);
+    offerUndo(`${moved.title} movido`, () => moveLink(linkId, origin.sectionId, origin.index));
+  };
+
+  const moveSection = async (sectionId: string, index: number) => {
+    const before = latestContent.current;
+    const sorted = [...before.sections].sort((first, second) => first.position - second.position);
+    const originIndex = sorted.findIndex((section) => section.id === sectionId);
+    const moved = sorted[originIndex];
+    const plan = planSectionMove(before, sectionId, index);
+    if (!moved || !plan) return;
+    setContent(plan.content);
+    const result = await api.reorderSections(plan.order).catch(() => UNREACHABLE);
+    if (!result.ok) {
+      setContent(before);
+      announce(`No pudimos mover la sección ${moved.title}: ${result.message}`);
+      return;
+    }
+    setContent(result.value);
+    offerUndo(`Sección ${moved.title} movida`, () => moveSection(sectionId, originIndex));
+  };
+
+  /** Anuncios en español para el lector de pantalla (SPEC-admin-panel, "Accesibilidad"). */
+  const describePosition = (data: unknown, index: number, group: unknown, linkId: string) =>
+    positionText({
+      data,
+      index,
+      group,
+      linkId,
+      order: latestDragOrder.current,
+      sectionCount: latestContent.current.sections.length,
+      groupName,
+    });
+
+  const announcements = Accessibility.configure({
+    screenReaderInstructions: { draggable: DRAG_INSTRUCTIONS },
+    announcements: {
+      dragstart({ operation: { source } }: DragStartEvent) {
+        return source ? startText(source.data) : undefined;
+      },
+      dragover({ operation: { source } }: DragOverEvent) {
+        if (!source || !isSortable(source)) return undefined;
+        return describePosition(source.data, source.index, source.group, String(source.id));
+      },
+      dragend({ operation: { source }, canceled }: DragEndEvent) {
+        if (!source) return undefined;
+        if (canceled) return cancelText(source.data);
+        if (!isSortable(source)) return undefined;
+        return `${describePosition(source.data, source.index, source.group, String(source.id))}. Soltado.`;
+      },
+    },
+  });
+
+  const savedGroups = groupLinks(content);
+  const savedEmptyGroups = new Set(
+    savedGroups
+      .filter((group) => group.links.length === 0)
+      .map((group) => group.section?.id ?? UNSECTIONED_GROUP),
+  );
+  const groups = applyLinkOrder(savedGroups, dragOrder);
+  const sortedSections = groups.flatMap((group) => (group.section ? [group.section] : []));
 
   return (
     <div className="editor">
       <AddLinkForm api={api} sections={content.sections} onCreated={created} />
 
-      {groups.map((group) => {
-        const headingId = `editor-group-${group.section?.id ?? "sin-seccion"}`;
-        return (
-          <section key={headingId} className="editor-group" aria-labelledby={headingId}>
-            <h2 id={headingId} className="editor-group-title">
-              {group.section?.title ?? "Sin sección"}
-              {group.section && !group.section.visible && <span className="admin-tag">Oculta</span>}
-            </h2>
-            {group.links.length > 0 ? (
-              <ul className="editor-links">
-                {group.links.map((link) => (
-                  <LinkRow
-                    key={link.id}
-                    link={link}
-                    api={api}
-                    onSaved={saved}
-                    onReload={reload}
-                    onDelete={requestDelete}
-                    offerUndo={offerUndo}
-                    announce={announce}
-                  />
-                ))}
-              </ul>
-            ) : (
-              <p className="editor-empty">
-                {content.links.length === 0
-                  ? "Todavía no hay links: agregá el primero con la URL de arriba."
-                  : "Sin links en esta sección."}
-              </p>
-            )}
-          </section>
-        );
-      })}
+      <DragDropProvider
+        plugins={(defaults) => [...defaults, announcements]}
+        onDragStart={(event) => {
+          if (dragKind(event.operation.source?.data) !== "link") return;
+          latestDragOrder.current = linkOrderOf(latestContent.current);
+          setDragOrder(latestDragOrder.current);
+        }}
+        onDragOver={(event) => {
+          if (dragKind(event.operation.source?.data) !== "link" || !latestDragOrder.current) return;
+          latestDragOrder.current = move(latestDragOrder.current, event);
+          setDragOrder(latestDragOrder.current);
+        }}
+        onDragEnd={(event) => {
+          const { source } = event.operation;
+          const finalOrder = latestDragOrder.current;
+          setDragOrder(null);
+          if (event.canceled || !source || !isSortable(source)) return;
+          const id = String(source.id);
+          if (dragKind(source.data) === "section") {
+            void moveSection(id, source.index);
+            return;
+          }
+          const place = finalOrder ? placeInOrder(finalOrder, id) : null;
+          if (place) void moveLink(id, place.sectionId, place.index);
+        }}
+      >
+        {groups.map((group, groupIndex) => {
+          const groupKey = group.section?.id ?? UNSECTIONED_GROUP;
+          // Vacío según lo guardado (no según el arrastre): así no cambia a mitad
+          // de un arrastre. La key lo incluye porque dnd-kit 0.5.0 no toma un
+          // cambio de prioridad después del primer render: el grupo se vuelve a
+          // montar al vaciarse o llenarse.
+          const isEmpty = savedEmptyGroups.has(groupKey);
+          return (
+            <EditorGroup
+              key={`${groupKey}:${isEmpty ? "vacio" : "con-links"}`}
+              section={group.section}
+              index={groupIndex}
+              isEmpty={isEmpty}
+            >
+              {group.links.length > 0 ? (
+                <ul className="editor-links">
+                  {group.links.map((link, linkIndex) => (
+                    <LinkRow
+                      key={link.id}
+                      link={link}
+                      index={linkIndex}
+                      groupKey={groupKeyOf(link)}
+                      api={api}
+                      onSaved={saved}
+                      onReload={reload}
+                      onDelete={requestDelete}
+                      offerUndo={offerUndo}
+                      announce={announce}
+                      groupSize={group.links.length}
+                      sections={sortedSections}
+                      onMove={(moved, sectionId, index) => {
+                        void moveLink(moved.id, sectionId, index);
+                      }}
+                    />
+                  ))}
+                </ul>
+              ) : (
+                <p className="editor-empty">
+                  {content.links.length === 0
+                    ? "Todavía no hay links: agregá el primero con la URL de arriba."
+                    : group.section
+                      ? "Sin links en esta sección: podés traer uno arrastrándolo."
+                      : "Sin links sueltos: soltá acá un link para sacarlo de su sección."}
+                </p>
+              )}
+            </EditorGroup>
+          );
+        })}
+      </DragDropProvider>
 
       <UndoToast offer={offer} onUndo={undoOffer} onExpire={expireOffer} />
-      <p className="visually-hidden" role="status" aria-live="polite">
+      <p className="visually-hidden" role="status" aria-live="polite" data-editor-status>
         {announcement}
       </p>
     </div>

@@ -113,3 +113,22 @@ export async function deleteLinksTitled(pageId: string, titles: readonly string[
   const { error } = await admin.from("links").delete().eq("page_id", pageId).in("title", titles);
   if (error) throw error;
 }
+
+/** Crea links "Sin sección" en una página, en ese orden (para pruebas de ordenar). */
+export async function insertUnsectionedLinks(
+  ownerId: string,
+  pageId: string,
+  titles: readonly string[],
+) {
+  const supabase = localSupabase();
+  const admin = createClient(supabase.url, supabase.secretKey, { auth: { persistSession: false } });
+  for (const title of titles) {
+    const { error } = await admin.from("links").insert({
+      owner_id: ownerId,
+      page_id: pageId,
+      title,
+      url: `https://plektia.app/${title.toLowerCase().replace(/ /g, "-")}`,
+    });
+    if (error) throw error;
+  }
+}

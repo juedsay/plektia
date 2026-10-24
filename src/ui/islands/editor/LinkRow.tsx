@@ -1,14 +1,19 @@
+import { useSortable } from "@dnd-kit/react/sortable";
 import { useEffect, useId, useRef, useState } from "react";
 
-import type { Link } from "@/application/ports/link-repository";
+import type { Link, Section } from "@/application/ports/link-repository";
 import { changedFields, inverseChanges } from "@/ui/view/editor-state";
 import { linkMeta } from "@/ui/view/public-link";
 
 import type { OfferUndo } from "./Editor";
 import { CONFLICT_MESSAGE, type EditorApi, type Failure, UNREACHABLE } from "./editor-api";
+import { DragIcon } from "./EditorGroup";
 
 interface Props {
   readonly link: Link;
+  /** Posición dentro de su grupo y el grupo (para ordenar arrastrando o con el teclado). */
+  readonly index: number;
+  readonly groupKey: string;
   readonly api: EditorApi;
   readonly onSaved: (link: Link) => void;
   /** Otro lo cambió: el editor recarga los links para mostrar la última versión. */
@@ -18,13 +23,42 @@ interface Props {
   readonly offerUndo: OfferUndo;
   /** Mensaje para la región en vivo ("Guardado"). */
   readonly announce: (message: string) => void;
+  /** Cuántos links tiene su grupo y las secciones de la página (para los botones). */
+  readonly groupSize: number;
+  readonly sections: readonly Section[];
+  /**
+   * Mover sin arrastrar (la alternativa visible en el celular): a `index`
+   * dentro de `sectionId` (`null` es "Sin sección").
+   */
+  readonly onMove: (link: Link, sectionId: string | null, index: number) => void;
 }
 
 /**
  * Un link del editor: en reposo, el título y adónde lleva; al editarlo, la fila
  * se expande en el lugar (sin modal). Cada campo se guarda al salir de él.
  */
-export function LinkRow({ link, api, onSaved, onReload, onDelete, offerUndo, announce }: Props) {
+export function LinkRow({
+  link,
+  index,
+  groupKey,
+  api,
+  onSaved,
+  onReload,
+  onDelete,
+  offerUndo,
+  announce,
+  groupSize,
+  sections,
+  onMove,
+}: Props) {
+  const { ref, handleRef, isDragging } = useSortable({
+    id: link.id,
+    index,
+    group: groupKey,
+    type: "link",
+    accept: "link",
+    data: { title: link.title, kind: "link" },
+  });
   const idPrefix = useId();
   const editButton = useRef<HTMLButtonElement>(null);
   const titleInput = useRef<HTMLInputElement>(null);
@@ -177,12 +211,20 @@ export function LinkRow({ link, api, onSaved, onReload, onDelete, offerUndo, ann
 
   return (
     <li
-      className={`editor-link${link.visible ? "" : " is-hidden"}`}
+      ref={ref}
+      className={`editor-link${link.visible ? "" : " is-hidden"}${isDragging ? " is-dragging" : ""}`}
       aria-busy={busy || undefined}
       data-link-id={link.id}
     >
       <div className="editor-link-row">
-        <span className="admin-jack" aria-hidden="true" />
+        <button
+          ref={handleRef}
+          type="button"
+          className="drag-handle"
+          aria-label={`Mover ${link.title}`}
+        >
+          <DragIcon />
+        </button>
         <div className="editor-link-text">
           <span className="editor-link-title">{link.title}</span>
           <span className="editor-link-meta">
@@ -296,6 +338,55 @@ export function LinkRow({ link, api, onSaved, onReload, onDelete, offerUndo, ann
                 </p>
               )}
             </div>
+            <fieldset className="editor-link-place">
+              <legend>Lugar</legend>
+              <button
+                type="button"
+                className="editor-action"
+                disabled={index === 0}
+                aria-label={`Subir ${link.title}`}
+                onClick={() => {
+                  onMove(latestLink.current, link.sectionId, index - 1);
+                }}
+              >
+                Subir
+              </button>
+              <button
+                type="button"
+                className="editor-action"
+                disabled={index >= groupSize - 1}
+                aria-label={`Bajar ${link.title}`}
+                onClick={() => {
+                  onMove(latestLink.current, link.sectionId, index + 1);
+                }}
+              >
+                Bajar
+              </button>
+              {sections.length > 0 && (
+                <label className="editor-link-section">
+                  <span>Sección</span>
+                  <select
+                    aria-label={`Sección de ${link.title}`}
+                    value={link.sectionId ?? ""}
+                    onChange={(event) => {
+                      // Va al final de la sección elegida.
+                      onMove(
+                        latestLink.current,
+                        event.target.value || null,
+                        Number.MAX_SAFE_INTEGER,
+                      );
+                    }}
+                  >
+                    <option value="">Sin sección</option>
+                    {sections.map((section) => (
+                      <option key={section.id} value={section.id}>
+                        {section.title}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+              )}
+            </fieldset>
             <div className="editor-link-danger">
               <button
                 type="button"

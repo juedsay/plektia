@@ -120,7 +120,7 @@ Cada operación de owner queda registrada en `private.audit_log`: quién, qué, 
 - [ ] Cada cambio se ve en la vista previa en menos de 1 s y en la página pública en menos de 5 s.
 - [ ] Un `member` no puede ver ni invocar nada de `/admin/usuarios` (E2E + pgTAP).
 - [ ] Cada fila de la tabla de amenazas tiene su test, en verde en CI.
-- [ ] La isla `Editor` pesa ≤ 90 KB gzip, React incluido, y no se carga fuera de `/admin`. El presupuesto original era de 60 KB, pero React 19 solo ya pesa ~67 KB. Decisión del 2026-10-23: seguir con React y ajustar el presupuesto; lo controla `scripts/island-budget.ts` en la CI.
+- [ ] La isla `Editor` pesa ≤ 120 KB gzip, React y @dnd-kit/react incluidos (subido de 90 el 2026-10-23 para el arrastre), y no se carga fuera de `/admin`. El presupuesto original era de 60 KB, pero React 19 solo ya pesa ~67 KB. Decisión del 2026-10-23: seguir con React y ajustar el presupuesto; lo controla `scripts/island-budget.ts` en la CI.
 
 ## Preguntas abiertas
 

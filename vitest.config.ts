@@ -31,6 +31,8 @@ export default defineConfig({
         "src/ui/scripts/page.ts",
         "src/ui/scripts/thread.ts",
         "src/ui/scripts/contact-form.ts",
+        // Entrada de la isla: solo conecta el editor con las Actions (E2E).
+        "src/ui/islands/Editor.tsx",
       ],
       reporter: ["text", "html", "lcov"],
       thresholds: {

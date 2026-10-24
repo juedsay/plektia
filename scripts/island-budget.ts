@@ -6,8 +6,12 @@ import { join } from "node:path";
 import { gzipSync } from "node:zlib";
 
 const ASSETS = join(process.cwd(), "dist", "client", "_astro");
-/** React 19 ya pesa ~67 KB gzip (decisión del 2026-10-23: React, con presupuesto ajustado). */
-const BUDGET_KB = 90;
+/**
+ * React 19 ya pesa ~67 KB gzip y @dnd-kit/react (arrastre con mouse, toque y
+ * teclado) suma ~37 KB. Decisiones del 2026-10-23: React y arrastre, con
+ * botones de alternativa; tope de 120 KB.
+ */
+const BUDGET_KB = 120;
 /** Puntos de entrada de la isla: el componente y el renderer de Astro para React. */
 const ENTRY_PATTERNS = [/^Editor\.[\w-]+\.js$/, /^client\.[\w-]+\.js$/];
 

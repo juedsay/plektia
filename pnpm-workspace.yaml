@@ -3,8 +3,16 @@ allowBuilds:
   workerd: true
 minimumReleaseAgeExclude:
   - prettier@3.9.10
-# Parche de seguridad (GHSA-mrhx-c7xc-m3w5, zod < 4.6.6): una sola versión para
-# todo el repo, también la que usa Astro. Excepción a la regla de dos semanas
-# aprobada el 2026-10-23 (tiene procedencia SLSA y no corre scripts).
 overrides:
+  # @dnd-kit/react (pre-1.0) pide sus paquetes internos con ^0.5.0: se fijan
+  # todos en la versión auditada (procedencia firmada, más de dos semanas).
+  "@dnd-kit/abstract": 0.5.0
+  "@dnd-kit/collision": 0.5.0
+  "@dnd-kit/dom": 0.5.0
+  "@dnd-kit/geometry": 0.5.0
+  "@dnd-kit/helpers": 0.5.0
+  "@dnd-kit/state": 0.5.0
+  # Parche de seguridad (GHSA-mrhx-c7xc-m3w5, zod < 4.6.6): una sola versión
+  # para todo el repo, también la que usa Astro. Excepción a la regla de dos
+  # semanas aprobada el 2026-10-23 (procedencia SLSA, sin scripts).
   zod: 4.6.6

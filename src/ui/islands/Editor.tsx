@@ -46,6 +46,10 @@ function actionsApi(pageId: string): EditorApi {
     deleteOnExit: (target) => {
       deleteWithKeepalive(pageId, target);
     },
+    move: async (sectionId, order) =>
+      (await actions.links.move({ pageId, sectionId, items: order })).data ?? UNREACHABLE,
+    reorderSections: async (order) =>
+      (await actions.sections.reorder({ pageId, items: order })).data ?? UNREACHABLE,
   };
 }
 
