@@ -3,3 +3,8 @@ allowBuilds:
   workerd: true
 minimumReleaseAgeExclude:
   - prettier@3.9.10
+# Parche de seguridad (GHSA-mrhx-c7xc-m3w5, zod < 4.6.6): una sola versión para
+# todo el repo, también la que usa Astro. Excepción a la regla de dos semanas
+# aprobada el 2026-10-23 (tiene procedencia SLSA y no corre scripts).
+overrides:
+  zod: 4.6.6

@@ -26,6 +26,19 @@ describe("parseLinkInput", () => {
     expect(result.ok && result.value.tags).toEqual(["gaming", "vivo"]);
   });
 
+  it("una lista enorme de etiquetas inválidas se rechaza sin recorrerla (GHSA-mrhx-c7xc-m3w5)", () => {
+    const huge = Array.from({ length: 100_000 }, () => "NO VÁLIDA");
+    const startedAt = performance.now();
+    const result = parseLinkInput({ ...valid, tags: huge });
+    expect(result).toMatchObject({ ok: false, error: { kind: "invalid_input" } });
+    if (!result.ok) {
+      // Un solo error para el campo (no uno por elemento) y rápido.
+      expect(Object.keys(result.error.fields)).toEqual(["tags"]);
+      expect(result.error.fields["tags"]).toBe("Un link puede tener hasta 5 etiquetas.");
+    }
+    expect(performance.now() - startedAt).toBeLessThan(250);
+  });
+
   it("una descripción vacía queda como null", () => {
     const result = parseLinkInput({ ...valid, description: "   " });
     expect(result.ok && result.value.description).toBeNull();
