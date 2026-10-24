@@ -12,7 +12,9 @@ import {
   planLinkMove,
   planSectionMove,
   removeLink,
+  removeSection,
   replaceLink,
+  replaceSection,
   suggestTitle,
   UNSECTIONED_GROUP,
 } from "@/ui/view/editor-state";
@@ -255,5 +257,34 @@ describe("orden durante el arrastre", () => {
     expect(placeInOrder(order, "a")).toEqual({ sectionId: "redes", index: 1 });
     expect(placeInOrder(order, "suelto")).toEqual({ sectionId: null, index: 0 });
     expect(placeInOrder(order, "x")).toBeNull();
+  });
+});
+
+describe("removeSection y replaceSection", () => {
+  const content = {
+    sections: [section("redes", 0), section("proyectos", 1)],
+    links: [link("suelto", null, 0), link("b", "redes", 1), link("a", "redes", 0)],
+  };
+
+  it("los links de la sección borrada pasan al final de 'Sin sección', en su orden", () => {
+    const result = removeSection(content, "redes");
+    expect(result.sections.map((item) => item.id)).toEqual(["proyectos"]);
+    expect(
+      groupLinks(result)
+        .at(-1)
+        ?.links.map((item) => [item.id, item.position]),
+    ).toEqual([
+      ["suelto", 0],
+      ["a", 1],
+      ["b", 2],
+    ]);
+  });
+
+  it("reemplaza solo la sección con ese id", () => {
+    const renamed = { ...section("proyectos", 1), title: "Trabajos", version: 2 };
+    expect(replaceSection(content, renamed).sections.map((item) => item.title)).toEqual([
+      "redes",
+      "Trabajos",
+    ]);
   });
 });

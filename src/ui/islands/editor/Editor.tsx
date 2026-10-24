@@ -9,7 +9,7 @@ import { DragDropProvider } from "@dnd-kit/react";
 import { isSortable } from "@dnd-kit/react/sortable";
 import { useCallback, useEffect, useRef, useState } from "react";
 
-import type { Link, OwnLinks } from "@/application/ports/link-repository";
+import type { Link, OwnLinks, Section } from "@/application/ports/link-repository";
 import {
   addLink,
   applyLinkOrder,
@@ -20,12 +20,15 @@ import {
   planLinkMove,
   planSectionMove,
   removeLink,
+  removeSection,
   replaceLink,
+  replaceSection,
   UNSECTIONED_GROUP,
 } from "@/ui/view/editor-state";
 
 import { AddLinkForm } from "./AddLinkForm";
-import { type EditorApi, UNREACHABLE } from "./editor-api";
+import { AddSectionForm } from "./AddSectionForm";
+import { type EditorApi, type Failure, type SectionChanges, UNREACHABLE } from "./editor-api";
 import {
   cancelText,
   DRAG_INSTRUCTIONS,
@@ -36,6 +39,7 @@ import {
 
 import { EditorGroup } from "./EditorGroup";
 import { LinkRow } from "./LinkRow";
+import { SectionSettings } from "./SectionSettings";
 import { type UndoOffer, UndoToast } from "./UndoToast";
 
 interface Props {
@@ -71,6 +75,8 @@ export function Editor({ api, initialContent }: Props) {
    * múltiples de dnd-kit): React dibuja cada paso, así el DOM es siempre suyo.
    */
   const [dragOrder, setDragOrder] = useState<LinkOrder | null>(null);
+  /** La sección con las opciones abiertas (una a la vez). */
+  const [openSectionId, setOpenSectionId] = useState<string | null>(null);
   /** El mismo orden, para leerlo sin esperar al render (anuncios y al soltar). */
   const latestDragOrder = useRef<LinkOrder | null>(null);
   const [announcement, setAnnouncement] = useState("");
@@ -185,6 +191,79 @@ export function Editor({ api, initialContent }: Props) {
     };
   }, [api]);
 
+  const sectionCreated = (section: Section) => {
+    setContent((current) => ({ ...current, sections: [...current.sections, section] }));
+    announce(`Sección ${section.title}: creada`);
+  };
+
+  /** Guarda un cambio de una sección y ofrece deshacerlo; devuelve el error, si lo hay. */
+  const saveSection = async (
+    section: Section,
+    changes: SectionChanges,
+  ): Promise<Failure | null> => {
+    const result = await api
+      .updateSection({ id: section.id, version: section.version }, changes)
+      .catch(() => UNREACHABLE);
+    if (!result.ok) return result;
+    setContent((current) => replaceSection(current, result.value));
+    announce(`Sección ${result.value.title}: guardada`);
+    const inverse: SectionChanges = {
+      ...(changes.title === undefined ? {} : { title: section.title }),
+      ...(changes.showTitle === undefined ? {} : { showTitle: section.showTitle }),
+      ...(changes.visible === undefined ? {} : { visible: section.visible }),
+    };
+    offerUndo(`Sección ${result.value.title} guardada`, async () => {
+      const current = latestContent.current.sections.find((item) => item.id === section.id);
+      if (!current) return;
+      const undone = await api
+        .updateSection({ id: current.id, version: current.version }, inverse)
+        .catch(() => UNREACHABLE);
+      if (undone.ok) {
+        setContent((latest) => replaceSection(latest, undone.value));
+        announce(`Sección ${undone.value.title}: cambio deshecho`);
+      }
+    });
+    return null;
+  };
+
+  /** Secciones borradas que esperan los 6 s de "Deshacer". */
+  const pendingSectionDeletes = useRef(new Map<string, Section>());
+
+  const requestSectionDelete = (section: Section) => {
+    const before = latestContent.current;
+    pendingSectionDeletes.current.set(section.id, section);
+    setOpenSectionId(null);
+    setContent((current) => removeSection(current, section.id));
+    announce(
+      `Sección ${section.title}: borrada; sus links pasaron a Sin sección. Podés deshacerlo durante 6 segundos.`,
+    );
+    offerUndo(
+      `Sección ${section.title} borrada`,
+      () => {
+        pendingSectionDeletes.current.delete(section.id);
+        setContent(before);
+        announce(`Sección ${section.title}: restaurada`);
+      },
+      () => {
+        pendingSectionDeletes.current.delete(section.id);
+        void (async () => {
+          const result = await api
+            .deleteSection({ id: section.id, version: section.version })
+            .catch(() => UNREACHABLE);
+          if (result.ok) {
+            setContent(result.value);
+            return;
+          }
+          setContent(before);
+          announce(`No pudimos borrar la sección ${section.title}: ${result.message}`);
+        })();
+      },
+    );
+    requestAnimationFrame(() => {
+      document.querySelector<HTMLElement>(".add-section input")?.focus();
+    });
+  };
+
   /** El nombre de un grupo para los anuncios ("Redes", "Sin sección"). */
   const groupName = (groupKey: string) =>
     groupKey === UNSECTIONED_GROUP
@@ -281,6 +360,7 @@ export function Editor({ api, initialContent }: Props) {
   return (
     <div className="editor">
       <AddLinkForm api={api} sections={content.sections} onCreated={created} />
+      <AddSectionForm api={api} onCreated={sectionCreated} />
 
       <DragDropProvider
         plugins={(defaults) => [...defaults, announcements]}
@@ -321,6 +401,36 @@ export function Editor({ api, initialContent }: Props) {
               section={group.section}
               index={groupIndex}
               isEmpty={isEmpty}
+              settingsOpen={group.section?.id === openSectionId}
+              onToggleSettings={() => {
+                setOpenSectionId((current) =>
+                  current === group.section?.id ? null : (group.section?.id ?? null),
+                );
+              }}
+              settings={
+                group.section && (
+                  <SectionSettings
+                    section={group.section}
+                    index={groupIndex}
+                    sectionCount={sortedSections.length}
+                    onSave={saveSection}
+                    onMove={(section, index) => {
+                      void moveSection(section.id, index);
+                    }}
+                    onDelete={requestSectionDelete}
+                    onClose={() => {
+                      setOpenSectionId(null);
+                      requestAnimationFrame(() => {
+                        document
+                          .querySelector<HTMLElement>(
+                            `[aria-labelledby="editor-group-${group.section?.id ?? ""}"] [data-section-options]`,
+                          )
+                          ?.focus();
+                      });
+                    }}
+                  />
+                )
+              }
             >
               {group.links.length > 0 ? (
                 <ul className="editor-links">

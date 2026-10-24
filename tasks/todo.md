@@ -278,7 +278,7 @@
   - **Verificar:** `pnpm test && pnpm test:e2e`.
   - **Archivos:** `src/ui/islands/Editor.tsx`, `src/ui/islands/editor/*.tsx`, `src/actions/links.ts`, `src/pages/admin/index.astro`.
 
-- [ ] **Tarea 20: Ordenar y gestionar secciones** · M · Deps: 19
+- [x] **Tarea 20: Ordenar y gestionar secciones** · M · Deps: 19
   - `@dnd-kit` con mouse, toque y **teclado**, con anuncios; mover entre secciones; crear, renombrar, ocultar, mostrar u ocultar el título y borrar secciones.
   - **Aceptación:** E2E de ordenar con mouse y con teclado; el lector de pantalla anuncia los movimientos.
   - **Verificar:** `pnpm test:e2e`.

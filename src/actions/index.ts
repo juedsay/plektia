@@ -13,7 +13,10 @@ import { setLinkVisibility } from "@/application/links/set-link-visibility";
 import { updateLink } from "@/application/links/update-link";
 
 import { createPage } from "@/application/pages/create-page";
+import { createSection } from "@/application/sections/create-section";
+import { deleteSection } from "@/application/sections/delete-section";
 import { reorderSections } from "@/application/sections/reorder-sections";
+import { updateSection } from "@/application/sections/update-section";
 import { selectPage } from "@/application/pages/select-page";
 import { updatePageSettings } from "@/application/pages/update-page-settings";
 import { formFields, toFormResult } from "@/actions/form-result";
@@ -131,6 +134,40 @@ export const server = {
     }),
   },
   sections: {
+    /** `{ pageId, title, showTitle?, visible? }`: una sección nueva, al final. */
+    create: defineAction({
+      accept: "json",
+      handler: async (input: unknown, context) => {
+        const { links, purge } = await linksOfPage(context, input);
+        const created = await createSection({ sections: links })(input);
+        if (created.ok) await purge();
+        return toFormResult(created);
+      },
+    }),
+    /** `{ pageId, id, version, changes }`: renombrar, ocultar o mostrar el título. */
+    update: defineAction({
+      accept: "json",
+      handler: async (input: unknown, context) => {
+        const { links, purge } = await linksOfPage(context, input);
+        const updated = await updateSection({ sections: links })(input);
+        if (updated.ok) await purge();
+        return toFormResult(updated);
+      },
+    }),
+    /**
+     * `{ pageId, id, version }`: borra la sección; sus links pasan a "Sin sección".
+     * Devuelve el contenido nuevo (los links cambian de grupo y de versión).
+     */
+    delete: defineAction({
+      accept: "json",
+      handler: async (input: unknown, context) => {
+        const { links, purge } = await linksOfPage(context, input);
+        const deleted = await deleteSection({ sections: links })(input);
+        if (!deleted.ok) return toFormResult<OwnLinks>(deleted);
+        await purge();
+        return toFormResult(ok(await links.listOwn()));
+      },
+    }),
     /** `{ pageId, items }`: el orden completo de las secciones. Devuelve el contenido nuevo. */
     reorder: defineAction({
       accept: "json",
