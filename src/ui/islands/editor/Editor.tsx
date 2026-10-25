@@ -21,6 +21,7 @@ import {
   planSectionMove,
   removeLink,
   removeSection,
+  restoreSection,
   replaceLink,
   replaceSection,
   UNSECTIONED_GROUP,
@@ -83,8 +84,9 @@ export function Editor({ api, initialContent }: Props) {
   const [offer, setOffer] = useState<UndoOffer | null>(null);
   const pendingUndo = useRef<PendingUndo | null>(null);
   const offerCount = useRef(0);
-  /** Links borrados que esperan los 6 s: se envían igual si la pestaña se cierra. */
+  /** Links y secciones borrados que esperan los 6 s: se envían igual si la pestaña se cierra. */
   const pendingDeletes = useRef(new Map<string, Link>());
+  const pendingSectionDeletes = useRef(new Map<string, Section>());
 
   const announce = useCallback((message: string) => {
     // Vaciarla antes hace que el lector de pantalla repita un mismo mensaje.
@@ -184,6 +186,10 @@ export function Editor({ api, initialContent }: Props) {
         api.deleteOnExit({ id: link.id, version: link.version });
       }
       pendingDeletes.current.clear();
+      for (const section of pendingSectionDeletes.current.values()) {
+        api.deleteSectionOnExit({ id: section.id, version: section.version });
+      }
+      pendingSectionDeletes.current.clear();
     };
     window.addEventListener("pagehide", flush);
     return () => {
@@ -226,9 +232,6 @@ export function Editor({ api, initialContent }: Props) {
     return null;
   };
 
-  /** Secciones borradas que esperan los 6 s de "Deshacer". */
-  const pendingSectionDeletes = useRef(new Map<string, Section>());
-
   const requestSectionDelete = (section: Section) => {
     const before = latestContent.current;
     pendingSectionDeletes.current.set(section.id, section);
@@ -241,11 +244,12 @@ export function Editor({ api, initialContent }: Props) {
       `Sección ${section.title} borrada`,
       () => {
         pendingSectionDeletes.current.delete(section.id);
-        setContent(before);
+        setContent((current) => restoreSection(current, before, section.id));
         announce(`Sección ${section.title}: restaurada`);
       },
       () => {
-        pendingSectionDeletes.current.delete(section.id);
+        // Si ya salió al cerrar la pestaña, no se manda de nuevo.
+        if (!pendingSectionDeletes.current.delete(section.id)) return;
         void (async () => {
           const result = await api
             .deleteSection({ id: section.id, version: section.version })
@@ -254,7 +258,7 @@ export function Editor({ api, initialContent }: Props) {
             setContent(result.value);
             return;
           }
-          setContent(before);
+          setContent((current) => restoreSection(current, before, section.id));
           announce(`No pudimos borrar la sección ${section.title}: ${result.message}`);
         })();
       },

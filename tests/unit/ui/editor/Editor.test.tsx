@@ -188,6 +188,12 @@ class FakeApi implements EditorApi {
     return Promise.resolve({ ok: true, value: saved });
   }
 
+  sectionsDeletedOnExit: string[] = [];
+
+  deleteSectionOnExit(target: { id: string; version: number }) {
+    this.sectionsDeletedOnExit.push(target.id);
+  }
+
   deleteSection(target: { id: string; version: number }): Promise<FormResult<OwnLinks>> {
     this.sectionsDeleted.push(target.id);
     this.content = {
@@ -720,6 +726,29 @@ describe("Editor · secciones", () => {
 
     expect(sectionTitles()).toEqual(["Redes", "Proyectos", "Sin sección"]);
     await vi.advanceTimersByTimeAsync(UNDO_WINDOW_MS * 2);
+    expect(api.sectionsDeleted).toEqual([]);
+  });
+
+  it("'Deshacer' no pierde un link agregado mientras tanto", async () => {
+    const { user } = setup(CONTENT, { fakeTimers: true });
+    await user.click(screen.getByRole("button", { name: "Opciones de la sección Redes" }));
+    await user.click(screen.getByRole("button", { name: "Borrar sección" }));
+    await user.type(screen.getByLabelText("URL"), "https://www.instagram.com/juedsay/");
+    await user.click(screen.getByRole("button", { name: "Agregar link" }));
+    await user.click(screen.getByRole("button", { name: "Deshacer" }));
+
+    expect(sectionTitles()).toEqual(["Redes", "Proyectos", "Sin sección"]);
+    expect(screen.getByText("Instagram")).toBeTruthy();
+  });
+
+  it("si se cierra la pestaña durante los 6 s, el borrado de la sección sale igual", async () => {
+    const { api, user } = setup(CONTENT, { fakeTimers: true });
+    await user.click(screen.getByRole("button", { name: "Opciones de la sección Redes" }));
+    await user.click(screen.getByRole("button", { name: "Borrar sección" }));
+    window.dispatchEvent(new Event("pagehide"));
+    expect(api.sectionsDeletedOnExit).toEqual(["s-redes"]);
+
+    await vi.advanceTimersByTimeAsync(UNDO_WINDOW_MS);
     expect(api.sectionsDeleted).toEqual([]);
   });
 });

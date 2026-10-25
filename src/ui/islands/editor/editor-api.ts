@@ -43,6 +43,8 @@ export interface EditorApi {
   ): Promise<FormResult<Section>>;
   /** Borra la sección (sus links pasan a "Sin sección"); devuelve el contenido nuevo. */
   deleteSection(target: { id: string; version: number }): Promise<FormResult<OwnLinks>>;
+  /** Como `deleteOnExit`, para una sección. */
+  deleteSectionOnExit(target: { id: string; version: number }): void;
 }
 
 export interface SectionChanges {

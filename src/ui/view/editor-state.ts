@@ -242,6 +242,30 @@ export function removeSection(content: OwnLinks, sectionId: string): OwnLinks {
   };
 }
 
+/**
+ * Deshace `removeSection` sobre el contenido de ahora (no sobre la foto vieja):
+ * la sección vuelve a su lugar y recupera los links que tenía y que siguen en
+ * "Sin sección". Lo que se cambió mientras tanto se mantiene.
+ */
+export function restoreSection(content: OwnLinks, before: OwnLinks, sectionId: string): OwnLinks {
+  const section = before.sections.find((candidate) => candidate.id === sectionId);
+  if (!section || content.sections.some((candidate) => candidate.id === sectionId)) return content;
+  const formerLinks = new Map(
+    before.links.filter((link) => link.sectionId === sectionId).map((link) => [link.id, link]),
+  );
+  const sections = [...content.sections];
+  sections.splice(before.sections.indexOf(section), 0, section);
+  return {
+    sections,
+    links: content.links.map((link) => {
+      const former = formerLinks.get(link.id);
+      return former && link.sectionId === null
+        ? { ...link, sectionId, position: former.position }
+        : link;
+    }),
+  };
+}
+
 export function replaceSection(content: OwnLinks, updated: Section): OwnLinks {
   return {
     ...content,

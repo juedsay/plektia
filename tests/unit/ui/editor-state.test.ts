@@ -13,6 +13,7 @@ import {
   planSectionMove,
   removeLink,
   removeSection,
+  restoreSection,
   replaceLink,
   replaceSection,
   suggestTitle,
@@ -278,6 +279,41 @@ describe("removeSection y replaceSection", () => {
       ["a", 1],
       ["b", 2],
     ]);
+  });
+
+  it("deshacer el borrado devuelve la sección a su lugar con sus links", () => {
+    const removed = removeSection(content, "redes");
+    const restored = restoreSection(removed, content, "redes");
+    expect(restored.sections.map((item) => item.id)).toEqual(["redes", "proyectos"]);
+    expect(groupLinks(restored).map((group) => group.links.map((item) => item.id))).toEqual([
+      ["a", "b"],
+      [],
+      ["suelto"],
+    ]);
+  });
+
+  it("deshacer el borrado mantiene lo que cambió mientras tanto", () => {
+    const removed = removeSection(content, "redes");
+    const meanwhile = {
+      ...removed,
+      links: [
+        ...removed.links.map((item) =>
+          item.id === "b" ? { ...item, sectionId: "proyectos", title: "Movido" } : item,
+        ),
+        link("nuevo", null, 3),
+      ],
+    };
+    const restored = restoreSection(meanwhile, content, "redes");
+    expect(groupLinks(restored).map((group) => group.links.map((item) => item.id))).toEqual([
+      ["a"],
+      ["b"],
+      ["suelto", "nuevo"],
+    ]);
+    expect(restored.links.find((item) => item.id === "b")?.title).toBe("Movido");
+  });
+
+  it("deshacer no duplica una sección que ya está", () => {
+    expect(restoreSection(content, content, "redes")).toBe(content);
   });
 
   it("reemplaza solo la sección con ese id", () => {
