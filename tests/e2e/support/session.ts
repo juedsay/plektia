@@ -132,3 +132,11 @@ export async function insertUnsectionedLinks(
     if (error) throw error;
   }
 }
+
+/** Borra las secciones de prueba de una página por su título. */
+export async function deleteSectionsTitled(pageId: string, titles: readonly string[]) {
+  const supabase = localSupabase();
+  const admin = createClient(supabase.url, supabase.secretKey, { auth: { persistSession: false } });
+  const { error } = await admin.from("sections").delete().eq("page_id", pageId).in("title", titles);
+  if (error) throw error;
+}

@@ -223,3 +223,52 @@ export function placeInOrder(
   }
   return null;
 }
+
+/**
+ * Cómo queda la página al borrar una sección, como lo hace la base: la sección
+ * se va y sus links pasan al final de "Sin sección", en su orden.
+ */
+export function removeSection(content: OwnLinks, sectionId: string): OwnLinks {
+  const byPosition = (first: Link, second: Link) => first.position - second.position;
+  const unsectionedCount = content.links.filter((link) => link.sectionId === null).length;
+  const orphans = content.links
+    .filter((link) => link.sectionId === sectionId)
+    .sort(byPosition)
+    .map((link, offset) => ({ ...link, sectionId: null, position: unsectionedCount + offset }));
+  const orphanById = new Map(orphans.map((link) => [link.id, link]));
+  return {
+    sections: content.sections.filter((section) => section.id !== sectionId),
+    links: content.links.map((link) => orphanById.get(link.id) ?? link),
+  };
+}
+
+/**
+ * Deshace `removeSection` sobre el contenido de ahora (no sobre la foto vieja):
+ * la sección vuelve a su lugar y recupera los links que tenía y que siguen en
+ * "Sin sección". Lo que se cambió mientras tanto se mantiene.
+ */
+export function restoreSection(content: OwnLinks, before: OwnLinks, sectionId: string): OwnLinks {
+  const section = before.sections.find((candidate) => candidate.id === sectionId);
+  if (!section || content.sections.some((candidate) => candidate.id === sectionId)) return content;
+  const formerLinks = new Map(
+    before.links.filter((link) => link.sectionId === sectionId).map((link) => [link.id, link]),
+  );
+  const sections = [...content.sections];
+  sections.splice(before.sections.indexOf(section), 0, section);
+  return {
+    sections,
+    links: content.links.map((link) => {
+      const former = formerLinks.get(link.id);
+      return former && link.sectionId === null
+        ? { ...link, sectionId, position: former.position }
+        : link;
+    }),
+  };
+}
+
+export function replaceSection(content: OwnLinks, updated: Section): OwnLinks {
+  return {
+    ...content,
+    sections: content.sections.map((section) => (section.id === updated.id ? updated : section)),
+  };
+}

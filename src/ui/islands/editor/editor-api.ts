@@ -1,5 +1,5 @@
 import type { FormResult } from "@/actions/form-result";
-import type { Link, OwnLinks } from "@/application/ports/link-repository";
+import type { Link, OwnLinks, Section } from "@/application/ports/link-repository";
 import { errorMessage } from "@/domain/errors";
 
 // Lo que el editor le pide al servidor. En el navegador son las Actions de
@@ -36,6 +36,21 @@ export interface EditorApi {
     order: readonly { id: string; version: number }[],
   ): Promise<FormResult<OwnLinks>>;
   reorderSections(order: readonly { id: string; version: number }[]): Promise<FormResult<OwnLinks>>;
+  createSection(title: string): Promise<FormResult<Section>>;
+  updateSection(
+    target: { id: string; version: number },
+    changes: SectionChanges,
+  ): Promise<FormResult<Section>>;
+  /** Borra la sección (sus links pasan a "Sin sección"); devuelve el contenido nuevo. */
+  deleteSection(target: { id: string; version: number }): Promise<FormResult<OwnLinks>>;
+  /** Como `deleteOnExit`, para una sección. */
+  deleteSectionOnExit(target: { id: string; version: number }): void;
+}
+
+export interface SectionChanges {
+  readonly title?: string;
+  readonly showTitle?: boolean;
+  readonly visible?: boolean;
 }
 
 /** Un resultado que salió mal: el mensaje general y el de cada campo. */

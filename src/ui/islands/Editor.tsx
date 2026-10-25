@@ -24,8 +24,12 @@ function resultOf(response: {
 }
 
 /** Un borrado que tiene que salir aunque la pestaña se esté cerrando. */
-function deleteWithKeepalive(pageId: string, target: { id: string; version: number }) {
-  void fetch("/_actions/links.delete", {
+function deleteWithKeepalive(
+  action: "links.delete" | "sections.delete",
+  pageId: string,
+  target: { id: string; version: number },
+) {
+  void fetch(`/_actions/${action}`, {
     method: "POST",
     keepalive: true,
     headers: { "Content-Type": "application/json" },
@@ -44,12 +48,21 @@ function actionsApi(pageId: string): EditorApi {
     delete: async (target) =>
       (await actions.links.delete({ pageId, ...target })).data ?? UNREACHABLE,
     deleteOnExit: (target) => {
-      deleteWithKeepalive(pageId, target);
+      deleteWithKeepalive("links.delete", pageId, target);
     },
     move: async (sectionId, order) =>
       (await actions.links.move({ pageId, sectionId, items: order })).data ?? UNREACHABLE,
     reorderSections: async (order) =>
       (await actions.sections.reorder({ pageId, items: order })).data ?? UNREACHABLE,
+    createSection: async (title) =>
+      (await actions.sections.create({ pageId, title })).data ?? UNREACHABLE,
+    updateSection: async (target, changes) =>
+      (await actions.sections.update({ pageId, ...target, changes })).data ?? UNREACHABLE,
+    deleteSection: async (target) =>
+      (await actions.sections.delete({ pageId, ...target })).data ?? UNREACHABLE,
+    deleteSectionOnExit: (target) => {
+      deleteWithKeepalive("sections.delete", pageId, target);
+    },
   };
 }
 
