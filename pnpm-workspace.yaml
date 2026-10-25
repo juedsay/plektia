@@ -16,3 +16,8 @@ overrides:
   # para todo el repo, también la que usa Astro. Excepción a la regla de dos
   # semanas aprobada el 2026-10-23 (procedencia SLSA, sin scripts).
   zod: 4.6.6
+  # Parche de seguridad (GHSA-xjj6-f33q-929c, DoS en undici): solo lo usan
+  # herramientas de desarrollo y build (miniflare, jsdom, unifont). Excepción a
+  # la regla de dos semanas aprobada el 2026-10-25 (procedencia SLSA, sin scripts).
+  "undici@^7": 7.30.1
+  "undici@^8": 8.12.2
