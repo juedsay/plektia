@@ -30,6 +30,14 @@ describe("securityHeaders", () => {
     expect(headers["Content-Security-Policy"]).toContain("frame-ancestors 'none'");
   });
 
+  it("la vista previa se puede embeber solo en el propio sitio", () => {
+    const frameable = securityHeaders({ frameable: true });
+
+    expect(frameable["X-Frame-Options"]).toBe("SAMEORIGIN");
+    expect(frameable["Content-Security-Policy"]).toContain("frame-ancestors 'self'");
+    expect(frameable["Content-Security-Policy"]).not.toContain("frame-ancestors 'none'");
+  });
+
   it("bloquea plugins, cambios de <base> y envíos de formularios a otros orígenes", () => {
     const csp = headers["Content-Security-Policy"];
 

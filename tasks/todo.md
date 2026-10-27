@@ -284,7 +284,7 @@
   - **Verificar:** `pnpm test:e2e`.
   - **Archivos:** `src/ui/islands/editor/SortableList.tsx`, `src/ui/islands/editor/SectionHeader.tsx`, `src/actions/sections.ts`.
 
-- [ ] **Tarea 21: Vista previa en vivo y purga** · S · Deps: 19, 17
+- [x] **Tarea 21: Vista previa en vivo y purga** · S · Deps: 19, 17
   - `/admin/vista-previa` (con `frame-ancestors 'self'`) en un iframe; las Actions purgan la caché del perfil.
   - **Aceptación:** el cambio se ve en la vista previa en menos de 1 s y en la página pública en menos de 5 s.
   - **Verificar:** E2E.

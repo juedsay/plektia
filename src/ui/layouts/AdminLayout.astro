@@ -22,8 +22,10 @@ interface Props {
   currentPage: Page | null;
   /** Error de una acción del marco (por ejemplo, al cambiar de página). */
   notice?: string | null;
+  /** El inicio usa todo el ancho: el editor y, en escritorio, la vista previa al lado. */
+  wide?: boolean;
 }
-const { title, section, pages, currentPage, notice = null } = Astro.props;
+const { title, section, pages, currentPage, notice = null, wide = false } = Astro.props;
 const publicUrl = currentPage ? new URL(`/${currentPage.handle}`, Astro.url).href : null;
 ---
 
@@ -124,7 +126,7 @@ const publicUrl = currentPage ? new URL(`/${currentPage.handle}`, Astro.url).hre
         </form>
       </header>
 
-      <main class="admin-main" id="contenido" tabindex="-1">
+      <main class:list={["admin-main", { "is-wide": wide }]} id="contenido" tabindex="-1">
         {notice && <Alert variant="error" message={notice} />}
         <slot />
       </main>

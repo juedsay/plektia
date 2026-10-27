@@ -2,7 +2,12 @@
 // página se cierra con Esc (y el foco vuelve a su botón) o tocando afuera, y un
 // aviso de error que llega del servidor recibe el foco para que se anuncie.
 
+import { connectLivePreview } from "@/ui/scripts/live-preview";
+
 document.querySelector<HTMLElement>(".admin-main .alert:not([hidden])")?.focus();
+
+const workspace = document.querySelector<HTMLElement>("[data-workspace]");
+if (workspace) connectLivePreview(workspace);
 
 for (const switcher of document.querySelectorAll<HTMLDetailsElement>("[data-switcher]")) {
   const summary = switcher.querySelector("summary");

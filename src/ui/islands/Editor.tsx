@@ -2,7 +2,8 @@ import { actions } from "astro:actions";
 import { useMemo } from "react";
 
 import type { FormResult } from "@/actions/form-result";
-import type { Link, OwnLinks } from "@/application/ports/link-repository";
+import type { OwnLinks } from "@/application/ports/link-repository";
+import { PAGE_CHANGED_EVENT } from "@/ui/view/page-changed";
 
 import { Editor } from "./editor/Editor";
 import { type EditorApi, UNREACHABLE } from "./editor/editor-api";
@@ -15,12 +16,17 @@ interface Props {
   readonly initialContent: OwnLinks;
 }
 
-/** El resultado de una Action, o "sin conexión" si la llamada misma falló. */
-function resultOf(response: {
-  data?: FormResult<Link> | undefined;
+/**
+ * El resultado de una Action que cambia la página, o "sin conexión" si la
+ * llamada misma falló. Si se guardó, avisa a la vista previa para que se recargue.
+ */
+function resultOf<Value>(response: {
+  data?: FormResult<Value> | undefined;
   error?: unknown;
-}): FormResult<Link> {
-  return response.data ?? UNREACHABLE;
+}): FormResult<Value> {
+  const result = response.data ?? UNREACHABLE;
+  if (result.ok) document.dispatchEvent(new Event(PAGE_CHANGED_EVENT));
+  return result;
 }
 
 /** Un borrado que tiene que salir aunque la pestaña se esté cerrando. */
@@ -45,21 +51,18 @@ function actionsApi(pageId: string): EditorApi {
       resultOf(await actions.links.update({ pageId, ...target, changes })),
     setVisibility: async (target, visible) =>
       resultOf(await actions.links.setVisibility({ pageId, ...target, visible })),
-    delete: async (target) =>
-      (await actions.links.delete({ pageId, ...target })).data ?? UNREACHABLE,
+    delete: async (target) => resultOf(await actions.links.delete({ pageId, ...target })),
     deleteOnExit: (target) => {
       deleteWithKeepalive("links.delete", pageId, target);
     },
     move: async (sectionId, order) =>
-      (await actions.links.move({ pageId, sectionId, items: order })).data ?? UNREACHABLE,
+      resultOf(await actions.links.move({ pageId, sectionId, items: order })),
     reorderSections: async (order) =>
-      (await actions.sections.reorder({ pageId, items: order })).data ?? UNREACHABLE,
-    createSection: async (title) =>
-      (await actions.sections.create({ pageId, title })).data ?? UNREACHABLE,
+      resultOf(await actions.sections.reorder({ pageId, items: order })),
+    createSection: async (title) => resultOf(await actions.sections.create({ pageId, title })),
     updateSection: async (target, changes) =>
-      (await actions.sections.update({ pageId, ...target, changes })).data ?? UNREACHABLE,
-    deleteSection: async (target) =>
-      (await actions.sections.delete({ pageId, ...target })).data ?? UNREACHABLE,
+      resultOf(await actions.sections.update({ pageId, ...target, changes })),
+    deleteSection: async (target) => resultOf(await actions.sections.delete({ pageId, ...target })),
     deleteSectionOnExit: (target) => {
       deleteWithKeepalive("sections.delete", pageId, target);
     },
