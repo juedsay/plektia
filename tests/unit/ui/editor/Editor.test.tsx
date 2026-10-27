@@ -181,10 +181,13 @@ class FakeApi implements EditorApi {
     return Promise.resolve({ ok: true, value: created });
   }
 
+  sectionUpdates = 0;
+
   updateSection(
     target: { id: string; version: number },
     changes: SectionChanges,
   ): Promise<FormResult<Section>> {
+    this.sectionUpdates += 1;
     const current = this.content.sections.find((candidate) => candidate.id === target.id);
     if (!current) return Promise.resolve(failure(errorMessage("not_found")) as never);
     if (current.version !== target.version) {
@@ -716,8 +719,8 @@ describe("Editor · secciones", () => {
     expect(screen.getByLabelText("Nueva sección")).toHaveProperty("value", "");
   });
 
-  it("doble clic en 'Ocultar sección': el segundo pedido va con la versión nueva, sin conflicto", async () => {
-    const { user } = setup(CONTENT);
+  it("doble clic en 'Ocultar sección': un solo pedido, sin conflicto, y 'Deshacer' la vuelve a mostrar", async () => {
+    const { api, user } = setup(CONTENT);
     await user.click(screen.getByRole("button", { name: "Opciones de la sección Redes" }));
     const hide = screen.getByRole("button", { name: "Ocultar sección" });
     fireEvent.click(hide);
@@ -726,10 +729,13 @@ describe("Editor · secciones", () => {
     await waitFor(() => {
       expect(screen.getByRole("button", { name: "Mostrar sección" })).toBeTruthy();
     });
-    await waitFor(() => {
-      expect(editorStatus()).toBe("Sección Redes: guardada");
-    });
     expect(screen.queryByText(errorMessage("conflict"))).toBeNull();
+    expect(api.sectionUpdates).toBe(1);
+
+    await user.click(screen.getByRole("button", { name: "Deshacer" }));
+    await waitFor(() => {
+      expect(screen.getByRole("button", { name: "Ocultar sección" })).toBeTruthy();
+    });
   });
 
   const ARTICULOS: Section = { ...REDES, id: "s-articulos", title: "Artículos", position: 2 };

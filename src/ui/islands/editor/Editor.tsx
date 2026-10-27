@@ -14,6 +14,7 @@ import {
   addLink,
   addSection,
   applyLinkOrder,
+  changesNothing,
   groupLinks,
   type LinkOrder,
   linkOrderOf,
@@ -228,7 +229,9 @@ export function Editor({ api, initialContent }: Props) {
   const saveSection = ({ id }: Section, changes: SectionChanges): Promise<Failure | null> =>
     inOrder(async () => {
       const section = latestContent.current.sections.find((item) => item.id === id);
-      if (!section) return null;
+      // Ya está así (el segundo de un doble clic): no se manda nada y el
+      // "Deshacer" del primero sigue valiendo.
+      if (!section || changesNothing(section, changes)) return null;
       const result = await api
         .updateSection({ id: section.id, version: section.version }, changes)
         .catch(() => UNREACHABLE);

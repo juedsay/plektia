@@ -14,6 +14,7 @@ import {
   removeLink,
   removeSection,
   restoreSection,
+  changesNothing,
   replaceLink,
   replaceSection,
   suggestTitle,
@@ -258,6 +259,22 @@ describe("orden durante el arrastre", () => {
     expect(placeInOrder(order, "a")).toEqual({ sectionId: "redes", index: 1 });
     expect(placeInOrder(order, "suelto")).toEqual({ sectionId: null, index: 0 });
     expect(placeInOrder(order, "x")).toBeNull();
+  });
+});
+
+describe("changesNothing", () => {
+  const redes = { ...section("redes", 0), title: "Redes", showTitle: true, visible: false };
+
+  it("ocultar una sección ya oculta, o el mismo nombre con espacios, no cambia nada", () => {
+    expect(changesNothing(redes, { visible: false })).toBe(true);
+    expect(changesNothing(redes, { title: " Redes " })).toBe(true);
+    expect(changesNothing(redes, { showTitle: true, visible: false })).toBe(true);
+  });
+
+  it("cualquier campo distinto sí cambia", () => {
+    expect(changesNothing(redes, { visible: true })).toBe(false);
+    expect(changesNothing(redes, { title: "Otras" })).toBe(false);
+    expect(changesNothing(redes, { showTitle: false })).toBe(false);
   });
 });
 

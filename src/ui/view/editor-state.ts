@@ -83,6 +83,18 @@ export function changedFields(
   return changes;
 }
 
+/** Si aplicar estos cambios deja la sección igual (por ejemplo, ocultar una ya oculta). */
+export function changesNothing(
+  section: Section,
+  changes: { title?: string; showTitle?: boolean; visible?: boolean },
+): boolean {
+  return (
+    (changes.title === undefined || changes.title.trim() === section.title) &&
+    (changes.showTitle === undefined || changes.showTitle === section.showTitle) &&
+    (changes.visible === undefined || changes.visible === section.visible)
+  );
+}
+
 export function removeLink(content: OwnLinks, id: string): OwnLinks {
   return { ...content, links: content.links.filter((link) => link.id !== id) };
 }
