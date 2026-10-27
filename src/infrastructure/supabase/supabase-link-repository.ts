@@ -55,10 +55,11 @@ export class SupabaseLinkRepository implements LinkReader, LinkWriter, SectionWr
     return { sections: sections.data.map(toSection), links: links.data.map(toLink) };
   }
 
-  async createLink(draft: LinkDraft): Promise<Result<Link, WriteError>> {
+  async createLink(draft: LinkDraft, id?: string): Promise<Result<Link, WriteError>> {
     const { data, error } = await this.client
       .from("links")
       .insert({
+        ...(id === undefined ? {} : { id }),
         page_id: this.pageId,
         section_id: draft.sectionId,
         title: draft.title,
@@ -71,7 +72,19 @@ export class SupabaseLinkRepository implements LinkReader, LinkWriter, SectionWr
       })
       .select(LINK_COLUMNS)
       .single();
-    return error ? fail(error) : ok(toLink(data));
+    if (!error) return ok(toLink(data));
+    // El mismo pedido otra vez: el link ya existe con ese id (en esta página).
+    if (id !== undefined) {
+      const existing = await this.client
+        .from("links")
+        .select(LINK_COLUMNS)
+        .eq("id", id)
+        .eq("page_id", this.pageId)
+        .maybeSingle();
+      if (existing.error) throw unexpected(existing.error);
+      if (existing.data) return ok(toLink(existing.data));
+    }
+    return fail(error);
   }
 
   async updateLink(
@@ -128,10 +141,11 @@ export class SupabaseLinkRepository implements LinkReader, LinkWriter, SectionWr
     return error ? fail(error) : ok(undefined);
   }
 
-  async createSection(draft: SectionDraft): Promise<Result<Section, WriteError>> {
+  async createSection(draft: SectionDraft, id?: string): Promise<Result<Section, WriteError>> {
     const { data, error } = await this.client
       .from("sections")
       .insert({
+        ...(id === undefined ? {} : { id }),
         page_id: this.pageId,
         title: draft.title,
         show_title: draft.showTitle,
@@ -139,7 +153,19 @@ export class SupabaseLinkRepository implements LinkReader, LinkWriter, SectionWr
       })
       .select(SECTION_COLUMNS)
       .single();
-    return error ? fail(error) : ok(toSection(data));
+    if (!error) return ok(toSection(data));
+    // El mismo pedido otra vez: la sección ya existe con ese id (en esta página).
+    if (id !== undefined) {
+      const existing = await this.client
+        .from("sections")
+        .select(SECTION_COLUMNS)
+        .eq("id", id)
+        .eq("page_id", this.pageId)
+        .maybeSingle();
+      if (existing.error) throw unexpected(existing.error);
+      if (existing.data) return ok(toSection(existing.data));
+    }
+    return fail(error);
   }
 
   async updateSection(

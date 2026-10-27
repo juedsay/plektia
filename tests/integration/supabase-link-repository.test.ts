@@ -70,6 +70,39 @@ describe("SupabaseLinkRepository contra Supabase local", () => {
     await ownerClient.from("sections").delete().eq("id", foreignSectionId);
   });
 
+  describe("altas idempotentes (el id lo elige el panel)", () => {
+    const LINK_ID = "c0ffee00-0000-4000-8000-000000000001";
+    const SECTION_ID = "c0ffee00-0000-4000-8000-000000000002";
+
+    it("el mismo alta de link dos veces devuelve el mismo link y no lo duplica", async () => {
+      const draft = parseLinkInput({ title: "Una vez", url: "https://plektia.app/una-vez" });
+      if (!draft.ok) throw new Error("draft inválido");
+      const first = await repo.createLink(draft.value, LINK_ID);
+      const second = await repo.createLink(draft.value, LINK_ID);
+      expect(first).toMatchObject({ ok: true, value: { id: LINK_ID } });
+      expect(second).toEqual(first);
+      expect((await repo.listOwn()).links.filter((link) => link.id === LINK_ID)).toHaveLength(1);
+    });
+
+    it("la misma alta de sección dos veces devuelve la misma sección", async () => {
+      const draft = { title: "Una vez", showTitle: true, visible: true };
+      const first = await repo.createSection(draft, SECTION_ID);
+      const second = await repo.createSection(draft, SECTION_ID);
+      expect(first).toMatchObject({ ok: true, value: { id: SECTION_ID } });
+      expect(second).toEqual(first);
+      expect((await repo.listOwn()).sections).toHaveLength(1);
+    });
+
+    it("un id que ya usa algo de otra cuenta es conflicto, sin revelarlo", async () => {
+      const draft = parseLinkInput({ title: "Robado", url: "https://plektia.app/robado" });
+      if (!draft.ok) throw new Error("draft inválido");
+      expect(await repo.createLink(draft.value, foreignLinkId)).toEqual({
+        ok: false,
+        error: "conflict",
+      });
+    });
+  });
+
   it("crea secciones y links y los lista en orden", async () => {
     const section = await repo.createSection({ title: "Redes", showTitle: true, visible: true });
     expect(section.ok).toBe(true);

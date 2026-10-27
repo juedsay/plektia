@@ -12,7 +12,9 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import type { Link, OwnLinks, Section } from "@/application/ports/link-repository";
 import {
   addLink,
+  addSection,
   applyLinkOrder,
+  changesNothing,
   groupLinks,
   type LinkOrder,
   linkOrderOf,
@@ -71,6 +73,22 @@ export function Editor({ api, initialContent }: Props) {
   /** Lo último que se ve: los movimientos y "Deshacer" parten de acá. */
   const latestContent = useRef(content);
   latestContent.current = content;
+  /** Muestra contenido nuevo y lo deja como el último ya mismo (sin esperar al render). */
+  const showContent = useCallback((next: OwnLinks) => {
+    latestContent.current = next;
+    setContent(next);
+  }, []);
+  /**
+   * Fila de las escrituras que dependen de la versión (mover, guardar una
+   * sección): cada una sale cuando terminó la anterior y lee las versiones que
+   * esa dejó. Así un doble clic no manda dos pedidos con la misma versión.
+   */
+  const writeQueue = useRef<Promise<unknown>>(Promise.resolve());
+  const inOrder = useCallback(<Value,>(write: () => Promise<Value>): Promise<Value> => {
+    const next = writeQueue.current.then(write, write);
+    writeQueue.current = next.catch(() => undefined);
+    return next;
+  }, []);
   /**
    * Orden de los links mientras se arrastra uno (como en la guía de listas
    * múltiples de dnd-kit): React dibuja cada paso, así el DOM es siempre suyo.
@@ -141,7 +159,8 @@ export function Editor({ api, initialContent }: Props) {
   };
 
   const sendDelete = async (link: Link) => {
-    pendingDeletes.current.delete(link.id);
+    // Si ya salió al cerrar la pestaña, no se manda de nuevo.
+    if (!pendingDeletes.current.delete(link.id)) return;
     const result = await api
       .delete({ id: link.id, version: link.version })
       .catch(() => UNREACHABLE);
@@ -198,38 +217,50 @@ export function Editor({ api, initialContent }: Props) {
   }, [api]);
 
   const sectionCreated = (section: Section) => {
-    setContent((current) => ({ ...current, sections: [...current.sections, section] }));
+    setContent((current) => addSection(current, section));
     announce(`Sección ${section.title}: creada`);
   };
 
-  /** Guarda un cambio de una sección y ofrece deshacerlo; devuelve el error, si lo hay. */
-  const saveSection = async (
-    section: Section,
-    changes: SectionChanges,
-  ): Promise<Failure | null> => {
-    const result = await api
-      .updateSection({ id: section.id, version: section.version }, changes)
-      .catch(() => UNREACHABLE);
-    if (!result.ok) return result;
-    setContent((current) => replaceSection(current, result.value));
-    announce(`Sección ${result.value.title}: guardada`);
+  /**
+   * Guarda un cambio de una sección y ofrece deshacerlo; devuelve el error, si lo
+   * hay. Va en fila y con la versión de ese momento: un doble clic en "Ocultar
+   * sección" no choca consigo mismo (el segundo pedido ya no cambia nada).
+   */
+  const saveSection = ({ id }: Section, changes: SectionChanges): Promise<Failure | null> =>
+    inOrder(async () => {
+      const section = latestContent.current.sections.find((item) => item.id === id);
+      // Ya está así (el segundo de un doble clic): no se manda nada y el
+      // "Deshacer" del primero sigue valiendo.
+      if (!section || changesNothing(section, changes)) return null;
+      const result = await api
+        .updateSection({ id: section.id, version: section.version }, changes)
+        .catch(() => UNREACHABLE);
+      if (!result.ok) return result;
+      showContent(replaceSection(latestContent.current, result.value));
+      offerSectionUndo(section, changes, result.value);
+      return null;
+    });
+
+  const offerSectionUndo = (section: Section, changes: SectionChanges, saved: Section) => {
+    announce(`Sección ${saved.title}: guardada`);
     const inverse: SectionChanges = {
       ...(changes.title === undefined ? {} : { title: section.title }),
       ...(changes.showTitle === undefined ? {} : { showTitle: section.showTitle }),
       ...(changes.visible === undefined ? {} : { visible: section.visible }),
     };
-    offerUndo(`Sección ${result.value.title} guardada`, async () => {
-      const current = latestContent.current.sections.find((item) => item.id === section.id);
-      if (!current) return;
-      const undone = await api
-        .updateSection({ id: current.id, version: current.version }, inverse)
-        .catch(() => UNREACHABLE);
-      if (undone.ok) {
-        setContent((latest) => replaceSection(latest, undone.value));
-        announce(`Sección ${undone.value.title}: cambio deshecho`);
-      }
-    });
-    return null;
+    offerUndo(`Sección ${saved.title} guardada`, () =>
+      inOrder(async () => {
+        const current = latestContent.current.sections.find((item) => item.id === section.id);
+        if (!current) return;
+        const undone = await api
+          .updateSection({ id: current.id, version: current.version }, inverse)
+          .catch(() => UNREACHABLE);
+        if (undone.ok) {
+          showContent(replaceSection(latestContent.current, undone.value));
+          announce(`Sección ${undone.value.title}: cambio deshecho`);
+        }
+      }),
+    );
   };
 
   const requestSectionDelete = (section: Section) => {
@@ -286,40 +317,44 @@ export function Editor({ api, initialContent }: Props) {
     return null;
   };
 
-  const moveLink = async (linkId: string, sectionId: string | null, index: number) => {
-    const before = latestContent.current;
-    const moved = before.links.find((link) => link.id === linkId);
-    const origin = placeOf(linkId);
-    const plan = planLinkMove(before, linkId, sectionId, index);
-    if (!moved || !origin || !plan) return;
-    setContent(plan.content);
-    const result = await api.move(plan.sectionId, plan.order).catch(() => UNREACHABLE);
-    if (!result.ok) {
-      setContent(before);
-      announce(`No pudimos mover ${moved.title}: ${result.message}`);
-      return;
-    }
-    setContent(result.value);
-    offerUndo(`${moved.title} movido`, () => moveLink(linkId, origin.sectionId, origin.index));
-  };
+  // Los movimientos van en fila (ver `inOrder`): "Subir" dos veces seguidas
+  // sube dos lugares, y el segundo parte de las versiones que dejó el primero.
+  const moveLink = (linkId: string, sectionId: string | null, index: number) =>
+    inOrder(async () => {
+      const before = latestContent.current;
+      const moved = before.links.find((link) => link.id === linkId);
+      const origin = placeOf(linkId);
+      const plan = planLinkMove(before, linkId, sectionId, index);
+      if (!moved || !origin || !plan) return;
+      setContent(plan.content);
+      const result = await api.move(plan.sectionId, plan.order).catch(() => UNREACHABLE);
+      if (!result.ok) {
+        showContent(before);
+        announce(`No pudimos mover ${moved.title}: ${result.message}`);
+        return;
+      }
+      showContent(result.value);
+      offerUndo(`${moved.title} movido`, () => moveLink(linkId, origin.sectionId, origin.index));
+    });
 
-  const moveSection = async (sectionId: string, index: number) => {
-    const before = latestContent.current;
-    const sorted = [...before.sections].sort((first, second) => first.position - second.position);
-    const originIndex = sorted.findIndex((section) => section.id === sectionId);
-    const moved = sorted[originIndex];
-    const plan = planSectionMove(before, sectionId, index);
-    if (!moved || !plan) return;
-    setContent(plan.content);
-    const result = await api.reorderSections(plan.order).catch(() => UNREACHABLE);
-    if (!result.ok) {
-      setContent(before);
-      announce(`No pudimos mover la sección ${moved.title}: ${result.message}`);
-      return;
-    }
-    setContent(result.value);
-    offerUndo(`Sección ${moved.title} movida`, () => moveSection(sectionId, originIndex));
-  };
+  const moveSection = (sectionId: string, index: number) =>
+    inOrder(async () => {
+      const before = latestContent.current;
+      const sorted = [...before.sections].sort((first, second) => first.position - second.position);
+      const originIndex = sorted.findIndex((section) => section.id === sectionId);
+      const moved = sorted[originIndex];
+      const plan = planSectionMove(before, sectionId, index);
+      if (!moved || !plan) return;
+      setContent(plan.content);
+      const result = await api.reorderSections(plan.order).catch(() => UNREACHABLE);
+      if (!result.ok) {
+        showContent(before);
+        announce(`No pudimos mover la sección ${moved.title}: ${result.message}`);
+        return;
+      }
+      showContent(result.value);
+      offerUndo(`Sección ${moved.title} movida`, () => moveSection(sectionId, originIndex));
+    });
 
   /** Anuncios en español para el lector de pantalla (SPEC-admin-panel, "Accesibilidad"). */
   const describePosition = (data: unknown, index: number, group: unknown, linkId: string) =>

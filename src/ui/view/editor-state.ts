@@ -36,8 +36,20 @@ export function replaceLink(content: OwnLinks, updated: Link): OwnLinks {
   };
 }
 
+/** Suma un link; si ya estaba (el servidor devolvió un alta repetida), no lo duplica. */
 export function addLink(content: OwnLinks, created: Link): OwnLinks {
-  return { ...content, links: [...content.links, created] };
+  return {
+    ...content,
+    links: [...content.links.filter((link) => link.id !== created.id), created],
+  };
+}
+
+/** Suma una sección al final; si ya estaba, no la duplica. */
+export function addSection(content: OwnLinks, created: Section): OwnLinks {
+  return {
+    ...content,
+    sections: [...content.sections.filter((section) => section.id !== created.id), created],
+  };
 }
 
 /**
@@ -69,6 +81,18 @@ export function changedFields(
   const description = edited.description.trim();
   if (description !== (link.description ?? "")) changes.description = description || null;
   return changes;
+}
+
+/** Si aplicar estos cambios deja la sección igual (por ejemplo, ocultar una ya oculta). */
+export function changesNothing(
+  section: Section,
+  changes: { title?: string; showTitle?: boolean; visible?: boolean },
+): boolean {
+  return (
+    (changes.title === undefined || changes.title.trim() === section.title) &&
+    (changes.showTitle === undefined || changes.showTitle === section.showTitle) &&
+    (changes.visible === undefined || changes.visible === section.visible)
+  );
 }
 
 export function removeLink(content: OwnLinks, id: string): OwnLinks {

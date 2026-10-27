@@ -1,4 +1,5 @@
 import type { SectionWriter } from "@/application/ports/link-repository";
+import { alreadyGone } from "@/application/shared/idempotent-delete";
 import { parseTarget } from "@/application/shared/target";
 import type { UseCaseResult } from "@/application/shared/use-case";
 
@@ -7,6 +8,6 @@ export function deleteSection(deps: { sections: SectionWriter }) {
   return async (raw: unknown): UseCaseResult<void> => {
     const target = parseTarget(raw);
     if (!target.ok) return target;
-    return deps.sections.deleteSection(target.value.id, target.value.version);
+    return alreadyGone(await deps.sections.deleteSection(target.value.id, target.value.version));
   };
 }

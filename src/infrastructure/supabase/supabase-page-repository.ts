@@ -54,10 +54,14 @@ export class SupabasePageRepository implements PageReader, PageWriter {
     return data?.last_page_id ?? null;
   }
 
-  async createPage(draft: PageDraft): Promise<Result<Page, PageWriteError>> {
+  async createPage(draft: PageDraft, id?: string): Promise<Result<Page, PageWriteError>> {
     const { data, error } = await this.client
       .from("pages")
-      .insert({ handle: draft.handle, display_name: draft.displayName })
+      .insert({
+        ...(id === undefined ? {} : { id }),
+        handle: draft.handle,
+        display_name: draft.displayName,
+      })
       .select(PAGE_COLUMNS)
       .single();
     if (error?.code === UNIQUE_VIOLATION) return err("handle_taken");

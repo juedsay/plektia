@@ -25,7 +25,8 @@ export interface PageReader {
 }
 
 export interface PageWriter {
-  createPage(draft: PageDraft): Promise<Result<Page, PageWriteError>>;
+  /** Con `id`, el alta va con ese id (el caso de uso devuelve la existente si se repite). */
+  createPage(draft: PageDraft, id?: string): Promise<Result<Page, PageWriteError>>;
   /** Cambia el nombre, la bio, el tema y si se muestra el @handle de una página propia. */
   updatePageSettings(pageId: string, settings: PageSettings): Promise<Result<Page, WriteError>>;
   /** Recuerda la página elegida para abrirla al volver al panel. */

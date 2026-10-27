@@ -50,7 +50,11 @@ export interface LinkReader {
 }
 
 export interface LinkWriter {
-  createLink(draft: LinkDraft): Promise<Result<Link, WriteError>>;
+  /**
+   * Con `id`, el alta es idempotente: si ya existe un link propio con ese id, lo
+   * devuelve sin crear otro (el mismo pedido, repetido).
+   */
+  createLink(draft: LinkDraft, id?: string): Promise<Result<Link, WriteError>>;
   updateLink(id: string, version: number, patch: LinkPatch): Promise<Result<Link, WriteError>>;
   deleteLink(id: string, version: number): Promise<Result<void, WriteError>>;
   /** `items` es el orden final completo del grupo destino (una sección o "Sin sección"). */
@@ -61,7 +65,8 @@ export interface LinkWriter {
 }
 
 export interface SectionWriter {
-  createSection(draft: SectionDraft): Promise<Result<Section, WriteError>>;
+  /** Con `id`, idempotente, como `createLink`. */
+  createSection(draft: SectionDraft, id?: string): Promise<Result<Section, WriteError>>;
   updateSection(
     id: string,
     version: number,

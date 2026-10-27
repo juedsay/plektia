@@ -1,12 +1,14 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { afterEach, beforeAll, describe, expect, it } from "vitest";
 
+import { createPage } from "@/application/pages/create-page";
 import { listPages } from "@/application/pages/list-pages";
 import { selectPage } from "@/application/pages/select-page";
 import { PAGE_LIMIT, parsePageInput, type PageDraft } from "@/domain/page";
 import type { Database } from "@/infrastructure/supabase/database.types";
 import { SupabasePageRepository } from "@/infrastructure/supabase/supabase-page-repository";
 
+import { RecordingPageCache } from "../unit/application/fakes/recording-page-cache";
 import { clientFor } from "./session-client";
 
 // El owner del seed tiene dos páginas: /juedsay (con su mismo id) y /demo-segunda.
@@ -59,6 +61,20 @@ describe("SupabasePageRepository contra Supabase local", () => {
       Array.from({ length: 3 }, () => ({ ok: false, error: "limit_reached" })),
     );
     expect(await repo.listOwn()).toHaveLength(PAGE_LIMIT);
+  });
+
+  it("doble envío simultáneo del alta (mismo id): una sola página y los dos ven la misma", async () => {
+    const input = {
+      id: "c0ffee00-0000-4000-8000-000000000003",
+      handle: "juedsay-una-vez",
+      displayName: "Una vez",
+    };
+    const create = createPage({ pages: repo, cache: new RecordingPageCache() });
+    // El owner tiene 2: la nueva completa el límite, y el otro envío choca con él.
+    const [first, second] = await Promise.all([create(input), create(input)]);
+    expect(first).toMatchObject({ ok: true, value: { id: input.id } });
+    expect(second).toEqual(first);
+    expect((await repo.listOwn()).filter((page) => page.handle === input.handle)).toHaveLength(1);
   });
 
   it("un handle usado por otra página da handle_taken", async () => {

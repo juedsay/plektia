@@ -35,13 +35,15 @@ export class InMemoryLinkRepository implements LinkReader, LinkWriter, SectionWr
     });
   }
 
-  createLink(draft: LinkDraft): Promise<Result<Link, WriteError>> {
+  createLink(draft: LinkDraft, id?: string): Promise<Result<Link, WriteError>> {
+    const existing = this.links.find((link) => link.id === id);
+    if (existing) return Promise.resolve(ok(existing));
     if (this.links.length >= LIMITS.links) return Promise.resolve(err("limit_reached"));
     if (draft.sectionId && !this.sections.some((section) => section.id === draft.sectionId)) {
       return Promise.resolve(err("not_found"));
     }
     const group = this.links.filter((link) => link.sectionId === draft.sectionId);
-    const link: Link = { ...draft, id: this.id(), position: group.length, version: 1 };
+    const link: Link = { ...draft, id: id ?? this.id(), position: group.length, version: 1 };
     this.links.push(link);
     return Promise.resolve(ok(link));
   }
@@ -84,11 +86,13 @@ export class InMemoryLinkRepository implements LinkReader, LinkWriter, SectionWr
     return Promise.resolve(ok(undefined));
   }
 
-  createSection(draft: SectionDraft): Promise<Result<Section, WriteError>> {
+  createSection(draft: SectionDraft, id?: string): Promise<Result<Section, WriteError>> {
+    const existing = this.sections.find((section) => section.id === id);
+    if (existing) return Promise.resolve(ok(existing));
     if (this.sections.length >= LIMITS.sections) return Promise.resolve(err("limit_reached"));
     const section: Section = {
       ...draft,
-      id: this.id(),
+      id: id ?? this.id(),
       position: this.sections.length,
       version: 1,
     };

@@ -1,5 +1,5 @@
 // @vitest-environment jsdom
-import { cleanup, render, screen, waitFor, within } from "@testing-library/react";
+import { cleanup, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
@@ -88,14 +88,20 @@ class FakeApi implements EditorApi {
     return Promise.resolve(this.content);
   }
 
-  create(newLink: NewLink) {
-    this.created.push(newLink);
+  /** Altas ya hechas por id de pedido: repetir uno devuelve lo mismo (como la base). */
+  private readonly createdByRequest = new Map<string, Link | Section>();
+
+  create({ id: requestId, ...newLink }: NewLink) {
+    this.created.push({ id: requestId, ...newLink });
     const failed = this.takeFailure();
     if (failed) return Promise.resolve(failed);
+    const replayed = this.createdByRequest.get(requestId) as Link | undefined;
+    if (replayed) return Promise.resolve({ ok: true as const, value: replayed });
     const created = link(`nuevo-${String(this.created.length)}`, {
       ...newLink,
       position: this.content.links.length,
     });
+    this.createdByRequest.set(requestId, created);
     this.content = { ...this.content, links: [...this.content.links, created] };
     return Promise.resolve({ ok: true as const, value: created });
   }
@@ -148,7 +154,12 @@ class FakeApi implements EditorApi {
 
   sectionsDeleted: string[] = [];
 
-  createSection(title: string): Promise<FormResult<Section>> {
+  sectionRequests: string[] = [];
+
+  createSection(title: string, requestId: string): Promise<FormResult<Section>> {
+    this.sectionRequests.push(requestId);
+    const replayed = this.createdByRequest.get(requestId) as Section | undefined;
+    if (replayed) return Promise.resolve({ ok: true, value: replayed });
     if (title.trim() === "") {
       return Promise.resolve({
         ok: false,
@@ -165,14 +176,18 @@ class FakeApi implements EditorApi {
       position: this.content.sections.length,
       version: 1,
     };
+    this.createdByRequest.set(requestId, created);
     this.content = { ...this.content, sections: [...this.content.sections, created] };
     return Promise.resolve({ ok: true, value: created });
   }
+
+  sectionUpdates = 0;
 
   updateSection(
     target: { id: string; version: number },
     changes: SectionChanges,
   ): Promise<FormResult<Section>> {
+    this.sectionUpdates += 1;
     const current = this.content.sections.find((candidate) => candidate.id === target.id);
     if (!current) return Promise.resolve(failure(errorMessage("not_found")) as never);
     if (current.version !== target.version) {
@@ -205,13 +220,24 @@ class FakeApi implements EditorApi {
     return Promise.resolve({ ok: true, value: this.content });
   }
 
+  reorders = 0;
+
+  /** Como la base: con una versión vieja da conflicto; si no, sube la versión de cada una. */
   reorderSections(order: readonly { id: string; version: number }[]) {
+    this.reorders += 1;
+    const stale = order.some(
+      (item) =>
+        this.content.sections.find((candidate) => candidate.id === item.id)?.version !==
+        item.version,
+    );
+    if (stale) return Promise.resolve(failure(errorMessage("conflict")) as never);
     const ids = order.map((item) => item.id);
     this.content = {
       ...this.content,
       sections: this.content.sections.map((candidate) => ({
         ...candidate,
         position: ids.indexOf(candidate.id),
+        version: candidate.version + 1,
       })),
     };
     return Promise.resolve({ ok: true as const, value: this.content });
@@ -269,7 +295,12 @@ describe("Editor · agregar", () => {
     await user.click(screen.getByRole("button", { name: "Agregar link" }));
 
     expect(api.created).toEqual([
-      { title: "Instagram", url: "https://www.instagram.com/juedsay/", sectionId: "s-redes" },
+      {
+        id: expect.stringMatching(/^[0-9a-f-]{36}$/) as unknown,
+        title: "Instagram",
+        url: "https://www.instagram.com/juedsay/",
+        sectionId: "s-redes",
+      },
     ]);
     const redes = screen.getByRole("region", { name: "Redes" });
     expect(within(redes).getByText("Instagram")).toBeTruthy();
@@ -279,6 +310,35 @@ describe("Editor · agregar", () => {
     await waitFor(() => {
       expect(editorStatus()).toBe("Instagram: agregado");
     });
+  });
+
+  it("dos envíos seguidos (doble Enter) crean un solo link", async () => {
+    const { api, user } = setup({ sections: [], links: [] });
+    await user.type(screen.getByLabelText("URL"), "https://github.com/juedsay");
+    const form = screen.getByLabelText("URL").closest("form");
+    if (!form) throw new Error("falta el formulario");
+    fireEvent.submit(form);
+    fireEvent.submit(form);
+
+    await waitFor(() => {
+      expect(editorStatus()).toBe("GitHub: agregado");
+    });
+    expect(api.created).toHaveLength(1);
+    expect(screen.getAllByText("GitHub")).toHaveLength(1);
+  });
+
+  it("reintentar tras un error va con el mismo id; el link siguiente, con otro", async () => {
+    const { api, user } = setup({ sections: [], links: [] });
+    api.nextFailure = failure("Sin conexión. Probá de nuevo.", {});
+    await user.type(screen.getByLabelText("URL"), "https://github.com/juedsay");
+    await user.click(screen.getByRole("button", { name: "Agregar link" }));
+    await user.click(screen.getByRole("button", { name: "Agregar link" }));
+    await user.type(screen.getByLabelText("URL"), "https://www.twitch.tv/juedsay");
+    await user.click(screen.getByRole("button", { name: "Agregar link" }));
+
+    const [failed, retried, next] = api.created.map((request) => request.id);
+    expect(retried).toBe(failed);
+    expect(next).not.toBe(retried);
   });
 
   it("un título escrito a mano no se pisa al cambiar la URL", async () => {
@@ -657,6 +717,68 @@ describe("Editor · secciones", () => {
       expect(sectionTitles()).toEqual(["Redes", "Proyectos", "Artículos", "Sin sección"]);
     });
     expect(screen.getByLabelText("Nueva sección")).toHaveProperty("value", "");
+  });
+
+  it("doble clic en 'Ocultar sección': un solo pedido, sin conflicto, y 'Deshacer' la vuelve a mostrar", async () => {
+    const { api, user } = setup(CONTENT);
+    await user.click(screen.getByRole("button", { name: "Opciones de la sección Redes" }));
+    const hide = screen.getByRole("button", { name: "Ocultar sección" });
+    fireEvent.click(hide);
+    fireEvent.click(hide);
+
+    await waitFor(() => {
+      expect(screen.getByRole("button", { name: "Mostrar sección" })).toBeTruthy();
+    });
+    expect(screen.queryByText(errorMessage("conflict"))).toBeNull();
+    expect(api.sectionUpdates).toBe(1);
+
+    await user.click(screen.getByRole("button", { name: "Deshacer" }));
+    await waitFor(() => {
+      expect(screen.getByRole("button", { name: "Ocultar sección" })).toBeTruthy();
+    });
+  });
+
+  const ARTICULOS: Section = { ...REDES, id: "s-articulos", title: "Artículos", position: 2 };
+
+  it("doble clic en 'Bajar sección' (los dos al mismo destino) la baja un lugar, sin conflicto", async () => {
+    const { api, user } = setup({ ...CONTENT, sections: [REDES, PROYECTOS, ARTICULOS] });
+    await user.click(screen.getByRole("button", { name: "Opciones de la sección Redes" }));
+    const down = screen.getByRole("button", { name: "Bajar sección" });
+    fireEvent.click(down);
+    fireEvent.click(down);
+
+    await waitFor(() => {
+      expect(sectionTitles()).toEqual(["Proyectos", "Redes", "Artículos", "Sin sección"]);
+    });
+    expect(api.reorders).toBe(1);
+    expect(screen.queryByText(/No pudimos mover/)).toBeNull();
+  });
+
+  it("'Bajar sección' dos veces la baja dos lugares; el segundo parte de la versión nueva", async () => {
+    const { api, user } = setup({ ...CONTENT, sections: [REDES, PROYECTOS, ARTICULOS] });
+    await user.click(screen.getByRole("button", { name: "Opciones de la sección Redes" }));
+    await user.click(screen.getByRole("button", { name: "Bajar sección" }));
+    await user.click(screen.getByRole("button", { name: "Bajar sección" }));
+
+    await waitFor(() => {
+      expect(sectionTitles()).toEqual(["Proyectos", "Artículos", "Redes", "Sin sección"]);
+    });
+    expect(api.reorders).toBe(2);
+    expect(screen.queryByText(/No pudimos mover/)).toBeNull();
+  });
+
+  it("dos envíos seguidos crean una sola sección", async () => {
+    const { api, user } = setup(CONTENT);
+    await user.type(screen.getByLabelText("Nueva sección"), "Artículos");
+    const form = screen.getByLabelText("Nueva sección").closest("form");
+    if (!form) throw new Error("falta el formulario");
+    fireEvent.submit(form);
+    fireEvent.submit(form);
+
+    await waitFor(() => {
+      expect(sectionTitles()).toEqual(["Redes", "Proyectos", "Artículos", "Sin sección"]);
+    });
+    expect(api.sectionRequests).toHaveLength(1);
   });
 
   it("renombra al salir del campo, oculta y deshace", async () => {

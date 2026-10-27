@@ -93,6 +93,51 @@ describe("createPage", () => {
     });
     expect(repo.pages).toHaveLength(PAGE_LIMIT);
   });
+
+  describe("con el id del pedido (doble envío del formulario)", () => {
+    const REQUEST_ID = "7d3e2f1a-0b9c-4d8e-a7f6-5e4d3c2b1a09";
+    const input = { id: REQUEST_ID, handle: "repetida", displayName: "Repetida" };
+
+    it("el segundo envío devuelve la misma página, sin error de handle ni duplicado", async () => {
+      const first = await createPage({ pages: repo, cache })(input);
+      const second = await createPage({ pages: repo, cache })(input);
+      expect(first).toMatchObject({ ok: true, value: { id: REQUEST_ID } });
+      expect(second).toEqual(first);
+      expect(repo.pages).toHaveLength(1);
+    });
+
+    it("aunque esa página haya completado el límite", async () => {
+      await created("uno-1");
+      await created("dos-2");
+      await createPage({ pages: repo, cache })(input);
+      expect(await createPage({ pages: repo, cache })(input)).toMatchObject({
+        ok: true,
+        value: { id: REQUEST_ID },
+      });
+    });
+
+    it("si los dos envíos llegan a la vez, el que pierde devuelve la del otro", async () => {
+      repo.createdByConcurrentRequest = {
+        id: REQUEST_ID,
+        handle: "repetida",
+        displayName: "Repetida",
+        bio: null,
+        theme: "tecnico",
+        showHandle: true,
+      };
+      expect(await createPage({ pages: repo, cache })(input)).toMatchObject({
+        ok: true,
+        value: { id: REQUEST_ID },
+      });
+      expect(repo.pages).toHaveLength(1);
+    });
+
+    it("un id que no es un UUID se rechaza sin crear nada", async () => {
+      const result = await createPage({ pages: repo, cache })({ ...input, id: "no-uuid" });
+      expect(result).toMatchObject({ ok: false, error: { kind: "invalid_input" } });
+      expect(repo.pages).toHaveLength(0);
+    });
+  });
 });
 
 describe("listPages", () => {
