@@ -6,6 +6,8 @@ import { errorMessage } from "@/domain/errors";
 // links (Editor.tsx); en los tests de componentes, un servidor falso.
 
 export interface NewLink {
+  /** Id del alta (UUID): repetir el pedido devuelve el mismo link, no otro. */
+  readonly id: string;
   readonly title: string;
   readonly url: string;
   readonly sectionId: string | null;
@@ -36,7 +38,8 @@ export interface EditorApi {
     order: readonly { id: string; version: number }[],
   ): Promise<FormResult<OwnLinks>>;
   reorderSections(order: readonly { id: string; version: number }[]): Promise<FormResult<OwnLinks>>;
-  createSection(title: string): Promise<FormResult<Section>>;
+  /** `id`: como en `NewLink`, repetir el pedido devuelve la misma sección. */
+  createSection(title: string, id: string): Promise<FormResult<Section>>;
   updateSection(
     target: { id: string; version: number },
     changes: SectionChanges,

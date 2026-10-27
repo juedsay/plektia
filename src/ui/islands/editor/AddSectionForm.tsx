@@ -1,4 +1,4 @@
-import { type SubmitEvent, useId, useState } from "react";
+import { type SubmitEvent, useId, useRef, useState } from "react";
 
 import type { Section } from "@/application/ports/link-repository";
 
@@ -15,16 +15,23 @@ export function AddSectionForm({ api, onCreated }: Props) {
   const [title, setTitle] = useState("");
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  // Como en AddLinkForm: el mismo id en cada reintento y un solo envío a la vez.
+  const requestId = useRef(crypto.randomUUID());
+  const inFlight = useRef(false);
 
   const submit = async (event: SubmitEvent<HTMLFormElement>) => {
     event.preventDefault();
+    if (inFlight.current) return;
+    inFlight.current = true;
     setSaving(true);
-    const result = await api.createSection(title).catch(() => UNREACHABLE);
+    const result = await api.createSection(title, requestId.current).catch(() => UNREACHABLE);
+    inFlight.current = false;
     setSaving(false);
     if (!result.ok) {
       setError(result.fields["title"] ?? result.message);
       return;
     }
+    requestId.current = crypto.randomUUID();
     setTitle("");
     setError(null);
     onCreated(result.value);

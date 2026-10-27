@@ -24,6 +24,10 @@ const message = failure
     ? "No pudimos crear la página. Probá de nuevo."
     : null;
 const origin = Astro.url.host;
+// Id del alta: si el formulario se envía dos veces (doble clic, volver a
+// enviar), el segundo devuelve la misma página en lugar de fallar o duplicar.
+// Tras un error se conserva, porque es el mismo pedido corregido.
+const requestId = values["id"] ?? crypto.randomUUID();
 ---
 
 <AdminLayout title="Nueva página" section="new-page" pages={pages} currentPage={currentPage}>
@@ -45,6 +49,7 @@ const origin = Astro.url.host;
   ) : (
     <form class="admin-form" method="post" action={actions.pages.create} novalidate>
       {message && <Alert variant="error" message={message} />}
+      <input type="hidden" name="id" value={requestId} />
       <div class="field">
         <label for="handle">Dirección</label>
         <div class="handle-input">

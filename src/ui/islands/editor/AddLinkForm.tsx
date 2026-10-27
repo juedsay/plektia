@@ -25,6 +25,11 @@ export function AddLinkForm({ api, sections, onCreated }: Props) {
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
   const [fieldErrors, setFieldErrors] = useState<Readonly<Record<string, string>>>({});
+  // El id del alta: el mismo en cada reintento de este link, así un pedido
+  // repetido no lo duplica (ver requestIdOf). Se renueva al crearlo.
+  const requestId = useRef(crypto.randomUUID());
+  // Un segundo envío mientras el primero sigue en camino (doble Enter) no sale.
+  const inFlight = useRef(false);
 
   const changeUrl = (value: string) => {
     setUrl(value);
@@ -33,16 +38,25 @@ export function AddLinkForm({ api, sections, onCreated }: Props) {
 
   const submit = async (event: SubmitEvent<HTMLFormElement>) => {
     event.preventDefault();
+    if (inFlight.current) return;
+    inFlight.current = true;
     setSaving(true);
     const result = await api
-      .create({ title, url, sectionId: sectionId === "" ? null : sectionId })
+      .create({
+        id: requestId.current,
+        title,
+        url,
+        sectionId: sectionId === "" ? null : sectionId,
+      })
       .catch(() => UNREACHABLE);
+    inFlight.current = false;
     setSaving(false);
     if (!result.ok) {
       setMessage(result.message);
       setFieldErrors(result.fields);
       return;
     }
+    requestId.current = crypto.randomUUID();
     onCreated(result.value);
     setUrl("");
     setTitle("");

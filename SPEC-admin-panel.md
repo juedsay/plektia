@@ -40,6 +40,11 @@ El panel privado (`/admin`) donde el dueño arma y mantiene su página: seccione
 - **Vista previa:** un `<iframe>` a `/admin/vista-previa`, que renderiza los mismos componentes de `public-page` con los datos del dueño.
   - Es una ruta autenticada del mismo origen, la única con `frame-ancestors 'self'`.
   - Se recarga sin parpadeo 300 ms después de cada cambio guardado.
+- **Idempotencia** (pedidos repetidos por doble clic, doble Enter o reintentos de red):
+  - **Altas:** el panel genera el `id` (UUID) de lo que crea (link, sección, página) y lo reusa en cada reintento del mismo alta. Si llega dos veces, la segunda devuelve lo ya creado (también si chocó con el límite o el handle que esa misma alta completó). Un `id` ajeno es `conflict`, sin revelar nada.
+  - **Bajas:** borrar algo que ya no existe es éxito (el resultado buscado ya se cumple); una `version` vieja sigue siendo `conflict`.
+  - **Cambios con `version`** (mover, guardar una sección, deshacer): van en fila en el cliente, y cada uno lee la versión que dejó el anterior. Dos clics al mismo destino dejan un solo cambio.
+  - **Formularios:** un segundo envío mientras el primero sigue en camino no sale.
 - **Deshacer:** cada acción guarda en el cliente su inversa (por ejemplo, restaurar los valores previos o el orden anterior) y la aplica como un cambio nuevo, respetando `version`. El borrado diferido usa `fetch(…, { keepalive: true })` en `pagehide`.
 
 ### Avatar

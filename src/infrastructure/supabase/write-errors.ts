@@ -13,6 +13,7 @@ const KNOWN_ERRORS: Readonly<Record<string, WriteError>> = {
   "23514": "invalid_input", // check
   "23503": "not_found", // la sección se borró en el medio
   "23P01": "conflict", // posición repetida por una escritura simultánea
+  "23505": "conflict", // el id elegido por el panel ya lo usa algo que no es de esta página
 };
 
 /** Un error esperable se devuelve como valor; cualquier otro se lanza. */

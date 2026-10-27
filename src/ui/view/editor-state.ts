@@ -36,8 +36,20 @@ export function replaceLink(content: OwnLinks, updated: Link): OwnLinks {
   };
 }
 
+/** Suma un link; si ya estaba (el servidor devolvió un alta repetida), no lo duplica. */
 export function addLink(content: OwnLinks, created: Link): OwnLinks {
-  return { ...content, links: [...content.links, created] };
+  return {
+    ...content,
+    links: [...content.links.filter((link) => link.id !== created.id), created],
+  };
+}
+
+/** Suma una sección al final; si ya estaba, no la duplica. */
+export function addSection(content: OwnLinks, created: Section): OwnLinks {
+  return {
+    ...content,
+    sections: [...content.sections.filter((section) => section.id !== created.id), created],
+  };
 }
 
 /**

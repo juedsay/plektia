@@ -687,3 +687,83 @@ test.describe("Actions del panel (/_actions)", () => {
     expect(await ownerPage.text()).not.toContain("Colado");
   });
 });
+
+test.describe("pedidos repetidos (doble clic, reintentos)", () => {
+  const TITLE = "Pedido repetido";
+  const MEMBER_PAGE_ID = MEMBER_ID;
+
+  test.beforeAll(async () => {
+    await resetPagesOf(MEMBER_ID);
+    await deleteLinksTitled(MEMBER_ID, [TITLE]);
+  });
+
+  test.afterAll(async () => {
+    await deleteLinksTitled(MEMBER_ID, [TITLE]);
+    await resetPagesOf(MEMBER_ID);
+  });
+
+  test.beforeEach(async ({ context, baseURL }) => {
+    await signIn(context, baseURL ?? "", "member@plektia.test");
+  });
+
+  test("el mismo alta de link dos veces a la vez crea uno solo; borrarlo dos veces sale bien", async ({
+    context,
+    page,
+    baseURL,
+  }) => {
+    const id = crypto.randomUUID();
+    const post = (action: string, data: Record<string, unknown>) =>
+      context.request.post(`/_actions/${action}`, { data, headers: { origin: baseURL ?? "" } });
+    const created = { pageId: MEMBER_PAGE_ID, id, title: TITLE, url: "https://plektia.app/x" };
+
+    const responses = await Promise.all([
+      post("links.create", created),
+      post("links.create", created),
+    ]);
+    for (const response of responses) {
+      expect(response.ok()).toBe(true);
+      expect(await response.text()).toContain(id);
+    }
+    // Se cuenta en el panel (sin caché; en local la purga de la pública no existe).
+    const inEditor = () => page.getByRole("button", { name: `Editar ${TITLE}` });
+    await page.goto("/admin");
+    await expect(inEditor()).toHaveCount(1);
+
+    const target = { pageId: MEMBER_PAGE_ID, id, version: 1 };
+    for (const response of [
+      await post("links.delete", target),
+      await post("links.delete", target),
+    ]) {
+      // `{ ok: true }` serializado por Astro (devalue).
+      expect(await response.text()).toBe('[{"ok":1,"value":-1},true]');
+    }
+    await page.goto("/admin");
+    await expect(inEditor()).toHaveCount(0);
+  });
+
+  test("enviar dos veces el alta de una página crea una sola y no da error de handle", async ({
+    context,
+    page,
+    baseURL,
+  }) => {
+    await page.goto("/admin/pages/new");
+    const requestId = await page.locator("form input[name='id']").inputValue();
+    expect(requestId).toMatch(/^[0-9a-f-]{36}$/);
+
+    const submit = () =>
+      context.request.post("/_actions/pages.create", {
+        multipart: { id: requestId, handle: "miembro-una-vez", displayName: "Una vez" },
+        headers: { origin: baseURL ?? "" },
+      });
+    for (const response of [await submit(), await submit()]) {
+      const body = await response.text();
+      expect(body).toContain(requestId);
+      expect(body).not.toContain("ya lo usa otra página");
+    }
+    await page.goto("/admin");
+    await page.locator("summary", { hasText: "Cambiar de página" }).click();
+    await expect(
+      page.locator(".switcher-list .switcher-handle", { hasText: "/miembro-una-vez" }),
+    ).toHaveCount(1);
+  });
+});

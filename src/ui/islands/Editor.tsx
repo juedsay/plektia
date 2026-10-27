@@ -59,7 +59,8 @@ function actionsApi(pageId: string): EditorApi {
       resultOf(await actions.links.move({ pageId, sectionId, items: order })),
     reorderSections: async (order) =>
       resultOf(await actions.sections.reorder({ pageId, items: order })),
-    createSection: async (title) => resultOf(await actions.sections.create({ pageId, title })),
+    createSection: async (title, id) =>
+      resultOf(await actions.sections.create({ pageId, id, title })),
     updateSection: async (target, changes) =>
       resultOf(await actions.sections.update({ pageId, ...target, changes })),
     deleteSection: async (target) => resultOf(await actions.sections.delete({ pageId, ...target })),

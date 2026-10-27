@@ -44,6 +44,14 @@ describe("createSection", () => {
       error: "limit_reached",
     });
   });
+
+  it("con el id del pedido, repetirlo (doble clic) no la duplica", async () => {
+    const input = { id: "5b2c1d0e-3f4a-4b5c-9d6e-7f8091a2b3c4", title: "Redes" };
+    const first = await createSection(deps)(input);
+    const second = await createSection(deps)(input);
+    expect(second).toEqual(first);
+    expect(repo.sections).toHaveLength(1);
+  });
 });
 
 describe("updateSection", () => {
@@ -86,6 +94,25 @@ describe("deleteSection", () => {
       ok: true,
       value: undefined,
     });
+  });
+
+  it("borrar otra vez la ya borrada (doble pedido) también sale bien", async () => {
+    const section = await created("Redes");
+    expect((await deleteSection(deps)({ id: section.id, version: 1 })).ok).toBe(true);
+    expect(await deleteSection(deps)({ id: section.id, version: 1 })).toEqual({
+      ok: true,
+      value: undefined,
+    });
+  });
+
+  it("con una versión vieja no la borra: alguien la cambió", async () => {
+    const section = await created("Redes");
+    await updateSection(deps)({ id: section.id, version: 1, changes: { title: "Otra" } });
+    expect(await deleteSection(deps)({ id: section.id, version: 1 })).toEqual({
+      ok: false,
+      error: "conflict",
+    });
+    expect(repo.sections).toHaveLength(1);
   });
 
   it("valida el comando", async () => {

@@ -121,6 +121,7 @@ describe("SupabaseLinkRepository · errores de la base", () => {
     ["23514", "invalid_input"],
     ["23503", "not_found"],
     ["23P01", "conflict"],
+    ["23505", "conflict"],
   ])("%s se traduce a %s", async (code, error) => {
     expect(await repoAnswering(fail(code)).createLink(draft)).toEqual({ ok: false, error });
   });
@@ -130,9 +131,53 @@ describe("SupabaseLinkRepository · errores de la base", () => {
   });
 });
 
+describe("SupabaseLinkRepository · altas repetidas (con el id del pedido)", () => {
+  it("si el link ya existe con ese id, lo devuelve en lugar del error", async () => {
+    const result = await repoAnswering(fail("23505"), ok(linkRow)).createLink(draft, "l1");
+    expect(result).toMatchObject({ ok: true, value: { id: "l1", version: 3 } });
+  });
+
+  it("si el id lo usa algo ajeno (no está en esta página), es conflicto", async () => {
+    expect(await repoAnswering(fail("23505"), ok(null)).createLink(draft, "l1")).toEqual({
+      ok: false,
+      error: "conflict",
+    });
+  });
+
+  it("con el límite completo por ese mismo alta, también devuelve el existente", async () => {
+    const result = await repoAnswering(fail("PL429"), ok(linkRow)).createLink(draft, "l1");
+    expect(result).toMatchObject({ ok: true, value: { id: "l1" } });
+  });
+
+  it("si falla la búsqueda del existente, el error no se esconde", async () => {
+    await expect(
+      repoAnswering(fail("23505"), fail("08006")).createLink(draft, "l1"),
+    ).rejects.toThrow(/08006/);
+  });
+
+  it("lo mismo con las secciones", async () => {
+    const sectionDraft = { title: "Redes", showTitle: false, visible: true };
+    expect(
+      await repoAnswering(fail("23505"), ok(sectionRow)).createSection(sectionDraft, "s1"),
+    ).toMatchObject({ ok: true, value: { id: "s1" } });
+    expect(await repoAnswering(fail("23505"), ok(null)).createSection(sectionDraft, "s1")).toEqual({
+      ok: false,
+      error: "conflict",
+    });
+    await expect(
+      repoAnswering(fail("23505"), fail("08006")).createSection(sectionDraft, "s1"),
+    ).rejects.toThrow(/08006/);
+  });
+});
+
 describe("SupabaseLinkRepository · links", () => {
   it("crea un link", async () => {
     const result = await repoAnswering(ok(linkRow)).createLink(draft);
+    expect(result.ok && result.value.id).toBe("l1");
+  });
+
+  it("crea un link con el id del pedido", async () => {
+    const result = await repoAnswering(ok(linkRow)).createLink(draft, "l1");
     expect(result.ok && result.value.id).toBe("l1");
   });
 

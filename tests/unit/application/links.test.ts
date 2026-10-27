@@ -10,6 +10,8 @@ import { LIMITS } from "@/domain/link";
 
 import { InMemoryLinkRepository } from "./fakes/in-memory-link-repository";
 
+const REQUEST_ID = "9f1c2d3e-4b5a-4c6d-8e7f-0a1b2c3d4e5f";
+
 let repo: InMemoryLinkRepository;
 let deps: { links: InMemoryLinkRepository };
 
@@ -44,6 +46,24 @@ describe("createLink", () => {
       await created({ title: `L${String(i)}`, url: "https://plektia.app" });
     const result = await createLink(deps)({ title: "Uno más", url: "https://plektia.app" });
     expect(result).toEqual({ ok: false, error: "limit_reached" });
+  });
+
+  it("con el id del pedido, repetirlo (doble clic) no lo duplica", async () => {
+    const input = { id: REQUEST_ID, title: "Twitch", url: "https://twitch.tv/juedsay" };
+    const first = await created(input);
+    const second = await created(input);
+    expect(first.id).toBe(REQUEST_ID);
+    expect(second).toEqual(first);
+    expect(repo.links).toHaveLength(1);
+  });
+
+  it("un id de pedido que no es un UUID se rechaza junto al campo", async () => {
+    const result = await createLink(deps)({ id: "1", title: "Twitch", url: "https://twitch.tv/x" });
+    expect(result).toMatchObject({ ok: false, error: { kind: "invalid_input" } });
+    if (!result.ok && typeof result.error === "object") {
+      expect(Object.keys(result.error.fields)).toEqual(["id"]);
+    }
+    expect(repo.links).toHaveLength(0);
   });
 });
 
@@ -151,6 +171,13 @@ describe("deleteLink", () => {
       value: undefined,
     });
     expect(repo.links).toHaveLength(0);
+  });
+
+  it("borrar otra vez lo ya borrado (doble pedido) también sale bien", async () => {
+    const link = await created({ title: "Canal", url: "https://plektia.app" });
+    const target = { id: link.id, version: link.version };
+    expect((await deleteLink(deps)(target)).ok).toBe(true);
+    expect(await deleteLink(deps)(target)).toEqual({ ok: true, value: undefined });
   });
 
   it("valida el comando", async () => {
