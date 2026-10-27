@@ -688,6 +688,40 @@ test.describe("Actions del panel (/_actions)", () => {
   });
 });
 
+test.describe("cuenta Admin: la página oficial (tarea 21b)", () => {
+  test.beforeEach(async ({ context, baseURL }) => {
+    await signIn(context, baseURL ?? "", "admin@plektia.test");
+  });
+
+  test("/plektia sale de la base: la de la cuenta Admin", async ({ request }) => {
+    const html = await (await request.get("/plektia")).text();
+    // En el repo los links son relativos; en la base, URLs completas.
+    expect(html).toContain('href="https://app.plektia.workers.dev/contact"');
+  });
+
+  test("la Admin edita /plektia desde el panel y la vista previa lo muestra", async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 800 });
+    await page.goto("/admin");
+    await expect(page.getByRole("heading", { level: 1 })).toHaveText("Plektia");
+    const preview = page.frameLocator("[data-preview-frame]");
+    await expect(preview.getByRole("link", { name: /Contacto/ })).toBeVisible();
+
+    await page.getByRole("button", { name: "Editar Contacto", exact: true }).click();
+    const title = page.locator(".editor-link-panel:not([hidden])").getByLabel("Título");
+    const rename = async (to: string) => {
+      await title.fill(to);
+      await title.press("Tab");
+      await expect(page.locator("[data-editor-status]")).toHaveText("Guardado");
+    };
+
+    await rename("Contacto y prensa");
+    await expect(preview.getByRole("link", { name: /Contacto y prensa/ })).toBeVisible();
+    // Deja la página como estaba.
+    await rename("Contacto");
+    await expect(preview.getByRole("link", { name: /Contacto y prensa/ })).toHaveCount(0);
+  });
+});
+
 test.describe("pedidos repetidos (doble clic, reintentos)", () => {
   const TITLE = "Pedido repetido";
   const MEMBER_PAGE_ID = MEMBER_ID;

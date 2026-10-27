@@ -78,7 +78,8 @@ select is(private.before_user_created(pg_temp.event('intruso@plektia.test', 'git
 select results_eq(
   $$ select pg.handle::text, pr.role::text, pg.display_name
      from public.pages pg join public.profiles pr on pr.id = pg.owner_id order by pg.handle $$,
-  $$ values ('juedsay', 'owner', 'Julián (dev)'), ('miembro-demo', 'member', 'Miembro Demo') $$,
+  $$ values ('juedsay', 'owner', 'Julián (dev)'), ('miembro-demo', 'member', 'Miembro Demo'),
+            ('plektia', 'owner', 'Plektia') $$,
   'trigger: cada usuario invitado tiene su perfil con el rol y su primera página con el handle');
 
 select throws_ok(
@@ -102,7 +103,8 @@ select throws_ok($$ select '-ana'::public.handle $$, '23514', null, 'handle: rec
 select throws_ok($$ select 'ana_b'::public.handle $$, '23514', null, 'handle: rechaza guion bajo');
 select throws_ok($$ select 'añá'::public.handle $$, '23514', null, 'handle: rechaza letras fuera de a-z');
 select throws_ok($$ select 'Admin'::public.handle $$, '23514', null, 'handle: rechaza rutas reservadas sin importar mayúsculas');
-select throws_ok($$ select 'plektia'::public.handle $$, '23514', null, 'handle: plektia está reservado');
+-- plektia ya no lo frena el dominio: es de la cuenta Admin (0008_official_page).
+select throws_ok($$ select 'legal'::public.handle $$, '23514', null, 'handle: legal está reservado');
 select throws_ok($$ select 'JuedSay'::public.handle $$, '23514', null, 'handle: se guarda solo en minúsculas');
 select throws_ok(
   $$ insert into private.allowed_emails (email, handle) values ('otra@plektia.test', 'juedsay') $$,
@@ -126,7 +128,8 @@ reset role;
 update public.profiles set disabled = true where id = '33333333-3333-4333-8333-333333333333';
 
 select pg_temp.as_anon();
-select is((select count(*)::int from public.profiles), 2, 'perfiles: anon ve los activos y no los dados de baja');
+-- Activos: owner, miembro y la cuenta Admin del seed.
+select is((select count(*)::int from public.profiles), 3, 'perfiles: anon ve los activos y no los dados de baja');
 select throws_ok($$ update public.pages set bio = 'x' $$, '42501', null, 'páginas: anon no puede editar');
 reset role;
 

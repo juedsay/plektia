@@ -18,6 +18,11 @@ describe("sitemapXml", () => {
     expect(xml).toMatch(/^<\?xml version="1.0" encoding="UTF-8"\?>/);
   });
 
+  it("la página oficial, que también es un perfil de la base, va una sola vez", () => {
+    const locs = [...sitemapXml(origin, ["plektia", "juedsay"]).matchAll(/<loc>([^<]+)<\/loc>/g)];
+    expect(locs.filter((match) => match[1]?.endsWith("/plektia"))).toHaveLength(1);
+  });
+
   it("escapa lo que no es XML válido", () => {
     expect(sitemapXml("https://a.test", ["x&y"])).toContain("https://a.test/x&amp;y");
   });

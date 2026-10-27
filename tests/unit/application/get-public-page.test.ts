@@ -33,6 +33,12 @@ describe("getPublicPage", () => {
     expect(pages.calls).toEqual(["juedsay"]);
   });
 
+  it("la página oficial se lee de la base aunque su handle esté reservado", async () => {
+    const pages = new FakeReader({ ...page, handle: "plektia" });
+    expect((await getPublicPage({ pages })("plektia")).ok).toBe(true);
+    expect(pages.calls).toEqual(["plektia"]);
+  });
+
   it("un perfil que no existe da not_found", async () => {
     expect(await getPublicPage({ pages: new FakeReader(null) })("nadie")).toEqual({
       ok: false,

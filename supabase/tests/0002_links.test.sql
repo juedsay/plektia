@@ -21,8 +21,8 @@ returns void language sql as $$
 $$;
 
 -- Punto de partida propio, sin depender del seed (la transacción se descarta al final).
-delete from public.links where owner_id in ('11111111-1111-4111-8111-111111111111', '22222222-2222-4222-8222-222222222222');
-delete from public.sections where owner_id in ('11111111-1111-4111-8111-111111111111', '22222222-2222-4222-8222-222222222222');
+delete from public.links;
+delete from public.sections;
 update public.pages set bio = null;
 
 -- Dueño (1111…) y otro usuario (2222…) vienen del seed.
