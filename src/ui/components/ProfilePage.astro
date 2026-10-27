@@ -25,6 +25,7 @@ const description = page.bio ?? `Todos los links de ${page.displayName} en un so
   type="profile"
   structuredData={preview ? undefined : profileJsonLd(page, canonical)}
   preview={preview}
+  publicUrl={canonical}
   sharePreview={{ name: page.displayName, brand }}
 >
   <ProfileHeader page={page} brand={brand} />

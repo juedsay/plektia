@@ -400,6 +400,11 @@ test.describe("panel: vista previa en vivo (tarea 21)", () => {
     await expect(page.locator("base")).toHaveAttribute("target", "_blank");
     await expect(page.locator("link[rel='canonical']")).toHaveCount(0);
     await expect(page.locator("meta[name='robots']")).toHaveAttribute("content", "noindex");
+    // Compartir desde la vista previa comparte el perfil público, no la ruta del panel.
+    await expect(page.locator("[data-share-url]")).toHaveAttribute(
+      "data-share-url",
+      /\/miembro-demo$/,
+    );
   });
 
   test("solo la vista previa se puede embeber, y solo en el propio sitio", async ({ page }) => {

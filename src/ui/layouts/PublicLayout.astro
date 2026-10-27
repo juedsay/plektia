@@ -28,6 +28,8 @@ interface Props {
   width?: "column" | "wide";
   /** Dentro de la vista previa del panel: los links se abren en otra pestaña, no en el marco. */
   preview?: boolean;
+  /** Lo que se comparte cuando no hay canónica (la vista previa comparte el perfil público). */
+  publicUrl?: URL | undefined;
 }
 const {
   title,
@@ -40,9 +42,11 @@ const {
   sharePreview,
   width = "column",
   preview = false,
+  publicUrl,
 } = Astro.props;
-// Se comparte la URL canónica (sin query strings); si no hay, la de la página.
-const shareUrl = canonical?.href ?? new URL(Astro.url.pathname, Astro.url).href;
+// Se comparte la URL canónica (sin query strings); si no hay, la pública indicada
+// o, en último caso, la de la página.
+const shareUrl = (canonical ?? publicUrl ?? new URL(Astro.url.pathname, Astro.url)).href;
 ---
 
 <!doctype html>
