@@ -16,24 +16,32 @@ const PERMISSIONS_POLICY = [
   "interest-cohort=()",
 ].join(", ");
 
-const BASE_CSP = [
-  "frame-ancestors 'none'",
-  "object-src 'none'",
-  "base-uri 'self'",
-  "form-action 'self'",
-].join("; ");
+const baseCsp = (frameAncestors: string) =>
+  [
+    `frame-ancestors ${frameAncestors}`,
+    "object-src 'none'",
+    "base-uri 'self'",
+    "form-action 'self'",
+  ].join("; ");
 
-export function securityHeaders(): Readonly<Record<string, string>> {
+interface Options {
+  /** Solo la vista previa del panel: se puede embeber, pero únicamente en el propio sitio. */
+  readonly frameable?: boolean;
+}
+
+export function securityHeaders({ frameable = false }: Options = {}): Readonly<
+  Record<string, string>
+> {
   return {
     "Strict-Transport-Security": "max-age=63072000; includeSubDomains",
     "X-Content-Type-Options": "nosniff",
     "Referrer-Policy": "strict-origin-when-cross-origin",
     "Permissions-Policy": PERMISSIONS_POLICY,
     // Respaldo para navegadores viejos que no entienden `frame-ancestors`.
-    "X-Frame-Options": "DENY",
+    "X-Frame-Options": frameable ? "SAMEORIGIN" : "DENY",
     "Cross-Origin-Opener-Policy": "same-origin",
     "Cross-Origin-Resource-Policy": "same-origin",
-    "Content-Security-Policy": BASE_CSP,
+    "Content-Security-Policy": baseCsp(frameable ? "'self'" : "'none'"),
   };
 }
 
@@ -59,8 +67,8 @@ function mergeCsp(current: string, base: string): string {
 // necesitar una política propia (por ejemplo, la vista previa del panel en un iframe).
 // La CSP se combina por directiva para no perder `frame-ancestors` cuando Astro
 // ya emitió la suya como cabecera.
-export function applySecurityHeaders(headers: Headers): void {
-  for (const [name, value] of Object.entries(securityHeaders())) {
+export function applySecurityHeaders(headers: Headers, options: Options = {}): void {
+  for (const [name, value] of Object.entries(securityHeaders(options))) {
     const current = headers.get(name);
     if (current === null) {
       headers.set(name, value);

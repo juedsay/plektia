@@ -58,6 +58,19 @@ describe("securityHeadersMiddleware", () => {
     expect(response).toBeInstanceOf(Response);
     expect((response as Response).headers.get("X-Frame-Options")).toBe("DENY");
   });
+
+  it("solo la vista previa del panel se puede embeber, y solo en el propio sitio", async () => {
+    const preview = (await securityHeadersMiddleware(
+      contextFor("/admin/vista-previa"),
+      ok,
+    )) as Response;
+    const panel = (await securityHeadersMiddleware(contextFor("/admin"), ok)) as Response;
+
+    expect(preview.headers.get("X-Frame-Options")).toBe("SAMEORIGIN");
+    expect(preview.headers.get("Content-Security-Policy")).toContain("frame-ancestors 'self'");
+    expect(panel.headers.get("X-Frame-Options")).toBe("DENY");
+    expect(panel.headers.get("Content-Security-Policy")).toContain("frame-ancestors 'none'");
+  });
 });
 
 describe("sessionMiddleware", () => {

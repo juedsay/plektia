@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import {
+  isFrameable,
   isRateLimited,
   loginErrorRedirect,
   loginRedirect,
@@ -9,6 +10,21 @@ import {
   usesSession,
 } from "@/infrastructure/http/route-access";
 import { safeRedirectPath } from "@/infrastructure/http/safe-redirect";
+
+describe("isFrameable", () => {
+  it("solo la vista previa del panel, como la ve el router", () => {
+    expect(isFrameable("/admin/vista-previa")).toBe(true);
+    expect(isFrameable("/admin/vista-previa/")).toBe(true);
+    expect(isFrameable("/Admin/Vista-Previa")).toBe(true);
+    expect(isFrameable("//admin//%76ista-previa")).toBe(true);
+  });
+
+  it("ninguna otra ruta, ni las que empiezan igual", () => {
+    for (const path of ["/", "/admin", "/admin/page", "/admin/vista-previa/x", "/vista-previa"]) {
+      expect(isFrameable(path)).toBe(false);
+    }
+  });
+});
 
 describe("requiresSession", () => {
   it.each(["/admin", "/admin/", "/admin/links", "/ADMIN", "/Admin/links"])("protege %j", (path) => {

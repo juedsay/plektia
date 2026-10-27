@@ -25,6 +25,14 @@ function matches(pathname: string, prefixes: readonly string[]): boolean {
   return prefixes.some((prefix) => path === prefix || path.startsWith(`${prefix}/`));
 }
 
+/** La vista previa del panel: la única página que se puede embeber (en el propio sitio). */
+const FRAMEABLE_PATHS = ["/admin/vista-previa"] as const;
+
+export function isFrameable(pathname: string): boolean {
+  const path = normalize(pathname).replace(/\/$/, "");
+  return FRAMEABLE_PATHS.some((frameable) => path === frameable);
+}
+
 export function usesSession(pathname: string): boolean {
   return matches(pathname, SESSION_PREFIXES);
 }

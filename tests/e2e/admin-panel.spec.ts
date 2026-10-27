@@ -21,7 +21,12 @@ const MEMBER_ID = "22222222-2222-4222-8222-222222222222";
 test.describe.configure({ mode: "serial" });
 
 async function violations(page: Page) {
-  const results = await new AxeBuilder({ page }).withTags(AA_TAGS).analyze();
+  // La vista previa es otro documento (la página pública, con su propio test de
+  // axe): sus landmarks repetirían los del panel ("Redes", main) entre marcos.
+  const results = await new AxeBuilder({ page })
+    .withTags(AA_TAGS)
+    .exclude("[data-preview-frame]")
+    .analyze();
   return results.violations.map((violation) => ({
     id: violation.id,
     nodes: violation.nodes.map((node) => node.target.join(" ")),
@@ -320,6 +325,101 @@ test.describe("panel: editor de links", () => {
 
     await expect(add.getByRole("alert")).toBeVisible();
     await expect(add.getByLabel("URL")).toHaveAttribute("aria-invalid", "true");
+  });
+});
+
+test.describe("panel: vista previa en vivo (tarea 21)", () => {
+  const TITLES = ["En la vista previa"];
+
+  test.beforeAll(async () => {
+    await resetPagesOf(MEMBER_ID);
+    await deleteLinksTitled(MEMBER_ID, TITLES);
+  });
+
+  test.afterAll(async () => {
+    await deleteLinksTitled(MEMBER_ID, TITLES);
+  });
+
+  test.beforeEach(async ({ context, baseURL }) => {
+    await signIn(context, baseURL ?? "", "member@plektia.test");
+  });
+
+  test("en escritorio, un cambio se ve en la vista previa en menos de 1 s y en la página pública en menos de 5 s", async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 1280, height: 800 });
+    await page.goto("/admin");
+    const preview = page.frameLocator("[data-preview-frame]");
+    await expect(preview.getByRole("heading", { level: 1 })).toBeVisible();
+    // En escritorio el editor y la vista previa están a la vista, sin pestañas.
+    await expect(page.getByRole("tablist")).toBeHidden();
+
+    const add = page.locator("form.add-link");
+    await add.getByLabel("URL").fill("https://plektia.app/en-la-vista-previa");
+    await add.getByLabel("Título").fill("En la vista previa");
+    await add.getByRole("button", { name: "Agregar link" }).click();
+    await expect(page.locator("[data-editor-status]")).toHaveText("En la vista previa: agregado");
+
+    await expect(preview.getByRole("link", { name: /En la vista previa/ })).toBeVisible({
+      timeout: 1_000,
+    });
+    const publicPage = await page.context().newPage();
+    await publicPage.goto("/miembro-demo");
+    await expect(publicPage.getByRole("link", { name: /En la vista previa/ })).toBeVisible({
+      timeout: 5_000,
+    });
+  });
+
+  test("en el celular, 'Editar' y 'Vista previa' son pestañas", async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto("/admin");
+    const previewTab = page.getByRole("tab", { name: "Vista previa" });
+    await expect(page.getByRole("tab", { name: "Editar" })).toHaveAttribute(
+      "aria-selected",
+      "true",
+    );
+    await expect(page.locator("[data-preview-frame]")).toBeHidden();
+
+    await previewTab.click();
+    await expect(previewTab).toHaveAttribute("aria-selected", "true");
+    await expect(
+      page.frameLocator("[data-preview-frame]").getByRole("heading", { level: 1 }),
+    ).toBeVisible();
+    await expect(page.locator("form.add-link")).toBeHidden();
+    expect(await violations(page)).toEqual([]);
+
+    await page.keyboard.press("ArrowLeft");
+    await expect(page.getByRole("tab", { name: "Editar" })).toBeFocused();
+    await expect(page.locator("form.add-link")).toBeVisible();
+  });
+
+  test("los links de la vista previa se abren en otra pestaña, no dentro del marco", async ({
+    page,
+  }) => {
+    await page.goto("/admin/vista-previa");
+    await expect(page.locator("base")).toHaveAttribute("target", "_blank");
+    await expect(page.locator("link[rel='canonical']")).toHaveCount(0);
+    await expect(page.locator("meta[name='robots']")).toHaveAttribute("content", "noindex");
+  });
+
+  test("solo la vista previa se puede embeber, y solo en el propio sitio", async ({ page }) => {
+    const preview = await page.request.get("/admin/vista-previa");
+    expect(preview.status()).toBe(200);
+    expect(preview.headers()["cache-control"]).toBe("private, no-store");
+    expect(preview.headers()["x-frame-options"]).toBe("SAMEORIGIN");
+    expect(preview.headers()["content-security-policy"]).toContain("frame-ancestors 'self'");
+
+    const panel = await page.request.get("/admin");
+    expect(panel.headers()["x-frame-options"]).toBe("DENY");
+    expect(panel.headers()["content-security-policy"]).toContain("frame-ancestors 'none'");
+  });
+
+  test("sin sesión, la vista previa manda al login", async ({ browser, baseURL }) => {
+    const anonymous = await browser.newContext({ baseURL: baseURL ?? "" });
+    const response = await anonymous.request.get("/admin/vista-previa", { maxRedirects: 0 });
+    expect(response.status()).toBe(302);
+    expect(response.headers()["location"]).toContain("/login?next=%2Fadmin%2Fvista-previa");
+    await anonymous.close();
   });
 });
 

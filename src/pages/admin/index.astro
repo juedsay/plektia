@@ -25,7 +25,14 @@ const notice =
       : null;
 ---
 
-<AdminLayout title="Inicio" section="home" pages={pages} currentPage={currentPage} notice={notice}>
+<AdminLayout
+  title="Inicio"
+  section="home"
+  pages={pages}
+  currentPage={currentPage}
+  notice={notice}
+  wide
+>
   {currentPage && publicUrl && content ? (
     <>
       <header class="admin-heading">
@@ -49,7 +56,54 @@ const notice =
         {currentPage.bio && <p class="admin-bio">{currentPage.bio}</p>}
       </header>
 
-      <EditorIsland client:load pageId={currentPage.id} initialContent={content} />
+      <div class="workspace" data-workspace>
+        <div class="workspace-tabs" role="tablist" aria-label="Editor y vista previa" hidden>
+          <button
+            type="button"
+            role="tab"
+            id="tab-editar"
+            aria-controls="panel-editar"
+            aria-selected="true"
+          >
+            Editar
+          </button>
+          <button
+            type="button"
+            role="tab"
+            id="tab-vista-previa"
+            aria-controls="panel-vista-previa"
+            aria-selected="false"
+            tabindex="-1"
+          >
+            Vista previa
+          </button>
+        </div>
+
+        <div
+          class="workspace-editor"
+          id="panel-editar"
+          role="tabpanel"
+          aria-labelledby="tab-editar"
+        >
+          <EditorIsland client:load pageId={currentPage.id} initialContent={content} />
+        </div>
+
+        <section
+          class="workspace-preview"
+          id="panel-vista-previa"
+          role="tabpanel"
+          aria-labelledby="tab-vista-previa"
+        >
+          <h2 class="workspace-preview-title">Vista previa</h2>
+          <p class="workspace-preview-hint">Así la ve quien la visita. Se actualiza al guardar.</p>
+          <iframe
+            class="workspace-preview-frame"
+            src="/admin/vista-previa"
+            title={`Vista previa de ${currentPage.displayName}`}
+            data-preview-frame
+          ></iframe>
+        </section>
+      </div>
     </>
   ) : (
     <div class="admin-empty">

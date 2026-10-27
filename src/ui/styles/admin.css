@@ -1052,3 +1052,139 @@
   cursor: not-allowed;
   opacity: 0.5;
 }
+
+/* ── Inicio: editor y vista previa ─────────────────────────────────────────── */
+
+/*
+ * Celular y pantallas medianas: pestañas "Editar" y "Vista previa" (las activa
+ * el script; sin él, una debajo de la otra). Desde 76rem, una al lado de la
+ * otra: el editor con su ancho de lectura y la vista previa del ancho de un celular.
+ */
+.admin-main.is-wide {
+  max-width: none;
+}
+
+.workspace {
+  --preview-width: 24rem;
+}
+
+.workspace-tabs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  margin-bottom: var(--space-6);
+  border-bottom: 1px solid var(--color-line);
+}
+
+.workspace-tabs[hidden] {
+  display: none;
+}
+
+.workspace-tabs [role="tab"] {
+  min-height: var(--target-min);
+  padding: var(--space-2) var(--space-3);
+  border: 0;
+  border-bottom: 2px solid transparent;
+  background: none;
+  color: var(--color-fg-muted);
+  font: inherit;
+  font-family: var(--font-display);
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.workspace-tabs [role="tab"][aria-selected="true"] {
+  border-bottom-color: var(--color-fg);
+  color: var(--color-fg);
+}
+
+.workspace-tabs [role="tab"]:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: -2px;
+}
+
+.workspace-editor {
+  max-width: var(--admin-measure);
+}
+
+[role="tabpanel"][data-inactive] {
+  display: none;
+}
+
+.workspace-preview {
+  display: grid;
+  gap: var(--space-2);
+  justify-items: center;
+}
+
+/* En el celular la pestaña ya dice "Vista previa": el título queda para lectores de pantalla. */
+.workspace-preview-title {
+  position: absolute;
+  overflow: hidden;
+  width: 1px;
+  height: 1px;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.workspace-preview-hint {
+  justify-self: start;
+  margin: 0 0 var(--space-2);
+  color: var(--color-fg-muted);
+  font-size: var(--text-sm);
+}
+
+.workspace-preview-frame {
+  width: 100%;
+  max-width: var(--preview-width);
+  height: min(48rem, calc(100vh - var(--admin-nav-height) - 12rem));
+  min-height: 28rem;
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-md);
+  background: var(--color-bg);
+}
+
+@media (min-width: 76rem) {
+  .workspace {
+    display: grid;
+    grid-template-columns: minmax(0, var(--admin-measure)) var(--preview-width);
+    gap: var(--space-10);
+    align-items: start;
+  }
+
+  .workspace-tabs,
+  .workspace-tabs[hidden] {
+    display: none;
+  }
+
+  /* En escritorio se ven las dos aunque una pestaña esté elegida. */
+  [role="tabpanel"][data-inactive] {
+    display: grid;
+  }
+
+  .workspace-editor[data-inactive] {
+    display: block;
+  }
+
+  .workspace-preview {
+    position: sticky;
+    top: var(--space-6);
+  }
+
+  .workspace-preview-title {
+    position: static;
+    overflow: visible;
+    justify-self: start;
+    width: auto;
+    height: auto;
+    margin: 0;
+    clip-path: none;
+    font-family: var(--font-display);
+    font-size: var(--text-lg);
+    font-weight: 500;
+  }
+
+  .workspace-preview-frame {
+    height: calc(100vh - 9rem);
+    max-height: 52rem;
+  }
+}

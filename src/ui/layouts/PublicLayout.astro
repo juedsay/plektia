@@ -14,10 +14,10 @@ interface Props {
   title: string;
   description: string;
   /** URL canónica absoluta; se omite en páginas que no deben indexarse (404). */
-  canonical?: URL;
+  canonical?: URL | undefined;
   theme?: "tecnico";
   type?: "website" | "profile";
-  structuredData?: Record<string, unknown>;
+  structuredData?: Record<string, unknown> | undefined;
   share?: boolean;
   /** Tarjeta de la ventana de compartir; sin ella, se muestra la marca Plektia. */
   sharePreview?: { name: string; brand?: boolean };
@@ -26,6 +26,8 @@ interface Props {
    * `wide`: las páginas del sitio, que en escritorio usan el ancho (site.css).
    */
   width?: "column" | "wide";
+  /** Dentro de la vista previa del panel: los links se abren en otra pestaña, no en el marco. */
+  preview?: boolean;
 }
 const {
   title,
@@ -37,6 +39,7 @@ const {
   share = true,
   sharePreview,
   width = "column",
+  preview = false,
 } = Astro.props;
 // Se comparte la URL canónica (sin query strings); si no hay, la de la página.
 const shareUrl = canonical?.href ?? new URL(Astro.url.pathname, Astro.url).href;
@@ -48,6 +51,7 @@ const shareUrl = canonical?.href ?? new URL(Astro.url.pathname, Astro.url).href;
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#121315" />
+    {preview && <base target="_blank" />}
     <Font cssVariable="--font-brand" preload />
     <Seo
       title={title}

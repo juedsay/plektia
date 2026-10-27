@@ -8,8 +8,10 @@ import { profileJsonLd } from "@/ui/view/seo";
 interface Props {
   page: PublicPage;
   brand?: boolean;
+  /** Vista previa del panel: sin URL canónica (no se indexa) y con los links afuera del marco. */
+  preview?: boolean;
 }
-const { page, brand = false } = Astro.props;
+const { page, brand = false, preview = false } = Astro.props;
 // La raíz (`/`) también muestra un perfil, pero su URL canónica es siempre `/{handle}`.
 const canonical = new URL(`/${page.handle}`, Astro.url);
 const description = page.bio ?? `Todos los links de ${page.displayName} en un solo lugar.`;
@@ -18,10 +20,11 @@ const description = page.bio ?? `Todos los links de ${page.displayName} en un so
 <PublicLayout
   title={brand ? "Plektia · Página oficial" : `${page.displayName} · Plektia`}
   description={description}
-  canonical={canonical}
+  canonical={preview ? undefined : canonical}
   theme={page.theme}
   type="profile"
-  structuredData={profileJsonLd(page, canonical)}
+  structuredData={preview ? undefined : profileJsonLd(page, canonical)}
+  preview={preview}
   sharePreview={{ name: page.displayName, brand }}
 >
   <ProfileHeader page={page} brand={brand} />
