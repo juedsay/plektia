@@ -9,6 +9,7 @@ export const ChannelsResponse = z.object({
 });
 
 export const PlaylistItemsResponse = z.object({
+  nextPageToken: z.string().optional(),
   items: z
     .array(
       z.object({

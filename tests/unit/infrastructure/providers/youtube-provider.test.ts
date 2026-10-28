@@ -212,6 +212,44 @@ describe("YouTubeProvider · lo último de cada tipo", () => {
     expect(calls.some((call) => call.resource === "search")).toBe(false);
   });
 
+  it("plan B: sigue a la página siguiente hasta encontrar el tipo, con un tope", async () => {
+    const pageOf = (token: string | null) => Number(token ?? "0");
+    const { youtube, calls } = provider({
+      playlistItems: (params) => {
+        if (params.get("playlistId") !== `UU${SUFFIX}`) {
+          return { status: 404, body: notFound("playlistNotFound") };
+        }
+        const page = pageOf(params.get("pageToken"));
+        return {
+          status: 200,
+          body: {
+            items: [
+              playlistItem(`pagina${String(page).padStart(5, "0")}`, `Página ${String(page)}`),
+            ],
+            nextPageToken: String(page + 1),
+          },
+        };
+      },
+      videos: (params) => {
+        const id = params.get("id") ?? "";
+        // Solo la tercera página tiene un Short; el resto son videos largos.
+        return {
+          status: 200,
+          body: { items: [video(id, id === "pagina00002" ? "PT30S" : "PT20M")] },
+        };
+      },
+    });
+    expect(await youtube.latest(CHANNEL, "short")).toMatchObject({
+      ok: true,
+      value: { videoId: "pagina00002", kind: "short" },
+    });
+
+    calls.length = 0;
+    expect(await youtube.latest(CHANNEL, "stream")).toEqual({ ok: true, value: null });
+    // 1 (UULV) + 4 páginas × (playlistItems + videos): nunca más que el tope.
+    expect(calls).toHaveLength(9);
+  });
+
   it("un canal sin nada de ese tipo es null; un ID que no es de canal no llama a la API", async () => {
     const { youtube, calls } = provider({
       playlistItems: () => ({ status: 200, body: { items: [] } }),

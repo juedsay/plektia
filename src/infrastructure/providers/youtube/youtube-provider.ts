@@ -37,8 +37,13 @@ export const SHORT_MAX_SECONDS = 180;
 const TITLE_MAX = 200;
 /** Cuántos elementos se miran para saltear privados o directos en curso. */
 const PAGE_SIZE = 10;
-/** En el plan B, la playlist de subidas mezcla tipos: se mira más. */
+/** En el plan B, la playlist de subidas mezcla tipos: se mira más, por páginas. */
 const FALLBACK_PAGE_SIZE = 50;
+/**
+ * Tope de páginas del plan B (200 subidas, hasta 8 unidades): un canal con
+ * cientos de videos de un solo tipo no se come la cuota buscando el otro.
+ */
+const FALLBACK_MAX_PAGES = 4;
 
 const PLAYLIST_PREFIX: Readonly<Record<FeaturedKind, string>> = {
   video: "UULF",
@@ -76,7 +81,7 @@ export class YouTubeProvider implements FeaturedContentProvider {
       return this.latestFromUploads(`UU${suffix}`, kind);
     }
 
-    const candidates = items.value.filter(isPublic);
+    const candidates = items.value.items.filter(isPublic);
     if (kind !== "stream") {
       const first = candidates[0];
       return ok(first ? fromPlaylistItem(first, kind) : null);
@@ -103,26 +108,40 @@ export class YouTubeProvider implements FeaturedContentProvider {
     uploads: string,
     kind: FeaturedKind,
   ): Promise<Result<FeaturedVideo | null, ProviderError>> {
-    const items = await this.playlist(uploads, FALLBACK_PAGE_SIZE);
-    if (!items.ok) return items.error === "not_found" ? ok(null) : err(items.error);
-    const videos = await this.videos(
-      items.value.filter(isPublic).map((item) => item.contentDetails.videoId),
-    );
-    if (!videos.ok) return videos;
-    const match = videos.value.find((video) => classify(video) === kind);
-    return ok(match ? fromVideo(match, kind) : null);
+    let pageToken: string | undefined;
+    for (let page = 0; page < FALLBACK_MAX_PAGES; page++) {
+      const items = await this.playlist(uploads, FALLBACK_PAGE_SIZE, pageToken);
+      if (!items.ok) return items.error === "not_found" ? ok(null) : err(items.error);
+      const videos = await this.videos(
+        items.value.items.filter(isPublic).map((item) => item.contentDetails.videoId),
+      );
+      if (!videos.ok) return videos;
+      const match = videos.value.find((video) => classify(video) === kind);
+      if (match) return ok(fromVideo(match, kind));
+      pageToken = items.value.nextPageToken;
+      if (!pageToken) break;
+    }
+    return ok(null);
   }
 
   private async playlist(
     playlistId: string,
     size: number,
-  ): Promise<Result<readonly PlaylistItem[], Failure>> {
+    pageToken?: string,
+  ): Promise<Result<{ items: readonly PlaylistItem[]; nextPageToken?: string }, Failure>> {
     const answer = await this.get(
       "playlistItems",
-      { part: "snippet,contentDetails,status", playlistId, maxResults: String(size) },
+      {
+        part: "snippet,contentDetails,status",
+        playlistId,
+        maxResults: String(size),
+        ...(pageToken ? { pageToken } : {}),
+      },
       PlaylistItemsResponse,
     );
-    return answer.ok ? ok(answer.value.items ?? []) : answer;
+    if (!answer.ok) return answer;
+    const { items = [], nextPageToken } = answer.value;
+    return ok(nextPageToken ? { items, nextPageToken } : { items });
   }
 
   /** Detalles de hasta 50 videos en una sola llamada (en el orden pedido). */
