@@ -12,6 +12,8 @@ export interface Page {
   readonly bio: string | null;
   readonly theme: Theme;
   readonly showHandle: boolean;
+  /** Ruta del avatar en el bucket (`{owner_id}/{uuid}.webp`), o `null` si no tiene. */
+  readonly avatarPath: string | null;
 }
 
 /** Además de los de escritura, el handle puede estar usado por otra página. */
@@ -29,6 +31,8 @@ export interface PageWriter {
   createPage(draft: PageDraft, id?: string): Promise<Result<Page, PageWriteError>>;
   /** Cambia el nombre, la bio, el tema y si se muestra el @handle de una página propia. */
   updatePageSettings(pageId: string, settings: PageSettings): Promise<Result<Page, WriteError>>;
+  /** Cambia (o saca, con `null`) el avatar de una página propia. */
+  setAvatar(pageId: string, avatarPath: string | null): Promise<Result<Page, WriteError>>;
   /** Recuerda la página elegida para abrirla al volver al panel. */
   rememberLastPage(pageId: string): Promise<Result<void, WriteError>>;
 }

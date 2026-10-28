@@ -23,6 +23,9 @@ const SITE_PAGES = new Set(["/", "/legal/privacy", "/sitemap.xml", "/robots.txt"
 const SITE_TAG = "site";
 /** La página oficial: un perfil de la base (la cuenta Admin la edita) y parte del sitio. */
 const OFFICIAL_PATH = `/${OFFICIAL_HANDLE}`;
+/** `/avatars/{owner}/{uuid}.webp`: los avatares, servidos desde el propio sitio. */
+const AVATAR_PATH = /^\/avatars\/[0-9a-f-]{36}\/[0-9a-f-]{36}\.webp$/;
+const AVATARS_TAG = "avatars";
 
 // Formularios con estado (Turnstile, avisos de envío) o pasos del login: nunca.
 const PRIVATE_PATHS = new Set(["/contact", "/contacto"]);
@@ -40,6 +43,11 @@ export function cachePolicy(request: {
 
   if (SITE_PAGES.has(pathname) && status === 200) {
     return { cacheControl: "public, max-age=300, stale-while-revalidate=3600", tags: [SITE_TAG] };
+  }
+
+  // Un avatar nunca cambia: uno nuevo es otro archivo (otra ruta).
+  if (AVATAR_PATH.test(pathname) && status === 200) {
+    return { cacheControl: "public, max-age=31536000, immutable", tags: [AVATARS_TAG] };
   }
 
   // Como un perfil: editarla desde el panel purga su etiqueta y se ve al instante.

@@ -124,6 +124,7 @@ describe("createPage", () => {
         bio: null,
         theme: "tecnico",
         showHandle: true,
+        avatarPath: null,
       };
       expect(await createPage({ pages: repo, cache })(input)).toMatchObject({
         ok: true,

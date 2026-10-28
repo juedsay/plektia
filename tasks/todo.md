@@ -307,7 +307,9 @@
     - Integración: SVG, PNG renombrado, 10 MB y 4000 px → todos rechazados.
     - Las políticas de Storage, probadas con dos usuarios.
   - **Verificar:** `pnpm test`.
-  - **Archivos:** `src/ui/islands/AvatarUpload.tsx`, `src/application/profile/set-avatar.ts`, `src/infrastructure/supabase/supabase-avatar-storage.ts`, `supabase/migrations/0004_avatars.sql`.
+  - **22a (servidor, hecho):** migración `avatars` (bucket, políticas, check de `pages.avatar_path`, `avatars` reservado), `inspectAvatar` (magic bytes, 512 × 512, ≤ 200 KB, sin animación ni EXIF/XMP, sin bytes de más), `setPageAvatar` y `removePageAvatar`, Actions `pages.setAvatar` y `pages.removeAvatar`, `/avatars/...` desde el propio sitio y la foto en la página pública.
+  - **22b (pendiente):** en `/admin/page`, elegir la imagen, recortarla en cuadrado (arrastrar y zoom, también con teclado), re-codificarla a WebP 512 × 512 en el navegador y subirla; sacar el avatar; E2E de la subida real.
+  - **Archivos:** `src/domain/avatar.ts`, `src/application/pages/set-page-avatar.ts`, `src/infrastructure/supabase/supabase-avatar-storage.ts`, `src/infrastructure/supabase/avatar-images.ts`, `src/pages/avatars/[owner]/[file].ts`, `supabase/migrations/20261029000000_avatars.sql`.
 
 - [ ] **Tarea 23: Usuarios habilitados (owner)** · M · Deps: 18
   - Funciones `admin_invite`, `admin_revoke` y `admin_list_users` (`security definer` con chequeo de rol), `profiles.disabled` en RLS, `private.audit_log` y la UI `/admin/usuarios`.

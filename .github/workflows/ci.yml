@@ -86,8 +86,9 @@ jobs:
       - name: Activar pnpm (versión de packageManager)
         run: corepack enable
       - run: pnpm install --frozen-lockfile
+      # Con Storage: los avatares se suben y se sirven desde `/avatars/...`.
       - name: Levantar Supabase local (para los tests con sesión)
-        run: pnpm exec supabase start -x studio,imgproxy,realtime,edge-runtime,logflare,vector,mailpit,supavisor,storage-api
+        run: pnpm exec supabase start -x studio,imgproxy,realtime,edge-runtime,logflare,vector,mailpit,supavisor
       - name: Variables locales (.dev.vars) desde Supabase local
         run: pnpm env:local
       - run: pnpm exec playwright install --with-deps chromium
