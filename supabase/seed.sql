@@ -75,6 +75,14 @@ insert into public.links (owner_id, page_id, section_id, title, url, description
   ('11111111-1111-4111-8111-111111111111', '11111111-1111-4111-8111-111111111111', '5e000000-0000-4000-8000-000000000002', 'GitHub', 'https://github.com/juedsay', null, 'github', null),
   ('11111111-1111-4111-8111-111111111111', '11111111-1111-4111-8111-111111111111', '5e000000-0000-4000-8000-000000000003', 'Cómo testeo RLS con pgTAP', 'https://github.com/juedsay/plektia/tree/main/supabase/tests', null, 'generic', null);
 
+-- Contenido destacado del YouTube del owner (SPEC-live-status): lo que el cron
+-- guardaría. Video ficticio con un ID con la forma real; en local la
+-- miniatura no carga (no hay red hacia YouTube en los tests).
+insert into public.featured_content (link_id, video_id, kind, title, published_at, duration_s)
+select l.id, 'aBcDeFgHiJk', 'video', 'Cómo testeo RLS con pgTAP', now() - interval '2 days', 754
+from public.links l
+where l.page_id = '11111111-1111-4111-8111-111111111111' and l.provider_handle = '@juedsay';
+
 -- Segunda página del owner (SPEC-pages), con sus propios links en su propio
 -- /{handle}. Datos ficticios: nada que parezca de una persona real.
 insert into public.pages (id, owner_id, handle, display_name, bio) values

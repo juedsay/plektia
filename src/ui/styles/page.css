@@ -346,10 +346,23 @@
   overflow: hidden;
 }
 
-.latest-video svg {
+.latest-video img {
   display: block;
   width: 100%;
   height: auto;
+  aspect-ratio: 16 / 9;
+  /* `hqdefault` es 4:3 con franjas: el recorte muestra solo el video. */
+  object-fit: cover;
+  background: var(--color-surface);
+}
+
+/* Un Short se ve vertical (9:16), angosto para no ocupar toda la pantalla. */
+.latest-video.is-short {
+  width: min(60%, 16rem);
+}
+
+.latest-video.is-short img {
+  aspect-ratio: 9 / 16;
 }
 
 .duration {

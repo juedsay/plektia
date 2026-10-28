@@ -17,7 +17,16 @@ for (const toggle of document.querySelectorAll<HTMLButtonElement>("[data-disclos
   if (panel) {
     toggle.addEventListener("click", () => {
       toggleDisclosure(toggle, panel);
+      revealImages(panel);
     });
+  }
+}
+
+/** Las miniaturas se piden recién al abrir el panel (cerrado, no cuesta nada). */
+function revealImages(panel: HTMLElement): void {
+  for (const image of panel.querySelectorAll<HTMLImageElement>("img[data-src]")) {
+    image.src = image.dataset["src"] ?? "";
+    image.removeAttribute("data-src");
   }
 }
 

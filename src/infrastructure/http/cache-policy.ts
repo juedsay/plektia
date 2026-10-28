@@ -26,6 +26,9 @@ const OFFICIAL_PATH = `/${OFFICIAL_HANDLE}`;
 /** `/avatars/{owner}/{uuid}.webp|jpg`: los avatares, servidos desde el propio sitio. */
 const AVATAR_PATH = /^\/avatars\/[0-9a-f-]{36}\/[0-9a-f-]{36}\.(webp|jpg)$/;
 const AVATARS_TAG = "avatars";
+/** `/thumbs/{videoId}.jpg`: miniaturas de YouTube, servidas desde el propio sitio. */
+const THUMB_PATH = /^\/thumbs\/[A-Za-z0-9_-]{11}\.jpg$/;
+const THUMBS_TAG = "thumbs";
 
 // Formularios con estado (Turnstile, avisos de envío) o pasos del login: nunca.
 const PRIVATE_PATHS = new Set(["/contact", "/contacto"]);
@@ -48,6 +51,11 @@ export function cachePolicy(request: {
   // Un avatar nunca cambia: uno nuevo es otro archivo (otra ruta).
   if (AVATAR_PATH.test(pathname) && status === 200) {
     return { cacheControl: "public, max-age=31536000, immutable", tags: [AVATARS_TAG] };
+  }
+
+  // Una miniatura casi nunca cambia, pero puede (el dueño del video la edita): un día.
+  if (THUMB_PATH.test(pathname) && status === 200) {
+    return { cacheControl: "public, max-age=86400", tags: [THUMBS_TAG] };
   }
 
   // Como un perfil: editarla desde el panel purga su etiqueta y se ve al instante.

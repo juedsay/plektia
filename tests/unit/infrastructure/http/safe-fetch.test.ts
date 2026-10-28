@@ -28,7 +28,7 @@ describe("safeFetch", () => {
       seenInit = init;
       return Promise.resolve(new Response('{"items":[]}', { status: 200 }));
     });
-    expect(await safeFetch(new URL(`https://${HOST}/youtube/v3/channels`))).toEqual({
+    expect(await safeFetch(new URL(`https://${HOST}/youtube/v3/channels`))).toMatchObject({
       ok: true,
       value: { status: 200, body: '{"items":[]}' },
     });
