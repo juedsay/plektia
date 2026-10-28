@@ -50,6 +50,13 @@ jobs:
             echo "::error::El build contiene una clave de servicio de Supabase."
             exit 1
           fi
+      # SPEC-live-status: la API key de YouTube es un secreto del Worker.
+      - name: Sin API keys de Google en el build
+        run: |
+          if grep -rEl 'AIza[0-9A-Za-z_-]{35}' dist/; then
+            echo "::error::El build contiene una API key de Google."
+            exit 1
+          fi
 
   database:
     name: Base de datos (pgTAP y asesores)

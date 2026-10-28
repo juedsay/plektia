@@ -3,7 +3,7 @@
 //
 //   pnpm env:local
 import { execFileSync } from "node:child_process";
-import { writeFileSync } from "node:fs";
+import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 
 const cli = join(process.cwd(), "node_modules", "supabase", "dist", "supabase.js");
@@ -31,11 +31,17 @@ const vars = {
   TURNSTILE_SITE_KEY: "1x00000000000000000000AA",
   TURNSTILE_SECRET_KEY: "1x0000000000000000000000000000000AA",
 };
+// Las claves que se cargan a mano (scripts/wizard-youtube.sh) no se pisan.
+const KEPT = ["YOUTUBE_API_KEY"];
+const kept = existsSync(".dev.vars")
+  ? readFileSync(".dev.vars", "utf8")
+      .split(/\r?\n/)
+      .filter((line) => KEPT.some((name) => line.startsWith(`${name}=`)))
+  : [];
+
 writeFileSync(
   ".dev.vars",
-  `${Object.entries(vars)
-    .map(([key, value]) => `${key}=${value}`)
-    .join("\n")}\n`,
+  `${[...Object.entries(vars).map(([key, value]) => `${key}=${value}`), ...kept].join("\n")}\n`,
   { mode: 0o600 },
 );
 console.warn("`.dev.vars` generado con Supabase local.");
