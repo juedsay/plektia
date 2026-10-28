@@ -312,13 +312,14 @@
   - **22c (hecho):** en `/admin/page`, elegir la foto (tipo real por sus bytes, ≤ 5 MB, ≤ 8000 px por lado y ≤ 40 MP leídos de la cabecera antes de decodificar), recortarla en cuadrado (arrastrar, flechas, zoom con barra o con más y menos), re-codificarla a WebP o JPEG de 512 × 512 en el navegador (sin EXIF) y subirla con un solo envío a la vez; sacar el avatar con un formulario sin JavaScript; E2E de la subida real con una cuenta propia del seed.
   - **Archivos:** `src/domain/avatar.ts`, `src/application/pages/set-page-avatar.ts`, `src/infrastructure/supabase/supabase-avatar-storage.ts`, `src/infrastructure/supabase/avatar-images.ts`, `src/pages/avatars/[owner]/[file].ts`, `supabase/migrations/20261029000000_avatars.sql`.
 
-- [ ] **Tarea 23: Usuarios habilitados (owner)** · M · Deps: 18
+- [x] **Tarea 23: Usuarios habilitados (owner)** · M · Deps: 18
   - Funciones `admin_invite`, `admin_revoke` y `admin_list_users` (`security definer` con chequeo de rol), `profiles.disabled` en RLS, `private.audit_log` y la UI `/admin/usuarios`.
   - **Aceptación:**
     - pgTAP: un `member` no puede; no se puede revocar al último owner.
     - E2E: invitar y revocar.
   - **Verificar:** `pnpm test:db && pnpm test:e2e`.
   - **Archivos:** `supabase/migrations/0005_admin.sql`, `src/application/admin/*.ts`, `src/pages/admin/usuarios.astro`, `src/actions/users.ts`.
+  - **Hecho (2026-10-28):** funciones `admin_invite`, `admin_revoke` (nadie se quita el acceso a sí mismo, así nunca queda sin owner; devuelve las páginas para purgar la caché) y `admin_list_users`, con `private.audit_log`; `/admin/usuarios` (404 para quien no es owner activo), Actions `users.invite` y `users.revoke`, link en la navegación solo para owners y aviso en el panel para una cuenta dada de baja. `pnpm user:allow` queda como alternativa.
 
 ### ✅ Checkpoint F5 · ENTREGA 2
 - [ ] Armás y ordenás tu página entera desde el celular.

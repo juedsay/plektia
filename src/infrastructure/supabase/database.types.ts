@@ -237,6 +237,25 @@ export type Database = {
       };
     };
     Functions: {
+      admin_invite: { Args: { target_email: string; target_handle: string }; Returns: string };
+      admin_list_users: {
+        Args: Record<PropertyKey, never>;
+        Returns: {
+          email: string;
+          handle: string;
+          invited_at: string;
+          last_sign_in_at: string;
+          role: Database["public"]["Enums"]["user_role"];
+          status: string;
+        }[];
+      };
+      admin_revoke: {
+        Args: { target_email: string };
+        Returns: {
+          handles: string[];
+          status: string;
+        }[];
+      };
       ingest_contact_message: {
         Args: { p_email: string; p_message: string; p_name: string };
         Returns: undefined;

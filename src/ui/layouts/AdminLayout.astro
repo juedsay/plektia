@@ -9,23 +9,28 @@ import "@/ui/styles/base.css";
 import "@/ui/styles/admin.css";
 
 import type { Page } from "@/application/ports/page-repository";
+import type { CurrentAccount } from "@/application/ports/user-directory";
+import { isActiveOwner } from "@/ui/admin/workspace";
 import Alert from "@/ui/components/Alert.astro";
 import Isotype from "@/ui/components/Isotype.astro";
 import PageSwitcher from "@/ui/components/admin/PageSwitcher.astro";
 
-type Section = "home" | "page" | "new-page";
+type Section = "home" | "page" | "new-page" | "users";
 
 interface Props {
   title: string;
   section: Section;
   pages: readonly Page[];
   currentPage: Page | null;
+  /** La cuenta de la sesión: "Usuarios" solo para un owner activo; aviso si fue dada de baja. */
+  account: CurrentAccount;
   /** Error de una acción del marco (por ejemplo, al cambiar de página). */
   notice?: string | null;
   /** El inicio usa todo el ancho: el editor y, en escritorio, la vista previa al lado. */
   wide?: boolean;
 }
-const { title, section, pages, currentPage, notice = null, wide = false } = Astro.props;
+const { title, section, pages, currentPage, account, notice = null, wide = false } = Astro.props;
+const showUsers = isActiveOwner(account);
 const publicUrl = currentPage ? new URL(`/${currentPage.handle}`, Astro.url).href : null;
 ---
 
@@ -86,6 +91,25 @@ const publicUrl = currentPage ? new URL(`/${currentPage.handle}`, Astro.url).hre
                 <span>Página</span>
               </a>
             </li>
+            {showUsers && (
+              <li>
+                <a href="/admin/usuarios" aria-current={section === "users" ? "page" : undefined}>
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.8"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                  >
+                    <circle cx="9" cy="8" r="3"></circle>
+                    <path d="M3.5 19a5.5 5.5 0 0 1 11 0M16 5.5a3 3 0 0 1 0 5.5M17.5 14a5 5 0 0 1 3 5"></path>
+                  </svg>
+                  <span>Usuarios</span>
+                </a>
+              </li>
+            )}
             {publicUrl && (
               <li>
                 <a href={publicUrl} target="_blank" rel="noopener">
@@ -127,6 +151,12 @@ const publicUrl = currentPage ? new URL(`/${currentPage.handle}`, Astro.url).hre
       </header>
 
       <main class:list={["admin-main", { "is-wide": wide }]} id="contenido" tabindex="-1">
+        {account.disabled && (
+          <Alert
+            variant="error"
+            message="Tu acceso a Plektia fue quitado: tu página ya no se publica y no podés editar nada. Si creés que es un error, escribinos desde contacto."
+          />
+        )}
         {notice && <Alert variant="error" message={notice} />}
         <slot />
       </main>

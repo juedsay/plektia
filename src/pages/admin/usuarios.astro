@@ -1,0 +1,191 @@
+---
+// Usuarios habilitados (SPEC-admin-panel, "Usuarios"): solo para un owner
+// activo. Invitar a una persona con su handle y quitar el acceso. Para quien no
+// es owner, la pantalla no existe (404); la base además lo verifica en cada función.
+import { actions } from "astro:actions";
+
+import { listUsers } from "@/application/admin/users";
+import type { AccountStatus } from "@/application/ports/user-directory";
+import { isActiveOwner, loadWorkspace } from "@/ui/admin/workspace";
+import Alert from "@/ui/components/Alert.astro";
+import AdminLayout from "@/ui/layouts/AdminLayout.astro";
+
+const switched = Astro.getActionResult(actions.pages.select);
+if (switched?.data?.ok) return Astro.redirect("/admin/usuarios", 303);
+const invited = Astro.getActionResult(actions.users.invite);
+if (invited?.data?.ok) return Astro.redirect("/admin/usuarios?invitado", 303);
+const revoked = Astro.getActionResult(actions.users.revoke);
+if (revoked?.data?.ok) return Astro.redirect("/admin/usuarios?acceso-quitado", 303);
+
+const { repositories, pages, currentPage, account } = await loadWorkspace(Astro);
+if (!isActiveOwner(account)) return Astro.rewrite("/404");
+
+const users = await listUsers({ users: repositories.users })();
+if (!users.ok) return Astro.rewrite("/404");
+
+const failure = invited?.data && !invited.data.ok ? invited.data : null;
+const fields = failure?.fields ?? {};
+const values = failure?.values ?? {};
+const inviteMessage = failure
+  ? failure.message
+  : invited?.error
+    ? "No pudimos crear la invitación. Probá de nuevo."
+    : null;
+const revokeMessage =
+  revoked?.data && !revoked.data.ok
+    ? (revoked.data.fields["email"] ?? revoked.data.message)
+    : revoked?.error
+      ? "No pudimos quitar el acceso. Probá de nuevo."
+      : null;
+const success = Astro.url.searchParams.has("invitado")
+  ? "Invitación creada. Ya puede entrar con ese correo (Google o GitHub)."
+  : Astro.url.searchParams.has("acceso-quitado")
+    ? "Acceso quitado: su página dejó de publicarse y ya no puede editar nada."
+    : null;
+const notice =
+  switched?.data && !switched.data.ok
+    ? switched.data.message
+    : switched?.error
+      ? "No pudimos cambiar de página. Probá de nuevo."
+      : null;
+
+const ownEmail = Astro.locals.user?.email?.toLowerCase() ?? null;
+const origin = Astro.url.host;
+const STATUS_NAMES: Record<AccountStatus, string> = {
+  active: "Activa",
+  invited: "Invitación pendiente",
+  disabled: "Sin acceso",
+};
+const dateFormat = new Intl.DateTimeFormat("es-AR", { dateStyle: "medium" });
+const formatDate = (iso: string | null) => (iso ? dateFormat.format(new Date(iso)) : null);
+---
+
+<AdminLayout
+  title="Usuarios"
+  section="users"
+  pages={pages}
+  currentPage={currentPage}
+  account={account}
+  notice={notice}
+>
+  <header class="admin-heading">
+    <h1>Usuarios</h1>
+    <p class="admin-bio">
+      Quiénes pueden tener una página en Plektia. Mientras el registro esté cerrado, solo entran los
+      correos invitados.
+    </p>
+  </header>
+
+  {success && <Alert variant="success" message={success} />}
+
+  <form class="admin-form users-invite" method="post" action={actions.users.invite} novalidate>
+    <h2 class="users-title">Invitar</h2>
+    {inviteMessage && <Alert variant="error" message={inviteMessage} />}
+    <div class="field">
+      <label for="email">Correo</label>
+      <input
+        id="email"
+        name="email"
+        type="email"
+        required
+        maxlength="254"
+        autocomplete="off"
+        value={values["email"] ?? ""}
+        aria-describedby={fields["email"] ? "email-error email-hint" : "email-hint"}
+        aria-invalid={fields["email"] ? "true" : undefined}
+      />
+      <p class="field-hint" id="email-hint">
+        El de su cuenta de Google o GitHub. No se publica en ningún lado.
+      </p>
+      {fields["email"] && (
+        <p class="field-error" id="email-error">
+          {fields["email"]}
+        </p>
+      )}
+    </div>
+    <div class="field">
+      <label for="handle">Dirección de su página</label>
+      <div class="handle-input">
+        <span class="handle-prefix" aria-hidden="true">
+          <span class="handle-host">{origin}</span>/
+        </span>
+        <input
+          id="handle"
+          name="handle"
+          required
+          minlength="3"
+          maxlength="30"
+          autocomplete="off"
+          autocapitalize="none"
+          spellcheck="false"
+          value={values["handle"] ?? ""}
+          aria-describedby={fields["handle"] ? "handle-error handle-hint" : "handle-hint"}
+          aria-invalid={fields["handle"] ? "true" : undefined}
+        />
+      </div>
+      <p class="field-hint" id="handle-hint">
+        De 3 a 30 caracteres: letras minúsculas, números y guiones simples.
+      </p>
+      {fields["handle"] && (
+        <p class="field-error" id="handle-error">
+          {fields["handle"]}
+        </p>
+      )}
+    </div>
+    <div class="admin-form-actions">
+      <button type="submit" class="button">
+        Invitar
+      </button>
+    </div>
+  </form>
+
+  <section class="users-list" aria-labelledby="users-list-title">
+    <h2 class="users-title" id="users-list-title">
+      Cuentas e invitaciones
+    </h2>
+    {revokeMessage && <Alert variant="error" message={revokeMessage} />}
+    <ul>
+      {users.value.map((user) => (
+        <li class="users-row" data-status={user.status}>
+          <div class="users-who">
+            <span class="users-email">{user.email}</span>
+            <span class="users-handle">
+              /{user.handle}
+              {user.role === "owner" && <span class="admin-tag">Owner</span>}
+            </span>
+          </div>
+          <div class="users-state">
+            <span class:list={["users-status", `is-${user.status}`]}>
+              {STATUS_NAMES[user.status]}
+            </span>
+            <span class="users-date">
+              {user.status === "invited"
+                ? `Invitada el ${formatDate(user.invitedAt) ?? ""}`
+                : user.lastSignInAt
+                  ? `Último acceso: ${formatDate(user.lastSignInAt) ?? ""}`
+                  : "Todavía no entró"}
+            </span>
+          </div>
+          {user.status !== "disabled" && user.email !== ownEmail && (
+            <details class="users-revoke">
+              <summary class="button is-quiet">
+                Quitar acceso<span class="visually-hidden"> a {user.email}</span>
+              </summary>
+              <form method="post" action={actions.users.revoke}>
+                <input type="hidden" name="email" value={user.email} />
+                <p>
+                  {user.status === "invited"
+                    ? "Se borra la invitación: ya no va a poder entrar."
+                    : "Su página deja de publicarse y no va a poder editar nada, aunque tenga la sesión abierta."}
+                </p>
+                <button type="submit" class="button">
+                  Sí, quitar acceso<span class="visually-hidden"> a {user.email}</span>
+                </button>
+              </form>
+            </details>
+          )}
+        </li>
+      ))}
+    </ul>
+  </section>
+</AdminLayout>

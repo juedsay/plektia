@@ -13,7 +13,7 @@ if (switched?.data?.ok) return Astro.redirect("/admin", 303);
 const created = Astro.getActionResult(actions.pages.create);
 if (created?.data?.ok) return Astro.redirect("/admin", 303);
 
-const { pages, currentPage } = await loadWorkspace(Astro);
+const { pages, currentPage, account } = await loadWorkspace(Astro);
 const atLimit = pages.length >= PAGE_LIMIT;
 const failure = created?.data && !created.data.ok ? created.data : null;
 const fields = failure?.fields ?? {};
@@ -30,7 +30,13 @@ const origin = Astro.url.host;
 const requestId = values["id"] ?? crypto.randomUUID();
 ---
 
-<AdminLayout title="Nueva página" section="new-page" pages={pages} currentPage={currentPage}>
+<AdminLayout
+  title="Nueva página"
+  section="new-page"
+  pages={pages}
+  currentPage={currentPage}
+  account={account}
+>
   <header class="admin-heading">
     <h1>Nueva página</h1>
     <p class="admin-bio">

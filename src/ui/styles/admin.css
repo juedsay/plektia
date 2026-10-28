@@ -1302,3 +1302,112 @@
   width: min(280px, 100%);
   accent-color: var(--color-fg);
 }
+
+/* ── Usuarios (/admin/usuarios, solo owner) ──────────────────────────────────── */
+
+.users-title {
+  margin: 0 0 var(--space-3);
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  font-weight: 500;
+}
+
+.users-invite {
+  margin-bottom: var(--space-8);
+  padding-bottom: var(--space-6);
+  border-bottom: 1px solid var(--color-line);
+}
+
+.users-list {
+  max-width: var(--admin-measure);
+}
+
+.users-list ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.users-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-4);
+  align-items: center;
+  padding: var(--space-4) 0;
+  border-bottom: 1px solid var(--color-line-soft);
+}
+
+.users-who,
+.users-state {
+  display: grid;
+  gap: var(--space-1);
+  min-width: 0;
+}
+
+.users-who {
+  flex: 1 1 14rem;
+}
+
+.users-email {
+  overflow-wrap: anywhere;
+  font-weight: 500;
+}
+
+.users-handle,
+.users-date {
+  color: var(--color-fg-muted);
+  font-size: var(--text-sm);
+}
+
+.users-handle .admin-tag {
+  margin-left: var(--space-2);
+}
+
+.users-status {
+  font-size: var(--text-sm);
+  font-weight: 500;
+}
+
+/* Activa: hueso; pendiente: apagado; sin acceso: tachado, sin color de alarma. */
+.users-status.is-invited {
+  color: var(--color-fg-muted);
+}
+
+.users-status.is-disabled {
+  color: var(--color-fg-muted);
+  text-decoration: line-through;
+}
+
+.users-row[data-status="disabled"] .users-email {
+  color: var(--color-fg-muted);
+}
+
+.users-revoke {
+  flex-basis: 100%;
+}
+
+.users-revoke summary {
+  display: inline-flex;
+  list-style: none;
+  cursor: pointer;
+}
+
+.users-revoke summary::-webkit-details-marker {
+  display: none;
+}
+
+.users-revoke form {
+  display: grid;
+  gap: var(--space-3);
+  justify-items: start;
+  margin-top: var(--space-3);
+  padding: var(--space-4);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-md);
+}
+
+.users-revoke p {
+  margin: 0;
+  color: var(--color-fg-muted);
+  font-size: var(--text-sm);
+}
