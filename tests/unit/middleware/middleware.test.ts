@@ -5,6 +5,7 @@ import type { SessionReader, SessionUser } from "@/application/ports/session-rea
 import { adminGuardMiddleware } from "@/middleware/admin-guard";
 import { cacheMiddleware } from "@/middleware/cache";
 import { rateLimitMiddleware } from "@/middleware/rate-limit";
+import { requestSizeMiddleware } from "@/middleware/request-size";
 import { securityHeadersMiddleware } from "@/middleware/security-headers";
 import { sessionMiddleware } from "@/middleware/session";
 
@@ -70,6 +71,33 @@ describe("securityHeadersMiddleware", () => {
     expect(preview.headers.get("Content-Security-Policy")).toContain("frame-ancestors 'self'");
     expect(panel.headers.get("X-Frame-Options")).toBe("DENY");
     expect(panel.headers.get("Content-Security-Policy")).toContain("frame-ancestors 'none'");
+  });
+});
+
+describe("requestSizeMiddleware", () => {
+  const postTo = (path: string, contentLength: string | null) => {
+    const url = new URL(path, "https://app.invalid");
+    const headers = contentLength === null ? undefined : { "content-length": contentLength };
+    return {
+      url,
+      request: new Request(url, { method: "POST", ...(headers ? { headers } : {}) }),
+    } as unknown as APIContext;
+  };
+
+  it("corta un cuerpo de más con 413 sin llegar a la Action", async () => {
+    const next = vi.fn(ok);
+    const response = (await requestSizeMiddleware(
+      postTo("/_actions/pages.setAvatar", String(10 * 1024 * 1024)),
+      next,
+    )) as Response;
+    expect(response.status).toBe(413);
+    expect(next).not.toHaveBeenCalled();
+  });
+
+  it("deja pasar lo que entra en el límite", async () => {
+    const next = vi.fn(ok);
+    await requestSizeMiddleware(postTo("/_actions/links.create", "120"), next);
+    expect(next).toHaveBeenCalled();
   });
 });
 

@@ -1,6 +1,6 @@
 import { expect, type APIRequestContext, test } from "@playwright/test";
 
-import { PNG_SIGNATURE, SVG_WITH_SCRIPT, webp } from "../support/webp";
+import { EXIF_SEGMENT, jpeg, PNG_SIGNATURE, SVG_WITH_SCRIPT, webp } from "../support/webp";
 import { signIn } from "./support/session";
 
 // Avatar (tarea 22a): la Action valida y guarda, la página pública lo muestra y
@@ -74,7 +74,46 @@ test.describe("avatar", () => {
     expect(image.headers()["content-type"]).toBe("image/webp");
     expect(image.headers()["x-content-type-options"]).toBe("nosniff");
     expect(image.headers()["cache-control"]).toBe("public, max-age=31536000, immutable");
+    // Abierta sola, la imagen no puede correr ni cargar nada.
+    expect(image.headers()["content-security-policy"]).toContain("sandbox");
+    expect(image.headers()["content-security-policy"]).toContain("default-src 'none'");
     expect(new Uint8Array(await image.body())).toEqual(webp());
+  });
+
+  test("un JPEG (lo que genera Safari) se guarda como .jpg y se sirve como image/jpeg", async ({
+    context,
+    baseURL,
+  }) => {
+    const response = await post(context.request, baseURL, "pages.setAvatar", {
+      pageId: MEMBER_PAGE_ID,
+      avatar: file(jpeg(), "avatar.jpg", "image/jpeg"),
+    });
+    const path = /22222222-2222-4222-8222-222222222222\/[0-9a-f-]{36}\.jpg/.exec(
+      await response.text(),
+    )?.[0];
+    expect(path).toBeDefined();
+    const image = await context.request.get(`/avatars/${path ?? ""}`);
+    expect(image.headers()["content-type"]).toBe("image/jpeg");
+    expect(new Uint8Array(await image.body())).toEqual(jpeg());
+  });
+
+  test("un JPEG con EXIF (ubicación de la foto) se rechaza", async ({ context, baseURL }) => {
+    const response = await post(context.request, baseURL, "pages.setAvatar", {
+      pageId: MEMBER_PAGE_ID,
+      avatar: file(jpeg({ before: EXIF_SEGMENT }), "foto.jpg", "image/jpeg"),
+    });
+    expect(await response.text()).toContain("datos de la cámara o la ubicación");
+  });
+
+  test("un envío de más de 256 KB se corta antes de llegar a la Action (413)", async ({
+    context,
+    baseURL,
+  }) => {
+    const response = await post(context.request, baseURL, "pages.setAvatar", {
+      pageId: MEMBER_PAGE_ID,
+      avatar: file(new Uint8Array(1024 * 1024)),
+    });
+    expect(response.status()).toBe(413);
   });
 
   test("una ruta que no es de avatar no llega a Storage", async ({ request }) => {

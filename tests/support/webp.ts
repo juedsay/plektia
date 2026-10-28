@@ -74,6 +74,71 @@ export function riff(chunks: readonly { fourCc: string; declaredSize: number; da
 /** Los datos de un chunk de 512 × 512 (para armar casos con `riff`). */
 export const chunkDataFor = (chunk: Chunk) => chunkData({ chunk });
 
+// ── JPEG mínimos ─────────────────────────────────────────────────────────────
+
+const be16 = (value: number) => [(value >>> 8) & 0xff, value & 0xff];
+const segment = (marker: number, data: readonly number[]) => [
+  0xff,
+  marker,
+  ...be16(data.length + 2),
+  ...data,
+];
+
+/** APP0 JFIF: lo que escribe un `<canvas>`. */
+const JFIF = segment(0xe0, [...text("JFIF"), 0, 1, 1, 0, 0, 1, 0, 1, 0, 0]);
+const startOfFrame = (width: number, height: number) =>
+  segment(0xc0, [8, ...be16(height), ...be16(width), 3, 1, 0x22, 0, 2, 0x11, 1, 3, 0x11, 1]);
+const startOfScan = segment(0xda, [3, 1, 0, 2, 0x11, 3, 0x11, 0, 0x3f, 0]);
+/** Datos comprimidos de mentira, con un byte de relleno (`FF 00`) y un reinicio. */
+const SCAN_DATA = [0x12, 0x34, 0xff, 0x00, 0x56, 0xff, 0xd0, 0x78];
+
+interface JpegOptions {
+  readonly width?: number;
+  readonly height?: number;
+  /** Segmentos antes del cuadro (por ejemplo, un APP1 con EXIF). */
+  readonly before?: readonly number[];
+  /** Algo entre dos barridos, como en un JPEG progresivo. */
+  readonly betweenScans?: readonly number[];
+  /** Bytes después del EOI (un polyglot). */
+  readonly after?: readonly number[];
+  /** Sin cuadro (SOF) o con dos. */
+  readonly frames?: 0 | 1 | 2;
+  /** Sin barrido (SOS): el cuadro y enseguida el EOI, sin imagen. */
+  readonly withoutScan?: boolean;
+}
+
+export function jpeg({
+  width = 512,
+  height = 512,
+  before = [],
+  betweenScans,
+  after = [],
+  frames = 1,
+  withoutScan = false,
+}: JpegOptions = {}): Uint8Array {
+  const frame = startOfFrame(width, height);
+  return Uint8Array.from([
+    0xff,
+    0xd8,
+    ...JFIF,
+    ...before,
+    ...(frames >= 1 ? frame : []),
+    ...(frames === 2 ? frame : []),
+    ...(withoutScan ? [] : [...startOfScan, ...SCAN_DATA]),
+    ...(betweenScans ? [...betweenScans, ...startOfScan, ...SCAN_DATA] : []),
+    0xff,
+    0xd9,
+    ...after,
+  ]);
+}
+
+/** Un APP1 con "Exif": datos de la cámara (y a veces la ubicación). */
+export const EXIF_SEGMENT = segment(0xe1, [...text("Exif"), 0, 0, 1, 2, 3, 4]);
+/** Un comentario de JPEG. */
+export const COMMENT_SEGMENT = segment(0xfe, text("hola"));
+/** Un perfil de color (APP2 ICC): permitido, no es un dato personal. */
+export const ICC_SEGMENT = segment(0xe2, [...text("ICC_PROFILE"), 0, 1, 1]);
+
 /** Un SVG con un script: lo que nunca tiene que llegar al bucket. */
 export const SVG_WITH_SCRIPT = new TextEncoder().encode(
   '<svg xmlns="http://www.w3.org/2000/svg"><script>alert(1)</script></svg>',

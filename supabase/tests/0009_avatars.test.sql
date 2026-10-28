@@ -3,7 +3,7 @@
 begin;
 create extension if not exists pgtap with schema extensions;
 
-select plan(10);
+select plan(14);
 
 create function pg_temp.login(uid uuid)
 returns void language sql as $$
@@ -19,8 +19,13 @@ $$;
 -- Dueño 1111…, miembro 2222… (seed).
 select is(
   (select row(public, file_size_limit, allowed_mime_types)::text from storage.buckets where id = 'avatars'),
-  row(true, 204800::bigint, array['image/webp'])::text,
-  'bucket: público, 200 KB y solo WebP');
+  row(true, 204800::bigint, array['image/webp', 'image/jpeg'])::text,
+  'bucket: público, 200 KB y solo WebP o JPEG');
+select is(
+  (select count(*)::int from pg_constraint
+   where conrelid = 'public.pages'::regclass and contype = 'c'
+     and pg_get_constraintdef(oid) like '%avatar_path%'),
+  1, 'pages: una sola regla para la ruta del avatar');
 
 -- ── Storage ─────────────────────────────────────────────────────────────────
 select pg_temp.login('22222222-2222-4222-8222-222222222222');
@@ -28,6 +33,10 @@ select lives_ok(
   $$ insert into storage.objects (bucket_id, name)
      values ('avatars', '22222222-2222-4222-8222-222222222222/0b1d2c3e-4f5a-4b6c-8d7e-9f0a1b2c3d4e.webp') $$,
   'una cuenta sube a su carpeta');
+select lives_ok(
+  $$ insert into storage.objects (bucket_id, name)
+     values ('avatars', '22222222-2222-4222-8222-222222222222/0b1d2c3e-4f5a-4b6c-8d7e-9f0a1b2c3d4e.jpg') $$,
+  'también un .jpg (lo que genera Safari)');
 select throws_ok(
   $$ insert into storage.objects (bucket_id, name)
      values ('avatars', '11111111-1111-4111-8111-111111111111/0b1d2c3e-4f5a-4b6c-8d7e-9f0a1b2c3d4f.webp') $$,
@@ -58,6 +67,16 @@ select lives_ok(
      set avatar_path = '22222222-2222-4222-8222-222222222222/0b1d2c3e-4f5a-4b6c-8d7e-9f0a1b2c3d4e.webp'
      where id = '22222222-2222-4222-8222-222222222222' $$,
   'el dueño pone un avatar de su carpeta');
+select lives_ok(
+  $$ update public.pages
+     set avatar_path = '22222222-2222-4222-8222-222222222222/0b1d2c3e-4f5a-4b6c-8d7e-9f0a1b2c3d4e.jpg'
+     where id = '22222222-2222-4222-8222-222222222222' $$,
+  'o uno .jpg');
+select lives_ok(
+  $$ update public.pages
+     set avatar_path = '22222222-2222-4222-8222-222222222222/0b1d2c3e-4f5a-4b6c-8d7e-9f0a1b2c3d4e.webp'
+     where id = '22222222-2222-4222-8222-222222222222' $$,
+  'y vuelve a uno .webp');
 select throws_ok(
   $$ update public.pages
      set avatar_path = '11111111-1111-4111-8111-111111111111/0b1d2c3e-4f5a-4b6c-8d7e-9f0a1b2c3d4f.webp'

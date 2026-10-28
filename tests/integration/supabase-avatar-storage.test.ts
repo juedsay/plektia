@@ -8,7 +8,7 @@ import { avatarImages } from "@/infrastructure/supabase/avatar-images";
 import { SupabaseAvatarStorage } from "@/infrastructure/supabase/supabase-avatar-storage";
 import { SupabasePageRepository } from "@/infrastructure/supabase/supabase-page-repository";
 
-import { PNG_SIGNATURE, SVG_WITH_SCRIPT, webp } from "../support/webp";
+import { EXIF_SEGMENT, jpeg, PNG_SIGNATURE, SVG_WITH_SCRIPT, webp } from "../support/webp";
 import { RecordingPageCache } from "../unit/application/fakes/recording-page-cache";
 import { clientFor } from "./session-client";
 
@@ -123,10 +123,26 @@ describe("avatares contra Supabase local", () => {
         .single();
       expect(data?.avatar_path).toBe(path);
 
-      const body = await avatarImages(supabase.url)(path ?? "");
-      expect(body).not.toBeNull();
-      const bytes = new Uint8Array(await new Response(body).arrayBuffer());
-      expect(bytes).toEqual(webp());
+      const served = await avatarImages(supabase.url)(path ?? "");
+      expect(served?.contentType).toBe("image/webp");
+      expect(served?.bytes).toEqual(webp());
+    });
+
+    it("un JPEG válido (Safari) queda como .jpg y se sirve como image/jpeg", async () => {
+      const result = await setAvatar()({ pageId: MEMBER_ID }, image(jpeg()));
+      const path = result.ok ? result.value.avatarPath : null;
+      expect(path).toMatch(new RegExp(`^${MEMBER_ID}/[0-9a-f-]{36}\\.jpg$`));
+      const served = await avatarImages(supabase.url)(path ?? "");
+      expect(served?.contentType).toBe("image/jpeg");
+      expect(served?.bytes).toEqual(jpeg());
+    });
+
+    it("un JPEG con EXIF (la ubicación de la foto) se rechaza", async () => {
+      const result = await setAvatar()(
+        { pageId: MEMBER_ID },
+        image(jpeg({ before: EXIF_SEGMENT })),
+      );
+      expect(result).toMatchObject({ ok: false, error: { kind: "invalid_input" } });
     });
   });
 });
