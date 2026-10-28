@@ -36,6 +36,19 @@ describe("safeFetch", () => {
     expect(seenInit?.method).toBe("GET");
   });
 
+  it("con `form`, manda un POST con el formulario", async () => {
+    let seen: RequestInit | undefined;
+    const { safeFetch } = safeFetchWith((_url, init) => {
+      seen = init;
+      return Promise.resolve(new Response("{}", { status: 200 }));
+    });
+    await safeFetch(new URL(`https://${HOST}/token`), {
+      form: { grant_type: "client_credentials" },
+    });
+    expect(seen?.method).toBe("POST");
+    expect(formBody(seen?.body)).toBe("grant_type=client_credentials");
+  });
+
   it.each([
     "https://evil.com/youtube/v3/channels",
     `http://${HOST}/youtube/v3/channels`,
@@ -115,3 +128,8 @@ describe("safeFetch", () => {
     });
   });
 });
+
+/** El formulario que viajó en el cuerpo del pedido. */
+function formBody(body: RequestInit["body"] | undefined): string {
+  return body instanceof URLSearchParams ? body.toString() : "";
+}
