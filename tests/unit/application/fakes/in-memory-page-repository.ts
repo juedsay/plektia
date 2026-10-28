@@ -48,6 +48,7 @@ export class InMemoryPageRepository implements PageReader, PageWriter {
       bio: null,
       theme: "tecnico",
       showHandle: true,
+      avatarPath: null,
     };
     this.pages.push(page);
     return Promise.resolve(ok(page));
@@ -58,6 +59,23 @@ export class InMemoryPageRepository implements PageReader, PageWriter {
     const current = this.pages[index];
     if (!current) return Promise.resolve(err("not_found"));
     const updated: Page = { ...current, ...settings };
+    this.pages[index] = updated;
+    return Promise.resolve(ok(updated));
+  }
+
+  /** Si está, el próximo `setAvatar` falla con este error (como si la base lo rechazara). */
+  nextAvatarFailure: WriteError | null = null;
+
+  setAvatar(pageId: string, avatarPath: string | null): Promise<Result<Page, WriteError>> {
+    if (this.nextAvatarFailure) {
+      const failure = this.nextAvatarFailure;
+      this.nextAvatarFailure = null;
+      return Promise.resolve(err(failure));
+    }
+    const index = this.pages.findIndex((page) => page.id === pageId);
+    const current = this.pages[index];
+    if (!current) return Promise.resolve(err("not_found"));
+    const updated: Page = { ...current, avatarPath };
     this.pages[index] = updated;
     return Promise.resolve(ok(updated));
   }

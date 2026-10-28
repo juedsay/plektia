@@ -31,6 +31,17 @@ describe("cachePolicy", () => {
     },
   );
 
+  it("un avatar se cachea un año: uno nuevo siempre es otra ruta", () => {
+    const avatar =
+      "/avatars/22222222-2222-4222-8222-222222222222/0b1d2c3e-4f5a-4b6c-8d7e-9f0a1b2c3d4e.webp";
+    expect(get(avatar)).toEqual({
+      cacheControl: "public, max-age=31536000, immutable",
+      tags: ["avatars"],
+    });
+    expect(get(avatar, 404).cacheControl).not.toContain("immutable");
+    expect(get("/avatars/otra-cosa.png").cacheControl).toBe("private, no-store");
+  });
+
   it("/plektia es la página oficial: como un perfil (la edita la Admin) y del sitio", () => {
     expect(get("/plektia")).toEqual({
       cacheControl: "public, max-age=60, stale-while-revalidate=300",

@@ -15,10 +15,10 @@ import { unexpectedDatabaseError, writeFailure } from "@/infrastructure/supabase
 type Client = SupabaseClient<Database>;
 type PageRow = Pick<
   Tables<"pages">,
-  "id" | "handle" | "display_name" | "bio" | "theme" | "show_handle"
+  "id" | "handle" | "display_name" | "bio" | "theme" | "show_handle" | "avatar_path"
 >;
 
-const PAGE_COLUMNS = "id, handle, display_name, bio, theme, show_handle";
+const PAGE_COLUMNS = "id, handle, display_name, bio, theme, show_handle, avatar_path";
 const UNIQUE_VIOLATION = "23505";
 
 /**
@@ -89,6 +89,18 @@ export class SupabasePageRepository implements PageReader, PageWriter {
     return row ? ok(toPage(row)) : err("not_found");
   }
 
+  async setAvatar(pageId: string, avatarPath: string | null): Promise<Result<Page, WriteError>> {
+    const { data, error } = await this.client
+      .from("pages")
+      .update({ avatar_path: avatarPath })
+      .eq("id", pageId)
+      .eq("owner_id", this.ownerId)
+      .select(PAGE_COLUMNS);
+    if (error) return writeFailure("pages", error);
+    const [row] = data;
+    return row ? ok(toPage(row)) : err("not_found");
+  }
+
   async rememberLastPage(pageId: string): Promise<Result<void, WriteError>> {
     const { data, error } = await this.client
       .from("profiles")
@@ -109,5 +121,6 @@ function toPage(row: PageRow): Page {
     bio: row.bio,
     theme: row.theme,
     showHandle: row.show_handle,
+    avatarPath: row.avatar_path,
   };
 }

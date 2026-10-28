@@ -4,18 +4,25 @@ import Isotype from "@/ui/components/Isotype.astro";
 import { initialOf } from "@/ui/view/public-link";
 
 interface Props {
-  page: Pick<PublicPage, "handle" | "displayName" | "showHandle" | "bio">;
+  page: Pick<PublicPage, "handle" | "displayName" | "showHandle" | "bio" | "avatarPath">;
   /** Página propia de Plektia: el avatar es el isotipo. */
   brand?: boolean;
 }
 const { page, brand = false } = Astro.props;
-// La foto real llega con la subida de avatares (tarea 22); hasta entonces, la inicial.
+// El avatar se sirve desde el propio sitio (`/avatars/...`); sin foto, la inicial.
+const avatarSrc = !brand && page.avatarPath ? `/avatars/${page.avatarPath}` : null;
 ---
 
 <section class="identity" aria-labelledby="profile-name">
-  <div class="avatar" aria-hidden="true">
-    {brand ? <Isotype size={44} /> : initialOf(page.displayName)}
-  </div>
+  {avatarSrc ? (
+    <div class="avatar avatar-image">
+      <img src={avatarSrc} alt="" width="88" height="88" decoding="async" />
+    </div>
+  ) : (
+    <div class="avatar" aria-hidden="true">
+      {brand ? <Isotype size={44} /> : initialOf(page.displayName)}
+    </div>
+  )}
   <h1 id="profile-name">{page.displayName}</h1>
   {page.showHandle && <p class="handle">@{page.handle}</p>}
   {page.bio && <p class="bio">{page.bio}</p>}

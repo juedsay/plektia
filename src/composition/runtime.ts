@@ -18,6 +18,7 @@ import { createPublicPageReader } from "@/composition/public-page";
 import { createSessionReader } from "@/composition/session";
 import { WorkerPageCache } from "@/infrastructure/cache/purge";
 import { CloudflareRateLimiter } from "@/infrastructure/cloudflare/cloudflare-rate-limiter";
+import { avatarImages } from "@/infrastructure/supabase/avatar-images";
 import { createIngestClient } from "@/infrastructure/supabase/ingest-client";
 
 const supabase = () => ({ url: env.SUPABASE_URL, publishableKey: env.SUPABASE_PUBLISHABLE_KEY });
@@ -54,6 +55,9 @@ export const contactSender = () =>
 
 /** Clave pública del widget de Turnstile (va en el HTML). */
 export const turnstileSiteKey = (): string => env.TURNSTILE_SITE_KEY;
+
+/** Los avatares del bucket público, para servirlos desde `/avatars/...`. */
+export const avatarImage = (path: string) => avatarImages(env.SUPABASE_URL)(path);
 
 /** Purga de la caché de páginas. En local `cache` no existe: purgar no hace nada. */
 export const pageCache = (): PageCache =>

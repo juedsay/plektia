@@ -18,6 +18,7 @@ import { deleteSection } from "@/application/sections/delete-section";
 import { reorderSections } from "@/application/sections/reorder-sections";
 import { updateSection } from "@/application/sections/update-section";
 import { selectPage } from "@/application/pages/select-page";
+import { removePageAvatar, setPageAvatar } from "@/application/pages/set-page-avatar";
 import { updatePageSettings } from "@/application/pages/update-page-settings";
 import { formFields, toFormResult } from "@/actions/form-result";
 import { ok } from "@/domain/result";
@@ -198,6 +199,37 @@ export const server = {
         const created = await createPage({ pages, cache: pageCache() })(values);
         if (created.ok) await selectPage({ pages })({ pageId: created.value.id });
         return toFormResult(created, values);
+      },
+    }),
+    /**
+     * `{ pageId, avatar }`: el WebP de 512 × 512 que el panel recortó en el
+     * navegador. Se vuelve a validar con sus bytes antes de guardarlo.
+     */
+    setAvatar: defineAction({
+      accept: "form",
+      handler: async (form, context) => {
+        const { ownerId, pages, avatars } = await repositoriesOf(context);
+        const file = form.get("avatar");
+        const image =
+          file instanceof File && file.size > 0
+            ? { size: file.size, bytes: async () => new Uint8Array(await file.arrayBuffer()) }
+            : null;
+        return toFormResult(
+          await setPageAvatar({ pages, avatars, cache: pageCache(), ownerId })(
+            formFields(form),
+            image,
+          ),
+        );
+      },
+    }),
+    /** `{ pageId }`: saca el avatar (vuelve la inicial). */
+    removeAvatar: defineAction({
+      accept: "form",
+      handler: async (form, context) => {
+        const { pages, avatars } = await repositoriesOf(context);
+        return toFormResult(
+          await removePageAvatar({ pages, avatars, cache: pageCache() })(formFields(form)),
+        );
       },
     }),
     /** Guarda el nombre, la bio, el tema y si se muestra el @handle. */

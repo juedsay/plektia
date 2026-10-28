@@ -52,7 +52,8 @@ El panel privado (`/admin`) donde el dueño arma y mantiene su página: seccione
 1. En el navegador: se acepta JPEG, PNG o WebP de hasta 5 MB. Se recorta en cuadrado, se lleva a 512 × 512 y se re-codifica a WebP, lo que además **elimina los metadatos EXIF**, como la ubicación.
 2. En el servidor, la Action valida antes de guardar: *magic bytes* de WebP, dimensiones exactas y peso ≤ 200 KB.
 3. Se guarda en Supabase Storage, bucket `avatars`, en la ruta `{user_id}/{uuid}.webp`, y se actualiza `profiles.avatar_path`. El archivo anterior se borra.
-4. **Políticas de Storage:** lectura pública; escritura y borrado solo en la carpeta `{auth.uid()}`.
+4. **Políticas de Storage:** lectura pública; escritura y borrado solo en la carpeta `{auth.uid()}`, con nombres `{uuid}.webp` y sin subcarpetas. Sin `update`: un avatar nuevo es otro archivo. El bucket además limita a WebP de hasta 200 KB, y `pages.avatar_path` solo puede apuntar a la carpeta del dueño de la página (check).
+5. **Se sirve desde el propio sitio** (decisión del 2026-10-28): `/avatars/{owner_id}/{uuid}.webp`. El Worker lo trae del bucket público y lo devuelve con `Content-Type: image/webp`, `nosniff` y caché de un año (`immutable`, porque la ruta cambia con cada avatar). Así la página no pide nada a otro dominio y la CSP no se abre a Supabase. `avatars` pasa a ser un handle reservado.
 
 ### Usuarios habilitados sin `service_role`
 
