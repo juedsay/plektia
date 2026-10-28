@@ -3,6 +3,45 @@ export type Json = string | number | boolean | null | { [key: string]: Json | un
 export type Database = {
   public: {
     Tables: {
+      channel_status: {
+        Row: {
+          changed_at: string | null;
+          channel_id: string;
+          checked_at: string | null;
+          is_live: boolean;
+          live_started_at: string | null;
+          live_title: string | null;
+          live_url: string | null;
+        };
+        ComputedFields: never;
+        Insert: {
+          changed_at?: string | null;
+          channel_id: string;
+          checked_at?: string | null;
+          is_live?: boolean;
+          live_started_at?: string | null;
+          live_title?: string | null;
+          live_url?: string | null;
+        };
+        Update: {
+          changed_at?: string | null;
+          channel_id?: string;
+          checked_at?: string | null;
+          is_live?: boolean;
+          live_started_at?: string | null;
+          live_title?: string | null;
+          live_url?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "channel_status_channel_id_fkey";
+            columns: ["channel_id"];
+            isOneToOne: true;
+            referencedRelation: "provider_channels";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       featured_content: {
         Row: {
           duration_s: number | null;
@@ -401,6 +440,26 @@ export type Database = {
           handle: string;
           link_id: string;
           pinned_video_id: string;
+        }[];
+      };
+      ingest_live_status: {
+        Args: {
+          p_handle: string;
+          p_is_live: boolean;
+          p_provider: string;
+          p_started_at: string;
+          p_title: string;
+          p_url: string;
+        };
+        Returns: string[];
+      };
+      ingest_live_targets: {
+        Args: Record<PropertyKey, never>;
+        Returns: {
+          channel_checked_at: string;
+          channel_id: string;
+          handle: string;
+          provider: string;
         }[];
       };
       ingest_release_lock: { Args: { p_job: string }; Returns: undefined };

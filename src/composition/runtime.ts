@@ -14,7 +14,7 @@ import type { SessionReader } from "@/application/ports/session-reader";
 import { type AdminRepositories, createAdminRepositories } from "@/composition/admin";
 import { createAuthGateway } from "@/composition/auth";
 import { createContactSender } from "@/composition/contact";
-import { createFeaturedRefresh } from "@/composition/live";
+import { createFeaturedRefresh, createLiveRefresh } from "@/composition/live";
 import { createPublicPageReader } from "@/composition/public-page";
 import { createSessionReader } from "@/composition/session";
 import { WorkerPageCache } from "@/infrastructure/cache/purge";
@@ -72,6 +72,9 @@ export const pageCache = (): PageCache =>
 
 /** Refresco horario del contenido destacado (cron); `null` sin API key de YouTube. */
 export const featuredRefresh = () => createFeaturedRefresh(env, pageCache());
+
+/** Refresco del estado en vivo (cron); `null` sin credenciales de ningún proveedor. */
+export const liveRefresh = () => createLiveRefresh(env, pageCache());
 
 /** Miniaturas de YouTube servidas desde `/thumbs/{id}.jpg`. */
 export const youtubeThumbnail = youtubeThumbnails(
