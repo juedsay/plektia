@@ -3,6 +3,45 @@ export type Json = string | number | boolean | null | { [key: string]: Json | un
 export type Database = {
   public: {
     Tables: {
+      featured_content: {
+        Row: {
+          duration_s: number | null;
+          fetched_at: string;
+          kind: string;
+          link_id: string;
+          published_at: string;
+          title: string;
+          video_id: string;
+        };
+        ComputedFields: never;
+        Insert: {
+          duration_s?: number | null;
+          fetched_at?: string;
+          kind: string;
+          link_id: string;
+          published_at: string;
+          title: string;
+          video_id: string;
+        };
+        Update: {
+          duration_s?: number | null;
+          fetched_at?: string;
+          kind?: string;
+          link_id?: string;
+          published_at?: string;
+          title?: string;
+          video_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "featured_content_link_id_fkey";
+            columns: ["link_id"];
+            isOneToOne: true;
+            referencedRelation: "links";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       link_media_settings: {
         Row: {
           featured_mode: string;
@@ -207,6 +246,34 @@ export type Database = {
           },
         ];
       };
+      provider_channels: {
+        Row: {
+          external_id: string | null;
+          handle: string;
+          id: string;
+          last_error: string | null;
+          provider: Database["public"]["Enums"]["link_provider"];
+          resolved_at: string | null;
+        };
+        ComputedFields: never;
+        Insert: {
+          external_id?: string | null;
+          handle: string;
+          id?: string;
+          last_error?: string | null;
+          provider: Database["public"]["Enums"]["link_provider"];
+          resolved_at?: string | null;
+        };
+        Update: {
+          external_id?: string | null;
+          handle?: string;
+          id?: string;
+          last_error?: string | null;
+          provider?: Database["public"]["Enums"]["link_provider"];
+          resolved_at?: string | null;
+        };
+        Relationships: [];
+      };
       sections: {
         Row: {
           created_at: string;
@@ -299,10 +366,45 @@ export type Database = {
           status: string;
         }[];
       };
+      ingest_channel: {
+        Args: { p_error: string; p_external_id: string; p_handle: string; p_provider: string };
+        Returns: undefined;
+      };
+      ingest_consume_quota: {
+        Args: { p_daily_limit: number; p_provider: string; p_units: number };
+        Returns: boolean;
+      };
       ingest_contact_message: {
         Args: { p_email: string; p_message: string; p_name: string };
         Returns: undefined;
       };
+      ingest_featured: {
+        Args: {
+          p_duration_s: number;
+          p_kind: string;
+          p_link_id: string;
+          p_published_at: string;
+          p_title: string;
+          p_video_id: string;
+        };
+        Returns: string;
+      };
+      ingest_featured_clear: { Args: { p_link_id: string }; Returns: string };
+      ingest_featured_targets: {
+        Args: Record<PropertyKey, never>;
+        Returns: {
+          channel_checked_at: string;
+          channel_id: string;
+          current_video_id: string;
+          featured_mode: string;
+          fetched_at: string;
+          handle: string;
+          link_id: string;
+          pinned_video_id: string;
+        }[];
+      };
+      ingest_release_lock: { Args: { p_job: string }; Returns: undefined };
+      ingest_try_lock: { Args: { p_job: string; p_seconds: number }; Returns: boolean };
       move_links: {
         Args: {
           expected_versions: number[];

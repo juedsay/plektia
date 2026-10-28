@@ -9,7 +9,7 @@ describe("createContactSender", () => {
     const ingest: IngestClient = {
       call: (fn) => {
         calls.push(fn);
-        return Promise.resolve({ error: null });
+        return Promise.resolve({ data: null, error: null });
       },
     };
     const send = createContactSender({
