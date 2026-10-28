@@ -32,10 +32,13 @@ export interface IngestClient {
   ): Promise<{ data: Functions[F]["Returns"] | null; error: IngestError | null }>;
 }
 
-export function createIngestClient(env: {
-  SUPABASE_URL: string;
-  SUPABASE_SECRET_KEY?: string;
-}): IngestClient {
+/** Lo que necesita el cliente de ingesta del entorno del Worker. */
+export interface IngestConfig {
+  readonly SUPABASE_URL: string;
+  readonly SUPABASE_SECRET_KEY?: string;
+}
+
+export function createIngestClient(env: IngestConfig): IngestClient {
   const key = env.SUPABASE_SECRET_KEY;
   if (!env.SUPABASE_URL || !key) {
     throw new Error("ingest: falta SUPABASE_URL o la clave de servicio");

@@ -165,6 +165,16 @@ describe("refreshFeatured", () => {
     ]);
   });
 
+  it("un error pasajero al resolver el canal no se anota: se reintenta en la próxima corrida", async () => {
+    const { store, provider, refresh } = setup([
+      target("a", { handle: "@nuevo", channelId: null, channelCheckedAt: null }),
+    ]);
+    provider.channelAnswer = err("unavailable");
+    await refresh();
+    expect(store.channels).toEqual([]);
+    expect(store.featured.size).toBe(0);
+  });
+
   it("el canal recién resuelto se usa en la misma corrida", async () => {
     const { store, provider, refresh } = setup([
       target("a", { handle: "@nuevo", channelId: null, channelCheckedAt: null }),

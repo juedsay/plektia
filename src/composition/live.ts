@@ -5,7 +5,7 @@ import {
   YOUTUBE_API_HOST,
   YouTubeProvider,
 } from "@/infrastructure/providers/youtube/youtube-provider";
-import { createIngestClient } from "@/infrastructure/supabase/ingest-client";
+import { createIngestClient, type IngestConfig } from "@/infrastructure/supabase/ingest-client";
 import {
   IngestQuotaBudget,
   SupabaseFeaturedStore,
@@ -21,9 +21,7 @@ declare global {
   }
 }
 
-interface LiveConfig {
-  readonly SUPABASE_URL: string;
-  readonly SUPABASE_SECRET_KEY?: string;
+interface LiveConfig extends IngestConfig {
   readonly YOUTUBE_API_KEY?: string;
 }
 

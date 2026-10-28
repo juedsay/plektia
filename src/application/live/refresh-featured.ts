@@ -16,7 +16,7 @@ import type { Result } from "@/domain/result";
 export const FEATURED_JOB = "featured";
 /** Más que lo que tarda una corrida: si el Worker muere, el lock vence solo. */
 const LOCK_SECONDS = 10 * 60;
-/** Un canal que no se pudo resolver se reintenta al día siguiente. */
+/** Un canal que no existe se reintenta al día siguiente. */
 const CHANNEL_RETRY_MS = 24 * 60 * 60 * 1000;
 /** Un video fijado se vuelve a leer una vez por día (título, si se borró). */
 const PINNED_REFRESH_MS = 24 * 60 * 60 * 1000;
@@ -99,9 +99,9 @@ async function run(deps: Deps, now: Date): Promise<RefreshSummary> {
         resolved.value,
         resolved.value ? null : "canal inexistente",
       );
-    } else if (!STOPPING.has(resolved.error)) {
-      await store.saveChannel(target.handle, null, resolved.error);
     }
+    // Un error pasajero (YouTube caído, respuesta rara) no se anota: se
+    // reintenta en la próxima corrida, no al día siguiente.
   }
 
   // 2. Lo último de cada canal y tipo, una sola vez aunque lo pidan varios links.

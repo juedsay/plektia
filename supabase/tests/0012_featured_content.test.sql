@@ -4,7 +4,7 @@
 begin;
 create extension if not exists pgtap with schema extensions;
 
-select plan(22);
+select plan(23);
 
 create function pg_temp.login(uid uuid)
 returns void language sql as $$
@@ -21,6 +21,14 @@ insert into public.links (id, owner_id, page_id, title, url, provider, provider_
   ('b1000000-0000-4000-8000-000000000003', '11111111-1111-4111-8111-111111111111',
    '11111111-1111-4111-8111-111111111111', 'Oculto', 'https://www.youtube.com/@oculto-tap', 'youtube', '@oculto-tap');
 update public.links set visible = false where id = 'b1000000-0000-4000-8000-000000000003';
+-- Un link visible dentro de una sección oculta tampoco se ve en la página.
+insert into public.sections (id, owner_id, page_id, title, visible) values
+  ('b2000000-0000-4000-8000-000000000001', '11111111-1111-4111-8111-111111111111',
+   '11111111-1111-4111-8111-111111111111', 'Sección oculta', false);
+insert into public.links (id, owner_id, page_id, section_id, title, url, provider, provider_handle) values
+  ('b1000000-0000-4000-8000-000000000004', '11111111-1111-4111-8111-111111111111',
+   '11111111-1111-4111-8111-111111111111', 'b2000000-0000-4000-8000-000000000001', 'En sección oculta',
+   'https://www.youtube.com/@seccion-tap', 'youtube', '@seccion-tap');
 insert into public.link_media_settings (link_id, featured_mode)
 values ('b1000000-0000-4000-8000-000000000002', 'none');
 
@@ -66,6 +74,9 @@ select results_eq(
      where handle like '%-tap' $$,
   $$ values ('b1000000-0000-4000-8000-000000000001'::uuid, '@canal-tap', 'latest_video', null::text) $$,
   'solo links visibles que destacan algo, con "Último video" por defecto');
+select is(
+  (select count(*)::int from public.ingest_featured_targets() where handle = '@seccion-tap'), 0,
+  'un link en una sección oculta no gasta cuota');
 
 select public.ingest_channel('youtube', '@canal-tap', 'UCabcdefghijklmnopqrstuv', null);
 select is(

@@ -102,8 +102,8 @@ end;
 $$;
 
 -- Los links de YouTube que destacan algo, con su canal (si ya se resolvió) y
--- lo último guardado. Solo links visibles de cuentas activas: no se gasta
--- cuota en lo que nadie ve.
+-- lo último guardado. Solo links visibles (y en una sección visible) de
+-- cuentas activas: no se gasta cuota en lo que nadie ve.
 create function public.ingest_featured_targets()
 returns table (
   link_id           uuid,
@@ -137,12 +137,16 @@ as $$
   where l.provider = 'youtube'
     and l.provider_handle is not null
     and l.visible
+    and (
+      l.section_id is null
+      or exists (select 1 from public.sections s where s.id = l.section_id and s.visible)
+    )
     and coalesce(m.featured_mode, 'latest_video') <> 'none'
   order by l.id;
 $$;
 
--- Guarda el resultado de resolver un canal (o el error, para no reintentar
--- en cada corrida).
+-- Guarda el resultado de resolver un canal. Un canal inexistente se guarda
+-- sin ID: se reintenta al día siguiente, no en cada corrida.
 create function public.ingest_channel(
   p_provider text, p_handle text, p_external_id text, p_error text
 )
