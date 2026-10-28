@@ -1,6 +1,7 @@
 // Comportamiento de la página pública: hilo, desplegables y compartir. Sin
 // esto la página funciona igual (los links son links); esto es la capa extra.
 import { toggleDisclosure } from "@/ui/scripts/disclosure";
+import { liveElapsed } from "@/ui/view/live";
 import { shareMessage, shareOrCopy } from "@/ui/scripts/share";
 import { mountThread } from "@/ui/scripts/thread";
 
@@ -20,6 +21,17 @@ for (const toggle of document.querySelectorAll<HTMLButtonElement>("[data-disclos
       revealImages(panel);
     });
   }
+}
+
+// Cuánto lleva cada directo: se actualiza cada segundo desde su inicio.
+for (const clock of document.querySelectorAll<HTMLElement>("[data-live-since]")) {
+  const since = clock.dataset["liveSince"] ?? "";
+  if (Number.isNaN(Date.parse(since))) continue;
+  const render = () => {
+    clock.textContent = liveElapsed(since, Date.now());
+  };
+  render();
+  setInterval(render, 1000);
 }
 
 /** Las miniaturas se piden recién al abrir el panel (cerrado, no cuesta nada). */

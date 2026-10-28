@@ -49,3 +49,24 @@ for (const field of document.querySelectorAll<HTMLTextAreaElement>("[data-counte
   };
   field.addEventListener("input", update);
 }
+
+// "Comprobar ahora": un solo envío. Un segundo clic llegaría como otro pedido,
+// el límite de una vez por minuto lo rechazaría y taparía el resultado del primero.
+for (const button of document.querySelectorAll<HTMLButtonElement>("[data-live-check]")) {
+  // La marca se pone en el mismo evento: un doble clic dispara el segundo
+  // `submit` antes de que el botón llegue a deshabilitarse.
+  let sent = false;
+  button.form?.addEventListener("submit", (event) => {
+    if (sent) {
+      event.preventDefault();
+      return;
+    }
+    sent = true;
+    // En el próximo frame: deshabilitarlo antes cancelaría el envío en curso.
+    requestAnimationFrame(() => {
+      button.disabled = true;
+      button.setAttribute("aria-busy", "true");
+      button.textContent = "Comprobando…";
+    });
+  });
+}

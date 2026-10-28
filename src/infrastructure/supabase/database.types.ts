@@ -462,9 +462,19 @@ export type Database = {
           provider: string;
         }[];
       };
+      ingest_live_targets_of: {
+        Args: { p_owner: string };
+        Returns: {
+          channel_checked_at: string;
+          channel_id: string;
+          handle: string;
+          provider: string;
+        }[];
+      };
       ingest_release_lock: { Args: { p_job: string }; Returns: undefined };
       ingest_try_lock: { Args: { p_job: string; p_seconds: number }; Returns: boolean };
       link_featured: { Args: { p_link_id: string }; Returns: Json };
+      link_live: { Args: { p_link_id: string }; Returns: Json };
       move_links: {
         Args: {
           expected_versions: number[];

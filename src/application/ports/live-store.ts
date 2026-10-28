@@ -19,7 +19,8 @@ export interface LiveTarget {
 export interface LiveStore {
   tryLock(job: string, seconds: number): Promise<boolean>;
   releaseLock(job: string): Promise<void>;
-  targets(): Promise<readonly LiveTarget[]>;
+  /** Todos los canales vigilados, o solo los de una cuenta. */
+  targets(ownerId?: string): Promise<readonly LiveTarget[]>;
   /** Guarda el canal de YouTube resuelto (o `null` si no existe). */
   saveChannel(handle: string, channelId: string | null, error: string | null): Promise<void>;
   /** Guarda el estado; devuelve las páginas a purgar si cambió algo visible. */

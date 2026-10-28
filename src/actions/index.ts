@@ -24,7 +24,12 @@ import { removePageAvatar, setPageAvatar } from "@/application/pages/set-page-av
 import { updatePageSettings } from "@/application/pages/update-page-settings";
 import { formFields, toFormResult } from "@/actions/form-result";
 import { ok } from "@/domain/result";
-import { actionsRateLimiter, adminRepositoriesFor, pageCache } from "@/composition/runtime";
+import {
+  actionsRateLimiter,
+  adminRepositoriesFor,
+  liveCheckNow,
+  pageCache,
+} from "@/composition/runtime";
 
 /**
  * Los repositorios del usuario con sesión. Sin sesión la Action no corre, y
@@ -202,6 +207,29 @@ export const server = {
         if (!reordered.ok) return toFormResult<OwnLinks>(reordered);
         await purge();
         return toFormResult(ok(await links.listOwn()));
+      },
+    }),
+  },
+  live: {
+    /**
+     * "Comprobar ahora": revisa ya los canales vigilados de la cuenta. Una vez
+     * por minuto; repetirlo dentro del minuto no vuelve a gastar cuota.
+     */
+    checkNow: defineAction({
+      accept: "form",
+      handler: async (_form, context) => {
+        const { ownerId } = await repositoriesOf(context);
+        const checked = await liveCheckNow()(ownerId);
+        if (checked.ok) return { ok: true as const, value: checked.value.checked };
+        return {
+          ok: false as const,
+          message:
+            checked.error === "rate_limited"
+              ? "Ya lo pediste hace menos de un minuto. Probá de nuevo en un rato."
+              : "La revisión en vivo todavía no está configurada.",
+          fields: {},
+          values: {},
+        };
       },
     }),
   },

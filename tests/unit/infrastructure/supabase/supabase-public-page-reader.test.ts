@@ -48,8 +48,27 @@ describe("SupabasePublicPageReader", () => {
       bio: "Streams y código",
       avatarPath: null,
       theme: "tecnico",
-      sections: [{ ...row.sections[0], links: [{ ...link, featured: null }] }],
+      sections: [{ ...row.sections[0], links: [{ ...link, featured: null, live: null }] }],
       unsectionedLinks: [],
+    });
+  });
+
+  it("lee el directo en curso de un canal vigilado", async () => {
+    const onAir = {
+      ...link,
+      live: {
+        title: "Programando",
+        startedAt: "2026-10-28T20:00:00+00:00",
+        url: "https://www.twitch.tv/juedsay",
+      },
+    };
+    const page = await readerAnswering({
+      data: { ...row, sections: [], unsectioned_links: [onAir] },
+      error: null,
+    }).getByHandle(handle);
+    expect(page?.unsectionedLinks[0]?.live).toEqual({
+      title: "Programando",
+      startedAt: "2026-10-28T20:00:00+00:00",
     });
   });
 

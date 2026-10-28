@@ -24,6 +24,14 @@ const FeaturedSchema = z
   })
   .transform(({ mode, ...featured }) => ({ ...featured, pinned: mode === "pinned" }));
 
+const LiveSchema = z
+  .object({
+    title: z.string().nullable(),
+    startedAt: z.string().nullable(),
+    url: z.string().nullable(),
+  })
+  .transform(({ title, startedAt }) => ({ title, startedAt }));
+
 const PublicLinkSchema = z.object({
   id: z.uuid(),
   title: z.string(),
@@ -32,6 +40,7 @@ const PublicLinkSchema = z.object({
   provider: z.enum(PROVIDERS),
   providerHandle: z.string().nullable(),
   featured: FeaturedSchema.nullish().transform((featured) => featured ?? null),
+  live: LiveSchema.nullish().transform((live) => live ?? null),
 });
 
 const RowSchema = z.object({

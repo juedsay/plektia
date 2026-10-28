@@ -15,6 +15,12 @@ export interface PublicFeatured {
   readonly pinned: boolean;
 }
 
+/** El directo en curso de un canal vigilado (con la regla de los 25 minutos ya aplicada). */
+export interface PublicLive {
+  readonly title: string | null;
+  readonly startedAt: string | null;
+}
+
 export interface PublicLink {
   readonly id: string;
   readonly title: string;
@@ -24,6 +30,8 @@ export interface PublicLink {
   readonly providerHandle: string | null;
   /** Solo en links de canales de YouTube con algo para destacar. */
   readonly featured?: PublicFeatured | null;
+  /** Solo si el dueño marcó "Transmito en este canal" y está en vivo. */
+  readonly live?: PublicLive | null;
 }
 
 export interface PublicSection {

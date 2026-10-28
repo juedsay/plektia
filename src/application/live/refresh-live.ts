@@ -35,23 +35,29 @@ interface Deps {
   readonly now?: () => Date;
 }
 
+/**
+ * Sin `ownerId`, todos los canales vigilados (el cron). Con `ownerId`, solo
+ * los de esa cuenta ("Comprobar ahora"), con su propio lock: un doble clic no
+ * revisa dos veces.
+ */
 export function refreshLive(deps: Deps) {
   const now = deps.now ?? (() => new Date());
-  return async (): Promise<LiveRefreshSummary> => {
-    if (!(await deps.store.tryLock(LIVE_JOB, LOCK_SECONDS))) {
+  return async (ownerId?: string): Promise<LiveRefreshSummary> => {
+    const job = ownerId ? `${LIVE_JOB}:${ownerId}` : LIVE_JOB;
+    if (!(await deps.store.tryLock(job, LOCK_SECONDS))) {
       return { skipped: true, checked: 0, purged: [], failed: {} };
     }
     try {
-      return await run(deps, now());
+      return await run(deps, now(), ownerId);
     } finally {
-      await deps.store.releaseLock(LIVE_JOB);
+      await deps.store.releaseLock(job);
     }
   };
 }
 
-async function run(deps: Deps, now: Date): Promise<LiveRefreshSummary> {
+async function run(deps: Deps, now: Date, ownerId?: string): Promise<LiveRefreshSummary> {
   const { store, providers, cache } = deps;
-  const targets = await store.targets();
+  const targets = await store.targets(ownerId);
   const failed: Partial<Record<LiveProvider, ProviderError>> = {};
   const toPurge = new Set<string>();
   let checked = 0;

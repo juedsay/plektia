@@ -3,6 +3,7 @@
 import type { AstroCookies } from "astro";
 import { cache, env } from "cloudflare:workers";
 
+import { checkNow } from "@/application/live/check-now";
 import type { AuthGateway } from "@/application/ports/auth-gateway";
 import type { PageCache } from "@/application/ports/page-cache";
 import type {
@@ -75,6 +76,13 @@ export const featuredRefresh = () => createFeaturedRefresh(env, pageCache());
 
 /** Refresco del estado en vivo (cron); `null` sin credenciales de ningún proveedor. */
 export const liveRefresh = () => createLiveRefresh(env, pageCache());
+
+/** "Comprobar ahora": una vez por minuto por cuenta, y solo sus canales. */
+export const liveCheckNow = () =>
+  checkNow({
+    limiter: new CloudflareRateLimiter(env.LIVE_CHECK_RATE_LIMITER),
+    refresh: liveRefresh(),
+  });
 
 /** Miniaturas de YouTube servidas desde `/thumbs/{id}.jpg`. */
 export const youtubeThumbnail = youtubeThumbnails(
