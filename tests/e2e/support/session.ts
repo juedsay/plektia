@@ -140,3 +140,62 @@ export async function deleteSectionsTitled(pageId: string, titles: readonly stri
   const { error } = await admin.from("sections").delete().eq("page_id", pageId).in("title", titles);
   if (error) throw error;
 }
+
+/**
+ * Pone un canal "en vivo" como lo dejaría el refresco (con la clave de servicio
+ * local): marca "Transmito en este canal" en sus links y guarda su estado.
+ * `checkedMinutesAgo` simula cuándo fue la última revisión buena.
+ */
+export async function setChannelLive(
+  provider: "twitch" | "youtube",
+  handle: string,
+  live: { title: string; startedAt: string; url: string } | null,
+  checkedMinutesAgo = 0,
+) {
+  const supabase = localSupabase();
+  const admin = createClient(supabase.url, supabase.secretKey, { auth: { persistSession: false } });
+  const links = await admin
+    .from("links")
+    .select("id")
+    .eq("provider", provider)
+    .eq("provider_handle", handle);
+  if (links.error) throw links.error;
+  for (const link of links.data as { id: string }[]) {
+    const watched = await admin
+      .from("link_media_settings")
+      .upsert({ link_id: link.id, watch_live: live !== null }, { onConflict: "link_id" });
+    if (watched.error) throw watched.error;
+  }
+  const channel = await admin
+    .from("provider_channels")
+    .upsert({ provider, handle }, { onConflict: "provider,handle" })
+    .select("id")
+    .single<{ id: string }>();
+  if (channel.error) throw channel.error;
+  const status = await admin.from("channel_status").upsert({
+    channel_id: channel.data.id,
+    is_live: live !== null,
+    live_title: live?.title ?? null,
+    live_started_at: live?.startedAt ?? null,
+    live_url: live?.url ?? null,
+    checked_at: new Date(Date.now() - checkedMinutesAgo * 60_000).toISOString(),
+  });
+  if (status.error) throw status.error;
+}
+
+/** Crea un link en una página (con la clave de servicio local); devuelve su id. */
+export async function insertLink(
+  ownerId: string,
+  pageId: string,
+  link: { title: string; url: string; provider: string; provider_handle: string | null },
+): Promise<string> {
+  const supabase = localSupabase();
+  const admin = createClient(supabase.url, supabase.secretKey, { auth: { persistSession: false } });
+  const { data, error } = await admin
+    .from("links")
+    .insert({ owner_id: ownerId, page_id: pageId, ...link })
+    .select("id")
+    .single<{ id: string }>();
+  if (error) throw error;
+  return data.id;
+}

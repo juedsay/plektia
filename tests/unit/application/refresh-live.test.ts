@@ -29,20 +29,24 @@ function target(provider: LiveProvider, handle: string, extra: Partial<LiveTarge
 /** Base falsa: guarda el último estado por canal y purga solo si cambió. */
 class FakeStore implements LiveStore {
   locked = false;
+  lockedJobs: string[] = [];
+  askedFor: (string | undefined)[] = [];
   saved = new Map<string, LiveState>();
   channels: { handle: string; channelId: string | null }[] = [];
   constructor(public list: LiveTarget[]) {}
 
-  tryLock() {
+  tryLock(job: string) {
     if (this.locked) return Promise.resolve(false);
     this.locked = true;
+    this.lockedJobs.push(job);
     return Promise.resolve(true);
   }
   releaseLock() {
     this.locked = false;
     return Promise.resolve();
   }
-  targets() {
+  targets(ownerId?: string) {
+    this.askedFor.push(ownerId);
     return Promise.resolve(this.list);
   }
   saveChannel(handle: string, channelId: string | null) {
@@ -203,5 +207,14 @@ describe("refreshLive", () => {
     store.targets = () => Promise.reject(new Error("se cayó la base"));
     await expect(refresh()).rejects.toThrow("se cayó la base");
     expect(store.locked).toBe(false);
+  });
+
+  it("con una cuenta, revisa solo sus canales y con un lock propio", async () => {
+    const twitch = new FakeProvider();
+    const { store, refresh } = setup([target("twitch", "canal")], { twitch });
+    await refresh("cuenta-1");
+    await refresh();
+    expect(store.askedFor).toEqual(["cuenta-1", undefined]);
+    expect(store.lockedJobs).toEqual(["live:cuenta-1", "live"]);
   });
 });

@@ -30,8 +30,10 @@ export class SupabaseLiveStore implements LiveStore {
     return this.shared.saveChannel(handle, channelId, error);
   }
 
-  async targets(): Promise<readonly LiveTarget[]> {
-    const { data, error } = await this.ingest.call("ingest_live_targets", {});
+  async targets(ownerId?: string): Promise<readonly LiveTarget[]> {
+    const { data, error } = ownerId
+      ? await this.ingest.call("ingest_live_targets_of", { p_owner: ownerId })
+      : await this.ingest.call("ingest_live_targets", {});
     if (error) throw unexpected("ingest_live_targets", error);
     return (data ?? []).flatMap((row) =>
       PROVIDERS.has(row.provider)

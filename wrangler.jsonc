@@ -51,6 +51,12 @@
       "namespace_id": "1003",
       "simple": { "limit": 120, "period": 60 },
     },
+    // "Comprobar ahora": una vez por minuto por cuenta (SPEC-live-status, historia 3).
+    {
+      "name": "LIVE_CHECK_RATE_LIMITER",
+      "namespace_id": "1004",
+      "simple": { "limit": 1, "period": 60 },
+    },
   ],
   "observability": {
     "enabled": true,

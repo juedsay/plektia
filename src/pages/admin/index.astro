@@ -3,6 +3,7 @@
 // (SPEC-admin-panel, "Editor"). Es la única isla de React del panel.
 import { actions } from "astro:actions";
 
+import { mediaCapabilities } from "@/domain/link-media";
 import { loadWorkspace } from "@/ui/admin/workspace";
 import AdminLayout from "@/ui/layouts/AdminLayout.astro";
 import EditorIsland from "@/ui/islands/Editor";
@@ -13,10 +14,26 @@ for (const hash of DRAG_STYLE_HASHES) Astro.csp?.insertStyleHash(hash);
 
 const switched = Astro.getActionResult(actions.pages.select);
 if (switched?.data?.ok) return Astro.redirect(Astro.url.pathname, 303);
+// "Comprobar ahora" (POST/Redirect/GET): recargar no lo vuelve a pedir.
+const liveChecked = Astro.getActionResult(actions.live.checkNow);
+if (liveChecked?.data?.ok) return Astro.redirect(`${Astro.url.pathname}?comprobado`, 303);
 
 const { repositories, pages, currentPage, account } = await loadWorkspace(Astro);
 const content = currentPage ? await repositories.linksOf(currentPage.id).listOwn() : null;
 const publicUrl = currentPage ? new URL(`/${currentPage.handle}`, Astro.url) : null;
+// El botón solo aparece si la página tiene un canal que se pueda vigilar.
+const hasLiveChannel = content?.links.some((link) => mediaCapabilities(link).canWatchLive) ?? false;
+const liveMessage =
+  liveChecked?.data && !liveChecked.data.ok
+    ? { text: liveChecked.data.message, failed: true }
+    : liveChecked?.error
+      ? { text: "No pudimos comprobar ahora. Probá de nuevo en un rato.", failed: true }
+      : Astro.url.searchParams.has("comprobado")
+        ? {
+            text: "Listo: revisamos tus canales. Si estás en vivo, tu página ya lo muestra.",
+            failed: false,
+          }
+        : null;
 const notice =
   switched?.data && !switched.data.ok
     ? switched.data.message
@@ -56,6 +73,31 @@ const notice =
         </a>
         {currentPage.bio && <p class="admin-bio">{currentPage.bio}</p>}
       </header>
+
+      {hasLiveChannel && (
+        <section class="live-check" aria-labelledby="live-check-title">
+          <h2 id="live-check-title" class="visually-hidden">
+            En vivo
+          </h2>
+          <form method="post" action={actions.live.checkNow}>
+            <button type="submit" class="button is-quiet" data-live-check>
+              Comprobar ahora si estoy en vivo
+            </button>
+          </form>
+          <p class="field-hint">
+            Revisamos solos cada 10 minutos los canales con "Transmito en este canal". Esto lo hace
+            ya (una vez por minuto).
+          </p>
+          {liveMessage && (
+            <p
+              class={liveMessage.failed ? "field-error" : "live-check-done"}
+              role={liveMessage.failed ? "alert" : "status"}
+            >
+              {liveMessage.text}
+            </p>
+          )}
+        </section>
+      )}
 
       <div class="workspace" data-workspace>
         <div class="workspace-tabs" role="tablist" aria-label="Editor y vista previa" hidden>

@@ -9,6 +9,7 @@ import {
   watchLabel,
   watchUrl,
 } from "@/ui/view/featured";
+import { liveElapsed } from "@/ui/view/live";
 import { isProfileLink, linkMeta } from "@/ui/view/public-link";
 import { socialProfileFor } from "@/ui/view/social-profile";
 
@@ -19,11 +20,12 @@ const { link } = Astro.props;
 const network = socialProfileFor(link.url)?.network ?? null;
 const featured = link.featured ?? null;
 const panelId = `featured-${link.id}`;
+const live = link.live ?? null;
 // Misma pestaña a propósito: en los navegadores de las apps sociales una
 // pestaña nueva confunde (SPEC-public-page). La URL ya viene validada.
 ---
 
-<li class="port">
+<li class:list={["port", { "is-live": live }]}>
   <span class="jack" aria-hidden="true"></span>
   <div class="port-body">
     <a class="port-link" href={link.url} rel={isProfileLink(link) ? "me" : undefined}>
@@ -32,7 +34,23 @@ const panelId = `featured-${link.id}`;
           <NetworkIcon network={network} />
           {link.title}
         </span>
-        <span class="port-meta">{linkMeta(link)}</span>
+        {live ? (
+          <span class="port-meta">
+            <span class="live-label">En vivo</span>
+            {live.startedAt && (
+              <>
+                {" · "}
+                {/* El reloj avanza cada segundo (page.ts) desde `data-live-since`. */}
+                <span class="live-time" data-live-since={live.startedAt}>
+                  {liveElapsed(live.startedAt, Date.now())}
+                </span>
+              </>
+            )}
+            {live.title && ` · ${live.title}`}
+          </span>
+        ) : (
+          <span class="port-meta">{linkMeta(link)}</span>
+        )}
       </span>
       <svg
         class="go"
