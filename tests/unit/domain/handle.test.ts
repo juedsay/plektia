@@ -3,7 +3,12 @@ import { join } from "node:path";
 
 import { describe, expect, it } from "vitest";
 
-import { parseHandle, RESERVED_HANDLES } from "@/domain/handle";
+import {
+  OFFICIAL_HANDLE,
+  parseExistingHandle,
+  parseHandle,
+  RESERVED_HANDLES,
+} from "@/domain/handle";
 
 describe("parseHandle", () => {
   it.each([
@@ -70,6 +75,30 @@ describe("RESERVED_HANDLES", () => {
     const fromSql = [...block.matchAll(/'([^']+)'/g)].map((match) => match[1]).sort();
 
     expect(fromSql.length).toBeGreaterThan(0);
-    expect([...RESERVED_HANDLES].sort()).toEqual(fromSql);
+    // El oficial la base no lo frena por lista: lo permite solo a una cuenta owner.
+    const reservedForEveryone = [...RESERVED_HANDLES].filter(
+      (handle) => handle !== OFFICIAL_HANDLE,
+    );
+    expect(reservedForEveryone.sort()).toEqual(fromSql);
+    expect(RESERVED_HANDLES.has(OFFICIAL_HANDLE)).toBe(true);
+
+    const official = readdirSync(dir)
+      .filter((name) => name.endsWith(".sql"))
+      .map((name) => readFileSync(join(dir, name), "utf8"))
+      .find((text) => text.includes("function private.is_official_handle"));
+    expect(official).toContain(`lower(value) = '${OFFICIAL_HANDLE}'`);
+  });
+});
+
+describe("parseExistingHandle", () => {
+  it("acepta el handle oficial, que existe aunque nadie lo pueda pedir", () => {
+    expect(parseExistingHandle(" Plektia ")).toEqual({ ok: true, value: OFFICIAL_HANDLE });
+    expect(parseHandle(OFFICIAL_HANDLE)).toEqual({ ok: false, error: "reserved_handle" });
+  });
+
+  it("los demás, igual que parseHandle", () => {
+    expect(parseExistingHandle("juedsay")).toEqual({ ok: true, value: "juedsay" });
+    expect(parseExistingHandle("admin")).toEqual({ ok: false, error: "reserved_handle" });
+    expect(parseExistingHandle("ab")).toEqual({ ok: false, error: "invalid_handle" });
   });
 });

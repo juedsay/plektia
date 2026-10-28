@@ -10,7 +10,8 @@ const remote = Boolean(process.env["E2E_BASE_URL"]);
 const PUBLIC = [
   ["/juedsay", "public, max-age=60, stale-while-revalidate=300"],
   ["/", "public, max-age=300, stale-while-revalidate=3600"],
-  ["/plektia", "public, max-age=300, stale-while-revalidate=3600"],
+  // La página oficial se edita desde el panel: se cachea como un perfil.
+  ["/plektia", "public, max-age=60, stale-while-revalidate=300"],
   ["/legal/privacy", "public, max-age=300, stale-while-revalidate=3600"],
 ] as const;
 
@@ -30,6 +31,12 @@ test.describe("caché", () => {
       expect(response.headers()["cache-control"]).toBe("private, no-store");
     });
   }
+
+  test("/plektia lleva la etiqueta del perfil oficial: editarla la purga", async ({ request }) => {
+    test.skip(remote, "en producción Cloudflare saca la etiqueta antes de responder");
+    const response = await request.get("/plektia");
+    expect(response.headers()["cache-tag"]).toBe("site,profile:plektia");
+  });
 
   test("la etiqueta de caché no llega al visitante (Cloudflare la saca)", async ({ request }) => {
     test.skip(!remote, "solo en producción: en local nadie la saca");

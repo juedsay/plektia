@@ -6,7 +6,9 @@ const escapeXml = (text: string) =>
 
 /** Sitemap XML con las páginas de Plektia y un `/{handle}` por perfil. */
 export function sitemapXml(origin: string, handles: readonly string[]): string {
-  const urls = [...SITE_PAGES, ...handles.map((handle) => `/${handle}`)]
+  // Sin repetidos: la página oficial (`/plektia`) también es un perfil de la base.
+  const paths = new Set<string>([...SITE_PAGES, ...handles.map((handle) => `/${handle}`)]);
+  const urls = [...paths]
     .map((path) => `  <url><loc>${escapeXml(new URL(path, origin).href)}</loc></url>`)
     .join("\n");
   return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls}\n</urlset>\n`;

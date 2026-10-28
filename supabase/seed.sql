@@ -4,7 +4,9 @@
 -- Invitaciones: el owner (handle real del proyecto, email ficticio) y un miembro.
 insert into private.allowed_emails (email, handle, role) values
   ('owner@plektia.test', 'juedsay', 'owner'),
-  ('member@plektia.test', 'miembro-demo', 'member');
+  ('member@plektia.test', 'miembro-demo', 'member'),
+  -- La cuenta Admin de Plektia: dueña de la página oficial (tarea 21b).
+  ('admin@plektia.test', 'plektia', 'owner');
 
 -- Usuarios locales: el trigger `on_auth_user_created` les crea el perfil. GoTrue
 -- espera texto vacío (no NULL) en las columnas de tokens: con NULL falla el login.
@@ -20,12 +22,34 @@ values
    '', '', '', '', '', '', '', '', now(), now()),
   ('00000000-0000-0000-0000-000000000000', '22222222-2222-4222-8222-222222222222', 'authenticated', 'authenticated',
    'member@plektia.test', now(), '{"provider":"google","providers":["google"]}', '{"full_name":"Miembro Demo"}',
+   '', '', '', '', '', '', '', '', now(), now()),
+  ('00000000-0000-0000-0000-000000000000', 'adadadad-0000-4000-8000-00000000ad01', 'authenticated', 'authenticated',
+   'admin@plektia.test', now(), '{"provider":"google","providers":["google"]}', '{"full_name":"Plektia"}',
    '', '', '', '', '', '', '', '', now(), now());
 
 -- La primera página de cada cuenta del seed toma el id de su dueño, como las
 -- páginas migradas en producción (SPEC-pages): los datos de abajo los usan.
 update public.pages set id = owner_id
-where owner_id in ('11111111-1111-4111-8111-111111111111', '22222222-2222-4222-8222-222222222222');
+where owner_id in (
+  '11111111-1111-4111-8111-111111111111',
+  '22222222-2222-4222-8222-222222222222',
+  'adadadad-0000-4000-8000-00000000ad01'
+);
+
+-- Página oficial (/plektia), como la que carga la cuenta Admin en producción.
+update public.pages set bio = 'Todos tus links, unidos por un hilo.' where handle = 'plektia';
+
+insert into public.sections (id, owner_id, page_id, title) values
+  ('5e000000-0000-4000-8000-000000000201', 'adadadad-0000-4000-8000-00000000ad01', 'adadadad-0000-4000-8000-00000000ad01', 'Novedades'),
+  ('5e000000-0000-4000-8000-000000000202', 'adadadad-0000-4000-8000-00000000ad01', 'adadadad-0000-4000-8000-00000000ad01', 'Sobre Plektia'),
+  ('5e000000-0000-4000-8000-000000000203', 'adadadad-0000-4000-8000-00000000ad01', 'adadadad-0000-4000-8000-00000000ad01', 'Legal');
+
+insert into public.links (owner_id, page_id, section_id, title, url, description) values
+  ('adadadad-0000-4000-8000-00000000ad01', 'adadadad-0000-4000-8000-00000000ad01', '5e000000-0000-4000-8000-000000000201', 'Ya está la página pública', 'https://app.plektia.workers.dev/', 'El diseño de la patchera, con el hilo'),
+  ('adadadad-0000-4000-8000-00000000ad01', 'adadadad-0000-4000-8000-00000000ad01', '5e000000-0000-4000-8000-000000000202', 'Qué es Plektia', 'https://app.plektia.workers.dev/', 'Todos tus links, unidos por un hilo'),
+  ('adadadad-0000-4000-8000-00000000ad01', 'adadadad-0000-4000-8000-00000000ad01', '5e000000-0000-4000-8000-000000000202', 'Contacto', 'https://app.plektia.workers.dev/contact', 'Pedí tu invitación o escribinos'),
+  ('adadadad-0000-4000-8000-00000000ad01', 'adadadad-0000-4000-8000-00000000ad01', '5e000000-0000-4000-8000-000000000202', 'Entrar', 'https://app.plektia.workers.dev/login', 'Si ya tenés tu invitación'),
+  ('adadadad-0000-4000-8000-00000000ad01', 'adadadad-0000-4000-8000-00000000ad01', '5e000000-0000-4000-8000-000000000203', 'Política de privacidad', 'https://app.plektia.workers.dev/legal/privacy', 'Qué datos guardamos y cómo pedir que los borremos');
 
 -- Página de ejemplo del owner (como el prototipo de public-page). Datos de
 -- desarrollo: en producción cada uno carga los suyos desde el panel.

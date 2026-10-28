@@ -296,6 +296,8 @@
   - **Cuenta personal (juedsay):** pasa a `member` y conserva `/juedsay` con sus links; puede sumar hasta 3 páginas (por ejemplo, stream o contenido, y profesional).
   - **Pasos en producción** (con confirmación): invitar al email de Plektia como `owner` con `/plektia` como su primera página, migrar el contenido y bajar la cuenta personal a `member`. El email nuevo se agrega como usuario de prueba en la app de Google (sigue en "Prueba").
   - **Usuario de prueba:** ya invitado el 2026-10-23 como `member` con `/user-test`.
+  - **Código (hecho):** migración `official_page` (`plektia` solo para una cuenta `owner`, en invitaciones y páginas; quien la tiene no deja de ser owner), `/plektia` lee la base y, mientras no exista ahí, muestra el contenido del repo; caché con la etiqueta `profile:plektia`; seed con `admin@plektia.test`.
+  - **Pendiente en producción:** (1) invitar `plektiaapp@gmail.com` como `owner` con handle `plektia`; (2) agregarlo como usuario de prueba en Google y entrar con esa cuenta; (3) cargar el contenido de `/plektia` (desde el panel o con un script revisado); (4) pasar la cuenta personal a `member`; (5) borrar `src/content/plektia.ts` y el respaldo de la página.
   - **Aceptación:** la Admin edita `/plektia` desde el panel y se ve al instante; la cuenta personal ya no ve funciones de owner; pgTAP de que `plektia` solo lo puede usar la Admin.
 
 - [ ] **Tarea 22: Avatar** · M · Deps: 18

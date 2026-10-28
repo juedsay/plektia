@@ -21,7 +21,7 @@ describe("cachePolicy", () => {
     });
   });
 
-  it.each(["/", "/plektia", "/legal/privacy", "/sitemap.xml", "/robots.txt"])(
+  it.each(["/", "/legal/privacy", "/sitemap.xml", "/robots.txt"])(
     "%s es del sitio: cinco minutos y etiqueta site",
     (path) => {
       expect(get(path)).toEqual({
@@ -30,6 +30,13 @@ describe("cachePolicy", () => {
       });
     },
   );
+
+  it("/plektia es la página oficial: como un perfil (la edita la Admin) y del sitio", () => {
+    expect(get("/plektia")).toEqual({
+      cacheControl: "public, max-age=60, stale-while-revalidate=300",
+      tags: ["site", "profile:plektia"],
+    });
+  });
 
   it.each(["/login", "/auth/callback", "/admin", "/admin/perfil", "/contact", "/contacto"])(
     "%s nunca se cachea",

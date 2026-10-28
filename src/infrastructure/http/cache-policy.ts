@@ -1,4 +1,4 @@
-import { parseHandle } from "@/domain/handle";
+import { OFFICIAL_HANDLE, parseHandle } from "@/domain/handle";
 import { usesSession } from "@/infrastructure/http/route-access";
 
 // Qué se cachea en la caché del Worker y con qué etiquetas (SPEC-public-page,
@@ -19,8 +19,10 @@ export function profileTag(handle: string): string {
 }
 
 /** Páginas propias de Plektia, sin datos de la base. */
-const SITE_PAGES = new Set(["/", "/plektia", "/legal/privacy", "/sitemap.xml", "/robots.txt"]);
+const SITE_PAGES = new Set(["/", "/legal/privacy", "/sitemap.xml", "/robots.txt"]);
 const SITE_TAG = "site";
+/** La página oficial: un perfil de la base (la cuenta Admin la edita) y parte del sitio. */
+const OFFICIAL_PATH = `/${OFFICIAL_HANDLE}`;
 
 // Formularios con estado (Turnstile, avisos de envío) o pasos del login: nunca.
 const PRIVATE_PATHS = new Set(["/contact", "/contacto"]);
@@ -38,6 +40,14 @@ export function cachePolicy(request: {
 
   if (SITE_PAGES.has(pathname) && status === 200) {
     return { cacheControl: "public, max-age=300, stale-while-revalidate=3600", tags: [SITE_TAG] };
+  }
+
+  // Como un perfil: editarla desde el panel purga su etiqueta y se ve al instante.
+  if (pathname === OFFICIAL_PATH && status === 200) {
+    return {
+      cacheControl: "public, max-age=60, stale-while-revalidate=300",
+      tags: [SITE_TAG, profileTag(OFFICIAL_HANDLE)],
+    };
   }
 
   // `/{handle}`: la página de un perfil, o el 404 de un handle que todavía no
