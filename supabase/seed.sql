@@ -6,7 +6,10 @@ insert into private.allowed_emails (email, handle, role) values
   ('owner@plektia.test', 'juedsay', 'owner'),
   ('member@plektia.test', 'miembro-demo', 'member'),
   -- La cuenta Admin de Plektia: dueña de la página oficial (tarea 21b).
-  ('admin@plektia.test', 'plektia', 'owner');
+  ('admin@plektia.test', 'plektia', 'owner'),
+  -- Cuenta propia de los E2E del avatar: los archivos corren en paralelo y
+  -- otros cambian la página actual del miembro.
+  ('avatar@plektia.test', 'avatar-demo', 'member');
 
 -- Usuarios locales: el trigger `on_auth_user_created` les crea el perfil. GoTrue
 -- espera texto vacío (no NULL) en las columnas de tokens: con NULL falla el login.
@@ -25,6 +28,9 @@ values
    '', '', '', '', '', '', '', '', now(), now()),
   ('00000000-0000-0000-0000-000000000000', 'adadadad-0000-4000-8000-00000000ad01', 'authenticated', 'authenticated',
    'admin@plektia.test', now(), '{"provider":"google","providers":["google"]}', '{"full_name":"Plektia"}',
+   '', '', '', '', '', '', '', '', now(), now()),
+  ('00000000-0000-0000-0000-000000000000', '44444444-4444-4444-8444-444444444444', 'authenticated', 'authenticated',
+   'avatar@plektia.test', now(), '{"provider":"google","providers":["google"]}', '{"full_name":"Avatar Demo"}',
    '', '', '', '', '', '', '', '', now(), now());
 
 -- La primera página de cada cuenta del seed toma el id de su dueño, como las
@@ -33,7 +39,8 @@ update public.pages set id = owner_id
 where owner_id in (
   '11111111-1111-4111-8111-111111111111',
   '22222222-2222-4222-8222-222222222222',
-  'adadadad-0000-4000-8000-00000000ad01'
+  'adadadad-0000-4000-8000-00000000ad01',
+  '44444444-4444-4444-8444-444444444444'
 );
 
 -- Página oficial (/plektia), como la que carga la cuenta Admin en producción.

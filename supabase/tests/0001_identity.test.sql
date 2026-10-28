@@ -78,7 +78,8 @@ select is(private.before_user_created(pg_temp.event('intruso@plektia.test', 'git
 select results_eq(
   $$ select pg.handle::text, pr.role::text, pg.display_name
      from public.pages pg join public.profiles pr on pr.id = pg.owner_id order by pg.handle $$,
-  $$ values ('juedsay', 'owner', 'Julián (dev)'), ('miembro-demo', 'member', 'Miembro Demo'),
+  $$ values ('avatar-demo', 'member', 'Avatar Demo'), ('juedsay', 'owner', 'Julián (dev)'),
+            ('miembro-demo', 'member', 'Miembro Demo'),
             ('plektia', 'owner', 'Plektia') $$,
   'trigger: cada usuario invitado tiene su perfil con el rol y su primera página con el handle');
 
@@ -128,8 +129,8 @@ reset role;
 update public.profiles set disabled = true where id = '33333333-3333-4333-8333-333333333333';
 
 select pg_temp.as_anon();
--- Activos: owner, miembro y la cuenta Admin del seed.
-select is((select count(*)::int from public.profiles), 3, 'perfiles: anon ve los activos y no los dados de baja');
+-- Activos: owner, miembro, la cuenta Admin y la de los E2E del avatar.
+select is((select count(*)::int from public.profiles), 4, 'perfiles: anon ve los activos y no los dados de baja');
 select throws_ok($$ update public.pages set bio = 'x' $$, '42501', null, 'páginas: anon no puede editar');
 reset role;
 

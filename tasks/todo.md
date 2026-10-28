@@ -301,7 +301,7 @@
   - **Decisión del 2026-10-28:** la cuenta personal **sigue como `owner`** por las dudas (no baja a `member`).
   - **Aceptación:** la Admin edita `/plektia` desde el panel y se ve al instante; las dos cuentas son `owner` y `/plektia` es solo de la Admin; pgTAP de que `plektia` solo lo puede tener una cuenta `owner`.
 
-- [ ] **Tarea 22: Avatar** · M · Deps: 18
+- [x] **Tarea 22: Avatar** · M · Deps: 18
   - Recorte y WebP en el navegador; validación en el servidor (*magic bytes*, tamaño y peso); bucket `avatars` con sus políticas.
   - **Aceptación:**
     - Integración: SVG, PNG renombrado, 10 MB y 4000 px → todos rechazados.
@@ -309,7 +309,7 @@
   - **Verificar:** `pnpm test`.
   - **22a (servidor, hecho):** migración `avatars` (bucket, políticas, check de `pages.avatar_path`, `avatars` reservado), `inspectAvatar` (magic bytes, 512 × 512, ≤ 200 KB, sin animación ni EXIF/XMP, sin bytes de más), `setPageAvatar` y `removePageAvatar`, Actions `pages.setAvatar` y `pages.removeAvatar`, `/avatars/...` desde el propio sitio y la foto en la página pública.
   - **22b (servidor, hecho):** JPEG además de WebP (Safari no genera WebP), validado por toda su estructura y sin metadatos; límite del cuerpo de los pedidos (413/411) antes de leerlo; `/avatars` re-valida lo que trae de Storage y responde con CSP `sandbox`; una sola regla para `pages.avatar_path`.
-  - **22c (pendiente):** en `/admin/page`, elegir la imagen (tipo real por sus bytes, ≤ 5 MB y dimensiones máximas antes de decodificar), recortarla en cuadrado (arrastrar y zoom, también con teclado), re-codificarla a WebP o JPEG de 512 × 512 en el navegador y subirla; sacar el avatar; E2E de la subida real.
+  - **22c (hecho):** en `/admin/page`, elegir la foto (tipo real por sus bytes, ≤ 5 MB, ≤ 8000 px por lado y ≤ 40 MP leídos de la cabecera antes de decodificar), recortarla en cuadrado (arrastrar, flechas, zoom con barra o con más y menos), re-codificarla a WebP o JPEG de 512 × 512 en el navegador (sin EXIF) y subirla con un solo envío a la vez; sacar el avatar con un formulario sin JavaScript; E2E de la subida real con una cuenta propia del seed.
   - **Archivos:** `src/domain/avatar.ts`, `src/application/pages/set-page-avatar.ts`, `src/infrastructure/supabase/supabase-avatar-storage.ts`, `src/infrastructure/supabase/avatar-images.ts`, `src/pages/avatars/[owner]/[file].ts`, `supabase/migrations/20261029000000_avatars.sql`.
 
 - [ ] **Tarea 23: Usuarios habilitados (owner)** · M · Deps: 18

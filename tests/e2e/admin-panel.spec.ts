@@ -198,7 +198,8 @@ test.describe("panel: presentación de la página (/admin/page)", () => {
     await page.getByRole("button", { name: "Guardar cambios" }).click();
 
     await expect(page).toHaveURL(/\/admin\/page\?guardado$/);
-    await expect(page.getByRole("status")).toContainText("Guardado");
+    // La pantalla tiene otra región de estado (los anuncios del editor del avatar).
+    await expect(page.getByRole("status").filter({ hasText: "Guardado" })).toBeVisible();
     await expect(page.getByLabel("Nombre", { exact: true })).toHaveValue("Miembro Editado");
 
     await page.goto("/miembro-demo");

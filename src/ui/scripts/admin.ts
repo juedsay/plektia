@@ -9,6 +9,14 @@ document.querySelector<HTMLElement>(".admin-main .alert:not([hidden])")?.focus()
 const workspace = document.querySelector<HTMLElement>("[data-workspace]");
 if (workspace) connectLivePreview(workspace);
 
+// El editor del avatar solo se carga en la pantalla que lo tiene (/admin/page).
+const avatarEditor = document.querySelector<HTMLElement>("[data-avatar-editor]");
+if (avatarEditor) {
+  void import("@/ui/scripts/avatar-editor").then(({ connectAvatarEditor }) => {
+    connectAvatarEditor(avatarEditor);
+  });
+}
+
 for (const switcher of document.querySelectorAll<HTMLDetailsElement>("[data-switcher]")) {
   const summary = switcher.querySelector("summary");
 

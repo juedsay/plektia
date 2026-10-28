@@ -156,3 +156,27 @@ export const PNG_SIGNATURE = Uint8Array.from([
   0x0a,
   ...new Array<number>(40).fill(0),
 ]);
+
+/** La cabecera de un PNG (firma e IHDR): lo que lee el editor para el tamaño. */
+export function pngHeader(width: number, height: number): Uint8Array {
+  const be32 = (value: number) => [...be16(value >>> 16), ...be16(value & 0xffff)];
+  return Uint8Array.from([
+    0x89,
+    0x50,
+    0x4e,
+    0x47,
+    0x0d,
+    0x0a,
+    0x1a,
+    0x0a,
+    ...be32(13),
+    ...text("IHDR"),
+    ...be32(width),
+    ...be32(height),
+    8,
+    6,
+    0,
+    0,
+    0,
+  ]);
+}
