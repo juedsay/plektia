@@ -344,6 +344,10 @@
     - Las 4 opciones de contenido destacado se ven en la página.
   - **Verificar:** `pnpm test`; prueba manual con tu canal.
   - **Archivos:** `src/infrastructure/http/safe-fetch.ts`, `src/infrastructure/providers/youtube/*.ts`, `src/infrastructure/live-status/ingest-client.ts`, `src/application/live/refresh-featured.ts`.
+  - Se entrega en tres partes:
+    - [x] **25a · Adaptador y API key** (2026-10-28): `safeFetch` (lista de hosts, https, sin redirecciones, 5 s, 1 MB), `YouTubeProvider` (`@handle` → `UC…`; último video, Short y directo terminado por `UULF`/`UUSH`/`UULV`; plan B con la playlist de subidas `UU…`, sin `search`; video fijado; presupuesto de cuota por llamada; la key va en el header `X-Goog-Api-Key`), `scripts/wizard-youtube.sh` y `pnpm contract:youtube` contra la API real. La CI falla si una key de Google llega al build.
+    - [ ] **25b · Ingesta y cron:** `provider_channels`, `featured_content`, funciones `ingest_*`, presupuesto diario persistido, `refresh-featured.ts` y el cron horario con *lock*.
+    - [ ] **25c · Página pública:** la sub-fila plegable con el contenido destacado y el Short en vertical.
 
 - [ ] **Tarea 26: En vivo con Twitch y YouTube, más "Comprobar ahora"** · M · Deps: 25
   - `wizard` para la app de Twitch. `LiveStatusProvider` (Twitch y YouTube) con la misma suite de contrato; cron cada 10 min con *lock*; regla de 25 min; purga de caché; botón "Comprobar ahora" con rate limit.

@@ -1,0 +1,216 @@
+import type { z } from "zod";
+
+import type {
+  FeaturedContentProvider,
+  FeaturedKind,
+  FeaturedVideo,
+  ProviderError,
+  QuotaBudget,
+} from "@/application/ports/featured-content-provider";
+import { err, ok, type Result } from "@/domain/result";
+import type { SafeFetch } from "@/infrastructure/http/safe-fetch";
+import {
+  ChannelsResponse,
+  ErrorResponse,
+  parseIsoDuration,
+  type PlaylistItem,
+  PlaylistItemsResponse,
+  type VideoItem,
+  VideosResponse,
+} from "@/infrastructure/providers/youtube/youtube-responses";
+
+// Adaptador de la YouTube Data API v3 (SPEC-live-status, "Cómo se obtiene cada
+// dato"). Lo último de cada tipo sale de las playlists derivadas del canal:
+// `UULF…` (videos largos), `UUSH…` (Shorts) y `UULV…` (directos). Son una
+// convención no documentada: si una no existe, el plan B lee la playlist de
+// subidas (`UU…`, documentada) y clasifica cada video por duración y por si
+// fue un directo. Todo cuesta 1 unidad por llamada (nunca `search`, que cuesta 100).
+
+export const YOUTUBE_API_HOST = "www.googleapis.com";
+const API = `https://${YOUTUBE_API_HOST}/youtube/v3`;
+
+const HANDLE = /^@[A-Za-z0-9._-]{3,30}$/;
+const CHANNEL_ID = /^UC[A-Za-z0-9_-]{22}$/;
+const VIDEO_ID = /^[A-Za-z0-9_-]{11}$/;
+/** Un Short dura hasta 3 minutos (regla de YouTube desde 2024). */
+export const SHORT_MAX_SECONDS = 180;
+const TITLE_MAX = 200;
+/** Cuántos elementos se miran para saltear privados o directos en curso. */
+const PAGE_SIZE = 10;
+/** En el plan B, la playlist de subidas mezcla tipos: se mira más. */
+const FALLBACK_PAGE_SIZE = 50;
+
+const PLAYLIST_PREFIX: Readonly<Record<FeaturedKind, string>> = {
+  video: "UULF",
+  short: "UUSH",
+  stream: "UULV",
+};
+
+type Failure = ProviderError | "not_found";
+
+export class YouTubeProvider implements FeaturedContentProvider {
+  constructor(
+    private readonly apiKey: string,
+    private readonly safeFetch: SafeFetch,
+    private readonly budget: QuotaBudget,
+  ) {}
+
+  async resolveChannel(handle: string): Promise<Result<string | null, ProviderError>> {
+    if (CHANNEL_ID.test(handle)) return ok(handle);
+    if (!HANDLE.test(handle)) return ok(null);
+    const answer = await this.get("channels", { part: "id", forHandle: handle }, ChannelsResponse);
+    if (!answer.ok) return answer.error === "not_found" ? ok(null) : err(answer.error);
+    const id = answer.value.items?.[0]?.id;
+    return ok(id !== undefined && CHANNEL_ID.test(id) ? id : null);
+  }
+
+  async latest(
+    channelId: string,
+    kind: FeaturedKind,
+  ): Promise<Result<FeaturedVideo | null, ProviderError>> {
+    if (!CHANNEL_ID.test(channelId)) return ok(null);
+    const suffix = channelId.slice(2);
+    const items = await this.playlist(PLAYLIST_PREFIX[kind] + suffix, PAGE_SIZE);
+    if (!items.ok) {
+      if (items.error !== "not_found") return err(items.error);
+      return this.latestFromUploads(`UU${suffix}`, kind);
+    }
+
+    const candidates = items.value.filter(isPublic);
+    if (kind !== "stream") {
+      const first = candidates[0];
+      return ok(first ? fromPlaylistItem(first, kind) : null);
+    }
+    // Un directo en curso o programado también está en `UULV`: se busca el
+    // primero que ya terminó.
+    const videos = await this.videos(candidates.map((item) => item.contentDetails.videoId));
+    if (!videos.ok) return videos;
+    const ended = videos.value.find((video) => video.liveStreamingDetails?.actualEndTime);
+    return ok(ended ? fromVideo(ended, "stream") : null);
+  }
+
+  async video(videoId: string): Promise<Result<FeaturedVideo | null, ProviderError>> {
+    if (!VIDEO_ID.test(videoId)) return ok(null);
+    const videos = await this.videos([videoId]);
+    if (!videos.ok) return videos;
+    const [video] = videos.value;
+    if (!video || video.status?.privacyStatus === "private") return ok(null);
+    return ok(fromVideo(video, classify(video) ?? "video"));
+  }
+
+  /** Plan B: la playlist de subidas, clasificando cada video. */
+  private async latestFromUploads(
+    uploads: string,
+    kind: FeaturedKind,
+  ): Promise<Result<FeaturedVideo | null, ProviderError>> {
+    const items = await this.playlist(uploads, FALLBACK_PAGE_SIZE);
+    if (!items.ok) return items.error === "not_found" ? ok(null) : err(items.error);
+    const videos = await this.videos(
+      items.value.filter(isPublic).map((item) => item.contentDetails.videoId),
+    );
+    if (!videos.ok) return videos;
+    const match = videos.value.find((video) => classify(video) === kind);
+    return ok(match ? fromVideo(match, kind) : null);
+  }
+
+  private async playlist(
+    playlistId: string,
+    size: number,
+  ): Promise<Result<readonly PlaylistItem[], Failure>> {
+    const answer = await this.get(
+      "playlistItems",
+      { part: "snippet,contentDetails,status", playlistId, maxResults: String(size) },
+      PlaylistItemsResponse,
+    );
+    return answer.ok ? ok(answer.value.items ?? []) : answer;
+  }
+
+  /** Detalles de hasta 50 videos en una sola llamada (en el orden pedido). */
+  private async videos(
+    ids: readonly string[],
+  ): Promise<Result<readonly VideoItem[], ProviderError>> {
+    const valid = ids.filter((id) => VIDEO_ID.test(id)).slice(0, 50);
+    if (valid.length === 0) return ok([]);
+    const answer = await this.get(
+      "videos",
+      { part: "snippet,contentDetails,status,liveStreamingDetails", id: valid.join(",") },
+      VideosResponse,
+    );
+    if (!answer.ok) return answer.error === "not_found" ? ok([]) : err(answer.error);
+    const byId = new Map((answer.value.items ?? []).map((item) => [item.id, item]));
+    return ok(valid.flatMap((id) => byId.get(id) ?? []));
+  }
+
+  private async get<T>(
+    resource: string,
+    params: Readonly<Record<string, string>>,
+    schema: z.ZodType<T>,
+  ): Promise<Result<T, Failure>> {
+    if (!(await this.budget.tryConsume(1))) return err("budget_exhausted");
+    const url = new URL(`${API}/${resource}`);
+    for (const [name, value] of Object.entries(params)) url.searchParams.set(name, value);
+    // La key va en un header y no en la URL: así nunca aparece en un log de URLs.
+    const response = await this.safeFetch(url, { headers: { "X-Goog-Api-Key": this.apiKey } });
+    if (!response.ok) return err("unavailable");
+
+    const { status, body } = response.value;
+    let json: unknown;
+    try {
+      json = JSON.parse(body);
+    } catch {
+      return err(status >= 500 ? "unavailable" : "invalid_response");
+    }
+    if (status !== 200) return err(failureOf(status, json));
+    const parsed = schema.safeParse(json);
+    return parsed.success ? ok(parsed.data) : err("invalid_response");
+  }
+}
+
+function failureOf(status: number, json: unknown): Failure {
+  const parsed = ErrorResponse.safeParse(json);
+  const reasons = parsed.success ? (parsed.data.error.errors ?? []).map((e) => e.reason) : [];
+  if (status === 404) return "not_found";
+  if (reasons.includes("quotaExceeded") || reasons.includes("dailyLimitExceeded")) {
+    return "quota_exceeded";
+  }
+  if (status === 429 || reasons.includes("rateLimitExceeded")) return "rate_limited";
+  return "unavailable";
+}
+
+function isPublic(item: PlaylistItem): boolean {
+  return (item.status?.privacyStatus ?? "public") === "public";
+}
+
+/** Tipo de un video por sus datos: directo terminado, Short o largo. */
+function classify(video: VideoItem): FeaturedKind | null {
+  if (video.liveStreamingDetails) {
+    return video.liveStreamingDetails.actualEndTime ? "stream" : null;
+  }
+  const seconds = parseIsoDuration(video.contentDetails?.duration);
+  if (seconds === null || seconds === 0) return null;
+  return seconds <= SHORT_MAX_SECONDS ? "short" : "video";
+}
+
+function fromPlaylistItem(item: PlaylistItem, kind: FeaturedKind): FeaturedVideo | null {
+  const { videoId, videoPublishedAt } = item.contentDetails;
+  const publishedAt = videoPublishedAt ?? item.snippet?.publishedAt;
+  if (!VIDEO_ID.test(videoId) || !item.snippet || !publishedAt) return null;
+  return {
+    videoId,
+    kind,
+    title: item.snippet.title.slice(0, TITLE_MAX),
+    publishedAt,
+    durationSeconds: null,
+  };
+}
+
+function fromVideo(video: VideoItem, kind: FeaturedKind): FeaturedVideo | null {
+  if (!VIDEO_ID.test(video.id) || !video.snippet) return null;
+  return {
+    videoId: video.id,
+    kind,
+    title: video.snippet.title.slice(0, TITLE_MAX),
+    publishedAt: video.snippet.publishedAt,
+    durationSeconds: parseIsoDuration(video.contentDetails?.duration),
+  };
+}
