@@ -48,9 +48,45 @@ describe("SupabasePublicPageReader", () => {
       bio: "Streams y código",
       avatarPath: null,
       theme: "tecnico",
-      sections: row.sections,
+      sections: [{ ...row.sections[0], links: [{ ...link, featured: null }] }],
       unsectionedLinks: [],
     });
+  });
+
+  it("lee lo destacado de un link de YouTube y si está fijado", async () => {
+    const youtube = {
+      ...link,
+      provider: "youtube",
+      providerHandle: "@juedsay",
+      featured: {
+        videoId: "aBcDeFgHiJk",
+        kind: "short",
+        title: "Un Short",
+        publishedAt: "2026-10-27T10:00:00+00:00",
+        durationSeconds: 45,
+        mode: "pinned",
+      },
+    };
+    const page = await readerAnswering({
+      data: { ...row, sections: [], unsectioned_links: [youtube] },
+      error: null,
+    }).getByHandle(handle);
+    expect(page?.unsectionedLinks[0]?.featured).toEqual({
+      videoId: "aBcDeFgHiJk",
+      kind: "short",
+      title: "Un Short",
+      publishedAt: "2026-10-27T10:00:00+00:00",
+      durationSeconds: 45,
+      pinned: true,
+    });
+
+    const broken = { ...youtube, featured: { ...youtube.featured, videoId: "../../x" } };
+    await expect(
+      readerAnswering({
+        data: { ...row, sections: [], unsectioned_links: [broken] },
+        error: null,
+      }).getByHandle(handle),
+    ).rejects.toThrow();
   });
 
   it("sin fila (no existe o está dado de baja) devuelve null", async () => {

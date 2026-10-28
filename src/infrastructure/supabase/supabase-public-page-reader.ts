@@ -13,6 +13,17 @@ import type { Database } from "@/infrastructure/supabase/database.types";
 // Las columnas JSON de la vista no tienen tipo en TypeScript: se validan antes de
 // llegar a la página. Si alguien rompe la forma de la vista, falla acá, claro,
 // en vez de renderizar datos a medias.
+const FeaturedSchema = z
+  .object({
+    videoId: z.string().regex(/^[A-Za-z0-9_-]{11}$/),
+    kind: z.enum(["video", "short", "stream"]),
+    title: z.string(),
+    publishedAt: z.string(),
+    durationSeconds: z.number().int().nonnegative().nullable(),
+    mode: z.string(),
+  })
+  .transform(({ mode, ...featured }) => ({ ...featured, pinned: mode === "pinned" }));
+
 const PublicLinkSchema = z.object({
   id: z.uuid(),
   title: z.string(),
@@ -20,6 +31,7 @@ const PublicLinkSchema = z.object({
   description: z.string().nullable(),
   provider: z.enum(PROVIDERS),
   providerHandle: z.string().nullable(),
+  featured: FeaturedSchema.nullish().transform((featured) => featured ?? null),
 });
 
 const RowSchema = z.object({

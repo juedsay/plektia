@@ -19,6 +19,12 @@ import { createPublicPageReader } from "@/composition/public-page";
 import { createSessionReader } from "@/composition/session";
 import { WorkerPageCache } from "@/infrastructure/cache/purge";
 import { CloudflareRateLimiter } from "@/infrastructure/cloudflare/cloudflare-rate-limiter";
+import { createSafeFetch } from "@/infrastructure/http/safe-fetch";
+import {
+  binaryFetchFrom,
+  THUMBNAIL_HOST,
+  youtubeThumbnails,
+} from "@/infrastructure/providers/youtube/youtube-thumbnails";
 import { avatarImages } from "@/infrastructure/supabase/avatar-images";
 import { createIngestClient } from "@/infrastructure/supabase/ingest-client";
 
@@ -66,3 +72,8 @@ export const pageCache = (): PageCache =>
 
 /** Refresco horario del contenido destacado (cron); `null` sin API key de YouTube. */
 export const featuredRefresh = () => createFeaturedRefresh(env, pageCache());
+
+/** Miniaturas de YouTube servidas desde `/thumbs/{id}.jpg`. */
+export const youtubeThumbnail = youtubeThumbnails(
+  binaryFetchFrom(createSafeFetch({ allowedHosts: [THUMBNAIL_HOST], maxBytes: 256 * 1024 })),
+);

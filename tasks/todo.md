@@ -336,7 +336,7 @@
   - **Archivos:** `supabase/migrations/0006_live.sql`, `src/ui/islands/editor/MediaSettings.tsx`, `src/actions/media.ts`.
   - **Hecho (2026-10-28):** tabla `link_media_settings` (RLS del dueño, sin lectura pública por ahora; un trigger saca el dueño del link y rechaza cada opción en un link que no la admite; si el link cambia de proveedor o deja de ser un canal, se borra). Actions `links.getMedia` y `links.setMedia` (upsert de la configuración completa: repetir el pedido deja lo mismo). En el editor, `MediaSettings` dentro de la fila del link: "Transmito en este canal" para canales de YouTube, Twitch o Kick, y "Contenido destacado" para canales de YouTube; "Fijado" guarda solo el ID del video. Todavía no cambia la página pública: lo usan las tareas 25 y 26.
 
-- [ ] **Tarea 25: YouTube, canal y contenido destacado** · M · Deps: 24
+- [x] **Tarea 25: YouTube, canal y contenido destacado** · M · Deps: 24
   - `wizard` para la API key. `safeFetch` con allowlist; resolver el `@handle`; playlists `UULF`, `UUSH` y `UULV` con plan B; `ingest-client.ts`; cron horario; Short vertical en la página.
   - **Aceptación:**
     - Suite de contrato con respuestas grabadas.
@@ -347,7 +347,7 @@
   - Se entrega en tres partes:
     - [x] **25a · Adaptador y API key** (2026-10-28): `safeFetch` (lista de hosts, https, sin redirecciones, 5 s, 1 MB), `YouTubeProvider` (`@handle` → `UC…`; último video, Short y directo terminado por `UULF`/`UUSH`/`UULV`; plan B con la playlist de subidas `UU…`, sin `search`; video fijado; presupuesto de cuota por llamada; la key va en el header `X-Goog-Api-Key`), `scripts/wizard-youtube.sh` y `pnpm contract:youtube` contra la API real. La CI falla si una key de Google llega al build.
     - [x] **25b · Ingesta y cron** (2026-10-28): tablas `provider_channels` y `featured_content` (sin lectura ni escritura para `anon`/`authenticated`), `private.quota_usage` y `private.job_locks`, funciones `ingest_*` solo para `service_role` (lock, cuota diaria con día del Pacífico, destinos, canal, guardar y sacar lo destacado devolviendo la página a purgar). `refresh-featured.ts`: una consulta por canal y tipo, canal inexistente reintentado al día, fijado releído cada 24 h, último dato bueno ante errores, corte ante cuota o límite. Cron `0 * * * *` en `src/worker.ts`; sin `YOUTUBE_API_KEY` no hace nada.
-    - [ ] **25c · Página pública:** la sub-fila plegable con el contenido destacado y el Short en vertical.
+    - [x] **25c · Página pública** (2026-10-28): `public.link_featured` (solo links visibles, en sección visible, de cuentas activas y si coincide con el modo elegido hoy) y `featured` en cada link de `public_page_v`. Sub-fila plegable del prototipo ("Último video · anteayer" y el título), video con duración y nombre accesible, Short en 9:16. Las miniaturas salen de `/thumbs/{id}.jpg` (el Worker las trae de `i.ytimg.com` por `safeFetch`, valida que sean JPEG y las cachea un día) y se piden recién al abrir la sub-fila: la página sigue sin pedirle nada a terceros. `thumbs` queda reservado como handle.
 
 - [ ] **Tarea 26: En vivo con Twitch y YouTube, más "Comprobar ahora"** · M · Deps: 25
   - `wizard` para la app de Twitch. `LiveStatusProvider` (Twitch y YouTube) con la misma suite de contrato; cron cada 10 min con *lock*; regla de 25 min; purga de caché; botón "Comprobar ahora" con rate limit.

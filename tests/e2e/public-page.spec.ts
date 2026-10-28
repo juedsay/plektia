@@ -17,8 +17,9 @@ test.describe("página pública", () => {
     ]);
 
     const redes = page.getByRole("region", { name: "Redes" });
-    await expect(redes.getByRole("link")).toHaveCount(3);
-    const youtube = redes.getByRole("link", { name: /YouTube/ });
+    // Los links de la sección (sin contar el del video destacado de YouTube).
+    await expect(redes.locator(".port-link")).toHaveCount(3);
+    const youtube = redes.locator(".port-link", { hasText: "YouTube" });
     await expect(youtube).toHaveAttribute("href", "https://www.youtube.com/@juedsay");
     // Sin descripción, un perfil de red social muestra "@usuario"; y lleva rel="me".
     await expect(youtube).toContainText("@juedsay");

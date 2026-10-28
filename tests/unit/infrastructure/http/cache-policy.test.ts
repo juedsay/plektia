@@ -42,6 +42,15 @@ describe("cachePolicy", () => {
     expect(get("/avatars/otra-cosa.png").cacheControl).toBe("private, no-store");
   });
 
+  it("una miniatura de YouTube se cachea un día", () => {
+    expect(get("/thumbs/aBcDeFgHiJk.jpg")).toEqual({
+      cacheControl: "public, max-age=86400",
+      tags: ["thumbs"],
+    });
+    expect(get("/thumbs/aBcDeFgHiJk.jpg", 404).tags).not.toContain("thumbs");
+    expect(get("/thumbs/../../x.jpg").cacheControl).toBe("private, no-store");
+  });
+
   it("/plektia es la página oficial: como un perfil (la edita la Admin) y del sitio", () => {
     expect(get("/plektia")).toEqual({
       cacheControl: "public, max-age=60, stale-while-revalidate=300",

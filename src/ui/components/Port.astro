@@ -1,6 +1,14 @@
 ---
 import type { PublicLink } from "@/application/ports/public-page-reader";
 import NetworkIcon from "@/ui/components/NetworkIcon.astro";
+import {
+  featuredLabel,
+  formatDuration,
+  thumbPath,
+  timeAgo,
+  watchLabel,
+  watchUrl,
+} from "@/ui/view/featured";
 import { isProfileLink, linkMeta } from "@/ui/view/public-link";
 import { socialProfileFor } from "@/ui/view/social-profile";
 
@@ -9,6 +17,8 @@ interface Props {
 }
 const { link } = Astro.props;
 const network = socialProfileFor(link.url)?.network ?? null;
+const featured = link.featured ?? null;
+const panelId = `featured-${link.id}`;
 // Misma pestaña a propósito: en los navegadores de las apps sociales una
 // pestaña nueva confunde (SPEC-public-page). La URL ya viene validada.
 ---
@@ -36,5 +46,58 @@ const network = socialProfileFor(link.url)?.network ?? null;
         <path d="M7 17 17 7M8 7h9v9"></path>
       </svg>
     </a>
+    {featured && (
+      <>
+        <button
+          class="latest-toggle"
+          type="button"
+          data-disclosure
+          aria-expanded="false"
+          aria-controls={panelId}
+        >
+          <span class="latest-text">
+            <span class="port-meta">
+              {featuredLabel(featured)} · {timeAgo(featured.publishedAt, new Date())}
+            </span>
+            <span class="latest-title">{featured.title}</span>
+          </span>
+          <svg
+            class="chevron"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <path d="m6 9 6 6 6-6" />
+          </svg>
+        </button>
+        <div class="latest-panel" id={panelId} inert>
+          <div>
+            <a
+              class:list={["latest-video", { "is-short": featured.kind === "short" }]}
+              href={watchUrl(featured)}
+              aria-label={watchLabel(featured)}
+            >
+              {/* Sin `src` hasta que se abre (page.ts): cerrado no pide nada. */}
+              <img
+                data-src={thumbPath(featured.videoId)}
+                alt=""
+                width={featured.kind === "short" ? 270 : 480}
+                height={featured.kind === "short" ? 480 : 270}
+                decoding="async"
+              />
+              {featured.durationSeconds ? (
+                <span class="duration" aria-hidden="true">
+                  {formatDuration(featured.durationSeconds)}
+                </span>
+              ) : null}
+            </a>
+          </div>
+        </div>
+      </>
+    )}
   </div>
 </li>

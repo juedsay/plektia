@@ -9,7 +9,10 @@ export type SafeFetchError = "host_not_allowed" | "redirect" | "timeout" | "too_
 
 export interface SafeResponse {
   readonly status: number;
+  /** El cuerpo como texto (UTF-8). */
   readonly body: string;
+  /** El cuerpo tal cual (para imágenes). */
+  readonly bytes: Uint8Array<ArrayBuffer>;
 }
 
 export interface SafeFetchOptions {
@@ -72,8 +75,9 @@ export function createSafeFetch(options: SafeFetchOptions): SafeFetch {
     }
 
     try {
-      const body = await readLimited(response, maxBytes);
-      return body === null ? err("too_large") : ok({ status: response.status, body });
+      const bytes = await readLimited(response, maxBytes);
+      if (bytes === null) return err("too_large");
+      return ok({ status: response.status, body: new TextDecoder().decode(bytes), bytes });
     } catch (error) {
       return err(isTimeout(error) ? "timeout" : "network");
     }
@@ -81,8 +85,11 @@ export function createSafeFetch(options: SafeFetchOptions): SafeFetch {
 }
 
 /** Lee el cuerpo cortando en `maxBytes` (el `content-length` puede mentir o faltar). */
-async function readLimited(response: Response, maxBytes: number): Promise<string | null> {
-  if (!response.body) return "";
+async function readLimited(
+  response: Response,
+  maxBytes: number,
+): Promise<Uint8Array<ArrayBuffer> | null> {
+  if (!response.body) return new Uint8Array(0);
   const reader = response.body.getReader();
   const chunks: Uint8Array[] = [];
   let total = 0;
@@ -102,7 +109,7 @@ async function readLimited(response: Response, maxBytes: number): Promise<string
     bytes.set(chunk, offset);
     offset += chunk.byteLength;
   }
-  return new TextDecoder().decode(bytes);
+  return bytes;
 }
 
 function isTimeout(error: unknown): boolean {

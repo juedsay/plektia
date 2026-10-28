@@ -405,6 +405,7 @@ export type Database = {
       };
       ingest_release_lock: { Args: { p_job: string }; Returns: undefined };
       ingest_try_lock: { Args: { p_job: string; p_seconds: number }; Returns: boolean };
+      link_featured: { Args: { p_link_id: string }; Returns: Json };
       move_links: {
         Args: {
           expected_versions: number[];

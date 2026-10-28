@@ -42,6 +42,7 @@ export const RESERVED_HANDLES: ReadonlySet<string> = new Set([
   "static",
   "support",
   "terms",
+  "thumbs",
 ]);
 
 // 3 a 30 caracteres: minúsculas ASCII, números y guiones simples, sin guion al
