@@ -176,12 +176,14 @@ function skipScanData(bytes: Uint8Array, from: number): number {
 }
 
 /**
- * Ancho y alto de un JPEG recorriendo todos sus segmentos: un solo cuadro, sin
- * metadatos (tampoco entre barridos de un JPEG progresivo) y terminado justo en
- * el EOI, sin nada escondido después.
+ * Ancho y alto de un JPEG recorriendo todos sus segmentos: un solo cuadro, al
+ * menos un barrido con la imagen (después del cuadro), sin metadatos (tampoco
+ * entre barridos de un JPEG progresivo) y terminado justo en el EOI, sin nada
+ * escondido después.
  */
 function readJpeg(bytes: Uint8Array): Result<Dimensions, AvatarError> {
   let frame: Dimensions | null = null;
+  let scanned = false;
   let offset = 2;
   while (offset + 1 < bytes.length) {
     if (bytes[offset] !== MARKER) return err("not_an_image");
@@ -191,8 +193,9 @@ function readJpeg(bytes: Uint8Array): Result<Dimensions, AvatarError> {
       continue;
     }
     if (marker === END_OF_IMAGE) {
+      // Sin barrido no hay imagen que mostrar, aunque el cuadro diga 512 × 512.
       const atEnd = offset + 2 === bytes.length;
-      return frame && atEnd ? ok(frame) : err("not_an_image");
+      return frame && scanned && atEnd ? ok(frame) : err("not_an_image");
     }
     if (isStandalone(marker)) {
       offset += 2;
@@ -208,7 +211,13 @@ function readJpeg(bytes: Uint8Array): Result<Dimensions, AvatarError> {
       if (frame || length < 7) return err("not_an_image");
       frame = { height: bigEndian16(bytes, offset + 5), width: bigEndian16(bytes, offset + 7) };
     }
-    offset = marker === START_OF_SCAN ? skipScanData(bytes, end) : end;
+    if (marker === START_OF_SCAN) {
+      if (!frame) return err("not_an_image");
+      scanned = true;
+      offset = skipScanData(bytes, end);
+      continue;
+    }
+    offset = end;
   }
   return err("not_an_image");
 }

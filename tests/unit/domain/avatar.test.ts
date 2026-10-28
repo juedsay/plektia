@@ -172,6 +172,13 @@ describe("inspectAvatar con JPEG (lo que genera Safari)", () => {
     expect(inspectAvatar(cut)).toEqual({ ok: false, error: "not_an_image" });
   });
 
+  it("rechaza un JPEG sin barrido (sin imagen) aunque el cuadro diga 512 × 512", () => {
+    expect(inspectAvatar(jpeg({ withoutScan: true }))).toEqual({
+      ok: false,
+      error: "not_an_image",
+    });
+  });
+
   it("rechaza un JPEG sin cuadro o con dos, y uno de otro tamaño", () => {
     expect(inspectAvatar(jpeg({ frames: 0 }))).toEqual({ ok: false, error: "not_an_image" });
     expect(inspectAvatar(jpeg({ frames: 2 }))).toEqual({ ok: false, error: "not_an_image" });

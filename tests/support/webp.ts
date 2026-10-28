@@ -103,6 +103,8 @@ interface JpegOptions {
   readonly after?: readonly number[];
   /** Sin cuadro (SOF) o con dos. */
   readonly frames?: 0 | 1 | 2;
+  /** Sin barrido (SOS): el cuadro y enseguida el EOI, sin imagen. */
+  readonly withoutScan?: boolean;
 }
 
 export function jpeg({
@@ -112,6 +114,7 @@ export function jpeg({
   betweenScans,
   after = [],
   frames = 1,
+  withoutScan = false,
 }: JpegOptions = {}): Uint8Array {
   const frame = startOfFrame(width, height);
   return Uint8Array.from([
@@ -121,8 +124,7 @@ export function jpeg({
     ...before,
     ...(frames >= 1 ? frame : []),
     ...(frames === 2 ? frame : []),
-    ...startOfScan,
-    ...SCAN_DATA,
+    ...(withoutScan ? [] : [...startOfScan, ...SCAN_DATA]),
     ...(betweenScans ? [...betweenScans, ...startOfScan, ...SCAN_DATA] : []),
     0xff,
     0xd9,
