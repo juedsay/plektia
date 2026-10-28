@@ -293,13 +293,13 @@
 - [ ] **Tarea 21b: /plektia en la base y la cuenta Admin** · M · Deps: 21
   - Decisión del 2026-10-23: el sitio lo administra una **cuenta Admin propia de Plektia** (rol `owner`), separada de la cuenta personal.
   - **Admin:** edita las novedades del sitio y la página `/plektia` desde el panel, con el mismo editor de links. `/plektia` pasa del repo (`src/content/plektia.ts`) a ser una página en la base de esa cuenta; el handle reservado `plektia` se le permite solo a ella.
-  - **Cuenta personal (juedsay):** pasa a `member` y conserva `/juedsay` con sus links; puede sumar hasta 3 páginas (por ejemplo, stream o contenido, y profesional).
-  - **Pasos en producción** (con confirmación): invitar al email de Plektia como `owner` con `/plektia` como su primera página, migrar el contenido y bajar la cuenta personal a `member`. El email nuevo se agrega como usuario de prueba en la app de Google (sigue en "Prueba").
+  - **Cuenta personal (juedsay):** conserva `/juedsay` con sus links y puede sumar hasta 3 páginas (por ejemplo, stream o contenido, y profesional). Sigue como `owner` por las dudas (decisión del 2026-10-28, abajo).
+  - **Pasos en producción** (con confirmación): invitar al email de Plektia como `owner` con `/plektia` como su primera página y cargar el contenido. El email nuevo se agrega como usuario de prueba en la app de Google (sigue en "Prueba").
   - **Usuario de prueba:** ya invitado el 2026-10-23 como `member` con `/user-test`.
   - **Código (hecho):** migración `official_page` (`plektia` solo para una cuenta `owner`, en invitaciones y páginas; quien la tiene no deja de ser owner), `/plektia` lee la base y, mientras no exista ahí, muestra el contenido del repo; caché con la etiqueta `profile:plektia`; seed con `admin@plektia.test`.
   - **Producción:** (1) ✅ invitación de la cuenta Admin como `owner` con `/plektia` (2026-10-28); (2) agregarla como usuario de prueba en Google y entrar con esa cuenta; (3) cargar el contenido de `/plektia` a mano desde el panel; (4) borrar `src/content/plektia.ts` y el respaldo de la página.
   - **Decisión del 2026-10-28:** la cuenta personal **sigue como `owner`** por las dudas (no baja a `member`).
-  - **Aceptación:** la Admin edita `/plektia` desde el panel y se ve al instante; la cuenta personal ya no ve funciones de owner; pgTAP de que `plektia` solo lo puede usar la Admin.
+  - **Aceptación:** la Admin edita `/plektia` desde el panel y se ve al instante; las dos cuentas son `owner` y `/plektia` es solo de la Admin; pgTAP de que `plektia` solo lo puede tener una cuenta `owner`.
 
 - [ ] **Tarea 22: Avatar** · M · Deps: 18
   - Recorte y WebP en el navegador; validación en el servidor (*magic bytes*, tamaño y peso); bucket `avatars` con sus políticas.
