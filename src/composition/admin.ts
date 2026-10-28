@@ -1,6 +1,7 @@
 import type { AvatarStorage } from "@/application/ports/avatar-storage";
 import type { LinkReader, LinkWriter, SectionWriter } from "@/application/ports/link-repository";
 import type { PageReader, PageWriter } from "@/application/ports/page-repository";
+import type { UserDirectory } from "@/application/ports/user-directory";
 import {
   type CookieWriter,
   createSupabaseServerClient,
@@ -9,6 +10,7 @@ import {
 import { SupabaseAvatarStorage } from "@/infrastructure/supabase/supabase-avatar-storage";
 import { SupabaseLinkRepository } from "@/infrastructure/supabase/supabase-link-repository";
 import { SupabasePageRepository } from "@/infrastructure/supabase/supabase-page-repository";
+import { SupabaseUserDirectory } from "@/infrastructure/supabase/supabase-user-directory";
 
 export interface AdminRepositories {
   /** La cuenta de la sesión (su carpeta del bucket de avatares). */
@@ -18,6 +20,8 @@ export interface AdminRepositories {
   readonly avatars: AvatarStorage;
   /** Secciones y links de una página de la cuenta. */
   linksOf(pageId: string): LinkReader & LinkWriter & SectionWriter;
+  /** La cuenta de la sesión y, si es owner, los usuarios habilitados. */
+  readonly users: UserDirectory;
 }
 
 /**
@@ -36,5 +40,6 @@ export function createAdminRepositories(
     pages: new SupabasePageRepository(client, ownerId),
     avatars: new SupabaseAvatarStorage(client),
     linksOf: (pageId) => new SupabaseLinkRepository(client, pageId),
+    users: new SupabaseUserDirectory(client, ownerId),
   };
 }

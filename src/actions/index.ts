@@ -5,6 +5,7 @@
 import { ActionError, type ActionAPIContext, defineAction } from "astro:actions";
 import { z } from "zod";
 
+import { inviteUser, revokeUser } from "@/application/admin/users";
 import { createLink } from "@/application/links/create-link";
 import type { OwnLinks } from "@/application/ports/link-repository";
 import { deleteLink } from "@/application/links/delete-link";
@@ -178,6 +179,28 @@ export const server = {
         if (!reordered.ok) return toFormResult<OwnLinks>(reordered);
         await purge();
         return toFormResult(ok(await links.listOwn()));
+      },
+    }),
+  },
+  users: {
+    /**
+     * `{ email, handle }`: invita a una persona (como `member`). Solo un owner:
+     * la base lo verifica dentro de la función; si no, `forbidden`.
+     */
+    invite: defineAction({
+      accept: "form",
+      handler: async (form, context) => {
+        const { users } = await repositoriesOf(context);
+        const values = formFields(form);
+        return toFormResult(await inviteUser({ users })(values), values);
+      },
+    }),
+    /** `{ email }`: quita el acceso (la invitación y, si existe, la cuenta). */
+    revoke: defineAction({
+      accept: "form",
+      handler: async (form, context) => {
+        const { users } = await repositoriesOf(context);
+        return toFormResult(await revokeUser({ users, cache: pageCache() })(formFields(form)));
       },
     }),
   },

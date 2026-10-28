@@ -61,7 +61,7 @@ El panel privado (`/admin`) donde el dueño arma y mantiene su página: seccione
 Las operaciones de owner son funciones Postgres `security definer` que primero verifican `role = 'owner'`:
 
 - `admin_invite(email, handle)`: inserta en `private.allowed_emails` (valida el handle con las mismas reglas que `identity`).
-- `admin_revoke(email)`: borra la invitación y marca `profiles.disabled = true`.
+- `admin_revoke(email)`: borra la invitación y marca `profiles.disabled = true`. Nadie se quita el acceso a sí mismo (así nunca queda la plataforma sin un owner). Devuelve los handles de sus páginas para purgarlas de la caché.
 - `admin_list_users()`: devuelve invitaciones y usuarios activos (email, handle, alta, último acceso), solo para el owner.
 
 Un usuario deshabilitado no aparece en la vista pública y las políticas RLS de `links` y `sections` rechazan sus escrituras (`not disabled`). Su token sigue siendo válido hasta que vence (1 h), pero no le sirve para nada.

@@ -16,7 +16,7 @@ if (saved?.data?.ok) return Astro.redirect("/admin/page?guardado", 303);
 const avatarRemoved = Astro.getActionResult(actions.pages.removeAvatar);
 if (avatarRemoved?.data?.ok) return Astro.redirect("/admin/page?sin-avatar", 303);
 
-const { pages, currentPage } = await loadWorkspace(Astro);
+const { pages, currentPage, account } = await loadWorkspace(Astro);
 const failure = saved?.data && !saved.data.ok ? saved.data : null;
 const fields = failure?.fields ?? {};
 // Si falló, se muestra lo que se envió; si no, lo guardado.
@@ -60,7 +60,14 @@ const THEME_NAMES: Record<string, string> = {
 };
 ---
 
-<AdminLayout title="Página" section="page" pages={pages} currentPage={currentPage} notice={notice}>
+<AdminLayout
+  title="Página"
+  section="page"
+  pages={pages}
+  currentPage={currentPage}
+  account={account}
+  notice={notice}
+>
   <header class="admin-heading">
     <h1>Página</h1>
     <p class="admin-bio">Cómo se presenta tu página: el nombre, la bio y el estilo.</p>
