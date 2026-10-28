@@ -4,7 +4,7 @@
 begin;
 create extension if not exists pgtap with schema extensions;
 
-select plan(22);
+select plan(25);
 
 create function pg_temp.login(uid uuid)
 returns void language sql as $$
@@ -57,6 +57,16 @@ select is(public.admin_invite('otra@plektia.test', 'a'), 'invalid_handle',
 select is(public.admin_invite('no-es-un-email', 'otra'), 'invalid_email',
   'un email mal formado no se invita');
 
+reset role;
+
+-- El handle invitado queda reservado: otra cuenta no lo puede tomar antes.
+select pg_temp.login('22222222-2222-4222-8222-222222222222');
+select throws_ok(
+  $$ insert into public.pages (handle, display_name) values ('nueva-persona', 'Copia') $$,
+  '23505', null, 'nadie toma el handle de una invitación pendiente');
+reset role;
+select pg_temp.login('11111111-1111-4111-8111-111111111111');
+
 select results_eq(
   $$ select email, handle, role::text, status from public.admin_list_users()
      where email in ('nueva@plektia.test', 'member@plektia.test') order by email $$,
@@ -98,7 +108,16 @@ select throws_ok(
   $$ insert into public.links (page_id, title, url)
      values ('22222222-2222-4222-8222-222222222222', 'Después', 'https://plektia.app') $$,
   '42501', null, 'con la sesión abierta, ya no puede escribir');
+select throws_ok(
+  $$ insert into storage.objects (bucket_id, name)
+     values ('avatars', '22222222-2222-4222-8222-222222222222/0b1d2c3e-4f5a-4b6c-8d7e-9f0a1b2c3d4e.webp') $$,
+  '42501', null, 'ni subir avatares a Storage');
 reset role;
+
+-- El alta toma la invitación con bloqueo (se serializa con una baja simultánea).
+select ok(
+  pg_get_functiondef('private.create_profile_for_new_user()'::regprocedure) ~ 'for share',
+  'el alta bloquea la invitación mientras crea la cuenta');
 
 select * from finish();
 rollback;

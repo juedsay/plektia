@@ -34,6 +34,9 @@ select throws_ok(
 insert into public.pages (owner_id, handle, display_name)
 values ('adadadad-0000-4000-8000-00000000ad01', 'admin-temporal', 'Temporal');
 delete from public.pages where handle = 'plektia';
+-- Su invitación también reserva el handle (0010): se libera para probar solo la
+-- regla del handle oficial.
+delete from private.allowed_emails where handle = 'plektia';
 
 -- Una invitación con el handle oficial solo puede ser de owner.
 select throws_ok(

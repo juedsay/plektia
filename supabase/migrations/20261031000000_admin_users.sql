@@ -111,9 +111,14 @@ begin
     raise exception 'solo un owner puede quitar el acceso' using errcode = '42501';
   end if;
 
-  select u.id into v_user from auth.users u where lower(u.email) = v_email;
+  -- Primero la invitación, con bloqueo: si esa persona se está dando de alta en
+  -- este momento (el alta la toma `for share`), se espera a que termine y la
+  -- consulta de abajo ya ve su cuenta. Si la baja llega primero, el alta espera,
+  -- no encuentra la invitación y se rechaza.
   select a.handle::text into v_invite from private.allowed_emails a
-  where a.email = v_email::extensions.citext;
+  where a.email = v_email::extensions.citext
+  for update;
+  select u.id into v_user from auth.users u where lower(u.email) = v_email;
 
   if v_user is null and v_invite is null then
     return query select 'not_found'::text, array[]::text[];
@@ -189,6 +194,97 @@ begin
   order by 4, 1;
 end;
 $$;
+
+-- ── 6. El alta toma la invitación con bloqueo ────────────────────────────────
+-- Igual que en la migración de páginas, más `for share`: así una baja simultánea
+-- (que la toma `for update`) se serializa con el alta y nunca queda una cuenta
+-- activa con la invitación ya borrada.
+create or replace function private.create_profile_for_new_user()
+returns trigger
+language plpgsql
+security definer
+set search_path = ''
+as $$
+declare
+  invite private.allowed_emails;
+begin
+  select * into invite
+  from private.allowed_emails a
+  where a.email::text = lower(trim(new.email))
+  for share;
+
+  if not found then
+    raise exception 'el email no está en la allowlist' using errcode = '42501';
+  end if;
+
+  insert into public.profiles (id, role) values (new.id, invite.role);
+  insert into public.pages (owner_id, handle, display_name)
+  values (
+    new.id,
+    invite.handle,
+    left(coalesce(
+      nullif(trim(new.raw_user_meta_data ->> 'full_name'), ''),
+      nullif(trim(new.raw_user_meta_data ->> 'name'), ''),
+      invite.handle::text
+    ), 60)
+  );
+  return new;
+end;
+$$;
+
+-- ── 7. El handle de una invitación queda reservado para esa persona ──────────
+-- Si otra cuenta creara una página con ese handle antes de que la persona
+-- invitada entre, su alta fallaría. Responde como un handle tomado (23505).
+create function private.guard_invited_handle()
+returns trigger
+language plpgsql
+security definer
+set search_path = ''
+as $$
+begin
+  if exists (
+    select 1 from private.allowed_emails a
+    where a.handle = new.handle
+      and a.email::text <> coalesce(
+        (select lower(u.email) from auth.users u where u.id = new.owner_id), ''
+      )
+  ) then
+    raise exception 'ese handle está reservado para una invitación' using errcode = '23505';
+  end if;
+  return new;
+end;
+$$;
+
+revoke all on function private.guard_invited_handle() from public, anon, authenticated;
+
+create trigger pages_invited_handle
+  before insert or update of handle on public.pages
+  for each row execute function private.guard_invited_handle();
+
+-- ── 8. Una cuenta dada de baja tampoco escribe en Storage ────────────────────
+drop policy "avatares: cada cuenta sube a su carpeta" on storage.objects;
+create policy "avatares: cada cuenta sube a su carpeta" on storage.objects
+  for insert to authenticated
+  with check (
+    bucket_id = 'avatars'
+    and (storage.foldername(name))[1] = (select auth.uid())::text
+    and array_length(storage.foldername(name), 1) = 1
+    and storage.filename(name) ~ '^[0-9a-f-]{36}\.(webp|jpg)$'
+    and exists (
+      select 1 from public.profiles p where p.id = (select auth.uid()) and not p.disabled
+    )
+  );
+
+drop policy "avatares: cada cuenta borra de su carpeta" on storage.objects;
+create policy "avatares: cada cuenta borra de su carpeta" on storage.objects
+  for delete to authenticated
+  using (
+    bucket_id = 'avatars'
+    and (storage.foldername(name))[1] = (select auth.uid())::text
+    and exists (
+      select 1 from public.profiles p where p.id = (select auth.uid()) and not p.disabled
+    )
+  );
 
 revoke all on function public.admin_invite(text, text) from public, anon;
 revoke all on function public.admin_revoke(text) from public, anon;
