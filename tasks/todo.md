@@ -356,6 +356,10 @@
     - E2E: el proveedor simulado en vivo muestra el badge.
   - **Verificar:** `pnpm test && pnpm test:e2e`; prueba manual con un stream real.
   - **Archivos:** `src/infrastructure/providers/twitch/*.ts`, `src/application/live/refresh-live.ts`, `src/application/live/check-now.ts`, `src/worker.ts`.
+  - Se entrega en tres partes:
+    - [x] **26a · Proveedores y app de Twitch** (2026-10-28): puerto `LiveStatusProvider` (`checkLive` por lote; un error es de todo el lote, nunca un offline inventado). `TwitchProvider`: token de aplicación con *client credentials* renovado antes de vencer y una vez ante un 401, `GET /streams` de a 100 logins validados. `YouTubeProvider.checkLive`: últimos de `UULV…` por canal y `videos.list` en lotes de 50 (en vivo = empezó y no terminó). Suite de contrato común (en vivo, offline, inexistente, error, lote mixto). `safeFetch` acepta un POST de formulario (solo para el token). `scripts/wizard-twitch.sh` y `pnpm contract:twitch`.
+    - [ ] **26b · Ingesta y cron:** `channel_status`, regla de 25 minutos en la vista, refresco cada 10 minutos con *lock*, solo canales con "Transmito en este canal", purga de las páginas que cambiaron.
+    - [ ] **26c · Página y "Comprobar ahora":** el aviso "En vivo" en la página y el botón del panel con límite de una vez por minuto.
 
 ### ✅ Checkpoint F6 · ENTREGA 3
 - [ ] Transmitís y tu página lo muestra; el último video se ve plegable.

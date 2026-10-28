@@ -32,6 +32,7 @@
     "test:e2e": "playwright test",
     "perf": "node scripts/lighthouse.ts",
     "contract:youtube": "node scripts/youtube-contract.ts",
+    "contract:twitch": "node scripts/twitch-contract.ts",
     "audit:deps": "pnpm audit --audit-level=high",
     "deploy:worker": "wrangler deploy"
   },

@@ -31,8 +31,8 @@ const vars = {
   TURNSTILE_SITE_KEY: "1x00000000000000000000AA",
   TURNSTILE_SECRET_KEY: "1x0000000000000000000000000000000AA",
 };
-// Las claves que se cargan a mano (scripts/wizard-youtube.sh) no se pisan.
-const KEPT = ["YOUTUBE_API_KEY"];
+// Las claves que se cargan a mano (los wizards de YouTube y Twitch) no se pisan.
+const KEPT = ["YOUTUBE_API_KEY", "TWITCH_CLIENT_ID", "TWITCH_CLIENT_SECRET"];
 const kept = existsSync(".dev.vars")
   ? readFileSync(".dev.vars", "utf8")
       .split(/\r?\n/)

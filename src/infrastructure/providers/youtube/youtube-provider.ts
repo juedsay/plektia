@@ -7,6 +7,11 @@ import type {
   ProviderError,
   QuotaBudget,
 } from "@/application/ports/featured-content-provider";
+import {
+  type LiveState,
+  type LiveStatusProvider,
+  OFFLINE,
+} from "@/application/ports/live-status-provider";
 import { err, ok, type Result } from "@/domain/result";
 import type { SafeFetch } from "@/infrastructure/http/safe-fetch";
 import {
@@ -53,7 +58,10 @@ const PLAYLIST_PREFIX: Readonly<Record<FeaturedKind, string>> = {
 
 type Failure = ProviderError | "not_found";
 
-export class YouTubeProvider implements FeaturedContentProvider {
+/** Cuántos directos recientes de cada canal se miran (uno en curso suele ser el primero). */
+const LIVE_CANDIDATES = 3;
+
+export class YouTubeProvider implements FeaturedContentProvider, LiveStatusProvider {
   constructor(
     private readonly apiKey: string,
     private readonly safeFetch: SafeFetch,
@@ -92,6 +100,49 @@ export class YouTubeProvider implements FeaturedContentProvider {
     if (!videos.ok) return videos;
     const ended = videos.value.find((video) => video.liveStreamingDetails?.actualEndTime);
     return ok(ended ? fromVideo(ended, "stream") : null);
+  }
+
+  /**
+   * En vivo: los últimos de `UULV…` de cada canal (1 unidad por canal) y sus
+   * detalles en lotes de 50 (1 unidad por lote). En vivo = empezó y no terminó.
+   */
+  async checkLive(
+    channels: readonly string[],
+  ): Promise<Result<ReadonlyMap<string, LiveState>, ProviderError>> {
+    const states = new Map<string, LiveState>(channels.map((channel) => [channel, OFFLINE]));
+    const candidates = new Map<string, string>(); // video → canal
+    for (const channel of new Set(channels)) {
+      if (!CHANNEL_ID.test(channel)) continue;
+      const items = await this.playlist(`UULV${channel.slice(2)}`, LIVE_CANDIDATES);
+      if (!items.ok) {
+        // Sin playlist de directos: el canal nunca transmitió.
+        if (items.error === "not_found") continue;
+        return err(items.error);
+      }
+      for (const item of items.value.items) candidates.set(item.contentDetails.videoId, channel);
+    }
+
+    const ids = [...candidates.keys()];
+    for (let start = 0; start < ids.length; start += 50) {
+      const videos = await this.videos(ids.slice(start, start + 50));
+      if (!videos.ok) return videos;
+      for (const video of videos.value) {
+        const details = video.liveStreamingDetails;
+        const live =
+          video.snippet?.liveBroadcastContent === "live" &&
+          details?.actualStartTime !== undefined &&
+          details.actualEndTime === undefined;
+        const channel = candidates.get(video.id);
+        if (!live || !channel || states.get(channel)?.isLive) continue;
+        states.set(channel, {
+          isLive: true,
+          title: video.snippet?.title.slice(0, TITLE_MAX) ?? null,
+          startedAt: details.actualStartTime ?? null,
+          url: `https://www.youtube.com/watch?v=${video.id}`,
+        });
+      }
+    }
+    return ok(states);
   }
 
   async video(videoId: string): Promise<Result<FeaturedVideo | null, ProviderError>> {

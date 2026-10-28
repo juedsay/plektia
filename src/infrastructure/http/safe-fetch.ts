@@ -26,7 +26,11 @@ export interface SafeFetchOptions {
 
 export type SafeFetch = (
   url: URL,
-  init?: { readonly headers?: Readonly<Record<string, string>> },
+  init?: {
+    readonly headers?: Readonly<Record<string, string>>;
+    /** Solo para pedir tokens (Twitch): un formulario, nunca datos de usuarios. */
+    readonly form?: Readonly<Record<string, string>>;
+  },
 ) => Promise<Result<SafeResponse, SafeFetchError>>;
 
 const DEFAULT_TIMEOUT_MS = 5000;
@@ -53,8 +57,9 @@ export function createSafeFetch(options: SafeFetchOptions): SafeFetch {
     let response: Response;
     try {
       response = await fetcher(url, {
-        method: "GET",
+        method: init?.form ? "POST" : "GET",
         headers: { Accept: "application/json", ...init?.headers },
+        ...(init?.form ? { body: new URLSearchParams(init.form) } : {}),
         redirect: "manual",
         signal: AbortSignal.timeout(timeoutMs),
       });
