@@ -308,7 +308,8 @@
     - Las políticas de Storage, probadas con dos usuarios.
   - **Verificar:** `pnpm test`.
   - **22a (servidor, hecho):** migración `avatars` (bucket, políticas, check de `pages.avatar_path`, `avatars` reservado), `inspectAvatar` (magic bytes, 512 × 512, ≤ 200 KB, sin animación ni EXIF/XMP, sin bytes de más), `setPageAvatar` y `removePageAvatar`, Actions `pages.setAvatar` y `pages.removeAvatar`, `/avatars/...` desde el propio sitio y la foto en la página pública.
-  - **22b (pendiente):** en `/admin/page`, elegir la imagen, recortarla en cuadrado (arrastrar y zoom, también con teclado), re-codificarla a WebP 512 × 512 en el navegador y subirla; sacar el avatar; E2E de la subida real.
+  - **22b (servidor, hecho):** JPEG además de WebP (Safari no genera WebP), validado por toda su estructura y sin metadatos; límite del cuerpo de los pedidos (413/411) antes de leerlo; `/avatars` re-valida lo que trae de Storage y responde con CSP `sandbox`; una sola regla para `pages.avatar_path`.
+  - **22c (pendiente):** en `/admin/page`, elegir la imagen (tipo real por sus bytes, ≤ 5 MB y dimensiones máximas antes de decodificar), recortarla en cuadrado (arrastrar y zoom, también con teclado), re-codificarla a WebP o JPEG de 512 × 512 en el navegador y subirla; sacar el avatar; E2E de la subida real.
   - **Archivos:** `src/domain/avatar.ts`, `src/application/pages/set-page-avatar.ts`, `src/infrastructure/supabase/supabase-avatar-storage.ts`, `src/infrastructure/supabase/avatar-images.ts`, `src/pages/avatars/[owner]/[file].ts`, `supabase/migrations/20261029000000_avatars.sql`.
 
 - [ ] **Tarea 23: Usuarios habilitados (owner)** · M · Deps: 18

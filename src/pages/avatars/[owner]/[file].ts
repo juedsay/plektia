@@ -7,5 +7,12 @@ import { avatarImage } from "@/composition/runtime";
 export const GET: APIRoute = async ({ params }) => {
   const image = await avatarImage(`${params["owner"] ?? ""}/${params["file"] ?? ""}`);
   if (!image) return new Response(null, { status: 404 });
-  return new Response(image, { headers: { "Content-Type": "image/webp" } });
+  return new Response(image.bytes, {
+    headers: {
+      "Content-Type": image.contentType,
+      // Si alguien abre la imagen sola, no puede correr nada ni cargar nada.
+      "Content-Security-Policy": "default-src 'none'; sandbox",
+      "Content-Disposition": "inline",
+    },
+  });
 };

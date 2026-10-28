@@ -39,8 +39,8 @@ async function ownPage(pages: PageReader, raw: unknown) {
 }
 
 /**
- * Cambia el avatar de una página (SPEC-admin-panel, "Avatar"): valida el WebP
- * otra vez con sus bytes, lo sube con un nombre nuevo, lo pone en la página,
+ * Cambia el avatar de una página (SPEC-admin-panel, "Avatar"): valida la imagen
+ * (WebP o JPEG) otra vez con sus bytes, la sube con un nombre nuevo, la pone en la página,
  * borra el anterior y purga la página pública.
  */
 export function setPageAvatar({
@@ -63,7 +63,7 @@ export function setPageAvatar({
     const inspected = inspectAvatar(bytes);
     if (!inspected.ok) return err(invalidInput({ avatar: avatarErrorMessage(inspected.error) }));
 
-    const path = avatarPath(ownerId, newFileId());
+    const path = avatarPath(ownerId, newFileId(), inspected.value.format);
     const uploaded = await avatars.upload(path, bytes);
     if (!uploaded.ok) {
       return err(invalidInput({ avatar: "No pudimos guardar la imagen. Probá de nuevo." }));
