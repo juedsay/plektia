@@ -1,17 +1,20 @@
 ---
 // Presentación de la página con la que se trabaja (SPEC-admin-panel, "Perfil";
-// desde la tarea 17c es de cada página): nombre, bio, tema y @handle.
+// desde la tarea 17c es de cada página): avatar, nombre, bio, tema y @handle.
 import { actions } from "astro:actions";
 
 import { AVAILABLE_THEMES, BIO_MAX_LENGTH, UPCOMING_THEMES } from "@/domain/page";
 import { loadWorkspace } from "@/ui/admin/workspace";
 import Alert from "@/ui/components/Alert.astro";
 import AdminLayout from "@/ui/layouts/AdminLayout.astro";
+import { initialOf } from "@/ui/view/public-link";
 
 const switched = Astro.getActionResult(actions.pages.select);
 if (switched?.data?.ok) return Astro.redirect("/admin/page", 303);
 const saved = Astro.getActionResult(actions.pages.update);
 if (saved?.data?.ok) return Astro.redirect("/admin/page?guardado", 303);
+const avatarRemoved = Astro.getActionResult(actions.pages.removeAvatar);
+if (avatarRemoved?.data?.ok) return Astro.redirect("/admin/page?sin-avatar", 303);
 
 const { pages, currentPage } = await loadWorkspace(Astro);
 const failure = saved?.data && !saved.data.ok ? saved.data : null;
@@ -28,6 +31,19 @@ const message = failure
     ? "No pudimos guardar los cambios. Probá de nuevo."
     : null;
 const justSaved = Astro.url.searchParams.has("guardado") && !saved;
+// El avatar se guarda desde el editor (JavaScript) o se saca con un formulario.
+const avatarNotice = Astro.url.searchParams.has("avatar")
+  ? "Avatar guardado. Tu página pública ya lo muestra."
+  : Astro.url.searchParams.has("sin-avatar")
+    ? "Avatar sacado: tu página muestra la inicial."
+    : null;
+const avatarError =
+  avatarRemoved?.data && !avatarRemoved.data.ok
+    ? avatarRemoved.data.message
+    : avatarRemoved?.error
+      ? "No pudimos sacar el avatar. Probá de nuevo."
+      : null;
+const avatarSrc = currentPage?.avatarPath ? `/avatars/${currentPage.avatarPath}` : null;
 const publicUrl = currentPage ? new URL(`/${currentPage.handle}`, Astro.url).href : null;
 const notice =
   switched?.data && !switched.data.ok
@@ -51,99 +67,198 @@ const THEME_NAMES: Record<string, string> = {
   </header>
 
   {currentPage ? (
-    <form class="admin-form" method="post" action={actions.pages.update} novalidate>
-      <input type="hidden" name="pageId" value={currentPage.id} />
-      {justSaved && publicUrl && (
-        <Alert variant="success" message="Guardado. Tu página pública ya muestra los cambios.">
-          <div class="alert-actions">
-            <a class="button is-quiet" href={publicUrl} target="_blank" rel="noopener">
-              Ver página<span class="visually-hidden"> (se abre en otra pestaña)</span>
-            </a>
+    <>
+      <section
+        class="avatar-editor"
+        aria-labelledby="avatar-title"
+        data-avatar-editor
+        data-page-id={currentPage.id}
+      >
+        <h2 id="avatar-title" class="avatar-editor-title">
+          Avatar
+        </h2>
+        {avatarNotice && <Alert variant="success" message={avatarNotice} />}
+        {avatarError && <Alert variant="error" message={avatarError} />}
+        <div class="avatar-editor-current">
+          {avatarSrc ? (
+            <img
+              class="avatar-editor-image"
+              src={avatarSrc}
+              alt="Tu avatar actual"
+              width="88"
+              height="88"
+            />
+          ) : (
+            <div class="avatar-editor-image avatar-editor-initial" aria-hidden="true">
+              {initialOf(currentPage.displayName)}
+            </div>
+          )}
+          <div class="avatar-editor-choose">
+            <label class="button is-quiet avatar-editor-pick" for="avatar-file">
+              Elegir foto
+            </label>
+            <input
+              id="avatar-file"
+              class="visually-hidden"
+              type="file"
+              accept="image/jpeg,image/png,image/webp"
+              aria-describedby="avatar-hint"
+              data-avatar-file
+            />
+            <p class="field-hint" id="avatar-hint">
+              JPEG, PNG o WebP de hasta 5 MB. Se recorta en cuadrado y se le borran los datos de la
+              cámara y la ubicación.
+            </p>
+            <noscript>
+              <p class="field-hint">Para elegir y recortar una foto necesitás JavaScript.</p>
+            </noscript>
+            {avatarSrc && (
+              <form method="post" action={actions.pages.removeAvatar}>
+                <input type="hidden" name="pageId" value={currentPage.id} />
+                <button type="submit" class="button is-quiet">
+                  Sacar avatar
+                </button>
+              </form>
+            )}
           </div>
-        </Alert>
-      )}
-      {message && <Alert variant="error" message={message} />}
+        </div>
 
-      <div class="field">
-        <label for="displayName">Nombre</label>
-        <input
-          id="displayName"
-          name="displayName"
-          required
-          maxlength="60"
-          autocomplete="off"
-          value={values.displayName}
-          aria-describedby={fields.displayName ? "displayName-error" : undefined}
-          aria-invalid={fields.displayName ? "true" : undefined}
-        />
-        {fields.displayName && (
-          <p class="field-error" id="displayName-error">
-            {fields.displayName}
+        <p class="field-error" role="alert" data-avatar-error hidden></p>
+
+        <div class="avatar-crop" data-avatar-crop hidden>
+          <div class="avatar-crop-frame">
+            <canvas
+              class="avatar-crop-canvas"
+              width="560"
+              height="560"
+              tabindex="0"
+              aria-label="Recorte de la foto"
+              aria-describedby="avatar-crop-help"
+              data-avatar-canvas
+            ></canvas>
+          </div>
+          <p class="field-hint" id="avatar-crop-help">
+            Arrastrá la foto o movela con las flechas. Acercala o alejala con el zoom, o con más y
+            menos.
           </p>
-        )}
-      </div>
+          <div class="field">
+            <label for="avatar-zoom">Zoom</label>
+            <input
+              id="avatar-zoom"
+              type="range"
+              min="1"
+              max="4"
+              step="0.01"
+              value="1"
+              data-avatar-zoom
+            />
+          </div>
+          <div class="admin-form-actions">
+            <button type="button" class="button" data-avatar-save>
+              Guardar avatar
+            </button>
+            <button type="button" class="button is-quiet" data-avatar-cancel>
+              Cancelar
+            </button>
+          </div>
+        </div>
+        <p class="visually-hidden" role="status" data-avatar-status></p>
+      </section>
 
-      <div class="field">
-        <label for="bio">Bio</label>
-        <textarea
-          id="bio"
-          name="bio"
-          rows="3"
-          maxlength={BIO_MAX_LENGTH}
-          data-single-line
-          data-counter="bio-count"
-          aria-describedby={fields.bio ? "bio-error bio-hint" : "bio-hint"}
-          aria-invalid={fields.bio ? "true" : undefined}
-          set:text={values.bio}
-        />
-        <p class="field-hint" id="bio-hint">
-          Opcional. Una línea, hasta {BIO_MAX_LENGTH} caracteres:{" "}
-          <span id="bio-count" class="field-count">
-            {values.bio.length} de {BIO_MAX_LENGTH}
-          </span>
-          .
-        </p>
-        {fields.bio && (
-          <p class="field-error" id="bio-error">
-            {fields.bio}
+      <form class="admin-form" method="post" action={actions.pages.update} novalidate>
+        <input type="hidden" name="pageId" value={currentPage.id} />
+        {justSaved && publicUrl && (
+          <Alert variant="success" message="Guardado. Tu página pública ya muestra los cambios.">
+            <div class="alert-actions">
+              <a class="button is-quiet" href={publicUrl} target="_blank" rel="noopener">
+                Ver página<span class="visually-hidden"> (se abre en otra pestaña)</span>
+              </a>
+            </div>
+          </Alert>
+        )}
+        {message && <Alert variant="error" message={message} />}
+
+        <div class="field">
+          <label for="displayName">Nombre</label>
+          <input
+            id="displayName"
+            name="displayName"
+            required
+            maxlength="60"
+            autocomplete="off"
+            value={values.displayName}
+            aria-describedby={fields.displayName ? "displayName-error" : undefined}
+            aria-invalid={fields.displayName ? "true" : undefined}
+          />
+          {fields.displayName && (
+            <p class="field-error" id="displayName-error">
+              {fields.displayName}
+            </p>
+          )}
+        </div>
+
+        <div class="field">
+          <label for="bio">Bio</label>
+          <textarea
+            id="bio"
+            name="bio"
+            rows="3"
+            maxlength={BIO_MAX_LENGTH}
+            data-single-line
+            data-counter="bio-count"
+            aria-describedby={fields.bio ? "bio-error bio-hint" : "bio-hint"}
+            aria-invalid={fields.bio ? "true" : undefined}
+            set:text={values.bio}
+          />
+          <p class="field-hint" id="bio-hint">
+            Opcional. Una línea, hasta {BIO_MAX_LENGTH} caracteres:{" "}
+            <span id="bio-count" class="field-count">
+              {values.bio.length} de {BIO_MAX_LENGTH}
+            </span>
+            .
           </p>
-        )}
-      </div>
+          {fields.bio && (
+            <p class="field-error" id="bio-error">
+              {fields.bio}
+            </p>
+          )}
+        </div>
 
-      <fieldset class="field choice-group">
-        <legend>Tema</legend>
-        {/* Con un solo tema disponible, es el elegido. */}
-        {AVAILABLE_THEMES.map((theme) => (
+        <fieldset class="field choice-group">
+          <legend>Tema</legend>
+          {/* Con un solo tema disponible, es el elegido. */}
+          {AVAILABLE_THEMES.map((theme) => (
+            <label class="choice">
+              <input type="radio" name="theme" value={theme} checked />
+              <span class="choice-name">{THEME_NAMES[theme]}</span>
+              <span class="choice-hint">Oscuro, con el hilo y los jacks.</span>
+            </label>
+          ))}
+          {UPCOMING_THEMES.map((theme) => (
+            <label class="choice is-disabled">
+              <input type="radio" name="theme" value={theme} disabled />
+              <span class="choice-name">{THEME_NAMES[theme]}</span>
+              <span class="choice-hint">Próximamente</span>
+            </label>
+          ))}
+          {fields.theme && <p class="field-error">{fields.theme}</p>}
+        </fieldset>
+
+        <div class="field">
           <label class="choice">
-            <input type="radio" name="theme" value={theme} checked />
-            <span class="choice-name">{THEME_NAMES[theme]}</span>
-            <span class="choice-hint">Oscuro, con el hilo y los jacks.</span>
+            <input type="checkbox" name="showHandle" checked={values.showHandle} />
+            <span class="choice-name">Mostrar @{currentPage.handle}</span>
+            <span class="choice-hint">Debajo de tu nombre, en la página pública.</span>
           </label>
-        ))}
-        {UPCOMING_THEMES.map((theme) => (
-          <label class="choice is-disabled">
-            <input type="radio" name="theme" value={theme} disabled />
-            <span class="choice-name">{THEME_NAMES[theme]}</span>
-            <span class="choice-hint">Próximamente</span>
-          </label>
-        ))}
-        {fields.theme && <p class="field-error">{fields.theme}</p>}
-      </fieldset>
+        </div>
 
-      <div class="field">
-        <label class="choice">
-          <input type="checkbox" name="showHandle" checked={values.showHandle} />
-          <span class="choice-name">Mostrar @{currentPage.handle}</span>
-          <span class="choice-hint">Debajo de tu nombre, en la página pública.</span>
-        </label>
-      </div>
-
-      <div class="admin-form-actions">
-        <button type="submit" class="button">
-          Guardar cambios
-        </button>
-      </div>
-    </form>
+        <div class="admin-form-actions">
+          <button type="submit" class="button">
+            Guardar cambios
+          </button>
+        </div>
+      </form>
+    </>
   ) : (
     <div class="admin-empty">
       <p class="admin-empty-title">No encontramos tu página.</p>

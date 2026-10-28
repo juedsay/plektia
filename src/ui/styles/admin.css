@@ -1188,3 +1188,117 @@
     max-height: 52rem;
   }
 }
+
+/* ── Avatar (/admin/page) ───────────────────────────────────────────────────── */
+
+.avatar-editor {
+  display: grid;
+  gap: var(--space-4);
+  max-width: var(--admin-measure);
+  margin-bottom: var(--space-8);
+  padding-bottom: var(--space-6);
+  border-bottom: 1px solid var(--color-line);
+}
+
+.avatar-editor-title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  font-weight: 500;
+}
+
+.avatar-editor-current {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-5);
+  align-items: center;
+}
+
+/* El mismo círculo con anillo que la página pública. */
+.avatar-editor-image {
+  flex: none;
+  width: 88px;
+  height: 88px;
+  border-radius: 50%;
+  background: var(--color-surface);
+  box-shadow:
+    0 0 0 3px var(--color-bg),
+    0 0 0 5px var(--color-fg);
+  object-fit: cover;
+}
+
+.avatar-editor-initial {
+  display: grid;
+  place-items: center;
+  font-family: var(--font-display);
+  font-size: 2rem;
+  font-weight: 500;
+}
+
+.avatar-editor-choose {
+  display: grid;
+  flex: 1 1 14rem;
+  gap: var(--space-2);
+  justify-items: start;
+}
+
+/* El input de archivo queda oculto; el foco se ve en su etiqueta (el botón). */
+.avatar-editor-choose:has(input[type="file"]:focus-visible) .avatar-editor-pick {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+.avatar-editor-pick {
+  cursor: pointer;
+}
+
+.avatar-crop {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.avatar-crop[hidden] {
+  display: none;
+}
+
+/* El recorte se ve como quedará: un círculo, con lo de afuera oscurecido. */
+.avatar-crop-frame {
+  position: relative;
+  overflow: hidden;
+  width: min(280px, 100%);
+  aspect-ratio: 1;
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+}
+
+.avatar-crop-frame::after {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  box-shadow: 0 0 0 999px rgb(18 19 21 / 0.6);
+  content: "";
+  pointer-events: none;
+}
+
+.avatar-crop-canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  cursor: grab;
+  touch-action: none;
+}
+
+.avatar-crop-canvas:active {
+  cursor: grabbing;
+}
+
+.avatar-crop-canvas:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: -2px;
+}
+
+.avatar-crop input[type="range"] {
+  width: min(280px, 100%);
+  accent-color: var(--color-fg);
+}

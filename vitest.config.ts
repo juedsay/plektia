@@ -33,6 +33,10 @@ export default defineConfig({
         "src/ui/scripts/contact-form.ts",
         // Entrada de la isla: solo conecta el editor con las Actions (E2E).
         "src/ui/islands/Editor.tsx",
+        // Editor del avatar: <canvas> y createImageBitmap, que jsdom no tiene. Su
+        // lógica (tipo real, dimensiones, recorte) está en ui/view/avatar-source.ts,
+        // con tests; la subida real la cubre el E2E en un navegador.
+        "src/ui/scripts/avatar-editor.ts",
       ],
       reporter: ["text", "html", "lcov"],
       thresholds: {
