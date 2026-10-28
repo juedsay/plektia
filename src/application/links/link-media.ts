@@ -3,12 +3,8 @@ import { z } from "zod";
 import type { LinkMediaRepository, LinkMediaView } from "@/application/ports/link-media-repository";
 import type { UseCaseResult } from "@/application/shared/use-case";
 import { invalidInput } from "@/domain/errors";
-import {
-  type LinkMedia,
-  mediaCapabilities,
-  parseLinkMediaInput,
-  unsupportedMediaFields,
-} from "@/domain/link-media";
+import { type LinkMedia, mediaCapabilities, unsupportedMediaFields } from "@/domain/link-media";
+import { parseLinkMediaInput } from "@/domain/link-media-input";
 import { err, ok } from "@/domain/result";
 import { validate } from "@/domain/text";
 

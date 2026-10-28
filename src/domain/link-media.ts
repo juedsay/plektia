@@ -1,13 +1,10 @@
-import { z } from "zod";
-
-import type { InvalidInput } from "@/domain/errors";
 import type { Provider } from "@/domain/provider";
-import { map, type Result } from "@/domain/result";
-import { validate } from "@/domain/text";
 
 // Configuración de medios de un link (SPEC-live-status, historias 1 y 4):
 // "Transmito en este canal" y el contenido destacado de YouTube. La base repite
-// estas reglas con un trigger, por si alguien escribe sin la app.
+// estas reglas con un trigger, por si alguien escribe sin la app. Este módulo
+// no usa zod: lo importa la isla del editor (la validación está en
+// link-media-input.ts, que corre en el servidor).
 
 export const FEATURED_MODES = [
   "latest_video",
@@ -82,42 +79,6 @@ export function parseYouTubeVideoId(input: string): string | null {
     else if (VIDEO_PATHS.has(first)) candidate = second;
   }
   return candidate !== null && VIDEO_ID.test(candidate) ? candidate : null;
-}
-
-const LinkMediaInputSchema = z
-  .object(
-    {
-      watchLive: z.boolean({ error: "Transmitir en el canal tiene que ser sí o no." }),
-      featuredMode: z.enum(FEATURED_MODES, { error: "Elegí qué contenido destacar." }),
-      pinnedVideo: z
-        .string({ error: "El video fijado tiene que ser un texto." })
-        .max(2048, { error: "La URL del video es demasiado larga." })
-        .nullish(),
-    },
-    { error: "La configuración del link no es válida." },
-  )
-  .transform((input, context) => {
-    if (input.featuredMode !== "pinned") {
-      return { watchLive: input.watchLive, featuredMode: input.featuredMode, pinnedVideoId: null };
-    }
-    const pinnedVideoId = parseYouTubeVideoId(input.pinnedVideo ?? "");
-    if (pinnedVideoId === null) {
-      context.addIssue({
-        code: "custom",
-        path: ["pinnedVideo"],
-        message: "Pegá el link de un video o Short de YouTube.",
-      });
-      return z.NEVER;
-    }
-    return { watchLive: input.watchLive, featuredMode: input.featuredMode, pinnedVideoId };
-  });
-
-/**
- * `{ watchLive, featuredMode, pinnedVideo? }` → la configuración completa, que
- * reemplaza la anterior (así repetir el pedido deja lo mismo).
- */
-export function parseLinkMediaInput(raw: unknown): Result<LinkMedia, InvalidInput> {
-  return map(validate(LinkMediaInputSchema, raw), (media): LinkMedia => media);
 }
 
 /** Lo que el link admite: pedir otra cosa es un error junto a esa opción. */

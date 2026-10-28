@@ -2,10 +2,10 @@ import { describe, expect, it } from "vitest";
 
 import {
   mediaCapabilities,
-  parseLinkMediaInput,
   parseYouTubeVideoId,
   unsupportedMediaFields,
 } from "@/domain/link-media";
+import { parseLinkMediaInput } from "@/domain/link-media-input";
 
 describe("parseYouTubeVideoId", () => {
   it.each([
