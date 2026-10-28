@@ -329,11 +329,12 @@
 
 ## F6 · Live status → ENTREGA 3
 
-- [ ] **Tarea 24: Configuración de medios por link** · M · Deps: 20
+- [x] **Tarea 24: Configuración de medios por link** · M · Deps: 20
   - `link_media_settings` + UI en el editor: "Transmito en este canal" y el contenido destacado (último video, Short, stream o fijado).
   - **Aceptación:** pgTAP (owner) y E2E de los interruptores.
   - **Verificar:** `pnpm test:db && pnpm test:e2e`.
   - **Archivos:** `supabase/migrations/0006_live.sql`, `src/ui/islands/editor/MediaSettings.tsx`, `src/actions/media.ts`.
+  - **Hecho (2026-10-28):** tabla `link_media_settings` (RLS del dueño, sin lectura pública por ahora; un trigger saca el dueño del link y rechaza cada opción en un link que no la admite; si el link cambia de proveedor o deja de ser un canal, se borra). Actions `links.getMedia` y `links.setMedia` (upsert de la configuración completa: repetir el pedido deja lo mismo). En el editor, `MediaSettings` dentro de la fila del link: "Transmito en este canal" para canales de YouTube, Twitch o Kick, y "Contenido destacado" para canales de YouTube; "Fijado" guarda solo el ID del video. Todavía no cambia la página pública: lo usan las tareas 25 y 26.
 
 - [ ] **Tarea 25: YouTube, canal y contenido destacado** · M · Deps: 24
   - `wizard` para la API key. `safeFetch` con allowlist; resolver el `@handle`; playlists `UULF`, `UUSH` y `UULV` con plan B; `ingest-client.ts`; cron horario; Short vertical en la página.

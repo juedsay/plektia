@@ -67,6 +67,10 @@ function actionsApi(pageId: string): EditorApi {
     deleteSectionOnExit: (target) => {
       deleteWithKeepalive("sections.delete", pageId, target);
     },
+    getMedia: async (linkId) =>
+      (await actions.links.getMedia({ pageId, linkId })).data ?? UNREACHABLE,
+    setMedia: async (linkId, settings) =>
+      resultOf(await actions.links.setMedia({ pageId, linkId, ...settings })),
   };
 }
 

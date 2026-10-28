@@ -4,12 +4,15 @@ import userEvent from "@testing-library/user-event";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 import type { FormResult } from "@/actions/form-result";
+import type { LinkMediaView } from "@/application/ports/link-media-repository";
 import type { Link, OwnLinks, Section } from "@/application/ports/link-repository";
 import { errorMessage } from "@/domain/errors";
+import { DEFAULT_LINK_MEDIA, type LinkMedia } from "@/domain/link-media";
 import { Editor } from "@/ui/islands/editor/Editor";
 import type {
   EditorApi,
   LinkChanges,
+  MediaChoice,
   NewLink,
   SectionChanges,
 } from "@/ui/islands/editor/editor-api";
@@ -130,6 +133,44 @@ class FakeApi implements EditorApi {
 
   deleteOnExit(target: { id: string; version: number }) {
     this.deletedOnExit.push(target.id);
+  }
+
+  /** La configuración de medios guardada, por link (sin fila: la predeterminada). */
+  media = new Map<string, LinkMedia>();
+
+  getMedia(linkId: string): Promise<FormResult<LinkMediaView>> {
+    const found = this.content.links.find((candidate) => candidate.id === linkId);
+    if (!found) return Promise.resolve({ ok: false, message: "No está", fields: {}, values: {} });
+    return Promise.resolve({
+      ok: true,
+      value: {
+        linkId,
+        provider: found.provider,
+        providerHandle: found.providerHandle,
+        media: this.media.get(linkId) ?? DEFAULT_LINK_MEDIA,
+      },
+    });
+  }
+
+  mediaSaves: { linkId: string; choice: MediaChoice }[] = [];
+
+  setMedia(linkId: string, choice: MediaChoice): Promise<FormResult<LinkMedia>> {
+    this.mediaSaves.push({ linkId, choice });
+    if (choice.featuredMode === "pinned" && choice.pinnedVideo === "no-es-un-video") {
+      return Promise.resolve({
+        ok: false,
+        message: errorMessage("invalid_input"),
+        fields: { pinnedVideo: "Pegá el link de un video o Short de YouTube." },
+        values: {},
+      });
+    }
+    const saved: LinkMedia = {
+      watchLive: choice.watchLive,
+      featuredMode: choice.featuredMode,
+      pinnedVideoId: choice.pinnedVideo === null ? null : "dQw4w9WgXcQ",
+    };
+    this.media.set(linkId, saved);
+    return Promise.resolve({ ok: true, value: saved });
   }
 
   moves: { sectionId: string | null; order: string[] }[] = [];
@@ -872,5 +913,138 @@ describe("Editor · secciones", () => {
 
     await vi.advanceTimersByTimeAsync(UNDO_WINDOW_MS);
     expect(api.sectionsDeleted).toEqual([]);
+  });
+});
+
+describe("Editor · canal en vivo y contenido destacado", () => {
+  const CHANNELS: OwnLinks = {
+    sections: [REDES],
+    links: [
+      link("youtube", {
+        title: "YouTube",
+        url: "https://www.youtube.com/@canal",
+        provider: "youtube",
+        providerHandle: "@canal",
+      }),
+      link("twitch", {
+        title: "Twitch",
+        url: "https://www.twitch.tv/canal",
+        provider: "twitch",
+        providerHandle: "canal",
+        position: 1,
+      }),
+      link("blog", { title: "Blog", position: 2 }),
+    ],
+  };
+
+  it("cada link muestra solo lo que admite", async () => {
+    const { user } = setup(CHANNELS);
+
+    await user.click(screen.getByRole("button", { name: "Editar YouTube" }));
+    expect(
+      (await screen.findByLabelText<HTMLInputElement>(/Transmito en este canal/)).checked,
+    ).toBe(false);
+    expect(screen.getByRole<HTMLInputElement>("radio", { name: /Último video/ }).checked).toBe(
+      true,
+    );
+    await user.click(screen.getByRole("button", { name: "Listo YouTube" }));
+
+    await user.click(screen.getByRole("button", { name: "Editar Twitch" }));
+    await screen.findByLabelText(/Transmito en este canal/);
+    expect(screen.queryByRole("group", { name: "Contenido destacado" })).toBeNull();
+    await user.click(screen.getByRole("button", { name: "Listo Twitch" }));
+
+    await user.click(screen.getByRole("button", { name: "Editar Blog" }));
+    expect(screen.queryByLabelText(/Transmito en este canal/)).toBeNull();
+  });
+
+  it("se guarda al tocar, con la configuración completa, y lo anuncia", async () => {
+    const { api, user } = setup(CHANNELS);
+    await user.click(screen.getByRole("button", { name: "Editar YouTube" }));
+
+    await user.click(await screen.findByLabelText(/Transmito en este canal/));
+    await user.click(screen.getByRole("radio", { name: /Último Short/ }));
+
+    await waitFor(() => {
+      expect(api.mediaSaves).toEqual([
+        {
+          linkId: "youtube",
+          choice: { watchLive: true, featuredMode: "latest_video", pinnedVideo: null },
+        },
+        {
+          linkId: "youtube",
+          choice: { watchLive: true, featuredMode: "latest_short", pinnedVideo: null },
+        },
+      ]);
+    });
+    await waitFor(() => {
+      expect(editorStatus()).toBe("YouTube: guardado");
+    });
+  });
+
+  it("'Fijado' espera el video, lo guarda al salir del campo y marca un link inválido", async () => {
+    const { api, user } = setup(CHANNELS);
+    await user.click(screen.getByRole("button", { name: "Editar YouTube" }));
+
+    await user.click(await screen.findByRole("radio", { name: /Fijado/ }));
+    expect(api.mediaSaves).toEqual([]);
+
+    const pinned = screen.getByLabelText("Video para fijar");
+    await user.type(pinned, "no-es-un-video");
+    await user.tab();
+    await screen.findByText("Pegá el link de un video o Short de YouTube.", {
+      selector: ".field-error",
+    });
+    expect(pinned.getAttribute("aria-invalid")).toBe("true");
+
+    await user.clear(pinned);
+    await user.type(pinned, "https://youtu.be/dQw4w9WgXcQ");
+    await user.tab();
+    await waitFor(() => {
+      expect(api.mediaSaves.at(-1)).toEqual({
+        linkId: "youtube",
+        choice: {
+          watchLive: false,
+          featuredMode: "pinned",
+          pinnedVideo: "https://youtu.be/dQw4w9WgXcQ",
+        },
+      });
+    });
+    expect(pinned.getAttribute("aria-invalid")).toBeNull();
+
+    // Salir otra vez sin cambiar nada no vuelve a guardar.
+    const saves = api.mediaSaves.length;
+    await user.click(pinned);
+    await user.tab();
+    expect(api.mediaSaves).toHaveLength(saves);
+  });
+
+  it("muestra lo guardado al abrir", async () => {
+    const content = CHANNELS;
+    const api = new FakeApi(content);
+    api.media.set("youtube", {
+      watchLive: true,
+      featuredMode: "pinned",
+      pinnedVideoId: "dQw4w9WgXcQ",
+    });
+    render(<Editor api={api} initialContent={content} />);
+    const user = userEvent.setup();
+
+    await user.click(screen.getByRole("button", { name: "Editar YouTube" }));
+    expect(
+      (await screen.findByLabelText<HTMLInputElement>(/Transmito en este canal/)).checked,
+    ).toBe(true);
+    expect(screen.getByRole<HTMLInputElement>("radio", { name: /Fijado/ }).checked).toBe(true);
+    expect(screen.getByLabelText<HTMLInputElement>("Video para fijar").value).toBe(
+      "https://youtu.be/dQw4w9WgXcQ",
+    );
+  });
+
+  it("si no puede leer la configuración, lo dice", async () => {
+    const { api, user } = setup(CHANNELS);
+    api.getMedia = () => Promise.reject(new Error("sin red"));
+
+    await user.click(screen.getByRole("button", { name: "Editar YouTube" }));
+    expect((await screen.findByRole("alert")).textContent).toMatch(/revisá tu conexión/);
   });
 });
