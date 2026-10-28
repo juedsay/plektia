@@ -25,10 +25,11 @@ export interface IngestError {
 }
 
 export interface IngestClient {
+  /** `data` es lo que devuelve la función (`null` si falló). */
   call<F extends IngestFunction>(
     fn: F,
     args: Functions[F]["Args"],
-  ): Promise<{ error: IngestError | null }>;
+  ): Promise<{ data: Functions[F]["Returns"] | null; error: IngestError | null }>;
 }
 
 export function createIngestClient(env: {
@@ -44,8 +45,9 @@ export function createIngestClient(env: {
   });
   return {
     async call(fn, args) {
-      const { error } = await client.rpc(fn, args);
-      return { error: error ? { code: error.code, message: error.message } : null };
+      const { data, error } = await client.rpc(fn, args);
+      if (error) return { data: null, error: { code: error.code, message: error.message } };
+      return { data, error: null };
     },
   };
 }

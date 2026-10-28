@@ -14,6 +14,7 @@ import type { SessionReader } from "@/application/ports/session-reader";
 import { type AdminRepositories, createAdminRepositories } from "@/composition/admin";
 import { createAuthGateway } from "@/composition/auth";
 import { createContactSender } from "@/composition/contact";
+import { createFeaturedRefresh } from "@/composition/live";
 import { createPublicPageReader } from "@/composition/public-page";
 import { createSessionReader } from "@/composition/session";
 import { WorkerPageCache } from "@/infrastructure/cache/purge";
@@ -62,3 +63,6 @@ export const avatarImage = (path: string) => avatarImages(env.SUPABASE_URL)(path
 /** Purga de la caché de páginas. En local `cache` no existe: purgar no hace nada. */
 export const pageCache = (): PageCache =>
   new WorkerPageCache(typeof cache === "undefined" ? undefined : (options) => cache.purge(options));
+
+/** Refresco horario del contenido destacado (cron); `null` sin API key de YouTube. */
+export const featuredRefresh = () => createFeaturedRefresh(env, pageCache());

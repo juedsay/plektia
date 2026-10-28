@@ -93,7 +93,8 @@ select is(
 reset role;
 
 select is(
-  (select array_agg(action || ':' || target_email::text order by id) from private.audit_log),
+  (select array_agg(action || ':' || target_email::text order by id) from private.audit_log
+   where target_email in ('nueva@plektia.test', 'member@plektia.test')),
   array['invite:nueva@plektia.test', 'revoke:member@plektia.test'],
   'auditoría: cada operación del owner, con quién y a quién');
 

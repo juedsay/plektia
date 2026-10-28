@@ -12,7 +12,7 @@ function ingestAnswering(error: IngestError | null) {
   const client: IngestClient = {
     call: (fn, args) => {
       calls.push([fn, args]);
-      return Promise.resolve({ error });
+      return Promise.resolve({ data: null, error });
     },
   };
   return { client, calls };
