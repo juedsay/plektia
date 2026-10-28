@@ -8,7 +8,7 @@ import {
   isAvatarPath,
 } from "@/domain/avatar";
 
-import { PNG_SIGNATURE, SVG_WITH_SCRIPT, webp } from "../../support/webp";
+import { chunkDataFor, PNG_SIGNATURE, riff, SVG_WITH_SCRIPT, webp } from "../../support/webp";
 
 describe("inspectAvatar", () => {
   it.each(["VP8L", "VP8 ", "VP8X"] as const)("acepta un WebP %s de 512 × 512", (chunk) => {
@@ -80,6 +80,33 @@ describe("inspectAvatar", () => {
     const lossless = Uint8Array.from(webp());
     lossless[20] = 0x00;
     expect(inspectAvatar(lossless)).toEqual({ ok: false, error: "not_webp" });
+  });
+
+  it.each([
+    ["en cero", 0],
+    ["más corto que la cabecera de la imagen", 3],
+    ["más largo que el archivo", 5000],
+  ])("rechaza un chunk con el tamaño %s (cabecera falsificada)", (_caso, declaredSize) => {
+    const forged = riff([{ fourCc: "VP8L", declaredSize, data: chunkDataFor("VP8L") }]);
+    expect(inspectAvatar(forged)).toEqual({ ok: false, error: "not_webp" });
+  });
+
+  it("rechaza un VP8X sin la imagen, o con una imagen de otro tamaño", () => {
+    expect(
+      inspectAvatar(riff([{ fourCc: "VP8X", declaredSize: 10, data: chunkDataFor("VP8X") }])),
+    ).toEqual({
+      ok: false,
+      error: "not_webp",
+    });
+    const mismatched = riff([
+      { fourCc: "VP8X", declaredSize: 10, data: chunkDataFor("VP8X") },
+      {
+        fourCc: "VP8L",
+        declaredSize: 10,
+        data: [...webp({ width: 256, height: 256 }).subarray(20, 30)],
+      },
+    ]);
+    expect(inspectAvatar(mismatched)).toEqual({ ok: false, error: "not_webp" });
   });
 
   it("rechaza un chunk desconocido", () => {

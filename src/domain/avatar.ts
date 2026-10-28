@@ -43,16 +43,42 @@ interface Dimensions {
   readonly height: number;
 }
 
-/** Ancho y alto de un WebP según su primer chunk, o el motivo por el que no es válido. */
-function readWebp(bytes: Uint8Array): Result<Dimensions, AvatarError> {
-  if (bytes.length < 30) return err("not_webp");
-  if (ascii(bytes, 0, 4) !== "RIFF" || ascii(bytes, 8, 4) !== "WEBP") return err("not_webp");
-  // El tamaño declarado tiene que ser el real: nada escondido después del WebP.
-  if (uint32(bytes, 4) !== bytes.length - 8) return err("not_webp");
+interface Chunk {
+  readonly fourCc: string;
+  /** Dónde empiezan sus datos y cuántos bytes declara. */
+  readonly start: number;
+  readonly size: number;
+}
 
-  const chunk = ascii(bytes, 12, 4);
-  const data = 20;
-  if (chunk === "VP8 ") {
+/**
+ * Los chunks del contenedor RIFF. Tienen que cubrir el archivo justo: un tamaño
+ * en cero, corto o más largo que el archivo hace que no sea un WebP.
+ */
+function readChunks(bytes: Uint8Array): readonly Chunk[] | null {
+  const chunks: Chunk[] = [];
+  let offset = 12;
+  while (offset < bytes.length) {
+    if (offset + 8 > bytes.length) return null;
+    const size = uint32(bytes, offset + 4);
+    const start = offset + 8;
+    // Cada chunk ocupa un número par de bytes (se rellena con uno si hace falta).
+    const end = start + size + (size % 2);
+    if (end > bytes.length) return null;
+    chunks.push({ fourCc: ascii(bytes, offset, 4), start, size });
+    offset = end;
+  }
+  return chunks;
+}
+
+// Lo mínimo que tiene que traer cada chunk para leer su tamaño.
+const VP8_HEADER_BYTES = 10;
+const VP8L_HEADER_BYTES = 5;
+const VP8X_BYTES = 10;
+
+/** Ancho y alto de la imagen de un chunk `VP8 ` o `VP8L`. */
+function readImage(bytes: Uint8Array, chunk: Chunk): Result<Dimensions, AvatarError> {
+  const data = chunk.start;
+  if (chunk.fourCc === "VP8 " && chunk.size >= VP8_HEADER_BYTES) {
     // Cuadro clave con su código de inicio; el tamaño son 14 bits.
     const keyFrame = ((bytes[data] ?? 1) & 0x01) === 0;
     const startCode =
@@ -63,18 +89,43 @@ function readWebp(bytes: Uint8Array): Result<Dimensions, AvatarError> {
       height: uint16(bytes, data + 8) & 0x3fff,
     });
   }
-  if (chunk === "VP8L") {
+  if (chunk.fourCc === "VP8L" && chunk.size >= VP8L_HEADER_BYTES) {
     if (bytes[data] !== 0x2f) return err("not_webp");
     const bits = uint32(bytes, data + 1);
     return ok({ width: (bits & 0x3fff) + 1, height: ((bits >>> 14) & 0x3fff) + 1 });
   }
-  if (chunk === "VP8X") {
-    const flags = bytes[data] ?? 0;
-    if (flags & VP8X_ANIMATION) return err("animated");
-    if (flags & (VP8X_EXIF | VP8X_XMP)) return err("has_metadata");
-    return ok({ width: uint24(bytes, data + 4) + 1, height: uint24(bytes, data + 7) + 1 });
-  }
   return err("not_webp");
+}
+
+/** Ancho y alto de un WebP, o el motivo por el que no es válido. */
+function readWebp(bytes: Uint8Array): Result<Dimensions, AvatarError> {
+  if (bytes.length < 20) return err("not_webp");
+  if (ascii(bytes, 0, 4) !== "RIFF" || ascii(bytes, 8, 4) !== "WEBP") return err("not_webp");
+  // El tamaño declarado tiene que ser el real: nada escondido después del WebP.
+  if (uint32(bytes, 4) !== bytes.length - 8) return err("not_webp");
+
+  const chunks = readChunks(bytes);
+  const [first] = chunks ?? [];
+  if (!first) return err("not_webp");
+  if (first.fourCc !== "VP8X") return readImage(bytes, first);
+
+  // Formato extendido: banderas y lienzo, y después la imagen, del mismo tamaño.
+  if (first.size !== VP8X_BYTES) return err("not_webp");
+  const flags = bytes[first.start] ?? 0;
+  if (flags & VP8X_ANIMATION) return err("animated");
+  if (flags & (VP8X_EXIF | VP8X_XMP)) return err("has_metadata");
+  const canvas = {
+    width: uint24(bytes, first.start + 4) + 1,
+    height: uint24(bytes, first.start + 7) + 1,
+  };
+  const imageChunk = chunks?.find((chunk) => chunk.fourCc === "VP8 " || chunk.fourCc === "VP8L");
+  if (!imageChunk) return err("not_webp");
+  const image = readImage(bytes, imageChunk);
+  if (!image.ok) return image;
+  if (image.value.width !== canvas.width || image.value.height !== canvas.height) {
+    return err("not_webp");
+  }
+  return ok(canvas);
 }
 
 /** Valida un avatar ya re-codificado: peso, WebP de verdad, quieto, sin metadatos y 512 × 512. */

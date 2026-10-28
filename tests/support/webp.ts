@@ -35,18 +35,44 @@ function chunkData({
   return [flags, 0, 0, 0, ...le24(width - 1), ...le24(height - 1)];
 }
 
+const chunkBytes = (fourCc: string, data: readonly number[]) => [
+  ...text(fourCc),
+  ...le32(data.length),
+  ...data,
+  ...(data.length % 2 === 1 ? [0] : []),
+];
+
 export function webp(options: WebpOptions = {}): Uint8Array {
+  const chunk = options.chunk ?? "VP8L";
   const data = chunkData(options);
-  const padding = Math.max(0, (options.totalBytes ?? 0) - (20 + data.length));
+  // El VP8X va seguido de la imagen (un VP8L del mismo tamaño), como lo arma un navegador.
+  const image =
+    chunk === "VP8X" ? chunkBytes("VP8L", chunkData({ ...options, chunk: "VP8L" })) : [];
+  const used = 20 + data.length + image.length;
+  const padding = Math.max(0, (options.totalBytes ?? 0) - used);
   const body = [
     ...text("WEBP"),
-    ...text(options.chunk ?? "VP8L"),
-    ...le32(data.length + padding),
-    ...data,
-    ...new Array<number>(padding).fill(0),
+    ...chunkBytes(chunk, [...data, ...new Array<number>(padding).fill(0)]),
+    ...image,
   ];
   return Uint8Array.from([...text("RIFF"), ...le32(body.length), ...body]);
 }
+
+/** Un WebP armado a mano con los chunks tal cual (para probar tamaños falsificados). */
+export function riff(chunks: readonly { fourCc: string; declaredSize: number; data: number[] }[]) {
+  const body = [
+    ...text("WEBP"),
+    ...chunks.flatMap(({ fourCc, declaredSize, data }) => [
+      ...text(fourCc),
+      ...le32(declaredSize),
+      ...data,
+    ]),
+  ];
+  return Uint8Array.from([...text("RIFF"), ...le32(body.length), ...body]);
+}
+
+/** Los datos de un chunk de 512 × 512 (para armar casos con `riff`). */
+export const chunkDataFor = (chunk: Chunk) => chunkData({ chunk });
 
 /** Un SVG con un script: lo que nunca tiene que llegar al bucket. */
 export const SVG_WITH_SCRIPT = new TextEncoder().encode(
