@@ -9,6 +9,7 @@ import { inviteUser, revokeUser } from "@/application/admin/users";
 import { createLink } from "@/application/links/create-link";
 import type { OwnLinks } from "@/application/ports/link-repository";
 import { deleteLink } from "@/application/links/delete-link";
+import { getLinkMedia, setLinkMedia } from "@/application/links/link-media";
 import { moveLinks } from "@/application/links/move-links";
 import { setLinkVisibility } from "@/application/links/set-link-visibility";
 import { updateLink } from "@/application/links/update-link";
@@ -57,6 +58,7 @@ async function linksOfPage(context: ActionAPIContext, input: unknown) {
   const { pageId } = target.data;
   return {
     links: repositories.linksOf(pageId),
+    media: repositories.mediaOf(pageId),
     /** Purga la página pública después de un cambio (se ve al instante). */
     purge: async () => {
       const page = (await repositories.pages.listOwn()).find(
@@ -132,6 +134,27 @@ export const server = {
         const updated = await setLinkVisibility({ links })(input);
         if (updated.ok) await purge();
         return toFormResult(updated);
+      },
+    }),
+    /** `{ pageId, linkId }`: "Transmito en este canal" y el contenido destacado. */
+    getMedia: defineAction({
+      accept: "json",
+      handler: async (input: unknown, context) => {
+        const { media } = await linksOfPage(context, input);
+        return toFormResult(await getLinkMedia({ media })(input));
+      },
+    }),
+    /**
+     * `{ pageId, linkId, watchLive, featuredMode, pinnedVideo? }`: guarda la
+     * configuración completa (repetir el pedido deja lo mismo).
+     */
+    setMedia: defineAction({
+      accept: "json",
+      handler: async (input: unknown, context) => {
+        const { media, purge } = await linksOfPage(context, input);
+        const saved = await setLinkMedia({ media })(input);
+        if (saved.ok) await purge();
+        return toFormResult(saved);
       },
     }),
   },

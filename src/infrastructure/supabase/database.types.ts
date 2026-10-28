@@ -3,6 +3,49 @@ export type Json = string | number | boolean | null | { [key: string]: Json | un
 export type Database = {
   public: {
     Tables: {
+      link_media_settings: {
+        Row: {
+          featured_mode: string;
+          link_id: string;
+          owner_id: string;
+          pinned_video_id: string | null;
+          updated_at: string;
+          watch_live: boolean;
+        };
+        ComputedFields: never;
+        Insert: {
+          featured_mode?: string;
+          link_id: string;
+          owner_id?: string;
+          pinned_video_id?: string | null;
+          updated_at?: string;
+          watch_live?: boolean;
+        };
+        Update: {
+          featured_mode?: string;
+          link_id?: string;
+          owner_id?: string;
+          pinned_video_id?: string | null;
+          updated_at?: string;
+          watch_live?: boolean;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "link_media_settings_link_id_fkey";
+            columns: ["link_id"];
+            isOneToOne: true;
+            referencedRelation: "links";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "link_media_settings_owner_id_fkey";
+            columns: ["owner_id"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       links: {
         Row: {
           created_at: string;

@@ -75,8 +75,13 @@ create table public.link_media_settings (
   featured_mode    text not null default 'latest_video'
                    check (featured_mode in ('none','latest_video','latest_short','latest_stream','pinned')),
   pinned_video_id  text check (pinned_video_id ~ '^[A-Za-z0-9_-]{11}$'),
+  updated_at       timestamptz not null default now(),
   check (featured_mode <> 'pinned' or pinned_video_id is not null)
 );
+-- Un trigger fija `owner_id` desde el link y rechaza cada opción donde no
+-- aplica (vigilar: canal de YouTube, Twitch o Kick; destacar: canal de
+-- YouTube). Si el link cambia de proveedor o deja de ser un canal, la fila se
+-- borra. Sin fila, rige lo predeterminado.
 
 -- Canales únicos por proveedor: los escribe solo el proceso de refresco.
 create table public.provider_channels (

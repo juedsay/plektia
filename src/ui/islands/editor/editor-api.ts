@@ -1,6 +1,8 @@
 import type { FormResult } from "@/actions/form-result";
+import type { LinkMediaView } from "@/application/ports/link-media-repository";
 import type { Link, OwnLinks, Section } from "@/application/ports/link-repository";
 import { errorMessage } from "@/domain/errors";
+import type { FeaturedMode, LinkMedia } from "@/domain/link-media";
 
 // Lo que el editor le pide al servidor. En el navegador son las Actions de
 // links (Editor.tsx); en los tests de componentes, un servidor falso.
@@ -48,6 +50,17 @@ export interface EditorApi {
   deleteSection(target: { id: string; version: number }): Promise<FormResult<OwnLinks>>;
   /** Como `deleteOnExit`, para una sección. */
   deleteSectionOnExit(target: { id: string; version: number }): void;
+  /** "Transmito en este canal" y el contenido destacado de un link de canal. */
+  getMedia(linkId: string): Promise<FormResult<LinkMediaView>>;
+  /** Guarda la configuración completa (repetirla deja lo mismo). */
+  setMedia(linkId: string, settings: MediaChoice): Promise<FormResult<LinkMedia>>;
+}
+
+export interface MediaChoice {
+  readonly watchLive: boolean;
+  readonly featuredMode: FeaturedMode;
+  /** La URL o el ID que pegó el dueño, solo con "Fijado". */
+  readonly pinnedVideo: string | null;
 }
 
 export interface SectionChanges {

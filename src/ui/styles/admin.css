@@ -811,6 +811,16 @@
   display: none;
 }
 
+/* Opciones de un link de canal: en vivo y contenido destacado. */
+.editor-media {
+  display: grid;
+  gap: var(--space-4);
+}
+
+.editor-media-pinned {
+  padding-top: var(--space-3);
+}
+
 .editor-error {
   display: flex;
   flex-wrap: wrap;

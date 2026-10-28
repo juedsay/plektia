@@ -2,12 +2,14 @@ import { useSortable } from "@dnd-kit/react/sortable";
 import { useEffect, useId, useRef, useState } from "react";
 
 import type { Link, Section } from "@/application/ports/link-repository";
+import { mediaCapabilities } from "@/domain/link-media";
 import { changedFields, inverseChanges } from "@/ui/view/editor-state";
 import { linkMeta } from "@/ui/view/public-link";
 
 import type { OfferUndo } from "./Editor";
 import { CONFLICT_MESSAGE, type EditorApi, type Failure, UNREACHABLE } from "./editor-api";
 import { DragIcon } from "./EditorGroup";
+import { MediaSettings } from "./MediaSettings";
 
 interface Props {
   readonly link: Link;
@@ -208,6 +210,7 @@ export function LinkRow({
   const fieldError = (name: string) => failure?.fields[name];
   const panelId = `${idPrefix}-panel`;
   const meta = linkMeta(link);
+  const capabilities = mediaCapabilities(link);
 
   return (
     <li
@@ -338,6 +341,17 @@ export function LinkRow({
                 </p>
               )}
             </div>
+            {(capabilities.canWatchLive || capabilities.canFeature) && (
+              <MediaSettings
+                // Otro canal (o proveedor): la configuración se vuelve a leer.
+                key={`${link.provider}:${link.providerHandle ?? ""}`}
+                linkId={link.id}
+                linkTitle={link.title}
+                capabilities={capabilities}
+                api={api}
+                announce={announce}
+              />
+            )}
             <fieldset className="editor-link-place">
               <legend>Lugar</legend>
               <button
