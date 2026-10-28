@@ -224,51 +224,59 @@ export function connectAvatarEditor(root: HTMLElement) {
       save.disabled = true;
       showError(null);
       status.textContent = "Guardando…";
+      let leaving = false;
 
-      const output = document.createElement("canvas");
-      output.width = AVATAR_SIZE;
-      output.height = AVATAR_SIZE;
-      const square = cropSquare(image, crop);
-      output
-        .getContext("2d")
-        ?.drawImage(
-          image,
-          square.x,
-          square.y,
-          square.size,
-          square.size,
-          0,
-          0,
-          AVATAR_SIZE,
-          AVATAR_SIZE,
+      try {
+        const output = document.createElement("canvas");
+        output.width = AVATAR_SIZE;
+        output.height = AVATAR_SIZE;
+        const square = cropSquare(image, crop);
+        output
+          .getContext("2d")
+          ?.drawImage(
+            image,
+            square.x,
+            square.y,
+            square.size,
+            square.size,
+            0,
+            0,
+            AVATAR_SIZE,
+            AVATAR_SIZE,
+          );
+        const encoded = await encodeAvatar(output);
+        if (!encoded) {
+          showError("No pudimos preparar la foto en este navegador. Probá con otra.");
+          return;
+        }
+
+        const form = new FormData();
+        form.set("pageId", pageId);
+        form.set("avatar", encoded);
+        const { data } = await actions.pages.setAvatar(form);
+        if (data?.ok) {
+          // Se recarga la pantalla con el avatar nuevo.
+          leaving = true;
+          window.location.assign("/admin/page?avatar");
+          return;
+        }
+        // Sin respuesta (sesión vencida, límite de pedidos): un mensaje general.
+        showError(
+          data
+            ? (data.fields["avatar"] ?? data.message)
+            : "No pudimos guardar la foto. Probá de nuevo.",
         );
-      const encoded = await encodeAvatar(output);
-      if (!encoded) {
-        showError("No pudimos preparar la foto en este navegador. Probá con otra.");
-        saving = false;
-        save.disabled = false;
-        status.textContent = "";
-        return;
+      } catch {
+        // La red se cortó en el medio (o falló el navegador): se puede reintentar.
+        showError("No pudimos guardar la foto. Revisá tu conexión y probá de nuevo.");
+      } finally {
+        // Mientras se recarga la pantalla, el botón sigue deshabilitado.
+        if (!leaving) {
+          saving = false;
+          save.disabled = false;
+          status.textContent = "";
+        }
       }
-
-      const form = new FormData();
-      form.set("pageId", pageId);
-      form.set("avatar", encoded);
-      const { data } = await actions.pages.setAvatar(form);
-      if (data?.ok) {
-        // Se recarga la pantalla con el avatar nuevo.
-        window.location.assign("/admin/page?avatar");
-        return;
-      }
-      // Sin respuesta (red, sesión vencida, límite de pedidos): un mensaje general.
-      showError(
-        data
-          ? (data.fields["avatar"] ?? data.message)
-          : "No pudimos guardar la foto. Probá de nuevo.",
-      );
-      saving = false;
-      save.disabled = false;
-      status.textContent = "";
     })();
   });
 }

@@ -167,6 +167,26 @@ test.describe("avatar", () => {
       .toBe(512);
   });
 
+  test("si la red se corta al guardar, avisa y deja reintentar", async ({ page }) => {
+    await page.goto("/admin/page");
+    await expect(page.locator("[data-avatar-editor][data-ready]")).toBeAttached();
+    await page.getByLabel("Elegir foto").setInputFiles({
+      name: "foto.png",
+      mimeType: "image/png",
+      buffer: realPng(600, 600),
+    });
+    const isUpload = (url: URL) => url.pathname.includes("pages.setAvatar");
+    await page.route(isUpload, (route) => route.abort("internetdisconnected"));
+    const save = page.getByRole("button", { name: "Guardar avatar" });
+    await save.click();
+    await expect(page.getByRole("alert")).toHaveText(/No pudimos guardar la foto/);
+    await expect(save).toBeEnabled();
+
+    await page.unroute(isUpload);
+    await save.click();
+    await page.waitForURL(/\/admin\/page\?avatar$/);
+  });
+
   test("el editor rechaza una foto disfrazada o demasiado pesada sin subir nada", async ({
     page,
   }) => {
