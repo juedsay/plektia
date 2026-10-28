@@ -1,15 +1,13 @@
 ---
 import { getPublicPage } from "@/application/public/get-public-page";
 import { publicPages } from "@/composition/runtime";
-import { buildPlektiaPage } from "@/content/plektia";
 import { OFFICIAL_HANDLE } from "@/domain/handle";
 import ProfilePage from "@/ui/components/ProfilePage.astro";
 
-// Página oficial de la marca (como `linktr.ee/linktree`). La edita la cuenta
-// Admin desde el panel, como cualquier página (tarea 21b). Hasta que esa cuenta
-// la tenga en la base, se muestra el contenido del repo (`src/content/plektia.ts`).
+// Página oficial de la marca (como `linktr.ee/linktree`). Es la página de la
+// cuenta Admin en la base y se edita desde el panel, como cualquier otra.
 const result = await getPublicPage({ pages: publicPages() })(OFFICIAL_HANDLE);
-const page = result.ok ? result.value : buildPlektiaPage();
+if (!result.ok) return Astro.rewrite("/404");
 ---
 
-<ProfilePage page={page} brand />
+<ProfilePage page={result.value} brand />

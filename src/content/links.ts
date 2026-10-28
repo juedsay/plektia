@@ -1,7 +1,7 @@
 import type { PublicLink } from "@/application/ports/public-page-reader";
 import { parseLinkInput } from "@/domain/link";
 
-// Links escritos a mano en el repo (página oficial, landing). Pasan por las
+// Links escritos a mano en el repo (la landing). Pasan por las
 // mismas reglas que los de los usuarios: lo que el panel rechazaría, acá rompe
 // el build.
 
