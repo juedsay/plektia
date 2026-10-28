@@ -11,8 +11,13 @@ import { readFileSync } from "node:fs";
 const API = "https://www.googleapis.com/youtube/v3";
 const handle = process.argv[2] ?? "@YouTube";
 
+// Por nombre en una variable: el tipo de `process.env` cambia según haya o no
+// `.dev.vars` (lo genera `wrangler types`), y así compila igual en los dos casos.
+const KEY_NAME = "YOUTUBE_API_KEY";
+
 function apiKey(): string {
-  if (process.env["YOUTUBE_API_KEY"]) return process.env["YOUTUBE_API_KEY"];
+  const fromEnvironment = process.env[KEY_NAME];
+  if (fromEnvironment) return fromEnvironment;
   try {
     const line = readFileSync(".dev.vars", "utf8")
       .split(/\r?\n/)

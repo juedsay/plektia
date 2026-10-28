@@ -19,9 +19,9 @@
     "enabled": true,
   },
   "triggers": {
-    // `live-status`: cada 5 minutos el estado en vivo (tarea 26) y cada hora
-    // el contenido destacado de YouTube. Deben coincidir con src/worker.ts.
-    "crons": ["*/5 * * * *", "0 * * * *"],
+    // `live-status`: cada 10 minutos el estado en vivo y cada hora el
+    // contenido destacado de YouTube. Deben coincidir con src/worker.ts.
+    "crons": ["*/10 * * * *", "0 * * * *"],
   },
   // Datos públicos del proyecto de Supabase. En local se reemplazan con
   // `.dev.vars` (`pnpm env:local`); en producción, la publishable key la pasa el
