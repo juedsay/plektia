@@ -228,6 +228,48 @@ export type Database = {
           },
         ];
       };
+      mcp_grants: {
+        Row: {
+          can_write: boolean;
+          client_id: string;
+          client_name: string;
+          created_at: string;
+          last_used_at: string | null;
+          redirect_host: string;
+          revoked_at: string | null;
+          user_id: string;
+        };
+        ComputedFields: never;
+        Insert: {
+          can_write?: boolean;
+          client_id: string;
+          client_name: string;
+          created_at?: string;
+          last_used_at?: string | null;
+          redirect_host: string;
+          revoked_at?: string | null;
+          user_id: string;
+        };
+        Update: {
+          can_write?: boolean;
+          client_id?: string;
+          client_name?: string;
+          created_at?: string;
+          last_used_at?: string | null;
+          redirect_host?: string;
+          revoked_at?: string | null;
+          user_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "mcp_grants_user_id_fkey";
+            columns: ["user_id"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       pages: {
         Row: {
           avatar_path: string | null;
@@ -580,6 +622,182 @@ export type Database = {
       ingest_try_lock: { Args: { p_job: string; p_seconds: number }; Returns: boolean };
       link_featured: { Args: { p_link_id: string }; Returns: Json };
       link_live: { Args: { p_link_id: string }; Returns: Json };
+      mcp_authorize: { Args: { p_write?: boolean }; Returns: boolean };
+      mcp_create_link: {
+        Args: {
+          p_description: string;
+          p_id: string;
+          p_page: string;
+          p_provider: Database["public"]["Enums"]["link_provider"];
+          p_provider_handle: string;
+          p_section: string;
+          p_tags: string[];
+          p_title: string;
+          p_url: string;
+          p_visible: boolean;
+        };
+        Returns: {
+          created_at: string;
+          description: string | null;
+          id: string;
+          owner_id: string;
+          page_id: string;
+          position: number;
+          provider: Database["public"]["Enums"]["link_provider"];
+          provider_handle: string | null;
+          section_id: string | null;
+          tags: string[];
+          title: string;
+          updated_at: string;
+          url: string;
+          version: number;
+          visible: boolean;
+        };
+        SetofOptions: {
+          from: "*";
+          to: "links";
+          isOneToOne: true;
+          isSetofReturn: false;
+        };
+      };
+      mcp_create_section: {
+        Args: {
+          p_id: string;
+          p_page: string;
+          p_show_title: boolean;
+          p_title: string;
+          p_visible: boolean;
+        };
+        Returns: {
+          created_at: string;
+          id: string;
+          owner_id: string;
+          page_id: string;
+          position: number;
+          show_title: boolean;
+          title: string;
+          updated_at: string;
+          version: number;
+          visible: boolean;
+        };
+        SetofOptions: {
+          from: "*";
+          to: "sections";
+          isOneToOne: true;
+          isSetofReturn: false;
+        };
+      };
+      mcp_delete_link: {
+        Args: { p_confirm_title: string; p_id: string; p_page: string; p_version: number };
+        Returns: undefined;
+      };
+      mcp_delete_section: {
+        Args: { p_confirm_title: string; p_id: string; p_page: string; p_version: number };
+        Returns: undefined;
+      };
+      mcp_move_links: {
+        Args: { p_ids: string[]; p_page: string; p_section: string; p_versions: number[] };
+        Returns: undefined;
+      };
+      mcp_reorder_sections: {
+        Args: { p_ids: string[]; p_page: string; p_versions: number[] };
+        Returns: undefined;
+      };
+      mcp_revoke_grant: { Args: { p_client_id: string }; Returns: boolean };
+      mcp_save_grant: {
+        Args: {
+          p_can_write: boolean;
+          p_client_id: string;
+          p_client_name: string;
+          p_redirect_host: string;
+        };
+        Returns: undefined;
+      };
+      mcp_set_link_media: {
+        Args: { p_changes: Json; p_link: string };
+        Returns: {
+          featured_mode: string;
+          link_id: string;
+          owner_id: string;
+          pinned_video_id: string | null;
+          updated_at: string;
+          watch_live: boolean;
+        };
+        SetofOptions: {
+          from: "*";
+          to: "link_media_settings";
+          isOneToOne: true;
+          isSetofReturn: false;
+        };
+      };
+      mcp_update_link: {
+        Args: { p_changes: Json; p_id: string; p_page: string; p_version: number };
+        Returns: {
+          created_at: string;
+          description: string | null;
+          id: string;
+          owner_id: string;
+          page_id: string;
+          position: number;
+          provider: Database["public"]["Enums"]["link_provider"];
+          provider_handle: string | null;
+          section_id: string | null;
+          tags: string[];
+          title: string;
+          updated_at: string;
+          url: string;
+          version: number;
+          visible: boolean;
+        };
+        SetofOptions: {
+          from: "*";
+          to: "links";
+          isOneToOne: true;
+          isSetofReturn: false;
+        };
+      };
+      mcp_update_page: {
+        Args: { p_changes: Json; p_page: string };
+        Returns: {
+          avatar_path: string | null;
+          bio: string | null;
+          created_at: string;
+          display_name: string;
+          handle: string;
+          id: string;
+          owner_id: string;
+          show_handle: boolean;
+          theme: Database["public"]["Enums"]["profile_theme"];
+          updated_at: string;
+        };
+        SetofOptions: {
+          from: "*";
+          to: "pages";
+          isOneToOne: true;
+          isSetofReturn: false;
+        };
+      };
+      mcp_update_section: {
+        Args: { p_changes: Json; p_id: string; p_page: string; p_version: number };
+        Returns: {
+          created_at: string;
+          id: string;
+          owner_id: string;
+          page_id: string;
+          position: number;
+          show_title: boolean;
+          title: string;
+          updated_at: string;
+          version: number;
+          visible: boolean;
+        };
+        SetofOptions: {
+          from: "*";
+          to: "sections";
+          isOneToOne: true;
+          isSetofReturn: false;
+        };
+      };
       move_links: {
         Args: {
           expected_versions: number[];
