@@ -2,7 +2,14 @@ import { useSortable } from "@dnd-kit/react/sortable";
 import { useEffect, useId, useRef, useState } from "react";
 
 import type { Link, Section } from "@/application/ports/link-repository";
-import { LINK_PLACEMENTS, type LinkPlacement } from "@/domain/link-placement";
+import { errorMessage } from "@/domain/errors";
+import {
+  LINK_HIGHLIGHTS,
+  LINK_PLACEMENTS,
+  type LinkHighlight,
+  type LinkPlacement,
+  TOP_LINKS_LIMIT,
+} from "@/domain/link-presentation";
 import { mediaCapabilities } from "@/domain/link-media";
 import { changedFields, inverseChanges } from "@/ui/view/editor-state";
 import { linkMeta } from "@/ui/view/public-link";
@@ -192,21 +199,31 @@ export function LinkRow({
     } else setFailure(result);
   };
 
-  /** Dónde se muestra en la página pública (36d), con "Deshacer". */
-  const choosePlacement = async (placement: LinkPlacement) => {
+  /**
+   * Dónde se ve y si se destaca (36d y 36e): se guarda al elegir, con
+   * "Deshacer". Elegir lo que ya tiene no llama al servidor.
+   */
+  const choosePresentation = async (
+    changes: { placement: LinkPlacement } | { highlight: LinkHighlight },
+    label: string,
+  ) => {
     const base = latestLink.current;
-    if (base.placement === placement) return;
+    if (
+      "placement" in changes
+        ? base.placement === changes.placement
+        : base.highlight === changes.highlight
+    ) {
+      return;
+    }
     setBusy(true);
     const result = await api
-      .update({ id: base.id, version: base.version }, { placement })
+      .update({ id: base.id, version: base.version }, changes)
       .catch(() => UNREACHABLE);
     setBusy(false);
     if (result.ok) {
-      acceptUndoable(
-        base,
-        result.value,
-        `${base.title}: ${PLACEMENT_NAMES[placement].toLowerCase()}`,
-      );
+      acceptUndoable(base, result.value, `${base.title}: ${label.toLowerCase()}`);
+    } else if ("highlight" in changes && result.message === LIMIT_MESSAGE) {
+      setFailure({ ...result, message: TOP_LIMIT_MESSAGE });
     } else setFailure(result);
   };
 
@@ -253,6 +270,9 @@ export function LinkRow({
             {!link.visible && <span className="admin-tag">Oculto</span>}
             {link.placement !== "list" && (
               <span className="admin-tag">{PLACEMENT_TAGS[link.placement]}</span>
+            )}
+            {link.highlight !== "none" && link.placement !== "icon" && (
+              <span className="admin-tag">{HIGHLIGHT_TAGS[link.highlight]}</span>
             )}
             {meta}
           </span>
@@ -384,10 +404,34 @@ export function LinkRow({
                     value={placement}
                     checked={link.placement === placement}
                     disabled={busy}
-                    onChange={() => void choosePlacement(placement)}
+                    onChange={() =>
+                      void choosePresentation({ placement }, PLACEMENT_NAMES[placement])
+                    }
                   />
                   <span className="choice-name">{PLACEMENT_NAMES[placement]}</span>
                   <span className="choice-hint">{PLACEMENT_HINTS[placement]}</span>
+                </label>
+              ))}
+            </fieldset>
+            <fieldset className="editor-link-placement" disabled={link.placement === "icon"}>
+              <legend>Destacado</legend>
+              {link.placement === "icon" && (
+                <p className="field-hint">Solo se destaca un link que está en la lista.</p>
+              )}
+              {LINK_HIGHLIGHTS.map((highlight) => (
+                <label key={highlight} className="choice">
+                  <input
+                    type="radio"
+                    name={`${idPrefix}-highlight`}
+                    value={highlight}
+                    checked={link.highlight === highlight}
+                    disabled={busy}
+                    onChange={() =>
+                      void choosePresentation({ highlight }, HIGHLIGHT_NAMES[highlight])
+                    }
+                  />
+                  <span className="choice-name">{HIGHLIGHT_NAMES[highlight]}</span>
+                  <span className="choice-hint">{HIGHLIGHT_HINTS[highlight]}</span>
                 </label>
               ))}
             </fieldset>
@@ -473,6 +517,26 @@ const PLACEMENT_TAGS: Record<Exclude<LinkPlacement, "list">, string> = {
   icon: "Ícono",
   both: "Ícono y lista",
 };
+
+const HIGHLIGHT_NAMES: Record<LinkHighlight, string> = {
+  none: "Sin destacar",
+  accent: "Con el acento",
+  top: "Arriba de todo",
+};
+
+const HIGHLIGHT_HINTS: Record<LinkHighlight, string> = {
+  none: "Como el resto.",
+  accent: "En su lugar, con borde y fondo del color de acento.",
+  top: `En tarjeta, antes de las secciones. Hasta ${String(TOP_LINKS_LIMIT)} por página.`,
+};
+
+const HIGHLIGHT_TAGS: Record<Exclude<LinkHighlight, "none">, string> = {
+  accent: "Destacado",
+  top: "Arriba",
+};
+
+const LIMIT_MESSAGE = errorMessage("limit_reached");
+const TOP_LIMIT_MESSAGE = `Ya tenés ${String(TOP_LINKS_LIMIT)} links arriba de todo: sacá uno antes de sumar otro.`;
 
 interface Draft {
   title: string;

@@ -157,10 +157,15 @@ cambian, igual que el tema y el modo.
 
 ### 36e · Links destacados
 
-- `links.highlight`, enum `public.link_highlight`: `none` (por defecto), `accent` (en su lugar, con
-  borde y fondo suave del acento) y `top` (arriba de todo, en tamaño de tarjeta).
-- Puede haber varios. Los `top` van en un bloque propio entre la fila de íconos y las secciones, en
-  el orden de la página, y no se repiten en su sección. Se admiten hasta 3, y la base lo valida.
+- `links.highlight`, enum `public.link_highlight`, con tres valores:
+  - `none` (por defecto);
+  - `accent`: en su lugar, con borde y un fondo con 6 % del acento (`--highlight-tint`), y todo el
+    texto sigue en AAA;
+  - `top`: arriba de todo, en tarjeta.
+- Puede haber varios. Los `top` van en un bloque propio ("Destacados") entre la fila de íconos y las
+  secciones, en el orden de la página, y no se repiten en su sección. Se admiten hasta 3 por página:
+  la base lo valida con un trigger (`PL429`) y el editor lo explica.
+- Un link que es solo ícono no se destaca: el editor deshabilita la opción y lo dice.
 - Son distintos del "contenido destacado" (el último video) que ya muestran algunos links.
 
 ### Pruebas de la 6b

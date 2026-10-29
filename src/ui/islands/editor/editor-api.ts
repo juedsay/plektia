@@ -2,7 +2,7 @@ import type { FormResult } from "@/actions/form-result";
 import type { LinkMediaView } from "@/application/ports/link-media-repository";
 import type { Link, OwnLinks, Section } from "@/application/ports/link-repository";
 import { errorMessage } from "@/domain/errors";
-import type { LinkPlacement } from "@/domain/link-placement";
+import type { LinkHighlight, LinkPlacement } from "@/domain/link-presentation";
 import type { FeaturedMode, LinkMedia } from "@/domain/link-media";
 
 // Lo que el editor le pide al servidor. En el navegador son las Actions de
@@ -24,6 +24,8 @@ export interface LinkChanges {
   readonly visible?: boolean;
   /** En la lista, como ícono o en los dos lugares (36d). */
   readonly placement?: LinkPlacement;
+  /** Sin destacar, con el acento o arriba de todo (36e). */
+  readonly highlight?: LinkHighlight;
 }
 
 export interface EditorApi {

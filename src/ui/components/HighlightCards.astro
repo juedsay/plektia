@@ -1,0 +1,56 @@
+---
+import type { PublicLink } from "@/application/ports/public-page-reader";
+import NetworkIcon from "@/ui/components/NetworkIcon.astro";
+import { isProfileLink, linkMeta } from "@/ui/view/public-link";
+import { socialProfileFor } from "@/ui/view/social-profile";
+
+// Destacados arriba de todo (SPEC-appearance, 36e): tarjetas antes de las
+// secciones, con el borde y el fondo del acento. Los clics cuentan igual.
+interface Props {
+  links: readonly PublicLink[];
+}
+const { links } = Astro.props;
+---
+
+{links.length > 0 && (
+  <section class="highlights" aria-label="Destacados">
+    <ul>
+      {links.map((link) => (
+        <li>
+          <a
+            class:list={["highlight-card", { "is-live": link.live }]}
+            href={link.url}
+            rel={isProfileLink(link) ? "me" : undefined}
+            data-link-id={link.id}
+          >
+            <span class="highlight-text">
+              <span class="highlight-name">
+                <NetworkIcon network={socialProfileFor(link.url)?.network ?? null} />
+                {link.title}
+              </span>
+              {link.live ? (
+                <span class="port-meta">
+                  <span class="live-label">En vivo</span>
+                  {link.live.title && ` · ${link.live.title}`}
+                </span>
+              ) : (
+                <span class="port-meta">{linkMeta(link)}</span>
+              )}
+            </span>
+            <svg
+              class="go"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              aria-hidden="true"
+            >
+              <path d="M7 17 17 7M8 7h9v9" />
+            </svg>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </section>
+)}

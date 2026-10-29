@@ -1,4 +1,4 @@
-import type { LinkDraft, LinkPatch, LinkPlacement } from "@/domain/link";
+import type { LinkDraft, LinkHighlight, LinkPatch, LinkPlacement } from "@/domain/link";
 import type { Provider } from "@/domain/provider";
 import type { Result } from "@/domain/result";
 import type { SectionDraft, SectionPatch } from "@/domain/section";
@@ -20,6 +20,8 @@ export interface Link {
   readonly visible: boolean;
   /** En la lista, como ícono en la fila bajo la bio o en los dos lugares. */
   readonly placement: LinkPlacement;
+  /** Sin destacar, con el acento en su lugar o arriba de todo. */
+  readonly highlight: LinkHighlight;
   readonly position: number;
   readonly version: number;
 }

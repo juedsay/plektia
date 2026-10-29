@@ -26,6 +26,7 @@ const link = {
   provider: "twitch",
   providerHandle: "juedsay",
   placement: "both",
+  highlight: "top",
 };
 const row = {
   handle: "juedsay",

@@ -33,6 +33,19 @@ function luminance(hex: string): number {
   return 0.2126 * channel(1) + 0.7152 * channel(3) + 0.0722 * channel(5);
 }
 
+/** `color-mix(in srgb, top amount, bottom)`, como lo calcula el navegador. */
+function mix(top: string, bottom: string, amount: number): string {
+  const channel = (hex: string, offset: number) =>
+    Number.parseInt(hex.slice(offset, offset + 2), 16);
+  return `#${[1, 3, 5]
+    .map((offset) =>
+      Math.round(channel(top, offset) * amount + channel(bottom, offset) * (1 - amount))
+        .toString(16)
+        .padStart(2, "0"),
+    )
+    .join("")}`;
+}
+
 function contrast(first: string, second: string): number {
   const [light, dark] = [luminance(first), luminance(second)].sort((a, b) => b - a);
   return ((light ?? 0) + 0.05) / ((dark ?? 0) + 0.05);
@@ -78,6 +91,22 @@ describe("acentos", () => {
       for (const background of ["--color-bg", "--color-surface"]) {
         const ratio = contrast(tones[tone] ?? "", colors[background] ?? "");
         expect(ratio, `${accent} ${tone} sobre ${background}`).toBeGreaterThanOrEqual(7);
+      }
+    }
+  });
+
+  it.each(ACCENTS)("%s: el texto sobre el fondo de un destacado sigue en AAA", (accent) => {
+    const tint = Number(/--highlight-tint:\s*(\d+)%/.exec(css)?.[1]) / 100;
+    expect(tint).toBeGreaterThan(0);
+    const tones = colorsOf(`[data-accent="${accent}"]`, "--accent-");
+    for (const [tone, colors] of [
+      ["--accent-on-dark", dark],
+      ["--accent-on-light", light],
+    ] as const) {
+      const background = mix(tones[tone] ?? "", colors["--color-bg"] ?? "", tint);
+      for (const text of ["--color-fg", "--color-fg-muted", "--color-live"]) {
+        const ratio = contrast(colors[text] ?? "", background);
+        expect(ratio, `${accent} ${tone}: ${text}`).toBeGreaterThanOrEqual(7);
       }
     }
   });

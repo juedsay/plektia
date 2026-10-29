@@ -42,6 +42,7 @@ function link(
     tags: [],
     visible: true,
     placement: "list",
+    highlight: "none",
     position,
     version: 1,
     ...extra,
@@ -146,6 +147,10 @@ describe("inverseChanges", () => {
 
   it("deshace mostrar u ocultar", () => {
     expect(inverseChanges(before, { ...before, visible: false })).toEqual({ visible: true });
+  });
+
+  it("deshace el destacado", () => {
+    expect(inverseChanges(before, { ...before, highlight: "top" })).toEqual({ highlight: "none" });
   });
 
   it("deshace el cambio de lugar (lista o ícono)", () => {

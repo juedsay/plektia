@@ -25,7 +25,7 @@ const live = link.live ?? null;
 // pestaña nueva confunde (SPEC-public-page). La URL ya viene validada.
 ---
 
-<li class:list={["port", { "is-live": live }]}>
+<li class:list={["port", { "is-live": live, "is-highlighted": link.highlight === "accent" }]}>
   <span class="jack" aria-hidden="true"></span>
   <div class="port-body">
     <a

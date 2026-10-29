@@ -46,6 +46,7 @@ export class InMemoryLinkRepository implements LinkReader, LinkWriter, SectionWr
     const link: Link = {
       ...draft,
       placement: "list",
+      highlight: "none",
       id: id ?? this.id(),
       position: group.length,
       version: 1,

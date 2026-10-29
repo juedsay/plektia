@@ -21,7 +21,7 @@ type LinkRow = Tables<"links">;
 type SectionRow = Tables<"sections">;
 
 const LINK_COLUMNS =
-  "id, section_id, title, url, description, provider, provider_handle, tags, visible, placement, position, version";
+  "id, section_id, title, url, description, provider, provider_handle, tags, visible, placement, highlight, position, version";
 const SECTION_COLUMNS = "id, title, show_title, visible, position, version";
 
 /**
@@ -99,6 +99,7 @@ export class SupabaseLinkRepository implements LinkReader, LinkWriter, SectionWr
     if (patch.tags !== undefined) changes.tags = [...patch.tags];
     if (patch.visible !== undefined) changes.visible = patch.visible;
     if (patch.placement !== undefined) changes.placement = patch.placement;
+    if (patch.highlight !== undefined) changes.highlight = patch.highlight;
     if (patch.provider !== undefined) changes.provider = patch.provider;
     if (patch.providerHandle !== undefined) changes.provider_handle = patch.providerHandle;
 
@@ -247,6 +248,7 @@ export function toLink(
     tags: row.tags,
     visible: row.visible,
     placement: row.placement,
+    highlight: row.highlight,
     position: row.position,
     version: row.version,
   };

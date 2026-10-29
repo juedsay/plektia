@@ -182,6 +182,7 @@ export type Database = {
         Row: {
           created_at: string;
           description: string | null;
+          highlight: Database["public"]["Enums"]["link_highlight"];
           id: string;
           owner_id: string;
           page_id: string;
@@ -201,6 +202,7 @@ export type Database = {
         Insert: {
           created_at?: string;
           description?: string | null;
+          highlight?: Database["public"]["Enums"]["link_highlight"];
           id?: string;
           owner_id?: string;
           page_id: string;
@@ -219,6 +221,7 @@ export type Database = {
         Update: {
           created_at?: string;
           description?: string | null;
+          highlight?: Database["public"]["Enums"]["link_highlight"];
           id?: string;
           owner_id?: string;
           page_id?: string;
@@ -685,6 +688,7 @@ export type Database = {
         Returns: {
           created_at: string;
           description: string | null;
+          highlight: Database["public"]["Enums"]["link_highlight"];
           id: string;
           owner_id: string;
           page_id: string;
@@ -782,6 +786,7 @@ export type Database = {
         Returns: {
           created_at: string;
           description: string | null;
+          highlight: Database["public"]["Enums"]["link_highlight"];
           id: string;
           owner_id: string;
           page_id: string;
@@ -868,6 +873,7 @@ export type Database = {
       accent_color:
         "hueso" | "coral" | "ambar" | "cielo" | "lavanda" | "rosa" | "turquesa" | "arena";
       color_mode: "auto" | "dark" | "light";
+      link_highlight: "none" | "accent" | "top";
       link_placement: "list" | "icon" | "both";
       link_provider:
         "generic" | "youtube" | "twitch" | "kick" | "whatsapp" | "github" | "instagram";
@@ -988,6 +994,7 @@ export const Constants = {
     Enums: {
       accent_color: ["hueso", "coral", "ambar", "cielo", "lavanda", "rosa", "turquesa", "arena"],
       color_mode: ["auto", "dark", "light"],
+      link_highlight: ["none", "accent", "top"],
       link_placement: ["list", "icon", "both"],
       link_provider: ["generic", "youtube", "twitch", "kick", "whatsapp", "github", "instagram"],
       link_shape: ["rows", "cards", "pills"],

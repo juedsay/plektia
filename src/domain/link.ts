@@ -1,7 +1,12 @@
 import { z } from "zod";
 
 import type { InvalidInput } from "@/domain/errors";
-import { LINK_PLACEMENTS, type LinkPlacement } from "@/domain/link-placement";
+import {
+  LINK_HIGHLIGHTS,
+  LINK_PLACEMENTS,
+  type LinkHighlight,
+  type LinkPlacement,
+} from "@/domain/link-presentation";
 import { detectProvider, type Provider } from "@/domain/provider";
 import { map, type Result } from "@/domain/result";
 import { parseSafeUrl } from "@/domain/safe-url";
@@ -12,7 +17,12 @@ import { safeLine, validate } from "@/domain/text";
 
 export const LIMITS = { sections: 30, links: 200, tags: 5 } as const;
 
-export { LINK_PLACEMENTS, type LinkPlacement } from "@/domain/link-placement";
+export {
+  LINK_HIGHLIGHTS,
+  LINK_PLACEMENTS,
+  type LinkHighlight,
+  type LinkPlacement,
+} from "@/domain/link-presentation";
 
 const Url = z
   .string({ error: "La URL tiene que ser un texto." })
@@ -72,6 +82,9 @@ const LinkPatchSchema = z
       placement: z
         .enum(LINK_PLACEMENTS, { error: "Elegí en la lista, como ícono o en los dos lugares." })
         .optional(),
+      highlight: z
+        .enum(LINK_HIGHLIGHTS, { error: "Elegí sin destacar, con el acento o arriba de todo." })
+        .optional(),
     },
     { error: "Los datos del link no son válidos." },
   )
@@ -90,9 +103,10 @@ export interface LinkDraft {
   readonly providerHandle: string | null;
 }
 
-/** Un link nace en la lista; su lugar se cambia después (36d). */
+/** Un link nace en la lista y sin destacar; eso se cambia después (36d y 36e). */
 export type LinkPatch = Partial<Omit<LinkDraft, "sectionId">> & {
   readonly placement?: LinkPlacement;
+  readonly highlight?: LinkHighlight;
 };
 
 export function parseLinkInput(raw: unknown): Result<LinkDraft, InvalidInput> {

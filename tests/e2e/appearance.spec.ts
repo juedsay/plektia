@@ -234,3 +234,52 @@ test("un link elegido como ícono pasa a la fila bajo la bio y deja la lista", a
     await deleteLinksTitled(AVATAR_ID, ICON_TITLES);
   }
 });
+
+// Destacados (tarea 36e): con el acento en su lugar o arriba de todo.
+const HIGHLIGHT_TITLES = ["Destacado arriba", "Destacado con acento"];
+
+test("un destacado arriba va en tarjeta antes de las secciones; el de acento, en su lugar", async ({
+  page,
+  context,
+  browser,
+  baseURL,
+}) => {
+  for (const title of HIGHLIGHT_TITLES) {
+    await insertLink(AVATAR_ID, AVATAR_ID, {
+      title,
+      url: `https://plektia.app/${title.replaceAll(" ", "-").toLowerCase()}`,
+      provider: "generic",
+      provider_handle: null,
+    });
+  }
+  try {
+    await signIn(context, baseURL ?? "", "avatar@plektia.test");
+    await page.goto("/admin");
+    for (const [title, option] of [
+      ["Destacado arriba", /^Arriba de todo/],
+      ["Destacado con acento", /^Con el acento/],
+    ] as const) {
+      await page.getByRole("button", { name: `Editar ${title}` }).click();
+      const panel = page.locator(".editor-link-panel:not([hidden])");
+      // Radio controlado: queda marcado cuando el servidor confirma.
+      await panel.getByRole("radio", { name: option }).click();
+      await expect(page.locator("[data-editor-status]")).toContainText(`${title}:`);
+      await page.getByRole("button", { name: `Listo ${title}` }).click();
+    }
+
+    const { visitor, close } = await visit(browser, baseURL ?? "", "dark");
+    const highlights = visitor.getByRole("region", { name: "Destacados" });
+    await expect(highlights.getByRole("link", { name: /Destacado arriba/ })).toBeVisible();
+    await expect(visitor.locator(".patchbay").getByText("Destacado arriba")).toHaveCount(0);
+    await expect(
+      visitor.locator(".port.is-highlighted").getByText("Destacado con acento"),
+    ).toBeVisible();
+    const results = await new AxeBuilder({ page: visitor })
+      .withTags(["wcag2a", "wcag2aa", "wcag2aaa", "wcag21aa", "wcag22aa"])
+      .analyze();
+    expect(results.violations.map((violation) => violation.id)).toEqual([]);
+    await close();
+  } finally {
+    await deleteLinksTitled(AVATAR_ID, HIGHLIGHT_TITLES);
+  }
+});

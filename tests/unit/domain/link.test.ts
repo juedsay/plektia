@@ -123,6 +123,11 @@ describe("parseLinkPatch", () => {
     expect(parseLinkPatch({ url: "data:text/html,x" }).ok).toBe(false);
   });
 
+  it("destaca el link solo con los estilos conocidos", () => {
+    expect(parseLinkPatch({ highlight: "top" })).toEqual({ ok: true, value: { highlight: "top" } });
+    expect(parseLinkPatch({ highlight: "glow" }).ok).toBe(false);
+  });
+
   it("cambia dónde se ve el link, solo entre los lugares conocidos", () => {
     expect(parseLinkPatch({ placement: "both" })).toEqual({
       ok: true,
