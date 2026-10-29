@@ -96,11 +96,11 @@
   - **Verificar:** `pnpm test:e2e`; prueba manual en el deploy.
   - **Archivos:** `src/pages/login.astro`, `src/pages/auth/callback.ts`, `src/pages/auth/logout.ts`, `scripts/allow-user.ts`, `e2e/auth.spec.ts`, `.github/workflows/deploy.yml`.
 
-- [ ] **Tarea 9c: Aviso de vencimiento de tokens** · S · Deps: 9
-  - Workflow semanal que abre un issue dos semanas antes de que venzan los tokens de la CI: `plektia-ci` de Supabase (90 días, ~13/01/2027) y el de Cloudflare (14/10/2027). Las fechas viven como variables del entorno `production`.
+- [x] **Tarea 9c: Aviso de vencimiento de tokens** · S · Deps: 9
+  - Workflow semanal que abre un issue dos semanas antes de que venzan los tokens de la CI: `plektia-ci` de Supabase (90 días, ~13/01/2027) y el de Cloudflare (14/10/2027). Las fechas viven como variables del repo (`SUPABASE_TOKEN_EXPIRES_ON`, `CLOUDFLARE_TOKEN_EXPIRES_ON`): no son secretas y así el job no entra al entorno `production`. Un issue abierto por token, sin duplicar.
   - Script de renovación que guía la creación del token nuevo con los mismos permisos, lo verifica y lo guarda en GitHub.
   - **Aceptación:** con una fecha de vencimiento cercana, el workflow abre el issue (probado con `workflow_dispatch`).
-  - **Archivos:** `.github/workflows/tokens.yml`, `scripts/renovar-token.sh`.
+  - **Archivos:** `.github/workflows/tokens.yml`, `scripts/token-expiry.ts`, `scripts/renovar-token.sh` (reemplaza a `renovar-token-supabase.sh`).
 
 ### ✅ Checkpoint F2
 - [x] Entrás a `/admin` (vacío) en producción con tu cuenta; nadie más puede (hook en producción y pgTAP; queda la prueba manual con una cuenta no invitada).
