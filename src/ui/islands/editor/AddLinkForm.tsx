@@ -2,8 +2,11 @@ import { type SubmitEvent, useId, useRef, useState } from "react";
 
 import type { Link, Section } from "@/application/ports/link-repository";
 import { suggestTitle } from "@/ui/view/editor-state";
+import { profilePrefix, profileUrlFor } from "@/ui/view/profile-url";
+import { networkLabel, socialProfileFor } from "@/ui/view/social-profile";
 
 import { type EditorApi, UNREACHABLE } from "./editor-api";
+import { type LinkSource, NetworkPicker } from "./NetworkPicker";
 
 interface Props {
   readonly api: EditorApi;
@@ -12,12 +15,16 @@ interface Props {
 }
 
 /**
- * Agregar un link: se pega la URL y se propone el título a partir de ella (el
- * nombre de la red o el sitio) mientras no se lo escriba a mano.
+ * Agregar un link (SPEC-link-form, 7a): se elige una red y se escribe el
+ * usuario, o "Otro link" y se pega la URL. El título se propone (el nombre de la
+ * red o el sitio) mientras no se lo escriba a mano. Al servidor siempre llega
+ * una URL, que valida como cualquier otra.
  */
 export function AddLinkForm({ api, sections, onCreated }: Props) {
   const idPrefix = useId();
   const urlInput = useRef<HTMLInputElement>(null);
+  const [source, setSource] = useState<LinkSource>("other");
+  const [username, setUsername] = useState("");
   const [url, setUrl] = useState("");
   const [title, setTitle] = useState("");
   const [titleTouched, setTitleTouched] = useState(false);
@@ -36,16 +43,35 @@ export function AddLinkForm({ api, sections, onCreated }: Props) {
     if (!titleTouched) setTitle(suggestTitle(value));
   };
 
+  const chooseSource = (next: LinkSource) => {
+    setSource(next);
+    setFieldErrors({});
+    setMessage(null);
+    if (!titleTouched) setTitle(next === "other" ? suggestTitle(url) : networkLabel(next));
+    // El foco va al campo que hay que completar.
+    requestAnimationFrame(() => urlInput.current?.focus());
+  };
+
+  const profile = source === "other" ? null : profileUrlFor(source, username);
+  // En "Otro link", un perfil de una red conocida se ofrece cargar como esa red.
+  const pastedProfile = source === "other" ? socialProfileFor(url.trim()) : null;
+
   const submit = async (event: SubmitEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (inFlight.current) return;
+    // Con una red, el usuario se valida acá: sin una URL armada, no hay pedido.
+    if (profile && !profile.ok) {
+      setFieldErrors({ url: profile.message });
+      return;
+    }
+    const target = profile?.ok ? profile.url : url;
     inFlight.current = true;
     setSaving(true);
     const result = await api
       .create({
         id: requestId.current,
         title,
-        url,
+        url: target,
         sectionId: sectionId === "" ? null : sectionId,
       })
       .catch(() => UNREACHABLE);
@@ -58,8 +84,10 @@ export function AddLinkForm({ api, sections, onCreated }: Props) {
     }
     requestId.current = crypto.randomUUID();
     onCreated(result.value);
+    // La red elegida queda, para cargar otra del mismo tipo.
     setUrl("");
-    setTitle("");
+    setUsername("");
+    setTitle(source === "other" ? "" : networkLabel(source));
     setTitleTouched(false);
     setMessage(null);
     setFieldErrors({});
@@ -73,34 +101,85 @@ export function AddLinkForm({ api, sections, onCreated }: Props) {
   return (
     <form className="add-link" onSubmit={(event) => void submit(event)} noValidate>
       <h2 className="add-link-title">Agregar un link</h2>
+      <NetworkPicker value={source} onChange={chooseSource} />
       {message && (
         <p className="editor-error" role="alert">
           {message}
         </p>
       )}
       <div className="add-link-fields">
-        <div className="field add-link-url">
-          <label htmlFor={urlId}>URL</label>
-          <input
-            ref={urlInput}
-            id={urlId}
-            type="url"
-            inputMode="url"
-            autoComplete="off"
-            placeholder="https://"
-            value={url}
-            onChange={(event) => {
-              changeUrl(event.target.value);
-            }}
-            aria-invalid={fieldErrors["url"] ? true : undefined}
-            aria-describedby={fieldErrors["url"] ? `${urlId}-error` : undefined}
-          />
-          {fieldErrors["url"] && (
-            <p className="field-error" id={`${urlId}-error`}>
-              {fieldErrors["url"]}
+        {source === "other" ? (
+          <div className="field add-link-url">
+            <label htmlFor={urlId}>URL</label>
+            <input
+              ref={urlInput}
+              id={urlId}
+              type="url"
+              inputMode="url"
+              autoComplete="off"
+              placeholder="https://"
+              value={url}
+              onChange={(event) => {
+                changeUrl(event.target.value);
+              }}
+              aria-invalid={fieldErrors["url"] ? true : undefined}
+              aria-describedby={fieldErrors["url"] ? `${urlId}-error` : undefined}
+            />
+            {pastedProfile?.username && (
+              <p className="field-hint">
+                Es un perfil de {pastedProfile.label}.{" "}
+                <button
+                  type="button"
+                  className="link-button"
+                  onClick={() => {
+                    setUsername(pastedProfile.username ?? "");
+                    chooseSource(pastedProfile.network);
+                  }}
+                >
+                  Cargarlo como {pastedProfile.label}
+                </button>
+              </p>
+            )}
+            {fieldErrors["url"] && (
+              <p className="field-error" id={`${urlId}-error`}>
+                {fieldErrors["url"]}
+              </p>
+            )}
+          </div>
+        ) : (
+          <div className="field add-link-url">
+            <label htmlFor={urlId}>Usuario de {networkLabel(source)}</label>
+            <div className="username-input">
+              <span className="username-prefix" aria-hidden="true">
+                {profilePrefix(source)}
+              </span>
+              <input
+                ref={urlInput}
+                id={urlId}
+                autoComplete="off"
+                autoCapitalize="none"
+                spellCheck={false}
+                value={username}
+                onChange={(event) => {
+                  setUsername(event.target.value);
+                  setFieldErrors({});
+                }}
+                aria-invalid={fieldErrors["url"] ? true : undefined}
+                aria-describedby={`${urlId}-hint${fieldErrors["url"] ? ` ${urlId}-error` : ""}`}
+              />
+            </div>
+            <p className="field-hint" id={`${urlId}-hint`}>
+              {profile?.ok
+                ? `Se va a abrir ${profile.url.replace(/^https:\/\/(www\.)?/, "")}`
+                : "Tu usuario, con o sin @, o el link de tu perfil."}
             </p>
-          )}
-        </div>
+            {fieldErrors["url"] && (
+              <p className="field-error" id={`${urlId}-error`}>
+                {fieldErrors["url"]}
+              </p>
+            )}
+          </div>
+        )}
         <div className="field">
           <label htmlFor={titleId}>Título</label>
           <input

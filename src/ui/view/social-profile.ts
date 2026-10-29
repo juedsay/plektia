@@ -214,6 +214,11 @@ const RULES: readonly NetworkRule[] = [
   },
 ];
 
+/** Nombre visible de una red ("LinkedIn"). */
+export function networkLabel(network: SocialNetwork): string {
+  return RULES.find((rule) => rule.network === network)?.label ?? network;
+}
+
 /** Prefijos de host que no cambian la red (`www.instagram.com`, `m.facebook.com`). */
 const HOST_PREFIXES = /^(www|m|mobile)\./;
 
