@@ -3,6 +3,7 @@ import type { AstroCookies } from "astro";
 import { listPages } from "@/application/pages/list-pages";
 import type { Page } from "@/application/ports/page-repository";
 import type { CurrentAccount } from "@/application/ports/user-directory";
+import type { ColorMode } from "@/domain/page";
 import type { AdminRepositories } from "@/composition/admin";
 import { adminRepositoriesFor } from "@/composition/runtime";
 
@@ -14,6 +15,8 @@ export interface AdminWorkspace {
   readonly currentPage: Page | null;
   /** Rol y si sigue activa; sin perfil (no debería pasar), como un `member` dado de baja. */
   readonly account: CurrentAccount;
+  /** El modo del panel que eligió la cuenta (`auto` si nunca eligió). */
+  readonly panelMode: ColorMode;
 }
 
 interface RequestContext {
@@ -30,9 +33,10 @@ export async function loadWorkspace({
   // El middleware ya mandó al login a quien no tiene sesión.
   if (!locals.user) throw new Error("panel: falta la sesión");
   const repositories = adminRepositoriesFor(request, cookies, locals.user.id);
-  const [{ pages, currentPageId }, account] = await Promise.all([
+  const [{ pages, currentPageId }, account, panelMode] = await Promise.all([
     listPages({ pages: repositories.pages })(),
     repositories.users.currentAccount(),
+    repositories.preferences.panelMode(),
   ]);
   const currentPage = pages.find((page) => page.id === currentPageId) ?? null;
   return {
@@ -40,6 +44,7 @@ export async function loadWorkspace({
     pages,
     currentPage,
     account: account ?? { role: "member", disabled: true },
+    panelMode,
   };
 }
 

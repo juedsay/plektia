@@ -8,7 +8,7 @@ import DailyBars from "@/ui/components/stats/DailyBars.astro";
 import AdminLayout from "@/ui/layouts/AdminLayout.astro";
 import { count, countryName, percent, shortDay, sourceName } from "@/ui/view/stats";
 
-const { repositories, pages, currentPage, account } = await loadWorkspace(Astro);
+const { repositories, pages, currentPage, account, panelMode } = await loadWorkspace(Astro);
 const period = parsePeriod(Astro.url.searchParams.get("dias"));
 
 let view: Awaited<ReturnType<typeof loadStatsView>> | null = null;
@@ -55,6 +55,7 @@ const totals = view
   pages={pages}
   currentPage={currentPage}
   account={account}
+  panelMode={panelMode}
 >
   <header class="admin-heading">
     <h1>Estadísticas</h1>

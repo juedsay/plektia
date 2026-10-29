@@ -1,3 +1,4 @@
+import type { AccountPreferences } from "@/application/ports/account-preferences";
 import type { AvatarStorage } from "@/application/ports/avatar-storage";
 import type { LinkMediaRepository } from "@/application/ports/link-media-repository";
 import type { McpConnections } from "@/application/ports/mcp-connections";
@@ -10,6 +11,7 @@ import {
   createSupabaseServerClient,
   type SupabaseConfig,
 } from "@/infrastructure/supabase/server-client";
+import { SupabaseAccountPreferences } from "@/infrastructure/supabase/supabase-account-preferences";
 import { SupabaseAvatarStorage } from "@/infrastructure/supabase/supabase-avatar-storage";
 import { SupabaseLinkMediaRepository } from "@/infrastructure/supabase/supabase-link-media-repository";
 import { SupabaseLinkRepository } from "@/infrastructure/supabase/supabase-link-repository";
@@ -34,6 +36,8 @@ export interface AdminRepositories {
   readonly stats: StatsReader;
   /** Las apps de IA conectadas por MCP (consentimiento y permisos). */
   readonly connections: McpConnections;
+  /** Preferencias de la cuenta (el modo del panel). */
+  readonly preferences: AccountPreferences;
 }
 
 /**
@@ -56,5 +60,6 @@ export function createAdminRepositories(
     users: new SupabaseUserDirectory(client, ownerId),
     stats: new SupabaseStatsReader(client),
     connections: new SupabaseMcpConnections(client),
+    preferences: new SupabaseAccountPreferences(client),
   };
 }

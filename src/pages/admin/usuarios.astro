@@ -17,7 +17,7 @@ if (invited?.data?.ok) return Astro.redirect("/admin/usuarios?invitado", 303);
 const revoked = Astro.getActionResult(actions.users.revoke);
 if (revoked?.data?.ok) return Astro.redirect("/admin/usuarios?acceso-quitado", 303);
 
-const { repositories, pages, currentPage, account } = await loadWorkspace(Astro);
+const { repositories, pages, currentPage, account, panelMode } = await loadWorkspace(Astro);
 if (!isActiveOwner(account)) return Astro.rewrite("/404");
 
 const users = await listUsers({ users: repositories.users })();
@@ -66,6 +66,7 @@ const formatDate = (iso: string | null) => (iso ? dateFormat.format(new Date(iso
   pages={pages}
   currentPage={currentPage}
   account={account}
+  panelMode={panelMode}
   notice={notice}
 >
   <header class="admin-heading">

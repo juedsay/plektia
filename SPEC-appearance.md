@@ -38,8 +38,11 @@ Decisiones del 2026-10-29:
 3. **Todas empiezan en Automático.** Las páginas que ya existen y las nuevas quedan en
    **Automático** (decisión del 2026-10-29): desde el deploy, quien tenga el celular en claro ve la
    página clara. El dueño puede fijar Oscuro si prefiere el aspecto de hoy.
-4. **El panel en claro.** El panel sigue el sistema por defecto. En el menú de la cuenta elijo
-   Automático, Claro u Oscuro, y la elección me sigue en cualquier dispositivo.
+4. **El panel en claro.** El panel sigue el sistema por defecto. Con el botón "Apariencia" (arriba
+   en el celular y abajo de la columna lateral en escritorio, junto a "Cerrar sesión") elijo
+   Automático, Claro u Oscuro. La elección me sigue en cualquier dispositivo y vuelvo a la misma
+   pantalla. Es un menú `<details>` que funciona sin JavaScript y envía un POST a
+   `/admin/apariencia`, que solo vuelve a pantallas del panel.
 5. **Accesible en los dos modos.** Toda combinación de estilo y modo cumple AAA en la página pública
    (7:1 en texto y 4.5:1 en texto grande, contra el fondo y la superficie), y el panel cumple AA.
    Foco visible y `forced-colors` siguen funcionando.

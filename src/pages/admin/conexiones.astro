@@ -18,7 +18,7 @@ if (changed?.data?.ok) return Astro.redirect("/admin/conexiones?permiso", 303);
 const revoked = Astro.getActionResult(actions.connections.revoke);
 if (revoked?.data?.ok) return Astro.redirect("/admin/conexiones?desconectada", 303);
 
-const { repositories, pages, currentPage, account } = await loadWorkspace(Astro);
+const { repositories, pages, currentPage, account, panelMode } = await loadWorkspace(Astro);
 let connections: Awaited<ReturnType<ReturnType<typeof listConnections>>> = [];
 let failed = false;
 try {
@@ -58,6 +58,7 @@ const formatDate = (iso: string) => dateFormat.format(new Date(iso));
   pages={pages}
   currentPage={currentPage}
   account={account}
+  panelMode={panelMode}
   notice={notice}
 >
   <header class="admin-heading">

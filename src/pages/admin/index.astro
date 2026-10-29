@@ -18,7 +18,7 @@ if (switched?.data?.ok) return Astro.redirect(Astro.url.pathname, 303);
 const liveChecked = Astro.getActionResult(actions.live.checkNow);
 if (liveChecked?.data?.ok) return Astro.redirect(`${Astro.url.pathname}?comprobado`, 303);
 
-const { repositories, pages, currentPage, account } = await loadWorkspace(Astro);
+const { repositories, pages, currentPage, account, panelMode } = await loadWorkspace(Astro);
 const content = currentPage ? await repositories.linksOf(currentPage.id).listOwn() : null;
 const publicUrl = currentPage ? new URL(`/${currentPage.handle}`, Astro.url) : null;
 // El botón solo aparece si la página tiene un canal que se pueda vigilar.
@@ -48,6 +48,7 @@ const notice =
   pages={pages}
   currentPage={currentPage}
   account={account}
+  panelMode={panelMode}
   notice={notice}
   wide
 >
