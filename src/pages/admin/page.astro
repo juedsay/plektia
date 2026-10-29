@@ -8,6 +8,7 @@ import {
   AVAILABLE_THEMES,
   BIO_MAX_LENGTH,
   COLOR_MODES,
+  LINK_SHAPES,
   UPCOMING_THEMES,
 } from "@/domain/page";
 import { loadWorkspace } from "@/ui/admin/workspace";
@@ -32,6 +33,7 @@ const values = {
   showHandle: failure ? failure.values["showHandle"] === "on" : (currentPage?.showHandle ?? true),
   colorMode: failure?.values["colorMode"] ?? currentPage?.colorMode ?? "auto",
   accent: failure?.values["accent"] ?? currentPage?.accent ?? "hueso",
+  linkShape: failure?.values["linkShape"] ?? currentPage?.linkShape ?? "rows",
 };
 const message = failure
   ? failure.message
@@ -64,6 +66,12 @@ const MODE_NAMES: Record<string, { name: string; hint: string }> = {
   auto: { name: "Automático", hint: "Clara u oscura según el celular de cada visitante." },
   dark: { name: "Oscuro", hint: "Siempre oscura." },
   light: { name: "Claro", hint: "Siempre clara." },
+};
+
+const SHAPE_NAMES: Record<string, { name: string; hint: string }> = {
+  rows: { name: "Filas", hint: "Separados por una línea, como hasta ahora." },
+  cards: { name: "Tarjetas", hint: "Cada link en su recuadro." },
+  pills: { name: "Pastillas", hint: "Cada link en una cápsula redondeada." },
 };
 
 const ACCENT_NAMES: Record<string, string> = {
@@ -315,6 +323,23 @@ const THEME_NAMES: Record<string, string> = {
             ))}
           </div>
           {fields.accent && <p class="field-error">{fields.accent}</p>}
+        </fieldset>
+
+        <fieldset class="field choice-group">
+          <legend>Forma de los links</legend>
+          {LINK_SHAPES.map((shape) => (
+            <label class="choice">
+              <input
+                type="radio"
+                name="linkShape"
+                value={shape}
+                checked={values.linkShape === shape}
+              />
+              <span class="choice-name">{SHAPE_NAMES[shape]?.name}</span>
+              <span class="choice-hint">{SHAPE_NAMES[shape]?.hint}</span>
+            </label>
+          ))}
+          {fields.linkShape && <p class="field-error">{fields.linkShape}</p>}
         </fieldset>
 
         <div class="field">

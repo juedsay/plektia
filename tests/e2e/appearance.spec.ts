@@ -127,3 +127,27 @@ test("el acento elegido se ve en la página pública, en claro y en oscuro", asy
     await chooseAccent(page, "Hueso");
   }
 });
+
+// Forma de los links (tarea 36b): la elección del panel llega a la página pública.
+test("la forma de los links elegida se aplica en la página pública", async ({
+  page,
+  context,
+  browser,
+  baseURL,
+}) => {
+  await signIn(context, baseURL ?? "", "avatar@plektia.test");
+  await page.goto("/admin/page");
+  await page.getByRole("radio", { name: /^Pastillas/ }).check();
+  await page.getByRole("button", { name: "Guardar" }).click();
+  await expect(page).toHaveURL(/\/admin\/page\?guardado$/);
+  try {
+    const { visitor, close } = await visit(browser, baseURL ?? "", "light");
+    await expect(visitor.locator("[data-patchbay]")).toHaveAttribute("data-shape", "pills");
+    await close();
+  } finally {
+    await page.goto("/admin/page");
+    await page.getByRole("radio", { name: /^Filas/ }).check();
+    await page.getByRole("button", { name: "Guardar" }).click();
+    await expect(page).toHaveURL(/\/admin\/page\?guardado$/);
+  }
+});

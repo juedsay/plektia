@@ -458,14 +458,14 @@
     - el panel sigue al sistema;
     - fijar Claro u Oscuro vale en cualquier dispositivo;
     - axe AA en claro.
-- [ ] **Tarea 36a: Color de acento** · S · Deps: 34
+- [x] **Tarea 36a: Color de acento** · S · Deps: 34
   - `pages.accent` (8 acentos, `hueso` por defecto), expuesto en `public_page_v`.
   - Tokens `--accent-on-dark` y `--accent-on-light`, y `--color-accent` por modo; pinta el hilo, los jacks y los filetes.
   - Elección en Panel → Página.
   - **Aceptación:**
     - el acento elegido se ve en la página pública, en los dos modos;
     - AAA de cada acento contra el fondo y la superficie.
-- [ ] **Tarea 36b: Forma de los links** · S · Deps: 36a
+- [x] **Tarea 36b: Forma de los links** · S · Deps: 36a
   - `pages.link_shape`: filas, tarjetas o pastillas.
 - [ ] **Tarea 36c: Tipografía de los nombres** · M · Deps: 36a
   - `pages.name_font`, con 4 fuentes propias auditadas y solo la de la página precargada.

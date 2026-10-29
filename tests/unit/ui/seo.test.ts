@@ -21,6 +21,7 @@ const page: PublicPage = {
   theme: "tecnico",
   colorMode: "auto",
   accent: "hueso",
+  linkShape: "rows",
   sections: [
     {
       id: "s",

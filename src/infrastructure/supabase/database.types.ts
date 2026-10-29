@@ -307,6 +307,7 @@ export type Database = {
           display_name: string;
           handle: string;
           id: string;
+          link_shape: Database["public"]["Enums"]["link_shape"];
           owner_id: string;
           show_handle: boolean;
           theme: Database["public"]["Enums"]["profile_theme"];
@@ -322,6 +323,7 @@ export type Database = {
           display_name: string;
           handle: string;
           id?: string;
+          link_shape?: Database["public"]["Enums"]["link_shape"];
           owner_id?: string;
           show_handle?: boolean;
           theme?: Database["public"]["Enums"]["profile_theme"];
@@ -336,6 +338,7 @@ export type Database = {
           display_name?: string;
           handle?: string;
           id?: string;
+          link_shape?: Database["public"]["Enums"]["link_shape"];
           owner_id?: string;
           show_handle?: boolean;
           theme?: Database["public"]["Enums"]["profile_theme"];
@@ -546,6 +549,7 @@ export type Database = {
           color_mode: Database["public"]["Enums"]["color_mode"] | null;
           display_name: string | null;
           handle: string | null;
+          link_shape: Database["public"]["Enums"]["link_shape"] | null;
           sections: Json | null;
           show_handle: boolean | null;
           theme: Database["public"]["Enums"]["profile_theme"] | null;
@@ -802,6 +806,7 @@ export type Database = {
           display_name: string;
           handle: string;
           id: string;
+          link_shape: Database["public"]["Enums"]["link_shape"];
           owner_id: string;
           show_handle: boolean;
           theme: Database["public"]["Enums"]["profile_theme"];
@@ -855,6 +860,7 @@ export type Database = {
       color_mode: "auto" | "dark" | "light";
       link_provider:
         "generic" | "youtube" | "twitch" | "kick" | "whatsapp" | "github" | "instagram";
+      link_shape: "rows" | "cards" | "pills";
       profile_theme: "tecnico";
       user_role: "owner" | "member";
     };
@@ -971,6 +977,7 @@ export const Constants = {
       accent_color: ["hueso", "coral", "ambar", "cielo", "lavanda", "rosa", "turquesa", "arena"],
       color_mode: ["auto", "dark", "light"],
       link_provider: ["generic", "youtube", "twitch", "kick", "whatsapp", "github", "instagram"],
+      link_shape: ["rows", "cards", "pills"],
       profile_theme: ["tecnico"],
       user_role: ["owner", "member"],
     },
