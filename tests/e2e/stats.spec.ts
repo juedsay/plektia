@@ -2,6 +2,11 @@ import { randomBytes } from "node:crypto";
 
 import { expect, test } from "@playwright/test";
 
+import {
+  LIMIT_TEST_TIMEOUT_MS,
+  limitWindowOf,
+  waitForRoomInLimitWindow,
+} from "./support/rate-limit-window";
 import { createPageAs, deletePage, insertLink, signIn, statsToday } from "./support/session";
 
 // Estadísticas sin cookies (tarea 27, SPEC-click-analytics). Una página propia
@@ -113,32 +118,16 @@ test.describe("el dueño", () => {
   });
 });
 
-// El limitador local (Miniflare) cuenta por ventanas fijas de un minuto
-// alineadas al reloj, no por los últimos 60 s: una ráfaga que cruza el cambio
-// de minuto puede registrar hasta 30 + 30. Por eso la ráfaga se manda entera
-// dentro de una sola ventana.
-const LIMIT_WINDOW_MS = 60_000;
-/** Lo que tiene que quedar de ventana para arrancar; la ráfaga tarda mucho menos. */
-const BURST_ROOM_MS = 15_000;
+// Si la ráfaga cruzara el cambio de minuto podría registrar hasta 30 + 30
+// (ver support/rate-limit-window.ts).
 const BURST_SIZE = 100;
 const CONCURRENT_REQUESTS = 10;
-
-const limitWindowOf = (timestamp: number) => Math.floor(timestamp / LIMIT_WINDOW_MS);
-
-/** Si a la ventana actual le queda poco, espera a que empiece la siguiente. */
-async function waitForRoomInLimitWindow() {
-  const remainingInWindow = LIMIT_WINDOW_MS - (Date.now() % LIMIT_WINDOW_MS);
-  if (remainingInWindow < BURST_ROOM_MS) {
-    await new Promise((resolve) => setTimeout(resolve, remainingInWindow + 100));
-  }
-}
 
 test.describe("límite", () => {
   test.use({ extraHTTPHeaders: { "cf-connecting-ip": ipOfThisRun() } });
 
   test("100 eventos seguidos desde una IP registran 30 o menos", async ({ request, baseURL }) => {
-    // La espera hasta la próxima ventana puede sumar hasta BURST_ROOM_MS.
-    test.setTimeout(60_000);
+    test.setTimeout(LIMIT_TEST_TIMEOUT_MS);
     const before = await statsToday(PAGE_ID, linkId);
     const view = JSON.stringify({ t: "view", h: HANDLE, s: "direct" });
     const sendView = () =>
@@ -147,8 +136,7 @@ test.describe("límite", () => {
         headers: { origin: baseURL ?? "", "content-type": "text/plain" },
       });
 
-    await waitForRoomInLimitWindow();
-    const windowAtStart = limitWindowOf(Date.now());
+    const windowAtStart = await waitForRoomInLimitWindow();
     // De a tandas en paralelo: la ráfaga dura poco aunque el servidor esté cargado.
     for (let sent = 0; sent < BURST_SIZE; sent += CONCURRENT_REQUESTS) {
       await Promise.all(Array.from({ length: CONCURRENT_REQUESTS }, sendView));
