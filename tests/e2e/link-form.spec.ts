@@ -34,7 +34,7 @@ test("con la red elegida, alcanza el usuario para agregar el perfil", async ({
     await add.getByRole("button", { name: "Agregar link" }).click();
     await expect(page.locator("[data-editor-status]")).toHaveText(`${TITLE}: agregado`);
 
-    const visitor = await (await browser.newContext({ baseURL })).newPage();
+    const visitor = await (await browser.newContext({ baseURL: baseURL ?? "" })).newPage();
     await visitor.goto("/avatar-demo");
     const link = visitor.getByRole("link", { name: new RegExp(TITLE) });
     await expect(link).toHaveAttribute("href", "https://www.instagram.com/plektia.demo");
