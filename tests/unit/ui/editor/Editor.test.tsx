@@ -329,6 +329,60 @@ async function deleteLink(user: ReturnType<typeof userEvent.setup>, title: strin
 }
 
 describe("Editor · agregar", () => {
+  it("con una red, alcanza el usuario: arma la URL, la muestra y recuerda la red", async () => {
+    const { api, user } = setup({ sections: [], links: [] });
+    await user.click(screen.getByRole("button", { name: "Instagram" }));
+
+    const usernameField = screen.getByLabelText("Usuario de Instagram");
+    await waitFor(() => {
+      expect(document.activeElement).toBe(usernameField);
+    });
+    expect(screen.getByLabelText("Título")).toHaveProperty("value", "Instagram");
+    await user.type(usernameField, "@juedsay");
+    expect(screen.getByText("Se va a abrir instagram.com/juedsay")).toBeTruthy();
+    await user.click(screen.getByRole("button", { name: "Agregar link" }));
+
+    expect(api.created.at(-1)).toMatchObject({
+      title: "Instagram",
+      url: "https://www.instagram.com/juedsay",
+    });
+    // Queda en Instagram, vacío y listo para otro.
+    expect(screen.getByRole("button", { name: "Instagram" }).getAttribute("aria-pressed")).toBe(
+      "true",
+    );
+    expect(screen.getByLabelText("Usuario de Instagram")).toHaveProperty("value", "");
+  });
+
+  it("un usuario inválido se explica junto al campo y no llama al servidor", async () => {
+    const { api, user } = setup({ sections: [], links: [] });
+    await user.click(screen.getByRole("button", { name: "GitHub" }));
+    await user.type(screen.getByLabelText("Usuario de GitHub"), "con espacios");
+    await user.click(screen.getByRole("button", { name: "Agregar link" }));
+
+    expect(api.created).toEqual([]);
+    expect(screen.getByText(/no parece un usuario de GitHub/)).toBeTruthy();
+    expect(screen.getByLabelText("Usuario de GitHub").getAttribute("aria-invalid")).toBe("true");
+  });
+
+  it("en 'Otro link', un perfil pegado se ofrece cargar como su red", async () => {
+    const { user } = setup({ sections: [], links: [] });
+    await user.type(screen.getByLabelText("URL"), "https://www.tiktok.com/@juedsay");
+    await user.click(screen.getByRole("button", { name: "Cargarlo como TikTok" }));
+
+    expect(screen.getByLabelText("Usuario de TikTok")).toHaveProperty("value", "juedsay");
+    expect(screen.getByText("Se va a abrir tiktok.com/@juedsay")).toBeTruthy();
+  });
+
+  it("'Más…' muestra el resto de las redes y pasa el foco a la primera", async () => {
+    const { user } = setup({ sections: [], links: [] });
+    expect(screen.queryByRole("button", { name: "LinkedIn" })).toBeNull();
+    await user.click(screen.getByRole("button", { name: "Más…" }));
+
+    expect(document.activeElement).toBe(screen.getByRole("button", { name: "Kick" }));
+    await user.click(screen.getByRole("button", { name: "LinkedIn" }));
+    expect(screen.getByText("linkedin.com/in/")).toBeTruthy();
+  });
+
   it("propone el título desde la URL y lo agrega en su sección", async () => {
     const { api, user } = setup({ sections: [REDES], links: [] });
 
@@ -367,7 +421,7 @@ describe("Editor · agregar", () => {
       expect(editorStatus()).toBe("GitHub: agregado");
     });
     expect(api.created).toHaveLength(1);
-    expect(screen.getAllByText("GitHub")).toHaveLength(1);
+    expect(screen.getAllByText("GitHub", { selector: LINK_TITLE })).toHaveLength(1);
   });
 
   it("reintentar tras un error va con el mismo id; el link siguiente, con otro", async () => {
@@ -627,6 +681,9 @@ describe("Editor · dónde se ve", () => {
   });
 });
 
+/** Los títulos de los links del editor (los botones de redes repiten sus nombres). */
+const LINK_TITLE = ".editor-link-title";
+
 /** El id del elemento con foco (el campo recién abierto). */
 function focusedId(): string {
   return document.activeElement?.id ?? "";
@@ -637,7 +694,7 @@ describe("Editor · borrar y deshacer", () => {
     const { api, user } = setup(TWO_LINKS, { fakeTimers: true });
     await deleteLink(user, "Twitch");
 
-    expect(screen.queryByText("Twitch")).toBeNull();
+    expect(screen.queryByText("Twitch", { selector: LINK_TITLE })).toBeNull();
     expect(screen.getByText("Twitch borrado")).toBeTruthy();
     await waitFor(() => {
       expect(document.activeElement).toBe(screen.getByRole("button", { name: "Editar YouTube" }));
@@ -677,7 +734,7 @@ describe("Editor · borrar y deshacer", () => {
     await vi.advanceTimersByTimeAsync(UNDO_WINDOW_MS * 2);
     expect(api.deleted).toEqual([]);
     await user.click(screen.getByRole("button", { name: "Deshacer" }));
-    expect(screen.getByText("Twitch")).toBeTruthy();
+    expect(screen.getByText("Twitch", { selector: LINK_TITLE })).toBeTruthy();
   });
 
   it("si se cierra la pestaña durante los 6 s, el borrado sale igual (keepalive)", async () => {
@@ -978,7 +1035,7 @@ describe("Editor · secciones", () => {
     await user.click(screen.getByRole("button", { name: "Deshacer" }));
 
     expect(sectionTitles()).toEqual(["Redes", "Proyectos", "Sin sección"]);
-    expect(screen.getByText("Instagram")).toBeTruthy();
+    expect(screen.getByText("Instagram", { selector: LINK_TITLE })).toBeTruthy();
   });
 
   it("si se cierra la pestaña durante los 6 s, el borrado de la sección sale igual", async () => {

@@ -498,3 +498,23 @@
     - README de portfolio con la arquitectura y la estrategia de tests.
   - **Verificar:** informes de cada skill.
   - **Archivos:** `README.md`, `docs/`.
+
+---
+
+## F10 · Link form → ENTREGA 7 ([SPEC-link-form](../SPEC-link-form.md))
+
+- [x] **Tarea 37a: Elegir la red y escribir el usuario** · M · Deps: 13
+  - Botones de las 11 redes y "Otro link". El campo "Usuario" va con el dominio de prefijo y muestra la URL final.
+  - Un perfil pegado en "Otro link" se puede cargar como su red.
+  - **Aceptación:**
+    - se agrega un Instagram escribiendo solo el usuario;
+    - un usuario inválido se explica sin llamar al servidor;
+    - la isla sigue debajo de 120 KB.
+- [ ] **Tarea 37b: Tipo de link** · M · Deps: 37a
+  - `links.kind`: red social, artículo, video o sitio. Se detecta, se puede cambiar, y se ve como etiqueta en la página.
+- [ ] **Tarea 37c: Vista previa del artículo** · M · Deps: 37b
+  - Se detalla y se aprueba antes de empezar; las salvaguardas ya están en la spec.
+
+### ✅ Checkpoint F10 · ENTREGA 7
+- [ ] Agregás tus redes con el usuario, y los artículos se distinguen en tu página.
+- [ ] Revisión con vos.
