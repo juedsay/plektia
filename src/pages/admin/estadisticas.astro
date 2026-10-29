@@ -1,0 +1,218 @@
+---
+// Estadísticas de la página con la que se trabaja (SPEC-click-analytics,
+// historia 3 y "Panel"): período, comparación con el anterior, links,
+// países, orígenes y evolución diaria. Son eventos, no personas.
+import { loadStatsView, PERIODS, parsePeriod, changeLabel } from "@/application/stats/stats-view";
+import { loadWorkspace } from "@/ui/admin/workspace";
+import DailyBars from "@/ui/components/stats/DailyBars.astro";
+import AdminLayout from "@/ui/layouts/AdminLayout.astro";
+import { count, countryName, percent, shortDay, sourceName } from "@/ui/view/stats";
+
+const { repositories, pages, currentPage, account } = await loadWorkspace(Astro);
+const period = parsePeriod(Astro.url.searchParams.get("dias"));
+
+let view: Awaited<ReturnType<typeof loadStatsView>> | null = null;
+let failed = false;
+if (currentPage) {
+  try {
+    view = await loadStatsView(repositories.stats, currentPage.id, period, new Date());
+  } catch (error) {
+    console.error("estadísticas: no se pudieron leer", error);
+    failed = true;
+  }
+}
+const publicUrl = currentPage ? new URL(`/${currentPage.handle}`, Astro.url) : null;
+/** "+20 % que antes", "igual que antes" o "nuevo" (sin nada en el período anterior). */
+function changeText(current: number, previous: number): string {
+  const label = changeLabel(current, previous);
+  return label === "nuevo" ? label : `${label} que antes`;
+}
+const totals = view
+  ? [
+      {
+        name: "Visitas",
+        value: count(view.current.views),
+        change: changeText(view.current.views, view.previous.views),
+      },
+      {
+        name: "Clics",
+        value: count(view.current.clicks),
+        change: changeText(view.current.clicks, view.previous.clicks),
+      },
+      {
+        name: "Clics por visita",
+        value: percent(view.current.ctr),
+        change:
+          view.previous.ctr === null ? "sin visitas antes" : `antes ${percent(view.previous.ctr)}`,
+      },
+    ]
+  : [];
+---
+
+<AdminLayout
+  title="Estadísticas"
+  section="stats"
+  pages={pages}
+  currentPage={currentPage}
+  account={account}
+>
+  <header class="admin-heading">
+    <h1>Estadísticas</h1>
+    {currentPage && <p class="admin-bio">De /{currentPage.handle}</p>}
+  </header>
+
+  {!currentPage ? (
+    <p>
+      Todavía no tenés una página. <a href="/admin/pages/new">Creá la primera</a>.
+    </p>
+  ) : (
+    <>
+      <nav class="stats-periods" aria-label="Período">
+        {PERIODS.map((days) => (
+          <a
+            href={`/admin/estadisticas?dias=${String(days)}`}
+            aria-current={days === period ? "page" : undefined}
+          >
+            {days} días
+          </a>
+        ))}
+      </nav>
+
+      {failed && (
+        <p class="field-error" role="alert">
+          No pudimos cargar las estadísticas. Recargá la página en un rato.
+        </p>
+      )}
+
+      {view && (
+        <>
+          <p class="field-hint stats-note">
+            Del {shortDay(view.from)} al {shortDay(view.to)} (días UTC), comparado con los{" "}
+            {view.period} días anteriores. Son eventos, no personas: si alguien recarga la página,
+            cuenta otra visita.
+          </p>
+
+          <section class="stats-totals" aria-label="Resumen del período">
+            {totals.map((total) => (
+              <div class="stats-total">
+                <span class="stats-total-name">{total.name}</span>
+                <span class="stats-total-value">{total.value}</span>
+                <span class="stats-total-change">{total.change}</span>
+              </div>
+            ))}
+          </section>
+
+          {view.empty ? (
+            <section class="stats-empty" aria-labelledby="stats-empty-title">
+              <h2 id="stats-empty-title">Todavía no hay visitas</h2>
+              <p>Compartí tu página para que empiecen a llegar:</p>
+              {publicUrl && (
+                <p class="stats-empty-link">
+                  <a href={publicUrl.href}>{publicUrl.href}</a>
+                  <button type="button" class="button is-quiet" data-copy={publicUrl.href}>
+                    Copiar link
+                  </button>
+                  <span class="field-hint" role="status" data-copy-status />
+                </p>
+              )}
+            </section>
+          ) : (
+            <>
+              <section class="stats-section" aria-labelledby="stats-days-title">
+                <h2 id="stats-days-title">Día por día</h2>
+                <div class="stats-charts">
+                  <DailyBars id="chart-views" title="Visitas" days={view.days} metric="views" />
+                  <DailyBars id="chart-clicks" title="Clics" days={view.days} metric="clicks" />
+                </div>
+              </section>
+
+              <section class="stats-section" aria-labelledby="stats-links-title">
+                <h2 id="stats-links-title">Links más tocados</h2>
+                {view.links.length === 0 ? (
+                  <p class="field-hint">Todavía nadie tocó un link en este período.</p>
+                ) : (
+                  <table class="stats-table">
+                    <thead>
+                      <tr>
+                        <th scope="col">Link</th>
+                        <th scope="col" class="is-number">
+                          Clics
+                        </th>
+                        <th scope="col" class="is-number">
+                          Por visita
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {view.links.map((link) => (
+                        <tr>
+                          <th scope="row">{link.title}</th>
+                          <td class="is-number">{count(link.clicks)}</td>
+                          <td class="is-number">{percent(link.ctr)}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                )}
+              </section>
+
+              <div class="stats-columns">
+                <section class="stats-section" aria-labelledby="stats-sources-title">
+                  <h2 id="stats-sources-title">De dónde llegan</h2>
+                  <table class="stats-table">
+                    <thead>
+                      <tr>
+                        <th scope="col">Origen</th>
+                        <th scope="col" class="is-number">
+                          Visitas
+                        </th>
+                        <th scope="col" class="is-number">
+                          Clics
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {view.sources.map((row) => (
+                        <tr>
+                          <th scope="row">{sourceName(row.value)}</th>
+                          <td class="is-number">{count(row.views)}</td>
+                          <td class="is-number">{count(row.clicks)}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </section>
+
+                <section class="stats-section" aria-labelledby="stats-countries-title">
+                  <h2 id="stats-countries-title">Países</h2>
+                  <table class="stats-table">
+                    <thead>
+                      <tr>
+                        <th scope="col">País</th>
+                        <th scope="col" class="is-number">
+                          Visitas
+                        </th>
+                        <th scope="col" class="is-number">
+                          Clics
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {view.countries.map((row) => (
+                        <tr>
+                          <th scope="row">{countryName(row.value)}</th>
+                          <td class="is-number">{count(row.views)}</td>
+                          <td class="is-number">{count(row.clicks)}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </section>
+              </div>
+            </>
+          )}
+        </>
+      )}
+    </>
+  )}
+</AdminLayout>

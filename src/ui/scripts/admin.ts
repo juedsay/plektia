@@ -70,3 +70,19 @@ for (const button of document.querySelectorAll<HTMLButtonElement>("[data-live-ch
     });
   });
 }
+
+// "Copiar link" (estadísticas sin datos): copia y lo anuncia.
+for (const button of document.querySelectorAll<HTMLButtonElement>("[data-copy]")) {
+  const status = button.parentElement?.querySelector<HTMLElement>("[data-copy-status]");
+  button.addEventListener("click", () => {
+    const text = button.dataset["copy"] ?? "";
+    navigator.clipboard.writeText(text).then(
+      () => {
+        if (status) status.textContent = "Link copiado.";
+      },
+      () => {
+        if (status) status.textContent = "No pudimos copiar: seleccioná el link y copialo a mano.";
+      },
+    );
+  });
+}

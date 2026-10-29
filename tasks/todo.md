@@ -379,11 +379,12 @@
   - **Archivos:** `supabase/migrations/0007_stats.sql`, `src/pages/api/e.ts`, `src/infrastructure/analytics/ingest-client.ts`, `src/ui/scripts/beacon.ts`.
   - **Hecho (2026-10-29):** contadores diarios por página (no por perfil: desde SPEC-pages una cuenta tiene varias) en `stats_daily`, `link_stats_daily` y `stats_breakdown_daily` (país y origen), sin eventos sueltos, IP, user agent, referer ni identificadores; RLS de lectura del dueño y escritura solo por `ingest_event` (descarta al dueño, links ocultos y lo inválido, en silencio). `POST /api/e`: siempre 204, Zod estricto, 512 bytes, solo del propio origen (Astro frena lo de otro sitio con 403), 30 por minuto por IP (`STATS_RATE_LIMITER`), país de Cloudflare. Beacon `sendBeacon` (o `fetch` con `keepalive`) con origen calculado en el navegador; la vista previa del panel no cuenta. Retención de 400 días con un cron mensual. La política de privacidad describe la medición.
 
-- [ ] **Tarea 28: Vista de estadísticas** · M · Deps: 27
+- [x] **Tarea 28: Vista de estadísticas** · M · Deps: 27
   - `/admin/estadisticas` con períodos, comparación, links, países y orígenes (skill `dataviz`), una tabla equivalente por gráfico y el estado vacío.
   - **Aceptación:** E2E de visitar y que el número suba; axe AA.
   - **Verificar:** `pnpm test:e2e`.
   - **Archivos:** `src/pages/admin/estadisticas.astro`, `src/ui/components/stats/*.astro`, `src/application/stats/*.ts`.
+  - **Hecho (2026-10-29):** `/admin/estadisticas` de la página actual, con 7, 30 o 90 días (`?dias=`), comparado con el período anterior: visitas, clics y clics por visita; evolución diaria en dos gráficos de barras SVG (una medida por gráfico, sin dos ejes), cada uno con su tabla; links más tocados con su porcentaje; orígenes en orden fijo y los 8 países principales más "Otros". Aclara que son eventos, no personas. Estado vacío con "Copiar link" y estado de error. Sin `style` en línea (la CSP no lo admite): las alturas van como atributos del SVG. Link "Estadísticas" en la navegación.
 
 ---
 

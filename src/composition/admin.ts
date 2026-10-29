@@ -2,6 +2,7 @@ import type { AvatarStorage } from "@/application/ports/avatar-storage";
 import type { LinkMediaRepository } from "@/application/ports/link-media-repository";
 import type { LinkReader, LinkWriter, SectionWriter } from "@/application/ports/link-repository";
 import type { PageReader, PageWriter } from "@/application/ports/page-repository";
+import type { StatsReader } from "@/application/ports/stats-reader";
 import type { UserDirectory } from "@/application/ports/user-directory";
 import {
   type CookieWriter,
@@ -12,6 +13,7 @@ import { SupabaseAvatarStorage } from "@/infrastructure/supabase/supabase-avatar
 import { SupabaseLinkMediaRepository } from "@/infrastructure/supabase/supabase-link-media-repository";
 import { SupabaseLinkRepository } from "@/infrastructure/supabase/supabase-link-repository";
 import { SupabasePageRepository } from "@/infrastructure/supabase/supabase-page-repository";
+import { SupabaseStatsReader } from "@/infrastructure/supabase/supabase-stats-reader";
 import { SupabaseUserDirectory } from "@/infrastructure/supabase/supabase-user-directory";
 
 export interface AdminRepositories {
@@ -26,6 +28,8 @@ export interface AdminRepositories {
   mediaOf(pageId: string): LinkMediaRepository;
   /** La cuenta de la sesión y, si es owner, los usuarios habilitados. */
   readonly users: UserDirectory;
+  /** Visitas y clics de las páginas de la cuenta (la RLS deja ver solo las propias). */
+  readonly stats: StatsReader;
 }
 
 /**
@@ -46,5 +50,6 @@ export function createAdminRepositories(
     linksOf: (pageId) => new SupabaseLinkRepository(client, pageId),
     mediaOf: (pageId) => new SupabaseLinkMediaRepository(client, pageId),
     users: new SupabaseUserDirectory(client, ownerId),
+    stats: new SupabaseStatsReader(client),
   };
 }
