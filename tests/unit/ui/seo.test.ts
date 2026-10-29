@@ -19,6 +19,7 @@ const page: PublicPage = {
   bio: "Streams y código",
   avatarPath: null,
   theme: "tecnico",
+  colorMode: "auto",
   sections: [
     {
       id: "s",

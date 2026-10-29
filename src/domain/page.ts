@@ -44,6 +44,13 @@ export const AVAILABLE_THEMES = ["tecnico"] as const;
 export const UPCOMING_THEMES = ["cercano", "energico", "editorial"] as const;
 export type Theme = (typeof AVAILABLE_THEMES)[number];
 
+/**
+ * Modo de la página (SPEC-appearance): `auto` sigue al dispositivo de cada
+ * visitante; `dark` y `light` lo fijan. Es independiente del tema.
+ */
+export const COLOR_MODES = ["auto", "dark", "light"] as const;
+export type ColorMode = (typeof COLOR_MODES)[number];
+
 export const BIO_MAX_LENGTH = 160;
 
 const Bio = z
@@ -56,6 +63,7 @@ const PageSettingsSchema = z.object(
     displayName: safeLine("El nombre", 60),
     bio: Bio.default(""),
     theme: z.enum(AVAILABLE_THEMES, { error: "Ese tema todavía no está disponible." }),
+    colorMode: z.enum(COLOR_MODES, { error: "Elegí automático, oscuro o claro." }).default("auto"),
     showHandle: z.boolean({ error: "Tiene que ser sí o no." }),
   },
   { error: "Los datos de la página no son válidos." },
@@ -65,6 +73,7 @@ export interface PageSettings {
   readonly displayName: string;
   readonly bio: string | null;
   readonly theme: Theme;
+  readonly colorMode: ColorMode;
   readonly showHandle: boolean;
 }
 

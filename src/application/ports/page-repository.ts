@@ -1,5 +1,5 @@
 import type { WriteError } from "@/application/ports/link-repository";
-import type { PageDraft, PageSettings, Theme } from "@/domain/page";
+import type { ColorMode, PageDraft, PageSettings, Theme } from "@/domain/page";
 import type { Result } from "@/domain/result";
 
 // Puertos de las páginas de una cuenta (SPEC-pages). Como en los links, el
@@ -11,6 +11,7 @@ export interface Page {
   readonly displayName: string;
   readonly bio: string | null;
   readonly theme: Theme;
+  readonly colorMode: ColorMode;
   readonly showHandle: boolean;
   /** Ruta del avatar en el bucket (`{owner_id}/{uuid}.webp`), o `null` si no tiene. */
   readonly avatarPath: string | null;

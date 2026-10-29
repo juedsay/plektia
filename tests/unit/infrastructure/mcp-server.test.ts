@@ -21,6 +21,7 @@ const PAGE: Page = {
   displayName: "Juedsay",
   bio: "Hola",
   theme: "tecnico",
+  colorMode: "auto",
   showHandle: true,
   avatarPath: null,
 };

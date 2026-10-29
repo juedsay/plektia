@@ -3,7 +3,7 @@
 // desde la tarea 17c es de cada página): avatar, nombre, bio, tema y @handle.
 import { actions } from "astro:actions";
 
-import { AVAILABLE_THEMES, BIO_MAX_LENGTH, UPCOMING_THEMES } from "@/domain/page";
+import { AVAILABLE_THEMES, BIO_MAX_LENGTH, COLOR_MODES, UPCOMING_THEMES } from "@/domain/page";
 import { loadWorkspace } from "@/ui/admin/workspace";
 import Alert from "@/ui/components/Alert.astro";
 import AdminLayout from "@/ui/layouts/AdminLayout.astro";
@@ -24,6 +24,7 @@ const values = {
   displayName: failure?.values["displayName"] ?? currentPage?.displayName ?? "",
   bio: failure ? (failure.values["bio"] ?? "") : (currentPage?.bio ?? ""),
   showHandle: failure ? failure.values["showHandle"] === "on" : (currentPage?.showHandle ?? true),
+  colorMode: failure?.values["colorMode"] ?? currentPage?.colorMode ?? "auto",
 };
 const message = failure
   ? failure.message
@@ -51,6 +52,12 @@ const notice =
     : switched?.error
       ? "No pudimos cambiar de página. Probá de nuevo."
       : null;
+
+const MODE_NAMES: Record<string, { name: string; hint: string }> = {
+  auto: { name: "Automático", hint: "Clara u oscura según el celular de cada visitante." },
+  dark: { name: "Oscuro", hint: "Siempre oscura." },
+  light: { name: "Claro", hint: "Siempre clara." },
+};
 
 const THEME_NAMES: Record<string, string> = {
   tecnico: "Técnico",
@@ -238,7 +245,7 @@ const THEME_NAMES: Record<string, string> = {
             <label class="choice">
               <input type="radio" name="theme" value={theme} checked />
               <span class="choice-name">{THEME_NAMES[theme]}</span>
-              <span class="choice-hint">Oscuro, con el hilo y los jacks.</span>
+              <span class="choice-hint">Con el hilo y los jacks, en claro y en oscuro.</span>
             </label>
           ))}
           {UPCOMING_THEMES.map((theme) => (
@@ -249,6 +256,23 @@ const THEME_NAMES: Record<string, string> = {
             </label>
           ))}
           {fields.theme && <p class="field-error">{fields.theme}</p>}
+        </fieldset>
+
+        <fieldset class="field choice-group">
+          <legend>Modo</legend>
+          {COLOR_MODES.map((mode) => (
+            <label class="choice">
+              <input
+                type="radio"
+                name="colorMode"
+                value={mode}
+                checked={values.colorMode === mode}
+              />
+              <span class="choice-name">{MODE_NAMES[mode]?.name}</span>
+              <span class="choice-hint">{MODE_NAMES[mode]?.hint}</span>
+            </label>
+          ))}
+          {fields.colorMode && <p class="field-error">{fields.colorMode}</p>}
         </fieldset>
 
         <div class="field">

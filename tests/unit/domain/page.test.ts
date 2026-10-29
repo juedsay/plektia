@@ -2,13 +2,27 @@ import { describe, expect, it } from "vitest";
 
 import { BIO_MAX_LENGTH, parsePageSettings } from "@/domain/page";
 
-const valid = { displayName: "Julián", bio: "QA", theme: "tecnico", showHandle: true };
+const valid = {
+  displayName: "Julián",
+  bio: "QA",
+  theme: "tecnico",
+  colorMode: "light",
+  showHandle: true,
+};
 
 describe("parsePageSettings", () => {
   it("valida y recorta los textos", () => {
     expect(parsePageSettings({ ...valid, displayName: "  Julián ", bio: " QA " })).toEqual({
       ok: true,
       value: valid,
+    });
+  });
+
+  it("sin modo, queda en automático", () => {
+    const withoutMode = { displayName: "Julián", bio: "QA", theme: "tecnico", showHandle: true };
+    expect(parsePageSettings(withoutMode)).toMatchObject({
+      ok: true,
+      value: { colorMode: "auto" },
     });
   });
 
@@ -25,6 +39,7 @@ describe("parsePageSettings", () => {
     [{ bio: "con\u202einvisible" }, "bio"],
     [{ theme: "cercano" }, "theme"],
     [{ showHandle: "sí" }, "showHandle"],
+    [{ colorMode: "sepia" }, "colorMode"],
   ])("rechaza %o en su campo", (change, field) => {
     const result = parsePageSettings({ ...valid, ...change });
     expect(result.ok).toBe(false);

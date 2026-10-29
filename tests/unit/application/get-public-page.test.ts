@@ -11,6 +11,7 @@ const page: PublicPage = {
   bio: null,
   avatarPath: null,
   theme: "tecnico",
+  colorMode: "auto",
   sections: [],
   unsectionedLinks: [],
 };
