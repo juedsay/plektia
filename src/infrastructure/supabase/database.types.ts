@@ -124,6 +124,33 @@ export type Database = {
           },
         ];
       };
+      link_stats_daily: {
+        Row: {
+          clicks: number;
+          day: string;
+          link_id: string;
+        };
+        ComputedFields: never;
+        Insert: {
+          clicks?: number;
+          day: string;
+          link_id: string;
+        };
+        Update: {
+          clicks?: number;
+          day?: string;
+          link_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "link_stats_daily_link_id_fkey";
+            columns: ["link_id"];
+            isOneToOne: false;
+            referencedRelation: "links";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       links: {
         Row: {
           created_at: string;
@@ -368,6 +395,72 @@ export type Database = {
           },
         ];
       };
+      stats_breakdown_daily: {
+        Row: {
+          clicks: number;
+          day: string;
+          dimension: string;
+          page_id: string;
+          value: string;
+          views: number;
+        };
+        ComputedFields: never;
+        Insert: {
+          clicks?: number;
+          day: string;
+          dimension: string;
+          page_id: string;
+          value: string;
+          views?: number;
+        };
+        Update: {
+          clicks?: number;
+          day?: string;
+          dimension?: string;
+          page_id?: string;
+          value?: string;
+          views?: number;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "stats_breakdown_daily_page_id_fkey";
+            columns: ["page_id"];
+            isOneToOne: false;
+            referencedRelation: "pages";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      stats_daily: {
+        Row: {
+          clicks: number;
+          day: string;
+          page_id: string;
+          views: number;
+        };
+        ComputedFields: never;
+        Insert: {
+          clicks?: number;
+          day: string;
+          page_id: string;
+          views?: number;
+        };
+        Update: {
+          clicks?: number;
+          day?: string;
+          page_id?: string;
+          views?: number;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "stats_daily_page_id_fkey";
+            columns: ["page_id"];
+            isOneToOne: false;
+            referencedRelation: "pages";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
     };
     Views: {
       public_page_v: {
@@ -415,6 +508,17 @@ export type Database = {
       };
       ingest_contact_message: {
         Args: { p_email: string; p_message: string; p_name: string };
+        Returns: undefined;
+      };
+      ingest_event: {
+        Args: {
+          p_country: string;
+          p_handle: string;
+          p_link: string;
+          p_source: string;
+          p_type: string;
+          p_viewer: string;
+        };
         Returns: undefined;
       };
       ingest_featured: {
@@ -471,6 +575,7 @@ export type Database = {
           provider: string;
         }[];
       };
+      ingest_purge_stats: { Args: Record<PropertyKey, never>; Returns: undefined };
       ingest_release_lock: { Args: { p_job: string }; Returns: undefined };
       ingest_try_lock: { Args: { p_job: string; p_seconds: number }; Returns: boolean };
       link_featured: { Args: { p_link_id: string }; Returns: Json };

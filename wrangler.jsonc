@@ -19,9 +19,10 @@
     "enabled": true,
   },
   "triggers": {
-    // `live-status`: cada 10 minutos el estado en vivo y cada hora el
-    // contenido destacado de YouTube. Deben coincidir con src/worker.ts.
-    "crons": ["*/10 * * * *", "0 * * * *"],
+    // Deben coincidir con src/worker.ts: cada 10 minutos el estado en vivo,
+    // cada hora el contenido destacado de YouTube y una vez por mes la
+    // retención de las estadísticas (400 días).
+    "crons": ["*/10 * * * *", "0 * * * *", "30 3 1 * *"],
   },
   // Datos públicos del proyecto de Supabase. En local se reemplazan con
   // `.dev.vars` (`pnpm env:local`); en producción, la publishable key la pasa el
@@ -50,6 +51,12 @@
       "name": "ACTIONS_RATE_LIMITER",
       "namespace_id": "1003",
       "simple": { "limit": 120, "period": 60 },
+    },
+    // Beacon de estadísticas: 30 eventos por minuto por IP (SPEC-click-analytics).
+    {
+      "name": "STATS_RATE_LIMITER",
+      "namespace_id": "1005",
+      "simple": { "limit": 30, "period": 60 },
     },
     // "Comprobar ahora": una vez por minuto por cuenta (SPEC-live-status, historia 3).
     {

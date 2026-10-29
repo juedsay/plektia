@@ -28,7 +28,12 @@ const live = link.live ?? null;
 <li class:list={["port", { "is-live": live }]}>
   <span class="jack" aria-hidden="true"></span>
   <div class="port-body">
-    <a class="port-link" href={link.url} rel={isProfileLink(link) ? "me" : undefined}>
+    <a
+      class="port-link"
+      href={link.url}
+      rel={isProfileLink(link) ? "me" : undefined}
+      data-link-id={link.id}
+    >
       <span>
         <span class="port-name">
           <NetworkIcon network={network} />

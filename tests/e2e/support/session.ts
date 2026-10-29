@@ -199,3 +199,54 @@ export async function insertLink(
   if (error) throw error;
   return data.id;
 }
+
+/**
+ * Crea una página como su dueño (con su sesión, sin la Action del panel: así
+ * no cambia cuál es su página actual, que otras pruebas en paralelo usan).
+ */
+export async function createPageAs(email: string, pageId: string, handle: string) {
+  const supabase = localSupabase();
+  const session = await verifiedSession(supabase, email);
+  const owner = createClient(supabase.url, supabase.publishableKey, {
+    auth: { persistSession: false },
+    global: { headers: { Authorization: `Bearer ${session.access_token}` } },
+  });
+  const { error } = await owner
+    .from("pages")
+    .insert({ id: pageId, owner_id: session.user.id, handle, display_name: "Estadísticas E2E" });
+  if (error) throw error;
+}
+
+/** Borra una página (y con ella sus links y sus estadísticas). */
+export async function deletePage(pageId: string) {
+  const supabase = localSupabase();
+  const admin = createClient(supabase.url, supabase.secretKey, { auth: { persistSession: false } });
+  const { error } = await admin.from("pages").delete().eq("id", pageId);
+  if (error) throw error;
+}
+
+/** Visitas y clics de hoy (UTC) de una página y de un link. */
+export async function statsToday(pageId: string, linkId: string) {
+  const supabase = localSupabase();
+  const admin = createClient(supabase.url, supabase.secretKey, { auth: { persistSession: false } });
+  const day = new Date().toISOString().slice(0, 10);
+  const page = await admin
+    .from("stats_daily")
+    .select("views, clicks")
+    .eq("page_id", pageId)
+    .eq("day", day)
+    .maybeSingle<{ views: number; clicks: number }>();
+  const link = await admin
+    .from("link_stats_daily")
+    .select("clicks")
+    .eq("link_id", linkId)
+    .eq("day", day)
+    .maybeSingle<{ clicks: number }>();
+  if (page.error) throw page.error;
+  if (link.error) throw link.error;
+  return {
+    views: page.data?.views ?? 0,
+    clicks: page.data?.clicks ?? 0,
+    linkClicks: link.data?.clicks ?? 0,
+  };
+}

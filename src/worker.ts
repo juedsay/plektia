@@ -1,7 +1,7 @@
 // Entrada del Worker: `fetch` lo atiende Astro y `scheduled` corre los cron.
 import { handle } from "@astrojs/cloudflare/handler";
 
-import { featuredRefresh, liveRefresh } from "@/composition/runtime";
+import { featuredRefresh, liveRefresh, statsPurge } from "@/composition/runtime";
 
 // Deben coincidir con `triggers.crons` de wrangler.jsonc. Sin `export`: workerd
 // toma cada export del módulo como un handler.
@@ -9,6 +9,8 @@ import { featuredRefresh, liveRefresh } from "@/composition/runtime";
 const LIVE_CRON = "*/10 * * * *";
 /** Cada hora: el contenido destacado de YouTube. */
 const FEATURED_CRON = "0 * * * *";
+/** El día 1 de cada mes: las estadísticas de hace más de 400 días se borran. */
+const STATS_RETENTION_CRON = "30 3 1 * *";
 
 /** Cada trabajo del cron, con su nombre para los logs. */
 const JOBS: Readonly<
@@ -16,6 +18,7 @@ const JOBS: Readonly<
 > = {
   [LIVE_CRON]: { name: "en vivo", build: liveRefresh },
   [FEATURED_CRON]: { name: "contenido destacado", build: featuredRefresh },
+  [STATS_RETENTION_CRON]: { name: "retención de estadísticas", build: statsPurge },
 };
 
 export default {

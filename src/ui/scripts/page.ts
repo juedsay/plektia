@@ -1,11 +1,21 @@
 // Comportamiento de la página pública: hilo, desplegables y compartir. Sin
 // esto la página funciona igual (los links son links); esto es la capa extra.
+import { mountBeacon } from "@/ui/scripts/beacon";
 import { toggleDisclosure } from "@/ui/scripts/disclosure";
 import { liveElapsed } from "@/ui/view/live";
 import { shareMessage, shareOrCopy } from "@/ui/scripts/share";
 import { mountThread } from "@/ui/scripts/thread";
 
 const patchbay = document.querySelector<HTMLElement>("[data-patchbay]");
+// Estadísticas sin cookies: una visita y los clics de los links.
+if (patchbay) {
+  mountBeacon(patchbay, {
+    ...(typeof navigator.sendBeacon === "function"
+      ? { sendBeacon: (url: string, body: string) => navigator.sendBeacon(url, body) }
+      : {}),
+    fetch: (url, init) => fetch(url, init),
+  });
+}
 // El hilo se calcula con las fuentes ya cargadas para no medir posiciones viejas.
 if (patchbay) {
   void document.fonts.ready.then(() => {
