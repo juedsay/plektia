@@ -85,3 +85,45 @@ test("en automático, decide el dispositivo de quien visita", async ({
     await close();
   }
 });
+
+// Acento curado (tarea 36a): cada modo toma su tono (la página de prueba no tiene
+// links, así que se mide el token que leen el hilo y los jacks).
+async function chooseAccent(page: Page, name: string) {
+  await page.goto("/admin/page");
+  await page.getByRole("radio", { name, exact: true }).check();
+  await page.getByRole("button", { name: "Guardar" }).click();
+  await expect(page).toHaveURL(/\/admin\/page\?guardado$/);
+}
+
+const accentColor = (page: Page) =>
+  page.evaluate(() =>
+    getComputedStyle(document.body).getPropertyValue("--color-accent").trim().toLowerCase(),
+  );
+
+test("el acento elegido se ve en la página pública, en claro y en oscuro", async ({
+  page,
+  context,
+  browser,
+  baseURL,
+}) => {
+  await signIn(context, baseURL ?? "", "avatar@plektia.test");
+  await chooseMode(page, "Automático");
+  await chooseAccent(page, "Turquesa");
+  try {
+    for (const [scheme, expected] of [
+      ["dark", "#6fd8d2"],
+      ["light", "#09504c"],
+    ] as const) {
+      const { visitor, close } = await visit(browser, baseURL ?? "", scheme);
+      await expect(visitor.locator("body")).toHaveAttribute("data-accent", "turquesa");
+      expect(await accentColor(visitor)).toBe(expected);
+      const results = await new AxeBuilder({ page: visitor })
+        .withTags(["wcag2a", "wcag2aa", "wcag2aaa", "wcag21aa", "wcag22aa"])
+        .analyze();
+      expect(results.violations.map((violation) => violation.id)).toEqual([]);
+      await close();
+    }
+  } finally {
+    await chooseAccent(page, "Hueso");
+  }
+});

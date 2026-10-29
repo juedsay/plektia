@@ -7,6 +7,7 @@ const valid = {
   bio: "QA",
   theme: "tecnico",
   colorMode: "light",
+  accent: "turquesa",
   showHandle: true,
 };
 
@@ -18,11 +19,11 @@ describe("parsePageSettings", () => {
     });
   });
 
-  it("sin modo, queda en automático", () => {
+  it("sin modo ni acento, queda en automático y hueso", () => {
     const withoutMode = { displayName: "Julián", bio: "QA", theme: "tecnico", showHandle: true };
     expect(parsePageSettings(withoutMode)).toMatchObject({
       ok: true,
-      value: { colorMode: "auto" },
+      value: { colorMode: "auto", accent: "hueso" },
     });
   });
 
@@ -40,6 +41,7 @@ describe("parsePageSettings", () => {
     [{ theme: "cercano" }, "theme"],
     [{ showHandle: "sí" }, "showHandle"],
     [{ colorMode: "sepia" }, "colorMode"],
+    [{ accent: "#ff0000" }, "accent"],
   ])("rechaza %o en su campo", (change, field) => {
     const result = parsePageSettings({ ...valid, ...change });
     expect(result.ok).toBe(false);

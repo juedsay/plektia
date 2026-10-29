@@ -123,6 +123,11 @@
   line-height: 1.2;
 }
 
+/* Con un acento elegido, el filete del rótulo lo lleva; hueso conserva la línea de siempre. */
+[data-accent]:not([data-accent="hueso"]) .bank h2 {
+  border-bottom-color: var(--color-accent);
+}
+
 .ports {
   margin: 0;
   padding: 0;
@@ -143,7 +148,7 @@
   width: var(--jack-size);
   height: var(--jack-size);
   margin-top: calc((var(--row-min) - var(--jack-size)) / 2);
-  border: 2.5px solid var(--color-fg);
+  border: 2.5px solid var(--color-accent);
   border-radius: 50%;
   background: transparent;
   transition: transform var(--dur-fast) var(--ease-out);

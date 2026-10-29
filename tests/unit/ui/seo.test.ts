@@ -20,6 +20,7 @@ const page: PublicPage = {
   avatarPath: null,
   theme: "tecnico",
   colorMode: "auto",
+  accent: "hueso",
   sections: [
     {
       id: "s",

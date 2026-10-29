@@ -220,6 +220,7 @@ describe("escritores por funciones mcp_*", () => {
       bio: null,
       theme: "tecnico",
       color_mode: "auto",
+      accent: "hueso",
       show_handle: true,
       avatar_path: null,
     };

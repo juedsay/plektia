@@ -22,6 +22,7 @@ const PAGE: Page = {
   bio: "Hola",
   theme: "tecnico",
   colorMode: "auto",
+  accent: "hueso",
   showHandle: true,
   avatarPath: null,
 };

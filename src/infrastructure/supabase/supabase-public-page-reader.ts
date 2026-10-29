@@ -7,7 +7,7 @@ import type {
   PublicProfileDirectory,
 } from "@/application/ports/public-page-reader";
 import type { Handle } from "@/domain/handle";
-import { COLOR_MODES } from "@/domain/page";
+import { ACCENTS, COLOR_MODES } from "@/domain/page";
 import { PROVIDERS } from "@/domain/provider";
 import type { Database } from "@/infrastructure/supabase/database.types";
 
@@ -52,6 +52,7 @@ const RowSchema = z.object({
   avatar_path: z.string().nullable(),
   theme: z.literal("tecnico"),
   color_mode: z.enum(COLOR_MODES),
+  accent: z.enum(ACCENTS),
   sections: z.array(
     z.object({
       id: z.uuid(),
@@ -71,7 +72,7 @@ export class SupabasePublicPageReader implements PublicPageReader, PublicProfile
     const { data, error } = await this.client
       .from("public_page_v")
       .select(
-        "handle, display_name, show_handle, bio, avatar_path, theme, color_mode, sections, unsectioned_links",
+        "handle, display_name, show_handle, bio, avatar_path, theme, color_mode, accent, sections, unsectioned_links",
       )
       .eq("handle", handle)
       .maybeSingle();
@@ -87,6 +88,7 @@ export class SupabasePublicPageReader implements PublicPageReader, PublicProfile
       avatarPath: row.avatar_path,
       theme: row.theme,
       colorMode: row.color_mode,
+      accent: row.accent,
       sections: row.sections,
       unsectionedLinks: row.unsectioned_links,
     };

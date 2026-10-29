@@ -299,6 +299,7 @@ export type Database = {
       };
       pages: {
         Row: {
+          accent: Database["public"]["Enums"]["accent_color"];
           avatar_path: string | null;
           bio: string | null;
           color_mode: Database["public"]["Enums"]["color_mode"];
@@ -313,6 +314,7 @@ export type Database = {
         };
         ComputedFields: never;
         Insert: {
+          accent?: Database["public"]["Enums"]["accent_color"];
           avatar_path?: string | null;
           bio?: string | null;
           color_mode?: Database["public"]["Enums"]["color_mode"];
@@ -326,6 +328,7 @@ export type Database = {
           updated_at?: string;
         };
         Update: {
+          accent?: Database["public"]["Enums"]["accent_color"];
           avatar_path?: string | null;
           bio?: string | null;
           color_mode?: Database["public"]["Enums"]["color_mode"];
@@ -537,6 +540,7 @@ export type Database = {
     Views: {
       public_page_v: {
         Row: {
+          accent: Database["public"]["Enums"]["accent_color"] | null;
           avatar_path: string | null;
           bio: string | null;
           color_mode: Database["public"]["Enums"]["color_mode"] | null;
@@ -790,6 +794,7 @@ export type Database = {
       mcp_update_page: {
         Args: { p_changes: Json; p_page: string };
         Returns: {
+          accent: Database["public"]["Enums"]["accent_color"];
           avatar_path: string | null;
           bio: string | null;
           color_mode: Database["public"]["Enums"]["color_mode"];
@@ -845,6 +850,8 @@ export type Database = {
       };
     };
     Enums: {
+      accent_color:
+        "hueso" | "coral" | "ambar" | "cielo" | "lavanda" | "rosa" | "turquesa" | "arena";
       color_mode: "auto" | "dark" | "light";
       link_provider:
         "generic" | "youtube" | "twitch" | "kick" | "whatsapp" | "github" | "instagram";
@@ -961,6 +968,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
+      accent_color: ["hueso", "coral", "ambar", "cielo", "lavanda", "rosa", "turquesa", "arena"],
       color_mode: ["auto", "dark", "light"],
       link_provider: ["generic", "youtube", "twitch", "kick", "whatsapp", "github", "instagram"],
       profile_theme: ["tecnico"],

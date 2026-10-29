@@ -15,10 +15,19 @@ import { unexpectedDatabaseError, writeFailure } from "@/infrastructure/supabase
 type Client = SupabaseClient<Database>;
 type PageRow = Pick<
   Tables<"pages">,
-  "id" | "handle" | "display_name" | "bio" | "theme" | "color_mode" | "show_handle" | "avatar_path"
+  | "id"
+  | "handle"
+  | "display_name"
+  | "bio"
+  | "theme"
+  | "color_mode"
+  | "accent"
+  | "show_handle"
+  | "avatar_path"
 >;
 
-const PAGE_COLUMNS = "id, handle, display_name, bio, theme, color_mode, show_handle, avatar_path";
+const PAGE_COLUMNS =
+  "id, handle, display_name, bio, theme, color_mode, accent, show_handle, avatar_path";
 const UNIQUE_VIOLATION = "23505";
 
 /**
@@ -79,6 +88,7 @@ export class SupabasePageRepository implements PageReader, PageWriter {
         bio: settings.bio,
         theme: settings.theme,
         color_mode: settings.colorMode,
+        accent: settings.accent,
         show_handle: settings.showHandle,
       })
       .eq("id", pageId)
@@ -122,6 +132,7 @@ export function toPage(row: PageRow): Page {
     bio: row.bio,
     theme: row.theme,
     colorMode: row.color_mode,
+    accent: row.accent,
     showHandle: row.show_handle,
     avatarPath: row.avatar_path,
   };

@@ -51,6 +51,22 @@ export type Theme = (typeof AVAILABLE_THEMES)[number];
 export const COLOR_MODES = ["auto", "dark", "light"] as const;
 export type ColorMode = (typeof COLOR_MODES)[number];
 
+/**
+ * Acento de la página (SPEC-appearance, 36a): una paleta curada, cada uno con
+ * su tono para oscuro y para claro en tokens.css. `hueso` es el de siempre.
+ */
+export const ACCENTS = [
+  "hueso",
+  "coral",
+  "ambar",
+  "cielo",
+  "lavanda",
+  "rosa",
+  "turquesa",
+  "arena",
+] as const;
+export type Accent = (typeof ACCENTS)[number];
+
 export const BIO_MAX_LENGTH = 160;
 
 const Bio = z
@@ -64,6 +80,7 @@ const PageSettingsSchema = z.object(
     bio: Bio.default(""),
     theme: z.enum(AVAILABLE_THEMES, { error: "Ese tema todavía no está disponible." }),
     colorMode: z.enum(COLOR_MODES, { error: "Elegí automático, oscuro o claro." }).default("auto"),
+    accent: z.enum(ACCENTS, { error: "Elegí uno de los acentos de la lista." }).default("hueso"),
     showHandle: z.boolean({ error: "Tiene que ser sí o no." }),
   },
   { error: "Los datos de la página no son válidos." },
@@ -74,6 +91,7 @@ export interface PageSettings {
   readonly bio: string | null;
   readonly theme: Theme;
   readonly colorMode: ColorMode;
+  readonly accent: Accent;
   readonly showHandle: boolean;
 }
 

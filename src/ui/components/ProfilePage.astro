@@ -23,6 +23,7 @@ const description = page.bio ?? `Todos los links de ${page.displayName} en un so
   canonical={preview ? undefined : canonical}
   theme={page.theme}
   mode={page.colorMode}
+  accent={page.accent}
   type="profile"
   structuredData={preview ? undefined : profileJsonLd(page, canonical)}
   preview={preview}

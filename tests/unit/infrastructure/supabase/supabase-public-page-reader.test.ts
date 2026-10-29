@@ -34,6 +34,7 @@ const row = {
   avatar_path: null,
   theme: "tecnico",
   color_mode: "light",
+  accent: "cielo",
   sections: [
     { id: "3f0c7c4e-2a8f-4f63-9a3c-1f7f3d1e2b11", title: "Redes", showTitle: true, links: [link] },
   ],
@@ -50,6 +51,7 @@ describe("SupabasePublicPageReader", () => {
       avatarPath: null,
       theme: "tecnico",
       colorMode: "light",
+      accent: "cielo",
       sections: [{ ...row.sections[0], links: [{ ...link, featured: null, live: null }] }],
       unsectionedLinks: [],
     });
