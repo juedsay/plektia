@@ -61,6 +61,7 @@ function link(id: string, extra: Partial<Link> = {}): Link {
     tags: [],
     visible: true,
     placement: "list",
+    highlight: "none",
     position: 0,
     version: 1,
     ...extra,
@@ -566,6 +567,52 @@ describe("Editor · dónde se ve", () => {
     expect(api.updates.at(-1)?.changes).toEqual({ placement: "icon" });
     expect(screen.getByText("Ícono")).toBeTruthy();
     expect(screen.getByRole("radio", { name: /^Como ícono/ })).toHaveProperty("checked", true);
+  });
+
+  it("destaca un link arriba de todo, lo marca y lo anuncia", async () => {
+    const { api, user } = setup({
+      sections: [REDES],
+      links: [link("twitch", { title: "Twitch" })],
+    });
+    await user.click(screen.getByRole("button", { name: "Editar Twitch" }));
+    await user.click(screen.getByRole("radio", { name: /^Arriba de todo/ }));
+
+    await waitFor(() => {
+      expect(editorStatus()).toBe("Twitch: arriba de todo");
+    });
+    expect(api.updates.at(-1)?.changes).toEqual({ highlight: "top" });
+    expect(screen.getByText("Arriba")).toBeTruthy();
+  });
+
+  it("con 3 arriba de todo, explica el límite en lugar del mensaje general", async () => {
+    const { api, user } = setup({
+      sections: [REDES],
+      links: [link("twitch", { title: "Twitch" })],
+    });
+    api.nextFailure = {
+      ok: false,
+      message: errorMessage("limit_reached"),
+      fields: {},
+      values: {},
+    };
+    await user.click(screen.getByRole("button", { name: "Editar Twitch" }));
+    await user.click(screen.getByRole("radio", { name: /^Arriba de todo/ }));
+
+    expect((await screen.findByRole("alert")).textContent).toContain(
+      "Ya tenés 3 links arriba de todo",
+    );
+  });
+
+  it("un link que es solo ícono no se puede destacar", async () => {
+    const { user } = setup({
+      sections: [REDES],
+      links: [link("twitch", { title: "Twitch", placement: "icon" })],
+    });
+    await user.click(screen.getByRole("button", { name: "Editar Twitch" }));
+
+    // El fieldset deshabilitado deshabilita sus opciones.
+    expect(screen.getByRole("radio", { name: /^Arriba de todo/ }).matches(":disabled")).toBe(true);
+    expect(screen.getByText("Solo se destaca un link que está en la lista.")).toBeTruthy();
   });
 
   it("elegir el lugar que ya tiene no llama al servidor", async () => {

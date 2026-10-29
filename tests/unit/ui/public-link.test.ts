@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import type { PublicLink } from "@/application/ports/public-page-reader";
-import type { LinkPlacement } from "@/domain/link";
+import type { LinkHighlight, LinkPlacement } from "@/domain/link";
 import {
   iconLinksOf,
   initialOf,
@@ -9,6 +9,7 @@ import {
   linkMeta,
   listedLinks,
   shortUrl,
+  topLinksOf,
 } from "@/ui/view/public-link";
 
 describe("shortUrl", () => {
@@ -79,7 +80,11 @@ describe("initialOf", () => {
 });
 
 describe("fila de íconos", () => {
-  const publicLink = (id: string, placement: LinkPlacement): PublicLink => ({
+  const publicLink = (
+    id: string,
+    placement: LinkPlacement,
+    highlight: LinkHighlight = "none",
+  ): PublicLink => ({
     id,
     title: id,
     url: `https://plektia.app/${id}`,
@@ -87,6 +92,7 @@ describe("fila de íconos", () => {
     provider: "generic",
     providerHandle: null,
     placement,
+    highlight,
   });
   const page = {
     sections: [
@@ -108,5 +114,41 @@ describe("fila de íconos", () => {
   it("la lista deja afuera los que son solo ícono", () => {
     expect(listedLinks(page.sections[0]?.links ?? []).map((link) => link.id)).toEqual(["b"]);
     expect(listedLinks(page.sections[1]?.links ?? []).map((link) => link.id)).toEqual(["c"]);
+  });
+});
+
+describe("destacados arriba de todo", () => {
+  const publicLink = (
+    id: string,
+    placement: LinkPlacement,
+    highlight: LinkHighlight,
+  ): PublicLink => ({
+    id,
+    title: id,
+    url: `https://plektia.app/${id}`,
+    description: null,
+    provider: "generic",
+    providerHandle: null,
+    placement,
+    highlight,
+  });
+  const page = {
+    sections: [
+      {
+        id: "s1",
+        title: "Redes",
+        showTitle: true,
+        links: [publicLink("a", "list", "top"), publicLink("b", "list", "accent")],
+      },
+    ],
+    unsectionedLinks: [publicLink("c", "both", "top"), publicLink("d", "icon", "top")],
+  };
+
+  it("van en el orden de la página, sin los que son solo ícono", () => {
+    expect(topLinksOf(page).map((link) => link.id)).toEqual(["a", "c"]);
+  });
+
+  it("no se repiten en su sección; el destacado con acento sí queda en su lugar", () => {
+    expect(listedLinks(page.sections[0]?.links ?? []).map((link) => link.id)).toEqual(["b"]);
   });
 });

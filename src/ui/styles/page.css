@@ -298,6 +298,71 @@
   line-height: 1;
 }
 
+/*
+ * Destacados (SPEC-appearance, 36e): el borde del acento y un fondo con
+ * --highlight-tint de acento (AAA verificado en tests/unit/ui/tokens.test.ts).
+ */
+.port.is-highlighted .port-body,
+.highlight-card {
+  border: 1.5px solid var(--color-accent);
+  border-radius: var(--radius-md);
+  background: color-mix(in srgb, var(--color-accent) var(--highlight-tint), var(--color-bg));
+}
+
+.port.is-highlighted .port-body {
+  margin-bottom: var(--space-2);
+  padding: 0 var(--space-4);
+}
+
+.patchbay[data-shape="pills"] .port.is-highlighted .port-body {
+  border-radius: calc(var(--row-min) / 2);
+}
+
+.highlights ul {
+  display: grid;
+  gap: var(--space-3);
+  margin: var(--space-6) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.highlight-card {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--space-3);
+  min-height: 4.5rem;
+  padding: var(--space-4) var(--space-5);
+  text-decoration: none;
+  transition: transform var(--dur-fast) var(--ease-out);
+}
+
+.highlight-card:is(:hover, :focus-visible) {
+  transform: translateY(-2px);
+}
+
+.highlight-card:is(:hover, :focus-visible) .go {
+  color: var(--color-fg);
+  transform: translate(2px, -2px);
+}
+
+.highlight-text {
+  display: grid;
+  gap: var(--space-1);
+  min-width: 0;
+}
+
+.highlight-name {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-family: var(--font-name);
+  font-size: var(--text-lg);
+  font-weight: 600;
+  line-height: 1.25;
+  overflow-wrap: anywhere;
+}
+
 /* Ícono de la red al lado del nombre: mismo color que el texto secundario,
    para que acompañe sin competir con el título. */
 .port-icon {

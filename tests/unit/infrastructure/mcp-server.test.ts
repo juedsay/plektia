@@ -48,6 +48,7 @@ const LINK: Link = {
   tags: [],
   visible: true,
   placement: "list",
+  highlight: "none",
   position: 0,
   version: 3,
 };

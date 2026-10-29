@@ -28,6 +28,9 @@
   --font-display: var(--font-brand, system-ui, sans-serif);
   /* Los nombres (persona, secciones y links): la voz de la marca, o la que elija la página. */
   --font-name: var(--font-display);
+
+  /* Cuánto acento lleva el fondo de un destacado: con 6 %, todo el texto sigue en AAA. */
+  --highlight-tint: 6%;
   --font-body: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   --font-data: ui-monospace, "Cascadia Mono", "SF Mono", Menlo, monospace;
 

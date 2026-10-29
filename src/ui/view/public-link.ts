@@ -41,9 +41,21 @@ export function iconLinksOf(
   );
 }
 
-/** Los links que van en la lista de su sección: todos menos los que son solo ícono. */
+/** Los destacados arriba de todo, en el orden de la página (36e). Un "solo ícono" no va. */
+export function topLinksOf(
+  page: Pick<PublicPage, "sections" | "unsectionedLinks">,
+): readonly PublicLink[] {
+  return [...page.sections.flatMap((section) => section.links), ...page.unsectionedLinks].filter(
+    (link) => link.highlight === "top" && link.placement !== "icon",
+  );
+}
+
+/**
+ * Los links que van en la lista de su sección: todos menos los que son solo
+ * ícono y los que ya están arriba de todo.
+ */
 export function listedLinks(links: readonly PublicLink[]): readonly PublicLink[] {
-  return links.filter((link) => link.placement !== "icon");
+  return links.filter((link) => link.placement !== "icon" && link.highlight !== "top");
 }
 
 /** Inicial del avatar provisorio: la primera letra visible del nombre. */
