@@ -252,6 +252,52 @@
   border-color: var(--color-fg-muted);
 }
 
+/*
+ * Fila de íconos bajo la bio (SPEC-appearance, 36d): objetivos de 44 px, el
+ * ícono en el color del texto y el anillo del acento al pasar o enfocar.
+ */
+.icon-row ul {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-2);
+  margin: var(--space-5) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.icon-link {
+  display: grid;
+  place-items: center;
+  width: var(--target-min);
+  height: var(--target-min);
+  border: 1px solid var(--color-line);
+  border-radius: 50%;
+  color: var(--color-fg);
+  text-decoration: none;
+  transition:
+    border-color var(--dur-fast) var(--ease-out),
+    transform var(--dur-fast) var(--ease-out);
+}
+
+.icon-link:is(:hover, :focus-visible) {
+  border-color: var(--color-accent);
+  transform: translateY(-2px);
+}
+
+.icon-link .port-icon {
+  width: 20px;
+  height: 20px;
+  color: inherit;
+}
+
+.icon-initial {
+  font-family: var(--font-name);
+  font-size: var(--text-md);
+  font-weight: 600;
+  line-height: 1;
+}
+
 /* Ícono de la red al lado del nombre: mismo color que el texto secundario,
    para que acompañe sin competir con el título. */
 .port-icon {

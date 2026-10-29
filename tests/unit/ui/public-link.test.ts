@@ -1,6 +1,15 @@
 import { describe, expect, it } from "vitest";
 
-import { initialOf, isProfileLink, linkMeta, shortUrl } from "@/ui/view/public-link";
+import type { PublicLink } from "@/application/ports/public-page-reader";
+import type { LinkPlacement } from "@/domain/link";
+import {
+  iconLinksOf,
+  initialOf,
+  isProfileLink,
+  linkMeta,
+  listedLinks,
+  shortUrl,
+} from "@/ui/view/public-link";
 
 describe("shortUrl", () => {
   it.each([
@@ -66,5 +75,38 @@ describe("initialOf", () => {
     ["", "?"],
   ])("%j → %s", (name, expected) => {
     expect(initialOf(name)).toBe(expected);
+  });
+});
+
+describe("fila de íconos", () => {
+  const publicLink = (id: string, placement: LinkPlacement): PublicLink => ({
+    id,
+    title: id,
+    url: `https://plektia.app/${id}`,
+    description: null,
+    provider: "generic",
+    providerHandle: null,
+    placement,
+  });
+  const page = {
+    sections: [
+      {
+        id: "s1",
+        title: "Redes",
+        showTitle: true,
+        links: [publicLink("a", "icon"), publicLink("b", "list")],
+      },
+      { id: "s2", title: "Más", showTitle: true, links: [publicLink("c", "both")] },
+    ],
+    unsectionedLinks: [publicLink("d", "icon")],
+  };
+
+  it("junta los íconos en el orden de la página: secciones y después los sueltos", () => {
+    expect(iconLinksOf(page).map((link) => link.id)).toEqual(["a", "c", "d"]);
+  });
+
+  it("la lista deja afuera los que son solo ícono", () => {
+    expect(listedLinks(page.sections[0]?.links ?? []).map((link) => link.id)).toEqual(["b"]);
+    expect(listedLinks(page.sections[1]?.links ?? []).map((link) => link.id)).toEqual(["c"]);
   });
 });

@@ -469,7 +469,7 @@
   - `pages.link_shape`: filas, tarjetas o pastillas.
 - [x] **Tarea 36c: Tipografía de los nombres** · M · Deps: 36a
   - `pages.name_font`, con 4 fuentes propias auditadas y solo la de la página precargada.
-- [ ] **Tarea 36d: Fila de íconos** · M · Deps: 36a
+- [x] **Tarea 36d: Fila de íconos** · M · Deps: 36a
   - `links.placement`: en la lista, como ícono o en los dos lugares, elegido link por link.
 - [ ] **Tarea 36e: Links destacados** · M · Deps: 36a
   - `links.highlight`: con borde de acento en su lugar o arriba de todo (hasta 3).

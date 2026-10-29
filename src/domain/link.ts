@@ -11,6 +11,13 @@ import { safeLine, validate } from "@/domain/text";
 
 export const LIMITS = { sections: 30, links: 200, tags: 5 } as const;
 
+/**
+ * Dónde se muestra un link en la página pública (SPEC-appearance, 36d): en la
+ * lista, solo como ícono en la fila bajo la bio, o en los dos lugares.
+ */
+export const LINK_PLACEMENTS = ["list", "icon", "both"] as const;
+export type LinkPlacement = (typeof LINK_PLACEMENTS)[number];
+
 const Url = z
   .string({ error: "La URL tiene que ser un texto." })
   .refine((value) => parseSafeUrl(value).ok, {
@@ -66,6 +73,9 @@ const LinkPatchSchema = z
       description: Description.nullable().optional(),
       tags: Tags.optional(),
       visible: Visible.optional(),
+      placement: z
+        .enum(LINK_PLACEMENTS, { error: "Elegí en la lista, como ícono o en los dos lugares." })
+        .optional(),
     },
     { error: "Los datos del link no son válidos." },
   )
@@ -84,7 +94,10 @@ export interface LinkDraft {
   readonly providerHandle: string | null;
 }
 
-export type LinkPatch = Partial<Omit<LinkDraft, "sectionId">>;
+/** Un link nace en la lista; su lugar se cambia después (36d). */
+export type LinkPatch = Partial<Omit<LinkDraft, "sectionId">> & {
+  readonly placement?: LinkPlacement;
+};
 
 export function parseLinkInput(raw: unknown): Result<LinkDraft, InvalidInput> {
   return map(validate(LinkInputSchema, raw), (link) => {

@@ -43,7 +43,13 @@ export class InMemoryLinkRepository implements LinkReader, LinkWriter, SectionWr
       return Promise.resolve(err("not_found"));
     }
     const group = this.links.filter((link) => link.sectionId === draft.sectionId);
-    const link: Link = { ...draft, id: id ?? this.id(), position: group.length, version: 1 };
+    const link: Link = {
+      ...draft,
+      placement: "list",
+      id: id ?? this.id(),
+      position: group.length,
+      version: 1,
+    };
     this.links.push(link);
     return Promise.resolve(ok(link));
   }

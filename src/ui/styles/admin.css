@@ -1128,6 +1128,24 @@
 }
 
 /* Lugar del link sin arrastrar: subir, bajar o pasar a otra sección. */
+/* Dónde se ve el link en la página pública (SPEC-appearance, 36d). */
+.editor-link-placement {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.editor-link-placement legend {
+  margin-bottom: var(--space-1);
+  padding: 0;
+  font-family: var(--font-display);
+  font-weight: 500;
+}
+
+.editor-link-placement .choice:last-child {
+  border-bottom: 0;
+}
+
 .editor-link-place {
   display: flex;
   flex-wrap: wrap;

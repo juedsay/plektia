@@ -1,4 +1,4 @@
-import type { PublicLink } from "@/application/ports/public-page-reader";
+import type { PublicLink, PublicPage } from "@/application/ports/public-page-reader";
 import { socialProfileFor } from "@/ui/view/social-profile";
 
 // Presentación de la página pública: funciones puras, sin DOM, para que los
@@ -30,6 +30,20 @@ export function shortUrl(raw: string): string {
  */
 export function isProfileLink(link: Pick<PublicLink, "providerHandle" | "url">): boolean {
   return link.providerHandle !== null || Boolean(socialProfileFor(link.url)?.username);
+}
+
+/** Los links de la fila de íconos, en el orden de la página (36d). */
+export function iconLinksOf(
+  page: Pick<PublicPage, "sections" | "unsectionedLinks">,
+): readonly PublicLink[] {
+  return [...page.sections.flatMap((section) => section.links), ...page.unsectionedLinks].filter(
+    (link) => link.placement !== "list",
+  );
+}
+
+/** Los links que van en la lista de su sección: todos menos los que son solo ícono. */
+export function listedLinks(links: readonly PublicLink[]): readonly PublicLink[] {
+  return links.filter((link) => link.placement !== "icon");
 }
 
 /** Inicial del avatar provisorio: la primera letra visible del nombre. */

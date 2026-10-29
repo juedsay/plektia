@@ -47,6 +47,7 @@ const LINK: Link = {
   providerHandle: null,
   tags: [],
   visible: true,
+  placement: "list",
   position: 0,
   version: 3,
 };

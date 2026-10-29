@@ -41,6 +41,7 @@ function link(
     providerHandle: null,
     tags: [],
     visible: true,
+    placement: "list",
     position,
     version: 1,
     ...extra,
@@ -145,6 +146,12 @@ describe("inverseChanges", () => {
 
   it("deshace mostrar u ocultar", () => {
     expect(inverseChanges(before, { ...before, visible: false })).toEqual({ visible: true });
+  });
+
+  it("deshace el cambio de lugar (lista o ícono)", () => {
+    expect(inverseChanges(before, { ...before, placement: "icon" })).toEqual({
+      placement: "list",
+    });
   });
 
   it("sin cambios, no hay nada que deshacer", () => {

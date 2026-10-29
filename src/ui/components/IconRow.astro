@@ -1,0 +1,44 @@
+---
+import type { PublicLink } from "@/application/ports/public-page-reader";
+import NetworkIcon from "@/ui/components/NetworkIcon.astro";
+import { initialOf, isProfileLink } from "@/ui/view/public-link";
+import { socialProfileFor } from "@/ui/view/social-profile";
+
+// Fila de íconos bajo la bio (SPEC-appearance, 36d): los links que el dueño
+// eligió mostrar como ícono. Cada uno es un link con nombre accesible (su
+// título) y un objetivo de 44 px; los clics cuentan igual que en la lista.
+interface Props {
+  links: readonly PublicLink[];
+}
+const { links } = Astro.props;
+---
+
+{links.length > 0 && (
+  <nav class="icon-row" aria-label="Redes">
+    <ul>
+      {links.map((link) => {
+        const network = socialProfileFor(link.url)?.network ?? null;
+        return (
+          <li>
+            <a
+              class="icon-link"
+              href={link.url}
+              rel={isProfileLink(link) ? "me" : undefined}
+              aria-label={link.title}
+              title={link.title}
+              data-link-id={link.id}
+            >
+              {network ? (
+                <NetworkIcon network={network} />
+              ) : (
+                <span class="icon-initial" aria-hidden="true">
+                  {initialOf(link.title)}
+                </span>
+              )}
+            </a>
+          </li>
+        );
+      })}
+    </ul>
+  </nav>
+)}

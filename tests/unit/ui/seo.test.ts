@@ -10,6 +10,7 @@ const link = (url: string, providerHandle: string | null) => ({
   description: null,
   provider: "generic" as const,
   providerHandle,
+  placement: "list" as const,
 });
 
 const page: PublicPage = {

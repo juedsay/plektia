@@ -1,3 +1,4 @@
+import type { LinkPlacement } from "@/domain/link";
 import type { Link, OwnLinks, Section } from "@/application/ports/link-repository";
 import { socialProfileFor } from "@/ui/view/social-profile";
 
@@ -106,17 +107,25 @@ export function removeLink(content: OwnLinks, id: string): OwnLinks {
 export function inverseChanges(
   before: Link,
   after: Link,
-): Partial<{ title: string; url: string; description: string | null; visible: boolean }> {
+): Partial<{
+  title: string;
+  url: string;
+  description: string | null;
+  visible: boolean;
+  placement: LinkPlacement;
+}> {
   const changes: Partial<{
     title: string;
     url: string;
     description: string | null;
     visible: boolean;
+    placement: LinkPlacement;
   }> = {};
   if (before.title !== after.title) changes.title = before.title;
   if (before.url !== after.url) changes.url = before.url;
   if (before.description !== after.description) changes.description = before.description;
   if (before.visible !== after.visible) changes.visible = before.visible;
+  if (before.placement !== after.placement) changes.placement = before.placement;
   return changes;
 }
 

@@ -122,4 +122,14 @@ describe("parseLinkPatch", () => {
   it("valida igual que la creación", () => {
     expect(parseLinkPatch({ url: "data:text/html,x" }).ok).toBe(false);
   });
+
+  it("cambia dónde se ve el link, solo entre los lugares conocidos", () => {
+    expect(parseLinkPatch({ placement: "both" })).toEqual({
+      ok: true,
+      value: { placement: "both" },
+    });
+    const result = parseLinkPatch({ placement: "sidebar" });
+    expect(result.ok).toBe(false);
+    if (!result.ok) expect(Object.keys(result.error.fields)).toEqual(["placement"]);
+  });
 });
