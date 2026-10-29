@@ -45,6 +45,20 @@ describe("consentimiento de apps de IA", () => {
     expect(connections.calls).toEqual([]);
   });
 
+  it("un id válido se consulta en Supabase", async () => {
+    const connections = connectionsWith();
+    expect(await loadConsent(connections)(ID)).toEqual(ok(REQUEST));
+    expect(connections.calls).toEqual([`detalle ${ID}`]);
+  });
+
+  it("decidir con un id inválido no consulta nada", async () => {
+    const connections = connectionsWith();
+    expect(
+      await decideConsent(connections)({ authorizationId: "x", approve: true, access: "read" }),
+    ).toEqual(err("not_found"));
+    expect(connections.calls).toEqual([]);
+  });
+
   it("aprobar guarda la conexión con el permiso elegido y después aprueba", async () => {
     const connections = connectionsWith();
     const result = await decideConsent(connections)({

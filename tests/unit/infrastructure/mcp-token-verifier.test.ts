@@ -4,7 +4,7 @@ import { SupabaseMcpTokenVerifier, type TokenChecks } from "@/infrastructure/mcp
 
 const CONFIG = { url: "https://proyecto.supabase.co", publishableKey: "sb_publishable_x" };
 const NOW = Date.parse("2026-10-28T12:00:00Z");
-const TOKEN = "eyJhbGciOiJFUzI1NiJ9.eyJzdWIiOiJ4In0.firma";
+const TOKEN = "cabecera.carga.firma";
 const USER = "11111111-1111-4111-8111-111111111111";
 const CLIENT = "e0000000-0000-4000-8000-00000000000e";
 
