@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 import type { InvalidInput } from "@/domain/errors";
+import { LINK_PLACEMENTS, type LinkPlacement } from "@/domain/link-placement";
 import { detectProvider, type Provider } from "@/domain/provider";
 import { map, type Result } from "@/domain/result";
 import { parseSafeUrl } from "@/domain/safe-url";
@@ -10,6 +11,8 @@ import { safeLine, validate } from "@/domain/text";
 // repite las reglas críticas con `check`, por si alguien escribe sin la app.
 
 export const LIMITS = { sections: 30, links: 200, tags: 5 } as const;
+
+export { LINK_PLACEMENTS, type LinkPlacement } from "@/domain/link-placement";
 
 const Url = z
   .string({ error: "La URL tiene que ser un texto." })
@@ -66,6 +69,9 @@ const LinkPatchSchema = z
       description: Description.nullable().optional(),
       tags: Tags.optional(),
       visible: Visible.optional(),
+      placement: z
+        .enum(LINK_PLACEMENTS, { error: "Elegí en la lista, como ícono o en los dos lugares." })
+        .optional(),
     },
     { error: "Los datos del link no son válidos." },
   )
@@ -84,7 +90,10 @@ export interface LinkDraft {
   readonly providerHandle: string | null;
 }
 
-export type LinkPatch = Partial<Omit<LinkDraft, "sectionId">>;
+/** Un link nace en la lista; su lugar se cambia después (36d). */
+export type LinkPatch = Partial<Omit<LinkDraft, "sectionId">> & {
+  readonly placement?: LinkPlacement;
+};
 
 export function parseLinkInput(raw: unknown): Result<LinkDraft, InvalidInput> {
   return map(validate(LinkInputSchema, raw), (link) => {

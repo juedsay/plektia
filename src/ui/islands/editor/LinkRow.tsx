@@ -2,6 +2,7 @@ import { useSortable } from "@dnd-kit/react/sortable";
 import { useEffect, useId, useRef, useState } from "react";
 
 import type { Link, Section } from "@/application/ports/link-repository";
+import { LINK_PLACEMENTS, type LinkPlacement } from "@/domain/link-placement";
 import { mediaCapabilities } from "@/domain/link-media";
 import { changedFields, inverseChanges } from "@/ui/view/editor-state";
 import { linkMeta } from "@/ui/view/public-link";
@@ -191,6 +192,24 @@ export function LinkRow({
     } else setFailure(result);
   };
 
+  /** Dónde se muestra en la página pública (36d), con "Deshacer". */
+  const choosePlacement = async (placement: LinkPlacement) => {
+    const base = latestLink.current;
+    if (base.placement === placement) return;
+    setBusy(true);
+    const result = await api
+      .update({ id: base.id, version: base.version }, { placement })
+      .catch(() => UNREACHABLE);
+    setBusy(false);
+    if (result.ok) {
+      acceptUndoable(
+        base,
+        result.value,
+        `${base.title}: ${PLACEMENT_NAMES[placement].toLowerCase()}`,
+      );
+    } else setFailure(result);
+  };
+
   const reload = async () => {
     await onReload();
     setFailure(null);
@@ -232,6 +251,9 @@ export function LinkRow({
           <span className="editor-link-title">{link.title}</span>
           <span className="editor-link-meta">
             {!link.visible && <span className="admin-tag">Oculto</span>}
+            {link.placement !== "list" && (
+              <span className="admin-tag">{PLACEMENT_TAGS[link.placement]}</span>
+            )}
             {meta}
           </span>
         </div>
@@ -352,6 +374,23 @@ export function LinkRow({
                 announce={announce}
               />
             )}
+            <fieldset className="editor-link-placement">
+              <legend>Dónde se ve</legend>
+              {LINK_PLACEMENTS.map((placement) => (
+                <label key={placement} className="choice">
+                  <input
+                    type="radio"
+                    name={`${idPrefix}-placement`}
+                    value={placement}
+                    checked={link.placement === placement}
+                    disabled={busy}
+                    onChange={() => void choosePlacement(placement)}
+                  />
+                  <span className="choice-name">{PLACEMENT_NAMES[placement]}</span>
+                  <span className="choice-hint">{PLACEMENT_HINTS[placement]}</span>
+                </label>
+              ))}
+            </fieldset>
             <fieldset className="editor-link-place">
               <legend>Lugar</legend>
               <button
@@ -417,6 +456,23 @@ export function LinkRow({
     </li>
   );
 }
+
+const PLACEMENT_NAMES: Record<LinkPlacement, string> = {
+  list: "En la lista",
+  icon: "Como ícono",
+  both: "En los dos lugares",
+};
+
+const PLACEMENT_HINTS: Record<LinkPlacement, string> = {
+  list: "Como hasta ahora, en su sección.",
+  icon: "Solo en la fila de íconos, debajo de tu bio.",
+  both: "En la fila de íconos y también en la lista.",
+};
+
+const PLACEMENT_TAGS: Record<Exclude<LinkPlacement, "list">, string> = {
+  icon: "Ícono",
+  both: "Ícono y lista",
+};
 
 interface Draft {
   title: string;

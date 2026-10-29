@@ -185,6 +185,7 @@ export type Database = {
           id: string;
           owner_id: string;
           page_id: string;
+          placement: Database["public"]["Enums"]["link_placement"];
           position: number;
           provider: Database["public"]["Enums"]["link_provider"];
           provider_handle: string | null;
@@ -203,6 +204,7 @@ export type Database = {
           id?: string;
           owner_id?: string;
           page_id: string;
+          placement?: Database["public"]["Enums"]["link_placement"];
           position?: number;
           provider?: Database["public"]["Enums"]["link_provider"];
           provider_handle?: string | null;
@@ -220,6 +222,7 @@ export type Database = {
           id?: string;
           owner_id?: string;
           page_id?: string;
+          placement?: Database["public"]["Enums"]["link_placement"];
           position?: number;
           provider?: Database["public"]["Enums"]["link_provider"];
           provider_handle?: string | null;
@@ -685,6 +688,7 @@ export type Database = {
           id: string;
           owner_id: string;
           page_id: string;
+          placement: Database["public"]["Enums"]["link_placement"];
           position: number;
           provider: Database["public"]["Enums"]["link_provider"];
           provider_handle: string | null;
@@ -781,6 +785,7 @@ export type Database = {
           id: string;
           owner_id: string;
           page_id: string;
+          placement: Database["public"]["Enums"]["link_placement"];
           position: number;
           provider: Database["public"]["Enums"]["link_provider"];
           provider_handle: string | null;
@@ -863,6 +868,7 @@ export type Database = {
       accent_color:
         "hueso" | "coral" | "ambar" | "cielo" | "lavanda" | "rosa" | "turquesa" | "arena";
       color_mode: "auto" | "dark" | "light";
+      link_placement: "list" | "icon" | "both";
       link_provider:
         "generic" | "youtube" | "twitch" | "kick" | "whatsapp" | "github" | "instagram";
       link_shape: "rows" | "cards" | "pills";
@@ -982,6 +988,7 @@ export const Constants = {
     Enums: {
       accent_color: ["hueso", "coral", "ambar", "cielo", "lavanda", "rosa", "turquesa", "arena"],
       color_mode: ["auto", "dark", "light"],
+      link_placement: ["list", "icon", "both"],
       link_provider: ["generic", "youtube", "twitch", "kick", "whatsapp", "github", "instagram"],
       link_shape: ["rows", "cards", "pills"],
       name_font: ["bricolage", "fraunces", "nunito", "space_mono"],

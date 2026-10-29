@@ -3,7 +3,7 @@ import { randomBytes } from "node:crypto";
 import AxeBuilder from "@axe-core/playwright";
 import { type Browser, expect, type Page, test } from "@playwright/test";
 
-import { signIn } from "./support/session";
+import { deleteLinksTitled, insertLink, signIn } from "./support/session";
 
 // Modo claro, oscuro y automático de la página (tarea 34, SPEC-appearance).
 // Cuenta del avatar (/avatar-demo): ninguna otra prueba depende de su modo.
@@ -180,5 +180,57 @@ test("la tipografía elegida nombra la página y es la única que se precarga", 
     await page.getByRole("radio", { name: /^Bricolage/ }).check();
     await page.getByRole("button", { name: "Guardar" }).click();
     await expect(page).toHaveURL(/\/admin\/page\?guardado$/);
+  }
+});
+
+// Fila de íconos (tarea 36d): el dueño elige qué links van como ícono.
+const AVATAR_ID = "44444444-4444-4444-8444-444444444444";
+const ICON_TITLES = ["Instagram de prueba", "Sitio de prueba"];
+
+test("un link elegido como ícono pasa a la fila bajo la bio y deja la lista", async ({
+  page,
+  context,
+  browser,
+  baseURL,
+}) => {
+  await insertLink(AVATAR_ID, AVATAR_ID, {
+    title: "Instagram de prueba",
+    url: "https://www.instagram.com/plektia",
+    provider: "instagram",
+    provider_handle: null,
+  });
+  await insertLink(AVATAR_ID, AVATAR_ID, {
+    title: "Sitio de prueba",
+    url: "https://plektia.app/prueba",
+    provider: "generic",
+    provider_handle: null,
+  });
+  try {
+    await signIn(context, baseURL ?? "", "avatar@plektia.test");
+    await page.goto("/admin");
+    await page.getByRole("button", { name: "Editar Instagram de prueba" }).click();
+    // Radio controlado: queda marcado cuando el servidor confirma.
+    await page.getByRole("radio", { name: /^Como ícono/ }).click();
+    await expect(page.locator("[data-editor-status]")).toHaveText(
+      "Instagram de prueba: como ícono",
+    );
+
+    const { visitor, close } = await visit(browser, baseURL ?? "", "light");
+    const icons = visitor.getByRole("navigation", { name: "Redes" });
+    await expect(icons.getByRole("link", { name: "Instagram de prueba" })).toHaveAttribute(
+      "href",
+      "https://www.instagram.com/plektia",
+    );
+    await expect(visitor.locator(".patchbay").getByText("Instagram de prueba")).toHaveCount(0);
+    await expect(visitor.locator(".patchbay").getByText("Sitio de prueba")).toBeVisible();
+    const box = await icons.getByRole("link").first().boundingBox();
+    expect(box?.width).toBeGreaterThanOrEqual(44);
+    const results = await new AxeBuilder({ page: visitor })
+      .withTags(["wcag2a", "wcag2aa", "wcag2aaa", "wcag21aa", "wcag22aa"])
+      .analyze();
+    expect(results.violations.map((violation) => violation.id)).toEqual([]);
+    await close();
+  } finally {
+    await deleteLinksTitled(AVATAR_ID, ICON_TITLES);
   }
 });

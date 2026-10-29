@@ -7,9 +7,11 @@ import { shareMessage, shareOrCopy } from "@/ui/scripts/share";
 import { mountThread } from "@/ui/scripts/thread";
 
 const patchbay = document.querySelector<HTMLElement>("[data-patchbay]");
-// Estadísticas sin cookies: una visita y los clics de los links.
-if (patchbay) {
-  mountBeacon(patchbay, {
+// Estadísticas sin cookies: una visita y los clics de los links (los de la
+// lista y los de la fila de íconos).
+const statsRoot = document.querySelector<HTMLElement>("[data-stats-handle]");
+if (statsRoot) {
+  mountBeacon(statsRoot, {
     ...(typeof navigator.sendBeacon === "function"
       ? { sendBeacon: (url: string, body: string) => navigator.sendBeacon(url, body) }
       : {}),

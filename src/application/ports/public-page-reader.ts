@@ -1,4 +1,5 @@
 import type { Handle } from "@/domain/handle";
+import type { LinkPlacement } from "@/domain/link";
 import type { Accent, ColorMode, LinkShape, NameFont } from "@/domain/page";
 import type { Provider } from "@/domain/provider";
 
@@ -30,6 +31,8 @@ export interface PublicLink {
   readonly provider: Provider;
   readonly providerHandle: string | null;
   /** Solo en links de canales de YouTube con algo para destacar. */
+  /** En la lista, como ícono en la fila bajo la bio o en los dos lugares (36d). */
+  readonly placement: LinkPlacement;
   readonly featured?: PublicFeatured | null;
   /** Solo si el dueño marcó "Transmito en este canal" y está en vivo. */
   readonly live?: PublicLive | null;

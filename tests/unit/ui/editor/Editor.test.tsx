@@ -60,6 +60,7 @@ function link(id: string, extra: Partial<Link> = {}): Link {
     providerHandle: null,
     tags: [],
     visible: true,
+    placement: "list",
     position: 0,
     version: 1,
     ...extra,
@@ -547,6 +548,35 @@ describe("Editor · mostrar u ocultar", () => {
 
     expect(screen.getByRole("alert").textContent).toContain("revisá tu conexión");
     expect(screen.queryByText("Oculto")).toBeNull();
+  });
+});
+
+describe("Editor · dónde se ve", () => {
+  it("pasa un link a la fila de íconos, lo marca y lo anuncia", async () => {
+    const { api, user } = setup({
+      sections: [REDES],
+      links: [link("twitch", { title: "Twitch" })],
+    });
+    await user.click(screen.getByRole("button", { name: "Editar Twitch" }));
+    await user.click(screen.getByRole("radio", { name: /^Como ícono/ }));
+
+    await waitFor(() => {
+      expect(editorStatus()).toBe("Twitch: como ícono");
+    });
+    expect(api.updates.at(-1)?.changes).toEqual({ placement: "icon" });
+    expect(screen.getByText("Ícono")).toBeTruthy();
+    expect(screen.getByRole("radio", { name: /^Como ícono/ })).toHaveProperty("checked", true);
+  });
+
+  it("elegir el lugar que ya tiene no llama al servidor", async () => {
+    const { api, user } = setup({
+      sections: [REDES],
+      links: [link("twitch", { title: "Twitch" })],
+    });
+    await user.click(screen.getByRole("button", { name: "Editar Twitch" }));
+    await user.click(screen.getByRole("radio", { name: /^En la lista/ }));
+
+    expect(api.updates).toEqual([]);
   });
 });
 

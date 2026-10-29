@@ -1,8 +1,10 @@
 ---
 import type { PublicPage } from "@/application/ports/public-page-reader";
 import Bank from "@/ui/components/Bank.astro";
+import IconRow from "@/ui/components/IconRow.astro";
 import ProfileHeader from "@/ui/components/ProfileHeader.astro";
 import PublicLayout from "@/ui/layouts/PublicLayout.astro";
+import { iconLinksOf, listedLinks } from "@/ui/view/public-link";
 import { profileJsonLd } from "@/ui/view/seo";
 
 interface Props {
@@ -33,21 +35,19 @@ const description = page.bio ?? `Todos los links de ${page.displayName} en un so
 >
   <ProfileHeader page={page} brand={brand} />
   {/* El beacon de estadísticas cuenta visitas y clics de esta página; en la vista previa, nada. */}
-  <div
-    class="patchbay"
-    data-patchbay
-    data-shape={page.linkShape}
-    data-stats-handle={preview ? undefined : page.handle}
-  >
-    <svg class="thread" aria-hidden="true"></svg>
-    {page.sections.map((section) => (
-      <Bank
-        id={section.id}
-        title={section.title}
-        showTitle={section.showTitle}
-        links={section.links}
-      />
-    ))}
-    <Bank id="sin-seccion" links={page.unsectionedLinks} />
+  <div data-stats-handle={preview ? undefined : page.handle}>
+    <IconRow links={iconLinksOf(page)} />
+    <div class="patchbay" data-patchbay data-shape={page.linkShape}>
+      <svg class="thread" aria-hidden="true"></svg>
+      {page.sections.map((section) => (
+        <Bank
+          id={section.id}
+          title={section.title}
+          showTitle={section.showTitle}
+          links={listedLinks(section.links)}
+        />
+      ))}
+      <Bank id="sin-seccion" links={listedLinks(page.unsectionedLinks)} />
+    </div>
   </div>
 </PublicLayout>
