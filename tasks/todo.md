@@ -406,13 +406,14 @@
   - **Archivos:** `src/pages/.well-known/oauth-protected-resource/[...path].ts`, `src/infrastructure/mcp/token-verifier.ts`, `src/pages/oauth/consent.astro`, la Action `oauth.decide` en `src/actions/index.ts`, `scripts/wizard-mcp.sh`.
   - **Hecho:** el verificador usa `getClaims` de supabase-js (JWKS) y `mcp_authorize` para el grant: sin dependencias nuevas. La vuelta a la app después de decidir va con `meta refresh` en la respuesta del POST, porque la CSP `form-action 'self'` no deja terminar un formulario en otro sitio.
 
-- [ ] **Tarea 31: Servidor MCP y herramientas** · M · Deps: 30
+- [x] **Tarea 31: Servidor MCP y herramientas** · M · Deps: 30
   - `/mcp` stateless con el SDK 1.x; las 14 tools sobre los casos de uso (`McpRpcLinkWriter`); `confirm_title`; rate limit; contenido marcado como datos.
   - **Aceptación:**
     - Tests de contrato con el cliente del SDK.
     - Un `confirm_title` incorrecto no borra.
   - **Verificar:** `pnpm test`; conexión manual desde Claude.
-  - **Archivos:** `src/pages/mcp.ts`, `src/infrastructure/mcp/server.ts`, `src/infrastructure/mcp/tools/*.ts`, `src/infrastructure/mcp/mcp-rpc-link-writer.ts`.
+  - **Archivos:** `src/pages/mcp.ts`, `src/infrastructure/mcp/server.ts`, `src/infrastructure/mcp/tools/*.ts`, `src/infrastructure/supabase/mcp-rpc-writers.ts`, `src/composition/mcp.ts`.
+  - **Hecho:** SDK 1.32.1 (procedencia SLSA; todos los avisos de seguridad corregidos desde 1.32.0) con el validador de `@cfworker/json-schema`, porque ajv compila código y Workers no lo permite. Son 15 herramientas: la spec cuenta `create_section` y `update_section` en una fila. Un servidor por pedido, sin estado: `GET` y `DELETE` dan 405. Límite: 60 por minuto por usuario y app (`MCP_RATE_LIMITER`).
 
 - [ ] **Tarea 32: Conexiones de IA en el panel** · S · Deps: 31
   - `/admin/conexiones`: listar, cambiar permiso y revocar (`revokeGrant`).

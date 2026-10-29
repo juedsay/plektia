@@ -68,7 +68,7 @@ export class SupabaseLinkMediaRepository implements LinkMediaRepository {
   }
 }
 
-function toMedia(row: MediaRow): LinkMedia {
+export function toMedia(row: MediaRow): LinkMedia {
   return {
     watchLive: row.watch_live,
     featuredMode: isFeaturedMode(row.featured_mode) ? row.featured_mode : "latest_video",

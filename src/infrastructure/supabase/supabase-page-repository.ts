@@ -113,7 +113,7 @@ export class SupabasePageRepository implements PageReader, PageWriter {
   }
 }
 
-function toPage(row: PageRow): Page {
+export function toPage(row: PageRow): Page {
   return {
     id: row.id,
     handle: row.handle,
