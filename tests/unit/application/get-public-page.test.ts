@@ -14,6 +14,7 @@ const page: PublicPage = {
   colorMode: "auto",
   accent: "hueso",
   linkShape: "rows",
+  nameFont: "bricolage",
   sections: [],
   unsectionedLinks: [],
 };

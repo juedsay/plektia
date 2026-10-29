@@ -9,7 +9,7 @@ import Footer from "@/ui/components/Footer.astro";
 import Seo from "@/ui/components/Seo.astro";
 import ShareDialog from "@/ui/components/ShareDialog.astro";
 import Topbar from "@/ui/components/Topbar.astro";
-import type { Accent, ColorMode } from "@/domain/page";
+import type { Accent, ColorMode, NameFont } from "@/domain/page";
 
 interface Props {
   title: string;
@@ -21,6 +21,8 @@ interface Props {
   mode?: ColorMode;
   /** Acento curado de la página (SPEC-appearance, 36a). */
   accent?: Accent;
+  /** Tipografía de los nombres (SPEC-appearance, 36c): se precarga solo esa. */
+  nameFont?: NameFont;
   type?: "website" | "profile";
   structuredData?: Record<string, unknown> | undefined;
   share?: boolean;
@@ -43,6 +45,7 @@ const {
   theme = "tecnico",
   mode = "auto",
   accent = "hueso",
+  nameFont = "bricolage",
   type,
   structuredData,
   share = true,
@@ -71,7 +74,11 @@ const shareUrl = (canonical ?? publicUrl ?? new URL(Astro.url.pathname, Astro.ur
       <meta name="theme-color" content={mode === "light" ? "#f5f4ef" : "#121315"} />
     )}
     {preview && <base target="_blank" />}
-    <Font cssVariable="--font-brand" preload />
+    {/* La marca queda declarada (botones y títulos del sitio) y se precarga si nombra la página. */}
+    <Font cssVariable="--font-brand" preload={nameFont === "bricolage"} />
+    {nameFont === "fraunces" && <Font cssVariable="--font-fraunces" preload />}
+    {nameFont === "nunito" && <Font cssVariable="--font-nunito" preload />}
+    {nameFont === "space_mono" && <Font cssVariable="--font-space-mono" preload />}
     <Seo
       title={title}
       description={description}
@@ -81,7 +88,7 @@ const shareUrl = (canonical ?? publicUrl ?? new URL(Astro.url.pathname, Astro.ur
     />
     <slot name="head" />
   </head>
-  <body data-theme={theme} data-mode={mode} data-accent={accent}>
+  <body data-theme={theme} data-mode={mode} data-accent={accent} data-name-font={nameFont}>
     <div class:list={["page", { "is-wide": width === "wide" }]}>
       <Topbar share={share} siteNav={width === "wide"} />
       <main>

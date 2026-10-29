@@ -308,6 +308,7 @@ export type Database = {
           handle: string;
           id: string;
           link_shape: Database["public"]["Enums"]["link_shape"];
+          name_font: Database["public"]["Enums"]["name_font"];
           owner_id: string;
           show_handle: boolean;
           theme: Database["public"]["Enums"]["profile_theme"];
@@ -324,6 +325,7 @@ export type Database = {
           handle: string;
           id?: string;
           link_shape?: Database["public"]["Enums"]["link_shape"];
+          name_font?: Database["public"]["Enums"]["name_font"];
           owner_id?: string;
           show_handle?: boolean;
           theme?: Database["public"]["Enums"]["profile_theme"];
@@ -339,6 +341,7 @@ export type Database = {
           handle?: string;
           id?: string;
           link_shape?: Database["public"]["Enums"]["link_shape"];
+          name_font?: Database["public"]["Enums"]["name_font"];
           owner_id?: string;
           show_handle?: boolean;
           theme?: Database["public"]["Enums"]["profile_theme"];
@@ -550,6 +553,7 @@ export type Database = {
           display_name: string | null;
           handle: string | null;
           link_shape: Database["public"]["Enums"]["link_shape"] | null;
+          name_font: Database["public"]["Enums"]["name_font"] | null;
           sections: Json | null;
           show_handle: boolean | null;
           theme: Database["public"]["Enums"]["profile_theme"] | null;
@@ -807,6 +811,7 @@ export type Database = {
           handle: string;
           id: string;
           link_shape: Database["public"]["Enums"]["link_shape"];
+          name_font: Database["public"]["Enums"]["name_font"];
           owner_id: string;
           show_handle: boolean;
           theme: Database["public"]["Enums"]["profile_theme"];
@@ -861,6 +866,7 @@ export type Database = {
       link_provider:
         "generic" | "youtube" | "twitch" | "kick" | "whatsapp" | "github" | "instagram";
       link_shape: "rows" | "cards" | "pills";
+      name_font: "bricolage" | "fraunces" | "nunito" | "space_mono";
       profile_theme: "tecnico";
       user_role: "owner" | "member";
     };
@@ -978,6 +984,7 @@ export const Constants = {
       color_mode: ["auto", "dark", "light"],
       link_provider: ["generic", "youtube", "twitch", "kick", "whatsapp", "github", "instagram"],
       link_shape: ["rows", "cards", "pills"],
+      name_font: ["bricolage", "fraunces", "nunito", "space_mono"],
       profile_theme: ["tecnico"],
       user_role: ["owner", "member"],
     },

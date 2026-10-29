@@ -54,6 +54,62 @@ export default defineConfig({
         ],
       },
     },
+    // Tipografías de los nombres que puede elegir cada página (SPEC-appearance,
+    // 36c): mismo origen auditado (fontsource, OFL-1.1) y solo el subset latino.
+    {
+      provider: fontProviders.local(),
+      name: "Fraunces",
+      cssVariable: "--font-fraunces",
+      fallbacks: ["Georgia", "serif"],
+      options: {
+        variants: [
+          {
+            weight: "100 900",
+            style: "normal",
+            src: [
+              "./node_modules/@fontsource-variable/fraunces/files/fraunces-latin-wght-normal.woff2",
+            ],
+          },
+        ],
+      },
+    },
+    {
+      provider: fontProviders.local(),
+      name: "Nunito",
+      cssVariable: "--font-nunito",
+      fallbacks: ["system-ui", "sans-serif"],
+      options: {
+        variants: [
+          {
+            weight: "200 1000",
+            style: "normal",
+            src: [
+              "./node_modules/@fontsource-variable/nunito/files/nunito-latin-wght-normal.woff2",
+            ],
+          },
+        ],
+      },
+    },
+    {
+      provider: fontProviders.local(),
+      name: "Space Mono",
+      cssVariable: "--font-space-mono",
+      fallbacks: ["ui-monospace", "monospace"],
+      options: {
+        variants: [
+          {
+            weight: 400,
+            style: "normal",
+            src: ["./node_modules/@fontsource/space-mono/files/space-mono-latin-400-normal.woff2"],
+          },
+          {
+            weight: 700,
+            style: "normal",
+            src: ["./node_modules/@fontsource/space-mono/files/space-mono-latin-700-normal.woff2"],
+          },
+        ],
+      },
+    },
   ],
   build: {
     // El CSS de la página pública pesa ~3 KB comprimido: en línea no bloquea el

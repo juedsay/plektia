@@ -1,5 +1,5 @@
 import type { Handle } from "@/domain/handle";
-import type { Accent, ColorMode, LinkShape } from "@/domain/page";
+import type { Accent, ColorMode, LinkShape, NameFont } from "@/domain/page";
 import type { Provider } from "@/domain/provider";
 
 // Modelo de lectura de la página pública: solo lo visible y en orden. Es lo que
@@ -53,6 +53,7 @@ export interface PublicPage {
   readonly colorMode: ColorMode;
   readonly accent: Accent;
   readonly linkShape: LinkShape;
+  readonly nameFont: NameFont;
   readonly sections: readonly PublicSection[];
   readonly unsectionedLinks: readonly PublicLink[];
 }

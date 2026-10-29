@@ -2,6 +2,7 @@
 // Presentación de la página con la que se trabaja (SPEC-admin-panel, "Perfil";
 // desde la tarea 17c es de cada página): avatar, nombre, bio, tema y @handle.
 import { actions } from "astro:actions";
+import { Font } from "astro:assets";
 
 import {
   ACCENTS,
@@ -9,6 +10,7 @@ import {
   BIO_MAX_LENGTH,
   COLOR_MODES,
   LINK_SHAPES,
+  NAME_FONTS,
   UPCOMING_THEMES,
 } from "@/domain/page";
 import { loadWorkspace } from "@/ui/admin/workspace";
@@ -34,6 +36,7 @@ const values = {
   colorMode: failure?.values["colorMode"] ?? currentPage?.colorMode ?? "auto",
   accent: failure?.values["accent"] ?? currentPage?.accent ?? "hueso",
   linkShape: failure?.values["linkShape"] ?? currentPage?.linkShape ?? "rows",
+  nameFont: failure?.values["nameFont"] ?? currentPage?.nameFont ?? "bricolage",
 };
 const message = failure
   ? failure.message
@@ -66,6 +69,13 @@ const MODE_NAMES: Record<string, { name: string; hint: string }> = {
   auto: { name: "Automático", hint: "Clara u oscura según el celular de cada visitante." },
   dark: { name: "Oscuro", hint: "Siempre oscura." },
   light: { name: "Claro", hint: "Siempre clara." },
+};
+
+const FONT_NAMES: Record<string, { name: string; hint: string }> = {
+  bricolage: { name: "Bricolage", hint: "La de Plektia: moderna y con carácter." },
+  fraunces: { name: "Fraunces", hint: "Con serif, editorial." },
+  nunito: { name: "Nunito", hint: "Redondeada y amable." },
+  space_mono: { name: "Space Mono", hint: "Monoespaciada, técnica." },
 };
 
 const SHAPE_NAMES: Record<string, { name: string; hint: string }> = {
@@ -102,6 +112,12 @@ const THEME_NAMES: Record<string, string> = {
   panelMode={panelMode}
   notice={notice}
 >
+  {/* Las tipografías a elegir, para que cada opción se muestre con su letra (solo en esta pantalla). */}
+  <Fragment slot="head">
+    <Font cssVariable="--font-fraunces" />
+    <Font cssVariable="--font-nunito" />
+    <Font cssVariable="--font-space-mono" />
+  </Fragment>
   <header class="admin-heading">
     <h1>Página</h1>
     <p class="admin-bio">Cómo se presenta tu página: el nombre, la bio y el estilo.</p>
@@ -340,6 +356,24 @@ const THEME_NAMES: Record<string, string> = {
             </label>
           ))}
           {fields.linkShape && <p class="field-error">{fields.linkShape}</p>}
+        </fieldset>
+
+        <fieldset class="field choice-group" aria-describedby="name-font-hint">
+          <legend>Tipografía de los nombres</legend>
+          <p class="field-hint" id="name-font-hint">
+            Para tu nombre, los títulos de sección y los nombres de los links. Cada opción se
+            muestra con su letra.
+          </p>
+          {NAME_FONTS.map((font) => (
+            <label class="choice">
+              <input type="radio" name="nameFont" value={font} checked={values.nameFont === font} />
+              <span class="choice-name font-sample" data-name-font={font}>
+                {FONT_NAMES[font]?.name}
+              </span>
+              <span class="choice-hint">{FONT_NAMES[font]?.hint}</span>
+            </label>
+          ))}
+          {fields.nameFont && <p class="field-error">{fields.nameFont}</p>}
         </fieldset>
 
         <div class="field">

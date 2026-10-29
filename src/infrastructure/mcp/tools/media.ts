@@ -133,6 +133,7 @@ export function registerMediaTools(server: McpServer, workspace: McpWorkspace): 
           colorMode: page.colorMode,
           accent: page.accent,
           linkShape: page.linkShape,
+          nameFont: page.nameFont,
           showHandle: page.showHandle,
         });
         if (!settings.ok) return useCaseFailure(settings.error);
