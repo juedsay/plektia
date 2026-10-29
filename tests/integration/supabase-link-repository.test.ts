@@ -252,6 +252,7 @@ describe("SupabaseLinkRepository contra Supabase local", () => {
       visible: true,
       provider: "generic",
       providerHandle: null,
+      kind: null,
     });
     expect(result).toEqual({ ok: false, error: "invalid_input" });
   });

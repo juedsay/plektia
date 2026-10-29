@@ -62,6 +62,7 @@ function link(id: string, extra: Partial<Link> = {}): Link {
     visible: true,
     placement: "list",
     highlight: "none",
+    kind: null,
     position: 0,
     version: 1,
     ...extra,
@@ -397,6 +398,7 @@ describe("Editor · agregar", () => {
         title: "Instagram",
         url: "https://www.instagram.com/juedsay/",
         sectionId: "s-redes",
+        kind: null,
       },
     ]);
     const redes = screen.getByRole("region", { name: "Redes" });
@@ -667,6 +669,28 @@ describe("Editor · dónde se ve", () => {
     // El fieldset deshabilitado deshabilita sus opciones.
     expect(screen.getByRole("radio", { name: /^Arriba de todo/ }).matches(":disabled")).toBe(true);
     expect(screen.getByText("Solo se destaca un link que está en la lista.")).toBeTruthy();
+  });
+
+  it("fija el tipo del link, y 'Automático' vuelve a deducirlo de la URL", async () => {
+    const { api, user } = setup({
+      sections: [REDES],
+      links: [link("blog", { title: "Mi nota", url: "https://plektia.app/" })],
+    });
+    await user.click(screen.getByRole("button", { name: "Editar Mi nota" }));
+    const kind = screen.getByRole("combobox", { name: "Tipo de Mi nota" });
+    expect(kind).toHaveProperty("value", "");
+    expect(within(kind).getByRole("option", { name: "Automático (Sitio)" })).toBeTruthy();
+
+    await user.selectOptions(kind, "article");
+    await waitFor(() => {
+      expect(editorStatus()).toBe("Mi nota: artículo");
+    });
+    expect(api.updates.at(-1)?.changes).toEqual({ kind: "article" });
+
+    await user.selectOptions(kind, "");
+    await waitFor(() => {
+      expect(api.updates.at(-1)?.changes).toEqual({ kind: null });
+    });
   });
 
   it("elegir el lugar que ya tiene no llama al servidor", async () => {

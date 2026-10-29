@@ -2,7 +2,7 @@ import type { FormResult } from "@/actions/form-result";
 import type { LinkMediaView } from "@/application/ports/link-media-repository";
 import type { Link, OwnLinks, Section } from "@/application/ports/link-repository";
 import { errorMessage } from "@/domain/errors";
-import type { LinkHighlight, LinkPlacement } from "@/domain/link-presentation";
+import type { LinkHighlight, LinkKind, LinkPlacement } from "@/domain/link-presentation";
 import type { FeaturedMode, LinkMedia } from "@/domain/link-media";
 
 // Lo que el editor le pide al servidor. En el navegador son las Actions de
@@ -14,6 +14,8 @@ export interface NewLink {
   readonly title: string;
   readonly url: string;
   readonly sectionId: string | null;
+  /** `null` (o sin él): automático, se deduce de la URL. */
+  readonly kind?: LinkKind | null;
 }
 
 export interface LinkChanges {
@@ -26,6 +28,8 @@ export interface LinkChanges {
   readonly placement?: LinkPlacement;
   /** Sin destacar, con el acento o arriba de todo (36e). */
   readonly highlight?: LinkHighlight;
+  /** Red social, artículo, video o sitio; `null` vuelve a automático (37b). */
+  readonly kind?: LinkKind | null;
 }
 
 export interface EditorApi {

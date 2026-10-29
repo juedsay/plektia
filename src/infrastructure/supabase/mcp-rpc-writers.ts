@@ -61,6 +61,7 @@ export class McpRpcLinkWriter implements LinkWriter, SectionWriter {
       p_provider_handle: draft.providerHandle,
       p_tags: [...draft.tags],
       p_visible: draft.visible,
+      p_kind: draft.kind,
     } as Functions["mcp_create_link"]["Args"]);
     return error ? fail(error) : ok(toLink(data));
   }
@@ -78,6 +79,7 @@ export class McpRpcLinkWriter implements LinkWriter, SectionWriter {
     if (patch.visible !== undefined) changes["visible"] = patch.visible;
     if (patch.provider !== undefined) changes["provider"] = patch.provider;
     if (patch.providerHandle !== undefined) changes["provider_handle"] = patch.providerHandle;
+    if (patch.kind !== undefined) changes["kind"] = patch.kind;
     const { data, error } = await this.client.rpc("mcp_update_link", {
       p_page: this.pageId,
       p_id: id,

@@ -3,8 +3,10 @@ import { z } from "zod";
 import type { InvalidInput } from "@/domain/errors";
 import {
   LINK_HIGHLIGHTS,
+  LINK_KINDS,
   LINK_PLACEMENTS,
   type LinkHighlight,
+  type LinkKind,
   type LinkPlacement,
 } from "@/domain/link-presentation";
 import { detectProvider, type Provider } from "@/domain/provider";
@@ -19,8 +21,10 @@ export const LIMITS = { sections: 30, links: 200, tags: 5 } as const;
 
 export {
   LINK_HIGHLIGHTS,
+  LINK_KINDS,
   LINK_PLACEMENTS,
   type LinkHighlight,
+  type LinkKind,
   type LinkPlacement,
 } from "@/domain/link-presentation";
 
@@ -59,6 +63,8 @@ const Tags = z
 
 const SectionId = z.uuid({ error: "La sección no es válida." }).nullable();
 const Visible = z.boolean({ error: "La visibilidad tiene que ser sí o no." });
+/** `null` es "automático" (se deduce de la URL). */
+const Kind = z.enum(LINK_KINDS, { error: "Elegí red social, artículo, video o sitio." }).nullable();
 
 const fields = {
   title: safeLine("El título", 80),
@@ -67,6 +73,7 @@ const fields = {
   tags: Tags.default([]),
   sectionId: SectionId.default(null),
   visible: Visible.default(true),
+  kind: Kind.default(null),
 };
 
 const LinkInputSchema = z.object(fields, { error: "Los datos del link no son válidos." });
@@ -79,6 +86,7 @@ const LinkPatchSchema = z
       description: Description.nullable().optional(),
       tags: Tags.optional(),
       visible: Visible.optional(),
+      kind: Kind.optional(),
       placement: z
         .enum(LINK_PLACEMENTS, { error: "Elegí en la lista, como ícono o en los dos lugares." })
         .optional(),
@@ -101,6 +109,8 @@ export interface LinkDraft {
   readonly visible: boolean;
   readonly provider: Provider;
   readonly providerHandle: string | null;
+  /** `null`: automático, se deduce de la URL. */
+  readonly kind: LinkKind | null;
 }
 
 /** Un link nace en la lista y sin destacar; eso se cambia después (36d y 36e). */

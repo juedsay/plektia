@@ -49,6 +49,7 @@ const LINK: Link = {
   visible: true,
   placement: "list",
   highlight: "none",
+  kind: null,
   position: 0,
   version: 3,
 };

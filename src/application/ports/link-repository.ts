@@ -1,4 +1,4 @@
-import type { LinkDraft, LinkHighlight, LinkPatch, LinkPlacement } from "@/domain/link";
+import type { LinkDraft, LinkHighlight, LinkKind, LinkPatch, LinkPlacement } from "@/domain/link";
 import type { Provider } from "@/domain/provider";
 import type { Result } from "@/domain/result";
 import type { SectionDraft, SectionPatch } from "@/domain/section";
@@ -22,6 +22,8 @@ export interface Link {
   readonly placement: LinkPlacement;
   /** Sin destacar, con el acento en su lugar o arriba de todo. */
   readonly highlight: LinkHighlight;
+  /** Red social, artículo, video o sitio; `null` es automático (por la URL). */
+  readonly kind: LinkKind | null;
   readonly position: number;
   readonly version: number;
 }

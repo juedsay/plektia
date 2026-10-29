@@ -85,20 +85,26 @@ Decisiones del 2026-10-29:
 
 ## Entrega 7b · Tipo de link
 
-- `links.kind`, enum `public.link_kind`: `social` (perfil de red), `article`, `video` y `site`
-  (por defecto).
-- **Detección al crear,** que el dueño puede cambiar después:
+- `links.kind`, enum `public.link_kind`: `social` (perfil de red), `article`, `video` o `site`. Es
+  **nullable**: `null` es "Automático", y el tipo se deduce de la URL al mostrar el link
+  (`src/ui/view/link-kind.ts`). Así los links existentes no necesitan rellenarse, y la regla vive en
+  un solo lugar. La base guarda solo lo que el dueño elige a mano.
+- **Detección:**
   - un perfil de una red conocida es `social`;
-  - un video de YouTube, TikTok o Twitch es `video`;
-  - un artículo de Medium, Substack, dev.to, Hashnode, o una ruta que parece de un artículo
-    (`/blog/…`, `/articulos/…`, `/p/…`, o un slug con guiones) es `article`;
+  - un video de YouTube (`watch`, `youtu.be`, `shorts`, `live`), Vimeo, TikTok, un reel de Instagram
+    o un video o clip de Twitch es `video`;
+  - un artículo de Medium, Substack, dev.to, Hashnode o Ghost, una carpeta típica (`/blog/`,
+    `/articulos/`, `/p/`, `/posts/`, `/pulse/`…) o un slug de varias palabras con guiones es
+    `article`;
   - el resto es `site`.
-- **Panel:** en "Otro link", un selector "Tipo" con lo detectado ya marcado. Al editar un link, el
-  mismo selector.
-- **Página pública:** la línea secundaria suma la etiqueta cuando no es `social`, por ejemplo
-  "Artículo · medium.com" o "Video · youtube.com", con un ícono chico, en el mismo color secundario
-  (AAA). No hace falta para los perfiles, que ya muestran el ícono de la red y "@usuario".
-- **MCP:** `create_link` y `update_link` aceptan `kind` opcional; sin él, se detecta.
+  - Solo se compara el host exacto: `youtube.com.evil.com` es un sitio.
+- **Panel:** selector "Tipo", con "Automático (Artículo)" mostrando lo deducido y las cuatro
+  opciones. En el alta aparece con "Otro link", y al editar un link, siempre. Cambiarlo ofrece
+  "Deshacer".
+- **Página pública:** la línea secundaria de un artículo o un video lo dice adelante, por ejemplo
+  "Artículo · medium.com/…" o "Video · Mi charla", en el color secundario (AAA). Los perfiles y los
+  sitios se ven como siempre: el ícono de la red y "@usuario", o la dirección.
+- **MCP:** `create_link` y `update_link` aceptan `kind` opcional; sin él (o con `null`), se deduce.
 
 ## Entrega 7c · Vista previa del artículo (se detalla y se aprueba antes de empezar)
 

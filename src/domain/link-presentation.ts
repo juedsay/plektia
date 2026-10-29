@@ -11,3 +11,10 @@ export const LINK_HIGHLIGHTS = ["none", "accent", "top"] as const;
 export type LinkHighlight = (typeof LINK_HIGHLIGHTS)[number];
 
 export const TOP_LINKS_LIMIT = 3;
+
+/**
+ * Qué es el link (SPEC-link-form, 7b). `null` en un link es "automático": se
+ * deduce de la URL al mostrarlo.
+ */
+export const LINK_KINDS = ["social", "article", "video", "site"] as const;
+export type LinkKind = (typeof LINK_KINDS)[number];

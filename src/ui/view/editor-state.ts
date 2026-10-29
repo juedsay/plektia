@@ -1,4 +1,4 @@
-import type { LinkHighlight, LinkPlacement } from "@/domain/link-presentation";
+import type { LinkHighlight, LinkKind, LinkPlacement } from "@/domain/link-presentation";
 import type { Link, OwnLinks, Section } from "@/application/ports/link-repository";
 import { socialProfileFor } from "@/ui/view/social-profile";
 
@@ -114,6 +114,7 @@ export function inverseChanges(
   visible: boolean;
   placement: LinkPlacement;
   highlight: LinkHighlight;
+  kind: LinkKind | null;
 }> {
   const changes: Partial<{
     title: string;
@@ -122,6 +123,7 @@ export function inverseChanges(
     visible: boolean;
     placement: LinkPlacement;
     highlight: LinkHighlight;
+    kind: LinkKind | null;
   }> = {};
   if (before.title !== after.title) changes.title = before.title;
   if (before.url !== after.url) changes.url = before.url;
@@ -129,6 +131,7 @@ export function inverseChanges(
   if (before.visible !== after.visible) changes.visible = before.visible;
   if (before.placement !== after.placement) changes.placement = before.placement;
   if (before.highlight !== after.highlight) changes.highlight = before.highlight;
+  if (before.kind !== after.kind) changes.kind = before.kind;
   return changes;
 }
 

@@ -1,5 +1,5 @@
 import type { Handle } from "@/domain/handle";
-import type { LinkHighlight, LinkPlacement } from "@/domain/link";
+import type { LinkHighlight, LinkKind, LinkPlacement } from "@/domain/link";
 import type { Accent, ColorMode, LinkShape, NameFont } from "@/domain/page";
 import type { Provider } from "@/domain/provider";
 
@@ -35,6 +35,8 @@ export interface PublicLink {
   readonly placement: LinkPlacement;
   /** Con el acento en su lugar, o arriba de todo en tarjeta (36e). */
   readonly highlight: LinkHighlight;
+  /** El elegido por el dueño, o `null` (se deduce de la URL al mostrarlo). */
+  readonly kind: LinkKind | null;
   readonly featured?: PublicFeatured | null;
   /** Solo si el dueño marcó "Transmito en este canal" y está en vivo. */
   readonly live?: PublicLive | null;

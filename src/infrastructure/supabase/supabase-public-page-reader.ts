@@ -7,7 +7,7 @@ import type {
   PublicProfileDirectory,
 } from "@/application/ports/public-page-reader";
 import type { Handle } from "@/domain/handle";
-import { LINK_HIGHLIGHTS, LINK_PLACEMENTS } from "@/domain/link";
+import { LINK_HIGHLIGHTS, LINK_KINDS, LINK_PLACEMENTS } from "@/domain/link";
 import { ACCENTS, COLOR_MODES, LINK_SHAPES, NAME_FONTS } from "@/domain/page";
 import { PROVIDERS } from "@/domain/provider";
 import type { Database } from "@/infrastructure/supabase/database.types";
@@ -45,6 +45,7 @@ const PublicLinkSchema = z.object({
   live: LiveSchema.nullish().transform((live) => live ?? null),
   placement: z.enum(LINK_PLACEMENTS),
   highlight: z.enum(LINK_HIGHLIGHTS),
+  kind: z.enum(LINK_KINDS).nullable(),
 });
 
 const RowSchema = z.object({
