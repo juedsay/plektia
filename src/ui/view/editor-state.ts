@@ -1,4 +1,4 @@
-import type { LinkPlacement } from "@/domain/link";
+import type { LinkPlacement } from "@/domain/link-placement";
 import type { Link, OwnLinks, Section } from "@/application/ports/link-repository";
 import { socialProfileFor } from "@/ui/view/social-profile";
 

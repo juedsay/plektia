@@ -67,7 +67,7 @@ select is(
 select is(
   (select l from public.public_page_v, jsonb_array_elements(sections) s, jsonb_array_elements(s -> 'links') l
    where handle = 'juedsay' and l ->> 'title' = 'Twitch') - 'id',
-  '{"title": "Twitch", "url": "https://twitch.tv/juedsay", "description": null, "provider": "twitch", "providerHandle": "juedsay", "featured": null, "live": null}'::jsonb,
+  '{"title": "Twitch", "url": "https://twitch.tv/juedsay", "description": null, "provider": "twitch", "providerHandle": "juedsay", "featured": null, "live": null, "placement": "list"}'::jsonb,
   'cada link expone solo lo que muestra la página (sin dueño ni versión)');
 select hasnt_column('public', 'public_page_v', 'owner_id', 'la vista no expone el dueño');
 select results_eq(

@@ -2,7 +2,7 @@ import { useSortable } from "@dnd-kit/react/sortable";
 import { useEffect, useId, useRef, useState } from "react";
 
 import type { Link, Section } from "@/application/ports/link-repository";
-import { LINK_PLACEMENTS, type LinkPlacement } from "@/domain/link";
+import { LINK_PLACEMENTS, type LinkPlacement } from "@/domain/link-placement";
 import { mediaCapabilities } from "@/domain/link-media";
 import { changedFields, inverseChanges } from "@/ui/view/editor-state";
 import { linkMeta } from "@/ui/view/public-link";
@@ -464,7 +464,7 @@ const PLACEMENT_NAMES: Record<LinkPlacement, string> = {
 };
 
 const PLACEMENT_HINTS: Record<LinkPlacement, string> = {
-  list: "Con su título, como hasta ahora.",
+  list: "Como hasta ahora, en su sección.",
   icon: "Solo en la fila de íconos, debajo de tu bio.",
   both: "En la fila de íconos y también en la lista.",
 };

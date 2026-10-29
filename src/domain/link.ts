@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 import type { InvalidInput } from "@/domain/errors";
+import { LINK_PLACEMENTS, type LinkPlacement } from "@/domain/link-placement";
 import { detectProvider, type Provider } from "@/domain/provider";
 import { map, type Result } from "@/domain/result";
 import { parseSafeUrl } from "@/domain/safe-url";
@@ -11,12 +12,7 @@ import { safeLine, validate } from "@/domain/text";
 
 export const LIMITS = { sections: 30, links: 200, tags: 5 } as const;
 
-/**
- * Dónde se muestra un link en la página pública (SPEC-appearance, 36d): en la
- * lista, solo como ícono en la fila bajo la bio, o en los dos lugares.
- */
-export const LINK_PLACEMENTS = ["list", "icon", "both"] as const;
-export type LinkPlacement = (typeof LINK_PLACEMENTS)[number];
+export { LINK_PLACEMENTS, type LinkPlacement } from "@/domain/link-placement";
 
 const Url = z
   .string({ error: "La URL tiene que ser un texto." })
