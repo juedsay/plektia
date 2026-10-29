@@ -136,12 +136,14 @@ cambian, igual que el tema y el modo.
 
 ### 36c · Tipografía de los nombres
 
-- `pages.name_font`, enum `public.name_font`: `marca` (la actual, por defecto), `bricolage`,
-  `fraunces`, `nunito` y `space_mono`.
-- Pinta el nombre de la página y los títulos de sección. Los links y la bio siguen con su fuente.
-- Los archivos se sirven desde el sitio, sin Google Fonts en la página. El paquete se audita antes de
-  instalarlo. Se precarga solo la fuente de la página, en woff2 con los subconjuntos latinos, y se
-  usa un respaldo métrico ajustado para que no haya salto de diseño.
+- `pages.name_font`, enum `public.name_font`: `bricolage` (la de la marca, por defecto), `fraunces`
+  (con serif), `nunito` (redondeada) y `space_mono` (monoespaciada).
+- Pinta el nombre de la página, los títulos de sección y los nombres de los links: la voz de la
+  marca de DESIGN.md, por el token `--font-name`. Bio, botones y metadatos no cambian.
+- Los archivos se sirven desde el sitio (`@fontsource`, OFL-1.1, auditados), sin Google Fonts. Solo
+  el subset latino en woff2: Fraunces 37 KB, Nunito 39 KB y Space Mono 33 KB (400 y 700). La página
+  declara y precarga solo su fuente, con un respaldo de métricas ajustadas. El panel las carga solo en
+  Panel → Página, para mostrar cada opción con su letra.
 
 ### 36d · Fila de íconos
 

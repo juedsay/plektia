@@ -1806,3 +1806,9 @@
     fill: CanvasText;
   }
 }
+
+/* Tipografía de los nombres (SPEC-appearance, 36c): cada opción con su letra. */
+.font-sample {
+  font-family: var(--font-name);
+  font-size: var(--text-lg);
+}

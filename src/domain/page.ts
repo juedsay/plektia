@@ -74,6 +74,13 @@ export type Accent = (typeof ACCENTS)[number];
 export const LINK_SHAPES = ["rows", "cards", "pills"] as const;
 export type LinkShape = (typeof LINK_SHAPES)[number];
 
+/**
+ * Tipografía de los nombres (SPEC-appearance, 36c): `bricolage` es la de la
+ * marca; las otras se sirven desde el sitio y se cargan solo donde se usan.
+ */
+export const NAME_FONTS = ["bricolage", "fraunces", "nunito", "space_mono"] as const;
+export type NameFont = (typeof NAME_FONTS)[number];
+
 export const BIO_MAX_LENGTH = 160;
 
 const Bio = z
@@ -89,6 +96,9 @@ const PageSettingsSchema = z.object(
     colorMode: z.enum(COLOR_MODES, { error: "Elegí automático, oscuro o claro." }).default("auto"),
     accent: z.enum(ACCENTS, { error: "Elegí uno de los acentos de la lista." }).default("hueso"),
     linkShape: z.enum(LINK_SHAPES, { error: "Elegí filas, tarjetas o pastillas." }).default("rows"),
+    nameFont: z
+      .enum(NAME_FONTS, { error: "Elegí una de las tipografías de la lista." })
+      .default("bricolage"),
     showHandle: z.boolean({ error: "Tiene que ser sí o no." }),
   },
   { error: "Los datos de la página no son válidos." },
@@ -101,6 +111,7 @@ export interface PageSettings {
   readonly colorMode: ColorMode;
   readonly accent: Accent;
   readonly linkShape: LinkShape;
+  readonly nameFont: NameFont;
   readonly showHandle: boolean;
 }
 

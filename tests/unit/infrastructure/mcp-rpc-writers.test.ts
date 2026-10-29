@@ -222,6 +222,7 @@ describe("escritores por funciones mcp_*", () => {
       color_mode: "auto",
       accent: "hueso",
       link_shape: "rows",
+      name_font: "bricolage",
       show_handle: true,
       avatar_path: null,
     };

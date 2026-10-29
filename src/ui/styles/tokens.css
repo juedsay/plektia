@@ -26,6 +26,8 @@
 
   /* `--font-brand` lo define <Font> (astro.config.mjs): archivo propio y respaldo ajustado. */
   --font-display: var(--font-brand, system-ui, sans-serif);
+  /* Los nombres (persona, secciones y links): la voz de la marca, o la que elija la página. */
+  --font-name: var(--font-display);
   --font-body: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   --font-data: ui-monospace, "Cascadia Mono", "SF Mono", Menlo, monospace;
 
@@ -154,6 +156,23 @@
 [data-accent="arena"] {
   --accent-on-dark: #dcc6a4;
   --accent-on-light: #5a4123;
+}
+
+/*
+ * Tipografía de los nombres (SPEC-appearance, 36c). Cada fuente la declara
+ * <Font> (astro.config.mjs) solo en las páginas que la usan; sin ella, el
+ * respaldo de su familia.
+ */
+[data-name-font="fraunces"] {
+  --font-name: var(--font-fraunces, Georgia, serif);
+}
+
+[data-name-font="nunito"] {
+  --font-name: var(--font-nunito, system-ui, sans-serif);
+}
+
+[data-name-font="space_mono"] {
+  --font-name: var(--font-space-mono, ui-monospace, monospace);
 }
 
 @media (min-width: 48rem) {

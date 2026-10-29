@@ -24,6 +24,7 @@ const PAGE: Page = {
   colorMode: "auto",
   accent: "hueso",
   linkShape: "rows",
+  nameFont: "bricolage",
   showHandle: true,
   avatarPath: null,
 };

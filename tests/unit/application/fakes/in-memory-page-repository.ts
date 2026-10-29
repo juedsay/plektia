@@ -50,6 +50,7 @@ export class InMemoryPageRepository implements PageReader, PageWriter {
       colorMode: "auto",
       accent: "hueso",
       linkShape: "rows",
+      nameFont: "bricolage",
       showHandle: true,
       avatarPath: null,
     };

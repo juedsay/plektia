@@ -151,3 +151,34 @@ test("la forma de los links elegida se aplica en la página pública", async ({
     await expect(page).toHaveURL(/\/admin\/page\?guardado$/);
   }
 });
+
+// Tipografía de los nombres (tarea 36c): se usa y se precarga solo la elegida.
+test("la tipografía elegida nombra la página y es la única que se precarga", async ({
+  page,
+  context,
+  browser,
+  baseURL,
+}) => {
+  await signIn(context, baseURL ?? "", "avatar@plektia.test");
+  await page.goto("/admin/page");
+  await page.getByRole("radio", { name: /^Fraunces/ }).check();
+  await page.getByRole("button", { name: "Guardar" }).click();
+  await expect(page).toHaveURL(/\/admin\/page\?guardado$/);
+  try {
+    const { visitor, close } = await visit(browser, baseURL ?? "", "dark");
+    await expect(visitor.locator("body")).toHaveAttribute("data-name-font", "fraunces");
+    const nameFont = await visitor
+      .locator(".identity h1")
+      .evaluate((heading) => getComputedStyle(heading).fontFamily);
+    expect(nameFont).toContain("Fraunces");
+    const preloads = visitor.locator('link[rel="preload"][as="font"]');
+    await expect(preloads).toHaveCount(1);
+    await expect(preloads).toHaveAttribute("href", /^\/_astro\/fonts\/[\w-]+\.woff2$/);
+    await close();
+  } finally {
+    await page.goto("/admin/page");
+    await page.getByRole("radio", { name: /^Bricolage/ }).check();
+    await page.getByRole("button", { name: "Guardar" }).click();
+    await expect(page).toHaveURL(/\/admin\/page\?guardado$/);
+  }
+});

@@ -66,6 +66,7 @@ const publicUrl = currentPage ? new URL(`/${currentPage.handle}`, Astro.url).hre
     )}
     <meta name="robots" content="noindex" />
     <Font cssVariable="--font-brand" />
+    <slot name="head" />
     <title>{title} · Panel · Plektia</title>
   </head>
   <body data-theme="tecnico" data-mode={panelMode} class="admin">
