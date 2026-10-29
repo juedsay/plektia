@@ -27,6 +27,7 @@ const link = {
   providerHandle: "juedsay",
   placement: "both",
   highlight: "top",
+  kind: "article",
 };
 const row = {
   handle: "juedsay",

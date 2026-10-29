@@ -12,11 +12,19 @@ import {
 } from "@/domain/link-presentation";
 import { mediaCapabilities } from "@/domain/link-media";
 import { changedFields, inverseChanges } from "@/ui/view/editor-state";
+import { KIND_NAMES, kindOf } from "@/ui/view/link-kind";
 import { linkMeta } from "@/ui/view/public-link";
 
 import type { OfferUndo } from "./Editor";
-import { CONFLICT_MESSAGE, type EditorApi, type Failure, UNREACHABLE } from "./editor-api";
+import {
+  CONFLICT_MESSAGE,
+  type EditorApi,
+  type Failure,
+  type LinkChanges,
+  UNREACHABLE,
+} from "./editor-api";
 import { DragIcon } from "./EditorGroup";
+import { KindSelect } from "./KindSelect";
 import { MediaSettings } from "./MediaSettings";
 
 interface Props {
@@ -204,17 +212,14 @@ export function LinkRow({
    * "Deshacer". Elegir lo que ya tiene no llama al servidor.
    */
   const choosePresentation = async (
-    changes: { placement: LinkPlacement } | { highlight: LinkHighlight },
+    changes: Pick<LinkChanges, "placement" | "highlight" | "kind">,
     label: string,
   ) => {
     const base = latestLink.current;
-    if (
-      "placement" in changes
-        ? base.placement === changes.placement
-        : base.highlight === changes.highlight
-    ) {
-      return;
-    }
+    const unchanged = (Object.keys(changes) as (keyof typeof changes)[]).every(
+      (key) => base[key] === changes[key],
+    );
+    if (unchanged) return;
     setBusy(true);
     const result = await api
       .update({ id: base.id, version: base.version }, changes)
@@ -383,6 +388,19 @@ export function LinkRow({
                 </p>
               )}
             </div>
+            <KindSelect
+              id={`${idPrefix}-kind`}
+              label={`Tipo de ${link.title}`}
+              url={link.url}
+              value={link.kind}
+              disabled={busy}
+              onChange={(kind) =>
+                void choosePresentation(
+                  { kind },
+                  kind ? KIND_NAMES[kind] : `automático (${KIND_NAMES[kindOf({ url: link.url })]})`,
+                )
+              }
+            />
             {(capabilities.canWatchLive || capabilities.canFeature) && (
               <MediaSettings
                 // Otro canal (o proveedor): la configuración se vuelve a leer.

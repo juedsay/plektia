@@ -510,7 +510,7 @@
     - se agrega un Instagram escribiendo solo el usuario;
     - un usuario inválido se explica sin llamar al servidor;
     - la isla sigue debajo de 120 KB.
-- [ ] **Tarea 37b: Tipo de link** · M · Deps: 37a
+- [x] **Tarea 37b: Tipo de link** · M · Deps: 37a
   - `links.kind`: red social, artículo, video o sitio. Se detecta, se puede cambiar, y se ve como etiqueta en la página.
 - [ ] **Tarea 37c: Vista previa del artículo** · M · Deps: 37b
   - Se detalla y se aprueba antes de empezar; las salvaguardas ya están en la spec.

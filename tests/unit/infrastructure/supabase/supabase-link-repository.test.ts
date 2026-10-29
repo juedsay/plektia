@@ -80,6 +80,7 @@ const draft: LinkDraft = {
   visible: true,
   provider: "generic",
   providerHandle: null,
+  kind: null,
 };
 
 describe("SupabaseLinkRepository · lecturas", () => {

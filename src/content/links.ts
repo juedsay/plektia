@@ -39,5 +39,6 @@ export function toLink(entry: Entry, id: string): PublicLink {
     providerHandle: draft.value.providerHandle,
     placement: "list",
     highlight: "none",
+    kind: draft.value.kind,
   };
 }

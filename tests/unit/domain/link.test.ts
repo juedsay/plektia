@@ -15,6 +15,7 @@ describe("parseLinkInput", () => {
         tags: [],
         sectionId: null,
         visible: true,
+        kind: null,
         provider: "youtube",
         providerHandle: "@juedsay",
       },
@@ -112,6 +113,12 @@ describe("parseLinkPatch", () => {
 
   it("un cambio sin URL no toca el proveedor", () => {
     expect(parseLinkPatch({ title: "Nuevo" })).toEqual({ ok: true, value: { title: "Nuevo" } });
+  });
+
+  it("el tipo se elige entre los conocidos, o null para volver a automático", () => {
+    expect(parseLinkPatch({ kind: "article" })).toEqual({ ok: true, value: { kind: "article" } });
+    expect(parseLinkPatch({ kind: null })).toEqual({ ok: true, value: { kind: null } });
+    expect(parseLinkPatch({ kind: "podcast" }).ok).toBe(false);
   });
 
   it("un cambio vacío es inválido", () => {

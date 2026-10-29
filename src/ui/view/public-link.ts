@@ -1,4 +1,6 @@
 import type { PublicLink, PublicPage } from "@/application/ports/public-page-reader";
+import type { LinkKind } from "@/domain/link-presentation";
+import { KIND_NAMES, kindOf } from "@/ui/view/link-kind";
 import { socialProfileFor } from "@/ui/view/social-profile";
 
 // Presentación de la página pública: funciones puras, sin DOM, para que los
@@ -6,12 +8,17 @@ import { socialProfileFor } from "@/ui/view/social-profile";
 
 /**
  * Línea secundaria de un link: la descripción; si no hay, el "@usuario" de un
- * perfil en una red social; y si tampoco, su dirección en corto.
+ * perfil en una red social; y si tampoco, su dirección en corto. Un artículo o
+ * un video lo dicen adelante ("Artículo · medium.com/…", SPEC-link-form 7b).
  */
-export function linkMeta(link: Pick<PublicLink, "description" | "url">): string {
-  if (link.description) return link.description;
+export function linkMeta(
+  link: Pick<PublicLink, "description" | "url"> & { readonly kind?: LinkKind | null },
+): string {
+  const kind = kindOf(link);
+  const prefix = kind === "article" || kind === "video" ? `${KIND_NAMES[kind]} · ` : "";
+  if (link.description) return `${prefix}${link.description}`;
   const username = socialProfileFor(link.url)?.username;
-  return username ? `@${username}` : shortUrl(link.url);
+  return username ? `@${username}` : `${prefix}${shortUrl(link.url)}`;
 }
 
 /** `https://www.youtube.com/@juedsay/` → `youtube.com/@juedsay`; `mailto:a@b.c` → `a@b.c`. */

@@ -1,11 +1,13 @@
 import { type SubmitEvent, useId, useRef, useState } from "react";
 
 import type { Link, Section } from "@/application/ports/link-repository";
+import type { LinkKind } from "@/domain/link-presentation";
 import { suggestTitle } from "@/ui/view/editor-state";
 import { profilePrefix, profileUrlFor } from "@/ui/view/profile-url";
 import { networkLabel, socialProfileFor } from "@/ui/view/social-profile";
 
 import { type EditorApi, UNREACHABLE } from "./editor-api";
+import { KindSelect } from "./KindSelect";
 import { type LinkSource, NetworkPicker } from "./NetworkPicker";
 
 interface Props {
@@ -29,6 +31,8 @@ export function AddLinkForm({ api, sections, onCreated }: Props) {
   const [title, setTitle] = useState("");
   const [titleTouched, setTitleTouched] = useState(false);
   const [sectionId, setSectionId] = useState<string>("");
+  /** `null`: automático, lo que se deduce de la URL. */
+  const [kind, setKind] = useState<LinkKind | null>(null);
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
   const [fieldErrors, setFieldErrors] = useState<Readonly<Record<string, string>>>({});
@@ -73,6 +77,8 @@ export function AddLinkForm({ api, sections, onCreated }: Props) {
         title,
         url: target,
         sectionId: sectionId === "" ? null : sectionId,
+        // Con una red es un perfil: se deduce solo.
+        kind: source === "other" ? kind : null,
       })
       .catch(() => UNREACHABLE);
     inFlight.current = false;
@@ -87,6 +93,7 @@ export function AddLinkForm({ api, sections, onCreated }: Props) {
     // La red elegida queda, para cargar otra del mismo tipo.
     setUrl("");
     setUsername("");
+    setKind(null);
     setTitle(source === "other" ? "" : networkLabel(source));
     setTitleTouched(false);
     setMessage(null);
@@ -200,6 +207,9 @@ export function AddLinkForm({ api, sections, onCreated }: Props) {
             </p>
           )}
         </div>
+        {source === "other" && (
+          <KindSelect id={`${idPrefix}-kind`} url={url} value={kind} onChange={setKind} />
+        )}
         {sections.length > 0 && (
           <div className="field">
             <label htmlFor={sectionFieldId}>Sección</label>

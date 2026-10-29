@@ -43,6 +43,7 @@ function link(
     visible: true,
     placement: "list",
     highlight: "none",
+    kind: null,
     position,
     version: 1,
     ...extra,

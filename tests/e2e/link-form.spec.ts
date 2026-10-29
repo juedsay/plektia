@@ -44,3 +44,33 @@ test("con la red elegida, alcanza el usuario para agregar el perfil", async ({
     await deleteLinksTitled(AVATAR_ID, [TITLE]);
   }
 });
+
+// Tipo de link (SPEC-link-form, 7b): un artículo se distingue en la página.
+const ARTICLE_TITLE = "Nota de prueba";
+
+test("un artículo se detecta al agregarlo y la página lo dice", async ({
+  page,
+  context,
+  browser,
+  baseURL,
+}) => {
+  await signIn(context, baseURL ?? "", "avatar@plektia.test");
+  try {
+    await page.goto("/admin");
+    const add = page.locator("form.add-link");
+    await add.getByLabel("URL").fill("https://medium.com/@plektia/como-armar-tu-pagina");
+    await expect(add.getByLabel("Tipo")).toContainText("Automático (Artículo)");
+    await add.getByLabel("Título").fill(ARTICLE_TITLE);
+    await add.getByRole("button", { name: "Agregar link" }).click();
+    await expect(page.locator("[data-editor-status]")).toHaveText(`${ARTICLE_TITLE}: agregado`);
+
+    const visitor = await (await browser.newContext({ baseURL: baseURL ?? "" })).newPage();
+    await visitor.goto("/avatar-demo");
+    await expect(visitor.getByRole("link", { name: new RegExp(ARTICLE_TITLE) })).toContainText(
+      "Artículo · medium.com/@plektia/como-armar-tu-pagina",
+    );
+    await visitor.context().close();
+  } finally {
+    await deleteLinksTitled(AVATAR_ID, [ARTICLE_TITLE]);
+  }
+});

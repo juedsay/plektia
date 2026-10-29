@@ -184,6 +184,7 @@ export type Database = {
           description: string | null;
           highlight: Database["public"]["Enums"]["link_highlight"];
           id: string;
+          kind: Database["public"]["Enums"]["link_kind"] | null;
           owner_id: string;
           page_id: string;
           placement: Database["public"]["Enums"]["link_placement"];
@@ -204,6 +205,7 @@ export type Database = {
           description?: string | null;
           highlight?: Database["public"]["Enums"]["link_highlight"];
           id?: string;
+          kind?: Database["public"]["Enums"]["link_kind"] | null;
           owner_id?: string;
           page_id: string;
           placement?: Database["public"]["Enums"]["link_placement"];
@@ -223,6 +225,7 @@ export type Database = {
           description?: string | null;
           highlight?: Database["public"]["Enums"]["link_highlight"];
           id?: string;
+          kind?: Database["public"]["Enums"]["link_kind"] | null;
           owner_id?: string;
           page_id?: string;
           placement?: Database["public"]["Enums"]["link_placement"];
@@ -676,6 +679,7 @@ export type Database = {
         Args: {
           p_description: string;
           p_id: string;
+          p_kind?: Database["public"]["Enums"]["link_kind"];
           p_page: string;
           p_provider: Database["public"]["Enums"]["link_provider"];
           p_provider_handle: string;
@@ -690,6 +694,7 @@ export type Database = {
           description: string | null;
           highlight: Database["public"]["Enums"]["link_highlight"];
           id: string;
+          kind: Database["public"]["Enums"]["link_kind"] | null;
           owner_id: string;
           page_id: string;
           placement: Database["public"]["Enums"]["link_placement"];
@@ -788,6 +793,7 @@ export type Database = {
           description: string | null;
           highlight: Database["public"]["Enums"]["link_highlight"];
           id: string;
+          kind: Database["public"]["Enums"]["link_kind"] | null;
           owner_id: string;
           page_id: string;
           placement: Database["public"]["Enums"]["link_placement"];
@@ -874,6 +880,7 @@ export type Database = {
         "hueso" | "coral" | "ambar" | "cielo" | "lavanda" | "rosa" | "turquesa" | "arena";
       color_mode: "auto" | "dark" | "light";
       link_highlight: "none" | "accent" | "top";
+      link_kind: "social" | "article" | "video" | "site";
       link_placement: "list" | "icon" | "both";
       link_provider:
         "generic" | "youtube" | "twitch" | "kick" | "whatsapp" | "github" | "instagram";
@@ -995,6 +1002,7 @@ export const Constants = {
       accent_color: ["hueso", "coral", "ambar", "cielo", "lavanda", "rosa", "turquesa", "arena"],
       color_mode: ["auto", "dark", "light"],
       link_highlight: ["none", "accent", "top"],
+      link_kind: ["social", "article", "video", "site"],
       link_placement: ["list", "icon", "both"],
       link_provider: ["generic", "youtube", "twitch", "kick", "whatsapp", "github", "instagram"],
       link_shape: ["rows", "cards", "pills"],

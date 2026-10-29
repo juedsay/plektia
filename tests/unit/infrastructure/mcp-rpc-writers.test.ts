@@ -59,6 +59,7 @@ describe("escritores por funciones mcp_*", () => {
         visible: true,
         provider: "generic",
         providerHandle: null,
+        kind: null,
       },
       LINK,
     );
@@ -168,6 +169,7 @@ describe("escritores por funciones mcp_*", () => {
       visible: true,
       provider: "generic" as const,
       providerHandle: null,
+      kind: null,
     };
     for (const attempt of [
       writer.createLink(draft),

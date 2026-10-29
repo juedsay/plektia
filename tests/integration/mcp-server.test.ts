@@ -81,6 +81,7 @@ describe("servidor MCP contra Supabase", () => {
       visible: true,
       provider: "generic",
       providerHandle: null,
+      kind: null,
     });
     expect(forced).toEqual(err("forbidden"));
   });

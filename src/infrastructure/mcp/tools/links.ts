@@ -1,3 +1,4 @@
+import { LINK_KINDS } from "@/domain/link-presentation";
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 
@@ -26,6 +27,11 @@ const linkFields = {
   url: z.string().max(2048).describe("https://… o mailto:…"),
   description: z.string().max(400).nullable().optional().describe("Hasta 120 caracteres."),
   tags: z.array(z.string().max(40)).max(10).optional().describe("Hasta 5 etiquetas."),
+  kind: z
+    .enum(LINK_KINDS)
+    .nullable()
+    .optional()
+    .describe("social, article, video o site. Sin él (o null), se deduce de la URL."),
 };
 
 export function registerLinkTools(server: McpServer, workspace: McpWorkspace): void {
@@ -74,6 +80,7 @@ export function registerLinkTools(server: McpServer, workspace: McpWorkspace): v
         url: linkFields.url.optional(),
         description: linkFields.description,
         tags: linkFields.tags,
+        kind: linkFields.kind,
       },
       annotations: { idempotentHint: true, destructiveHint: false, openWorldHint: false },
     },

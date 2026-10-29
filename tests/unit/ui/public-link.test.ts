@@ -93,6 +93,7 @@ describe("fila de íconos", () => {
     providerHandle: null,
     placement,
     highlight,
+    kind: null,
   });
   const page = {
     sections: [
@@ -131,6 +132,7 @@ describe("destacados arriba de todo", () => {
     providerHandle: null,
     placement,
     highlight,
+    kind: null,
   });
   const page = {
     sections: [
