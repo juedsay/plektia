@@ -4,6 +4,7 @@ import type { AstroCookies } from "astro";
 import { cache, env } from "cloudflare:workers";
 
 import { checkNow } from "@/application/live/check-now";
+import { recordEvent } from "@/application/stats/record-event";
 import type { AuthGateway } from "@/application/ports/auth-gateway";
 import type { PageCache } from "@/application/ports/page-cache";
 import type {
@@ -27,6 +28,7 @@ import {
   youtubeThumbnails,
 } from "@/infrastructure/providers/youtube/youtube-thumbnails";
 import { avatarImages } from "@/infrastructure/supabase/avatar-images";
+import { SupabaseStatsRecorder } from "@/infrastructure/supabase/supabase-stats-recorder";
 import { createIngestClient } from "@/infrastructure/supabase/ingest-client";
 
 const supabase = () => ({ url: env.SUPABASE_URL, publishableKey: env.SUPABASE_PUBLISHABLE_KEY });
@@ -88,3 +90,17 @@ export const liveCheckNow = () =>
 export const youtubeThumbnail = youtubeThumbnails(
   binaryFetchFrom(createSafeFetch({ allowedHosts: [THUMBNAIL_HOST], maxBytes: 256 * 1024 })),
 );
+
+/** Visitas y clics del beacon: 30 por minuto por IP, sumados por `ingest_event`. */
+export const statsEvents = () =>
+  recordEvent({
+    recorder: new SupabaseStatsRecorder(createIngestClient(env)),
+    limiter: new CloudflareRateLimiter(env.STATS_RATE_LIMITER),
+  });
+
+/** Retención de las estadísticas (cron mensual): borra lo de hace más de 400 días. */
+export const statsPurge = () => async () => {
+  const { error } = await createIngestClient(env).call("ingest_purge_stats", {});
+  if (error) throw new Error(`ingest_purge_stats (${error.code}): ${error.message}`);
+  return { purged: true };
+};
