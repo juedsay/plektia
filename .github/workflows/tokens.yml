@@ -1,0 +1,49 @@
+# Aviso de vencimiento de los tokens de la CI (tarea 9c). Cada lunes revisa las
+# fechas y, si a un token le quedan 14 días o menos, abre un issue (sin
+# repetirlo si ya hay uno abierto). Las fechas son variables del repo: no son
+# secretas y así el job no necesita entrar al entorno `production`.
+name: Tokens
+
+on:
+  schedule:
+    - cron: "0 12 * * 1"
+  workflow_dispatch:
+    inputs:
+      today:
+        description: "Simular otra fecha (AAAA-MM-DD), para probar el aviso"
+        required: false
+        default: ""
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: tokens
+  cancel-in-progress: false
+
+jobs:
+  check:
+    name: Vencimiento de tokens
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+      - name: Etiqueta de los avisos
+        run: gh label create token-por-vencer --color D93F0B --description "Un token de la CI está por vencer" --force
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+      - name: Revisar fechas y avisar
+        run: node scripts/token-expiry.ts
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          TODAY: ${{ inputs.today }}
+          SUPABASE_TOKEN_EXPIRES_ON: ${{ vars.SUPABASE_TOKEN_EXPIRES_ON }}
+          CLOUDFLARE_TOKEN_EXPIRES_ON: ${{ vars.CLOUDFLARE_TOKEN_EXPIRES_ON }}
