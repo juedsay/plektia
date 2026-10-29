@@ -2,6 +2,7 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 
 import type {
   AlreadyDecided,
+  Connection,
   ConsentError,
   ConsentRequest,
   McpConnections,
@@ -53,5 +54,45 @@ export class SupabaseMcpConnections implements McpConnections {
       : await this.client.auth.oauth.denyAuthorization(authorizationId, options);
     if (error) return err("not_found");
     return ok(data.redirect_url);
+  }
+
+  async list(): Promise<readonly Connection[]> {
+    const { data, error } = await this.client
+      .from("mcp_grants")
+      .select("client_id, client_name, redirect_host, can_write, created_at, last_used_at")
+      .is("revoked_at", null)
+      .order("created_at", { ascending: false });
+    if (error) throw new Error(`mcp: no se pudieron leer las conexiones (${error.code})`);
+    return data.map((row) => ({
+      clientId: row.client_id,
+      clientName: row.client_name,
+      redirectHost: row.redirect_host,
+      canWrite: row.can_write,
+      createdAt: row.created_at,
+      lastUsedAt: row.last_used_at,
+    }));
+  }
+
+  async setPermission(clientId: string, canWrite: boolean): Promise<Result<void, ConsentError>> {
+    // La RLS deja cambiar solo las propias y activas, y solo desde el panel.
+    const { data, error } = await this.client
+      .from("mcp_grants")
+      .update({ can_write: canWrite })
+      .eq("client_id", clientId)
+      .select("client_id");
+    if (error) return err(error.code === "42501" ? "forbidden" : "not_found");
+    return data.length > 0 ? ok(undefined) : err("not_found");
+  }
+
+  async revoke(clientId: string): Promise<Result<void, ConsentError>> {
+    // Primero el grant: desde ese momento `/mcp` rechaza el token. Después
+    // Supabase invalida los refresh tokens; si ya no lo tenía, no importa.
+    const { error } = await this.client.rpc("mcp_revoke_grant", { p_client_id: clientId });
+    if (error) return err(error.code === "42501" ? "forbidden" : "not_found");
+    const revoked = await this.client.auth.oauth.revokeGrant({ clientId });
+    if (revoked.error) {
+      console.warn("mcp: Supabase no revocó el grant OAuth", revoked.error.message);
+    }
+    return ok(undefined);
   }
 }

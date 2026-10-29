@@ -21,6 +21,17 @@ export interface AlreadyDecided {
 
 export type ConsentError = "not_found" | "forbidden";
 
+/** Una app conectada (activa) en `/admin/conexiones`. */
+export interface Connection {
+  readonly clientId: string;
+  /** Lo declaró la app: no está verificado. */
+  readonly clientName: string;
+  readonly redirectHost: string;
+  readonly canWrite: boolean;
+  readonly createdAt: string;
+  readonly lastUsedAt: string | null;
+}
+
 export interface McpConnections {
   /** Detalle del pedido, o a dónde volver si ya estaba autorizado. */
   consentRequest(
@@ -30,4 +41,9 @@ export interface McpConnections {
   saveGrant(request: ConsentRequest, canWrite: boolean): Promise<Result<void, ConsentError>>;
   /** Aprueba o rechaza el pedido; devuelve a dónde volver (con el código o el error). */
   decide(authorizationId: string, approve: boolean): Promise<Result<string, ConsentError>>;
+  /** Las conexiones activas del dueño, de la más nueva a la más vieja. */
+  list(): Promise<readonly Connection[]>;
+  setPermission(clientId: string, canWrite: boolean): Promise<Result<void, ConsentError>>;
+  /** Corta el acceso ya (grant) e invalida sus tokens en Supabase. Repetirlo no falla. */
+  revoke(clientId: string): Promise<Result<void, ConsentError>>;
 }

@@ -415,11 +415,12 @@
   - **Archivos:** `src/pages/mcp.ts`, `src/infrastructure/mcp/server.ts`, `src/infrastructure/mcp/tools/*.ts`, `src/infrastructure/supabase/mcp-rpc-writers.ts`, `src/composition/mcp.ts`.
   - **Hecho:** SDK 1.32.1 (procedencia SLSA; todos los avisos de seguridad corregidos desde 1.32.0) con el validador de `@cfworker/json-schema`, porque ajv compila código y Workers no lo permite. Son 15 herramientas: la spec cuenta `create_section` y `update_section` en una fila. Un servidor por pedido, sin estado: `GET` y `DELETE` dan 405. Límite: 60 por minuto por usuario y app (`MCP_RATE_LIMITER`).
 
-- [ ] **Tarea 32: Conexiones de IA en el panel** · S · Deps: 31
+- [x] **Tarea 32: Conexiones de IA en el panel** · S · Deps: 31
   - `/admin/conexiones`: listar, cambiar permiso y revocar (`revokeGrant`).
   - **Aceptación:** E2E: revocar hace que la siguiente llamada dé 401.
   - **Verificar:** `pnpm test:e2e`; prueba manual desde Claude.
-  - **Archivos:** `src/pages/admin/conexiones.astro`, `src/actions/connections.ts`.
+  - **Archivos:** `src/pages/admin/conexiones.astro`, las Actions `connections.*` en `src/actions/index.ts`, `src/application/mcp/connections.ts`.
+  - **Hecho:** revocar marca el grant primero (corte inmediato en `/mcp`) y después invalida los tokens en Supabase. En la barra del celular, con hasta seis destinos, los nombres largos van cortos ("Métricas", "Apps", "Ver"). Pendiente de la historia 5: el aviso "Editado desde Claude" en el conflicto del editor.
 
 - [ ] **Tarea 32c: CLI `pnpm plektia`** · S · Deps: 31
   - Cliente fino del mismo `/mcp` con el cliente del SDK: login OAuth con PKCE y redirección a `127.0.0.1` (abre el navegador), y comandos para ver la página, agregar, editar, ocultar, mover, borrar (pide el título exacto) y ver estadísticas.

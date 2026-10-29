@@ -6,6 +6,7 @@ import { ActionError, type ActionAPIContext, defineAction } from "astro:actions"
 import { z } from "zod";
 
 import { inviteUser, revokeUser } from "@/application/admin/users";
+import { revokeConnection, setConnectionPermission } from "@/application/mcp/connections";
 import { decideConsent } from "@/application/mcp/consent";
 import { createLink } from "@/application/links/create-link";
 import type { OwnLinks } from "@/application/ports/link-repository";
@@ -253,6 +254,24 @@ export const server = {
       handler: async (form, context) => {
         const { users } = await repositoriesOf(context);
         return toFormResult(await revokeUser({ users, cache: pageCache() })(formFields(form)));
+      },
+    }),
+  },
+  connections: {
+    /** `{ clientId, access }`: solo lectura (`read`) o lectura y edición (`write`). */
+    setPermission: defineAction({
+      accept: "form",
+      handler: async (form, context) => {
+        const { connections } = await repositoriesOf(context);
+        return toFormResult(await setConnectionPermission({ connections })(formFields(form)));
+      },
+    }),
+    /** `{ clientId }`: desconecta la app; su próxima llamada a `/mcp` da 401. */
+    revoke: defineAction({
+      accept: "form",
+      handler: async (form, context) => {
+        const { connections } = await repositoriesOf(context);
+        return toFormResult(await revokeConnection({ connections })(formFields(form)));
       },
     }),
   },
