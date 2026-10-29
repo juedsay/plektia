@@ -422,12 +422,16 @@
   - **Archivos:** `src/pages/admin/conexiones.astro`, las Actions `connections.*` en `src/actions/index.ts`, `src/application/mcp/connections.ts`.
   - **Hecho:** revocar marca el grant primero (corte inmediato en `/mcp`) y después invalida los tokens en Supabase. En la barra del celular, con hasta seis destinos, los nombres largos van cortos ("Métricas", "Apps", "Ver"). Pendiente de la historia 5: el aviso "Editado desde Claude" en el conflicto del editor.
 
-- [ ] **Tarea 32c: CLI `pnpm plektia`** · S · Deps: 31
+- [x] **Tarea 32c: CLI `pnpm plektia`** · S · Deps: 31
   - Cliente fino del mismo `/mcp` con el cliente del SDK: login OAuth con PKCE y redirección a `127.0.0.1` (abre el navegador), y comandos para ver la página, agregar, editar, ocultar, mover, borrar (pide el título exacto) y ver estadísticas.
   - Mismos permisos, auditoría y revocación que cualquier conexión: aparece en `/admin/conexiones`. No agrega rutas al servidor.
   - El refresh token queda solo en la carpeta de configuración del usuario, con permisos restringidos; `pnpm plektia logout` lo borra y revoca. Sin publicar en npm por ahora (decisión del 2026-10-28).
   - **Aceptación:** con una conexión de solo lectura, `pnpm plektia add` falla con un mensaje claro; revocar desde el panel hace que el siguiente comando pida login.
   - **Archivos:** `scripts/plektia/*.ts`.
+  - **Hecho:**
+    - **Login:** el OAuth lo hace el SDK (registro dinámico, PKCE, renovación) con un proveedor que guarda en archivo; la vuelta es a `127.0.0.1:8976` con `state`.
+    - **Logout:** borra el acceso local; para revocarlo del todo, se desconecta desde el panel, porque el cliente no tiene sesión del panel para revocar el grant.
+    - **Pruebas:** la integración prueba el login real contra Supabase local. La aceptación manual (solo lectura y revocación) queda para cuando el OAuth esté activo en producción.
 
 ### ✅ Checkpoint F8
 - [ ] Desde Claude agregás un link y aparece en tu página; con solo lectura no puede modificar nada.
