@@ -22,12 +22,13 @@ type PageRow = Pick<
   | "theme"
   | "color_mode"
   | "accent"
+  | "link_shape"
   | "show_handle"
   | "avatar_path"
 >;
 
 const PAGE_COLUMNS =
-  "id, handle, display_name, bio, theme, color_mode, accent, show_handle, avatar_path";
+  "id, handle, display_name, bio, theme, color_mode, accent, link_shape, show_handle, avatar_path";
 const UNIQUE_VIOLATION = "23505";
 
 /**
@@ -89,6 +90,7 @@ export class SupabasePageRepository implements PageReader, PageWriter {
         theme: settings.theme,
         color_mode: settings.colorMode,
         accent: settings.accent,
+        link_shape: settings.linkShape,
         show_handle: settings.showHandle,
       })
       .eq("id", pageId)
@@ -133,6 +135,7 @@ export function toPage(row: PageRow): Page {
     theme: row.theme,
     colorMode: row.color_mode,
     accent: row.accent,
+    linkShape: row.link_shape,
     showHandle: row.show_handle,
     avatarPath: row.avatar_path,
   };

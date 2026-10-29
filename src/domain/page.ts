@@ -67,6 +67,13 @@ export const ACCENTS = [
 ] as const;
 export type Accent = (typeof ACCENTS)[number];
 
+/**
+ * Forma de los links (SPEC-appearance, 36b): `rows` es la de siempre (filas
+ * con una línea), `cards` un recuadro por link y `pills` una cápsula.
+ */
+export const LINK_SHAPES = ["rows", "cards", "pills"] as const;
+export type LinkShape = (typeof LINK_SHAPES)[number];
+
 export const BIO_MAX_LENGTH = 160;
 
 const Bio = z
@@ -81,6 +88,7 @@ const PageSettingsSchema = z.object(
     theme: z.enum(AVAILABLE_THEMES, { error: "Ese tema todavía no está disponible." }),
     colorMode: z.enum(COLOR_MODES, { error: "Elegí automático, oscuro o claro." }).default("auto"),
     accent: z.enum(ACCENTS, { error: "Elegí uno de los acentos de la lista." }).default("hueso"),
+    linkShape: z.enum(LINK_SHAPES, { error: "Elegí filas, tarjetas o pastillas." }).default("rows"),
     showHandle: z.boolean({ error: "Tiene que ser sí o no." }),
   },
   { error: "Los datos de la página no son válidos." },
@@ -92,6 +100,7 @@ export interface PageSettings {
   readonly theme: Theme;
   readonly colorMode: ColorMode;
   readonly accent: Accent;
+  readonly linkShape: LinkShape;
   readonly showHandle: boolean;
 }
 

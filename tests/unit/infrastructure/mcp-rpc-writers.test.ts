@@ -221,6 +221,7 @@ describe("escritores por funciones mcp_*", () => {
       theme: "tecnico",
       color_mode: "auto",
       accent: "hueso",
+      link_shape: "rows",
       show_handle: true,
       avatar_path: null,
     };

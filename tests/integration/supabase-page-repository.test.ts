@@ -105,6 +105,7 @@ describe("SupabasePageRepository contra Supabase local", () => {
       theme: "tecnico",
       colorMode: "auto",
       accent: "hueso",
+      linkShape: "rows",
       showHandle: false,
     } as const;
     try {

@@ -32,7 +32,12 @@ const description = page.bio ?? `Todos los links de ${page.displayName} en un so
 >
   <ProfileHeader page={page} brand={brand} />
   {/* El beacon de estadísticas cuenta visitas y clics de esta página; en la vista previa, nada. */}
-  <div class="patchbay" data-patchbay data-stats-handle={preview ? undefined : page.handle}>
+  <div
+    class="patchbay"
+    data-patchbay
+    data-shape={page.linkShape}
+    data-stats-handle={preview ? undefined : page.handle}
+  >
     <svg class="thread" aria-hidden="true"></svg>
     {page.sections.map((section) => (
       <Bank
