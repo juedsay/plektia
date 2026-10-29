@@ -66,6 +66,32 @@ La app queda en `http://127.0.0.1:4321`, corriendo en workerd (el runtime de Clo
 | `pnpm env:local` | Genera `.dev.vars` (ignorado por git) con las claves de Supabase local |
 | `pnpm user:allow <email> <handle> [--role owner] [--prod]` | Invita a una persona (allowlist). Sin `--prod`, en la base local |
 | `pnpm deploy:worker` | Publica el build en Cloudflare (lo corre la CI; ver [Deploy](#deploy)) |
+| `pnpm plektia <comando>` | Gestiona tu página desde la terminal (ver [MCP y CLI](#mcp-y-cli)) |
+
+## MCP y CLI
+
+Plektia expone un servidor MCP en **`https://app.plektia.workers.dev/mcp`**. En Claude (u otro
+cliente MCP), agregá un conector remoto con esa dirección: te lleva a entrar a Plektia y a elegir
+el permiso (solo lectura, por defecto, o lectura y edición). Las apps conectadas se ven, se
+cambian de permiso y se desconectan en **Panel → Conexiones**.
+
+Para gestionar la página desde la terminal, `pnpm plektia` es un cliente del mismo servidor.
+Usa el mismo login (OAuth en el navegador), los mismos permisos y la misma revocación; aparece en
+Conexiones como "Plektia CLI":
+
+```bash
+pnpm plektia login
+pnpm plektia ver
+pnpm plektia agregar "Mi nuevo video" https://youtu.be/dQw4w9WgXcQ
+pnpm plektia ayuda
+```
+
+El acceso queda guardado solo en tu usuario (`%APPDATA%\plektia` en Windows,
+`~/.config/plektia` en el resto); `pnpm plektia logout` lo borra. Para usarlo contra un servidor
+local: `PLEKTIA_URL=http://127.0.0.1:4321`.
+
+El servidor OAuth de Supabase se activa una vez con
+[`scripts/wizard-mcp.sh`](scripts/wizard-mcp.sh).
 
 ## Deploy
 
