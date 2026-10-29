@@ -878,6 +878,22 @@
   color: var(--color-bg);
 }
 
+.network-glyph {
+  flex: none;
+  width: 16px;
+  height: 16px;
+}
+
+.network-glyph-text {
+  display: grid;
+  place-items: center;
+  border: 1.5px solid currentColor;
+  border-radius: 3px;
+  font-size: 9px;
+  font-weight: 700;
+  line-height: 1;
+}
+
 /* Usuario con el dominio delante: el prefijo es parte del recuadro, no del valor. */
 .username-input {
   display: flex;

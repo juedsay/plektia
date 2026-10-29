@@ -9,9 +9,10 @@ const ASSETS = join(process.cwd(), "dist", "client", "_astro");
 /**
  * React 19 ya pesa ~67 KB gzip y @dnd-kit/react (arrastre con mouse, toque y
  * teclado) suma ~37 KB. Decisiones del 2026-10-23: React y arrastre, con
- * botones de alternativa; tope de 120 KB.
+ * botones de alternativa; tope de 120 KB. El 2026-10-29 sube a 125 KB por los
+ * logos de las redes al agregar un link (~4 KB, SPEC-link-form).
  */
-const BUDGET_KB = 120;
+const BUDGET_KB = 125;
 /** Puntos de entrada de la isla: el componente y el renderer de Astro para React. */
 const ENTRY_PATTERNS = [/^Editor\.[\w-]+\.js$/, /^client\.[\w-]+\.js$/];
 

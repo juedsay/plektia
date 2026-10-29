@@ -67,10 +67,9 @@ Decisiones del 2026-10-29:
   `profileUrlFor(network, input)` normaliza la entrada (sin `@`, sin espacios, o la URL pegada) y
   devuelve la URL o un error con el formato esperado. Los formatos y la lista de rutas reservadas
   siguen en `social-profile`.
-- **Presupuesto:** la isla del editor tiene un tope de 120 KB. Con los botones queda en 117.7 KB. Los
-  logos de las redes sumaban unos 4 KB (121.8 KB), así que los botones van con el nombre y sin logo
-  hasta decidir si se sube el tope. Los paths de los logos quedan en `src/ui/view/network-icons.ts`,
-  compartidos con la página pública.
+- **Presupuesto:** los logos de las redes suman unos 4 KB a la isla del editor. El 2026-10-29 el tope
+  sube de 120 a 125 KB para mostrarlos (solo los descarga el panel, no la página pública). Los paths
+  quedan en `src/ui/view/network-icons.ts`, compartidos con la página pública.
 
 ### Pruebas
 
