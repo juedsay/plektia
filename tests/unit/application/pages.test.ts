@@ -123,6 +123,7 @@ describe("createPage", () => {
         displayName: "Repetida",
         bio: null,
         theme: "tecnico",
+        colorMode: "auto",
         showHandle: true,
         avatarPath: null,
       };

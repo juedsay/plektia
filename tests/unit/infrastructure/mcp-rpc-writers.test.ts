@@ -219,6 +219,7 @@ describe("escritores por funciones mcp_*", () => {
       display_name: "Nuevo",
       bio: null,
       theme: "tecnico",
+      color_mode: "auto",
       show_handle: true,
       avatar_path: null,
     };

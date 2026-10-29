@@ -355,7 +355,7 @@ export const server = {
         );
       },
     }),
-    /** Guarda el nombre, la bio, el tema y si se muestra el @handle. */
+    /** Guarda el nombre, la bio, el tema, el modo (claro, oscuro o automático) y el @handle. */
     update: defineAction({
       accept: "form",
       handler: async (form, context) => {

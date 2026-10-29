@@ -154,6 +154,8 @@ Una paleta casi monocroma de negro frío y hueso cálido, con un único acento �
 ### Named Rules
 **La regla de la señal única.** La lima es exclusiva del en vivo. Si nadie transmite, la página no tiene lima salvo el nodo del isotipo. Foco, selección, hover y estados activos usan hueso, nunca lima.
 
+**Modo claro (desde la Entrega 6, [SPEC-appearance](SPEC-appearance.md)).** Cada estilo tiene modo oscuro y claro, y el dueño elige Oscuro, Claro o Automático (el del dispositivo de quien visita, por `prefers-color-scheme`). En claro, "técnico" es papel (`#f5f4ef`) y tinta (`#16171a`), con el secundario en `#43464d`. La señal en vivo pasa de lima a **verde musgo** (`#2e5200`, 8.2:1), igual de exclusiva. `tests/unit/ui/tokens.test.ts` mide el AAA de cada modo.
+
 **La regla del contrato de tokens.** Los componentes leen solo variables (`--color-*`, `--font-*`, `--text-*`, `--space-*`, `--radius-*`); ningún color literal en componentes. Un tema nuevo (cercano, enérgico, editorial) se activa con `data-theme` y redefine el set completo, incluido `--color-live`, `--color-focus` y `--color-selection-*`. Todo tema debe cumplir WCAG 2.2 AAA en la página pública: 7:1 para texto, 4.5:1 para texto grande, medido contra su propio fondo y su superficie. En un tema claro la lima no alcanza: hay que definir otra señal en vivo que cumpla.
 
 ## Typography

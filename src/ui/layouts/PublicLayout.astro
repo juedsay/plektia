@@ -9,6 +9,7 @@ import Footer from "@/ui/components/Footer.astro";
 import Seo from "@/ui/components/Seo.astro";
 import ShareDialog from "@/ui/components/ShareDialog.astro";
 import Topbar from "@/ui/components/Topbar.astro";
+import type { ColorMode } from "@/domain/page";
 
 interface Props {
   title: string;
@@ -16,6 +17,8 @@ interface Props {
   /** URL canónica absoluta; se omite en páginas que no deben indexarse (404). */
   canonical?: URL | undefined;
   theme?: "tecnico";
+  /** Claro, oscuro o el del dispositivo de quien visita (SPEC-appearance). */
+  mode?: ColorMode;
   type?: "website" | "profile";
   structuredData?: Record<string, unknown> | undefined;
   share?: boolean;
@@ -36,6 +39,7 @@ const {
   description,
   canonical,
   theme = "tecnico",
+  mode = "auto",
   type,
   structuredData,
   share = true,
@@ -54,7 +58,15 @@ const shareUrl = (canonical ?? publicUrl ?? new URL(Astro.url.pathname, Astro.ur
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#121315" />
+    {/* La barra del navegador acompaña al modo (los fondos de tokens.css). */}
+    {mode === "auto" ? (
+      <>
+        <meta name="theme-color" media="(prefers-color-scheme: light)" content="#f5f4ef" />
+        <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#121315" />
+      </>
+    ) : (
+      <meta name="theme-color" content={mode === "light" ? "#f5f4ef" : "#121315"} />
+    )}
     {preview && <base target="_blank" />}
     <Font cssVariable="--font-brand" preload />
     <Seo
@@ -66,7 +78,7 @@ const shareUrl = (canonical ?? publicUrl ?? new URL(Astro.url.pathname, Astro.ur
     />
     <slot name="head" />
   </head>
-  <body data-theme={theme}>
+  <body data-theme={theme} data-mode={mode}>
     <div class:list={["page", { "is-wide": width === "wide" }]}>
       <Topbar share={share} siteNav={width === "wide"} />
       <main>

@@ -47,6 +47,7 @@ export class InMemoryPageRepository implements PageReader, PageWriter {
       displayName: draft.displayName,
       bio: null,
       theme: "tecnico",
+      colorMode: "auto",
       showHandle: true,
       avatarPath: null,
     };

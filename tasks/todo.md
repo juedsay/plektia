@@ -439,6 +439,35 @@
 
 ---
 
+## F9 · Appearance → ENTREGA 6 ([SPEC-appearance](../SPEC-appearance.md))
+
+- [x] **Tarea 34: Modo claro, oscuro y automático de la página** · M · Deps: 15
+  - `pages.color_mode` (`auto` por defecto, también para las existentes), expuesto en `public_page_v`.
+  - Tokens claros de "técnico", con AAA medido (texto 16.3:1, secundario 8.6:1, en vivo 8.2:1).
+  - `data-mode` en la página pública: Automático por `prefers-color-scheme` (sin JS), con dos `theme-color`.
+  - Elección en Panel → Página, con la vista previa.
+  - **Aceptación:**
+    - cambiar el modo cambia la página pública;
+    - con Automático, el modo del dispositivo decide;
+    - AAA en los dos modos.
+  - **Verificar:** `pnpm test:db`, `pnpm test`, `pnpm test:e2e`.
+- [ ] **Tarea 35: Modo del panel** · S · Deps: 34
+  - `account_preferences.panel_mode` (`auto` por defecto; tabla solo del dueño), con la elección en el menú de la cuenta.
+  - Tokens claros del panel, con AA.
+  - **Aceptación:**
+    - el panel sigue al sistema;
+    - fijar Claro u Oscuro vale en cualquier dispositivo;
+    - axe AA en claro.
+- [ ] **Tarea 36: Ajustes de estilo (Entrega 6b)** · M · Deps: 34
+  - Acento curado, forma de los links, tipografía de los nombres, fila de íconos de redes y link destacado.
+  - Se detalla en la spec antes de empezar.
+
+### ✅ Checkpoint F9 · ENTREGA 6
+- [ ] Tu página y el panel se ven bien en claro y en oscuro, y la personalizás sin romperla.
+- [ ] Revisión con vos.
+
+---
+
 ## Cierre
 
 - [ ] **Tarea 32b: Aviso por mail de los mensajes de contacto** · S · Deps: 16 (parte 3)

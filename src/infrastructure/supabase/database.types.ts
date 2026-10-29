@@ -3,6 +3,33 @@ export type Json = string | number | boolean | null | { [key: string]: Json | un
 export type Database = {
   public: {
     Tables: {
+      account_preferences: {
+        Row: {
+          panel_mode: Database["public"]["Enums"]["color_mode"];
+          updated_at: string;
+          user_id: string;
+        };
+        ComputedFields: never;
+        Insert: {
+          panel_mode?: Database["public"]["Enums"]["color_mode"];
+          updated_at?: string;
+          user_id?: string;
+        };
+        Update: {
+          panel_mode?: Database["public"]["Enums"]["color_mode"];
+          updated_at?: string;
+          user_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "account_preferences_user_id_fkey";
+            columns: ["user_id"];
+            isOneToOne: true;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       channel_status: {
         Row: {
           changed_at: string | null;
@@ -274,6 +301,7 @@ export type Database = {
         Row: {
           avatar_path: string | null;
           bio: string | null;
+          color_mode: Database["public"]["Enums"]["color_mode"];
           created_at: string;
           display_name: string;
           handle: string;
@@ -287,6 +315,7 @@ export type Database = {
         Insert: {
           avatar_path?: string | null;
           bio?: string | null;
+          color_mode?: Database["public"]["Enums"]["color_mode"];
           created_at?: string;
           display_name: string;
           handle: string;
@@ -299,6 +328,7 @@ export type Database = {
         Update: {
           avatar_path?: string | null;
           bio?: string | null;
+          color_mode?: Database["public"]["Enums"]["color_mode"];
           created_at?: string;
           display_name?: string;
           handle?: string;
@@ -509,6 +539,7 @@ export type Database = {
         Row: {
           avatar_path: string | null;
           bio: string | null;
+          color_mode: Database["public"]["Enums"]["color_mode"] | null;
           display_name: string | null;
           handle: string | null;
           sections: Json | null;
@@ -761,6 +792,7 @@ export type Database = {
         Returns: {
           avatar_path: string | null;
           bio: string | null;
+          color_mode: Database["public"]["Enums"]["color_mode"];
           created_at: string;
           display_name: string;
           handle: string;
@@ -813,6 +845,7 @@ export type Database = {
       };
     };
     Enums: {
+      color_mode: "auto" | "dark" | "light";
       link_provider:
         "generic" | "youtube" | "twitch" | "kick" | "whatsapp" | "github" | "instagram";
       profile_theme: "tecnico";
@@ -928,6 +961,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
+      color_mode: ["auto", "dark", "light"],
       link_provider: ["generic", "youtube", "twitch", "kick", "whatsapp", "github", "instagram"],
       profile_theme: ["tecnico"],
       user_role: ["owner", "member"],
