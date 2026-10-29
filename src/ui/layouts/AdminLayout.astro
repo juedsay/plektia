@@ -15,7 +15,7 @@ import Alert from "@/ui/components/Alert.astro";
 import Isotype from "@/ui/components/Isotype.astro";
 import PageSwitcher from "@/ui/components/admin/PageSwitcher.astro";
 
-type Section = "home" | "page" | "new-page" | "users";
+type Section = "home" | "page" | "stats" | "new-page" | "users";
 
 interface Props {
   title: string;
@@ -89,6 +89,22 @@ const publicUrl = currentPage ? new URL(`/${currentPage.handle}`, Astro.url).hre
                   <path d="M5 20a7 7 0 0 1 14 0"></path>
                 </svg>
                 <span>Página</span>
+              </a>
+            </li>
+            <li>
+              <a href="/admin/estadisticas" aria-current={section === "stats" ? "page" : undefined}>
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <path d="M5 20V11M12 20V5M19 20v-6"></path>
+                </svg>
+                <span>Estadísticas</span>
               </a>
             </li>
             {showUsers && (

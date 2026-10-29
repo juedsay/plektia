@@ -1,0 +1,83 @@
+---
+import type { DailyRow } from "@/application/ports/stats-reader";
+import { count, shortDay } from "@/ui/view/stats";
+
+// Evolución diaria de una sola medida (visitas o clics): barras finas en SVG,
+// una por día, con su tabla equivalente (SPEC-click-analytics, "Panel"). Una
+// medida por gráfico: nunca dos escalas en el mismo eje. Las alturas van como
+// atributos del SVG: la CSP no admite `style` en línea.
+
+interface Props {
+  id: string;
+  title: string;
+  days: readonly DailyRow[];
+  metric: "views" | "clicks";
+}
+const { id, title, days, metric } = Astro.props;
+const max = Math.max(...days.map((day) => day[metric]), 0);
+const SLOT = 10;
+const GAP = 2;
+const HEIGHT = 100;
+const width = days.length * SLOT;
+// Un día en cero se ve como una línea en la base (no como un hueco).
+const heightOf = (value: number) =>
+  max > 0 && value > 0 ? Math.max((value / max) * HEIGHT, 2) : 1;
+const first = days[0];
+const last = days.at(-1);
+---
+
+<figure class="stats-chart" aria-labelledby={`${id}-title`}>
+  <figcaption class="stats-chart-head">
+    <span id={`${id}-title`}>{title}</span>
+    <span class="stats-chart-max">máximo {count(max)} por día</span>
+  </figcaption>
+  <svg
+    class="stats-bars"
+    viewBox={`0 0 ${String(width)} ${String(HEIGHT)}`}
+    preserveAspectRatio="none"
+    aria-hidden="true"
+  >
+    {days.map((day, index) => {
+      const height = heightOf(day[metric]);
+      return (
+        <rect
+          class:list={["stats-bar", { "is-zero": day[metric] === 0 }]}
+          x={index * SLOT + GAP / 2}
+          y={HEIGHT - height}
+          width={SLOT - GAP}
+          height={height}
+        >
+          <title>{`${shortDay(day.day)}: ${count(day[metric])}`}</title>
+        </rect>
+      );
+    })}
+  </svg>
+  {first && last && (
+    <div class="stats-axis" aria-hidden="true">
+      <span>{shortDay(first.day)}</span>
+      <span>{shortDay(last.day)}</span>
+    </div>
+  )}
+  <details class="stats-table-toggle">
+    <summary>Ver la tabla</summary>
+    <table class="stats-table">
+      <caption class="visually-hidden">{`${title} por día`}</caption>
+      <thead>
+        <tr>
+          <th scope="col">Día</th>
+          <th scope="col" class="is-number">
+            {title}
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        {days.map((day) => (
+          <tr>
+            <th scope="row">{shortDay(day.day)}</th>
+            <td class="is-number">{count(day[metric])}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </details>
+</figure>
