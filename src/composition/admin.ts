@@ -1,5 +1,6 @@
 import type { AvatarStorage } from "@/application/ports/avatar-storage";
 import type { LinkMediaRepository } from "@/application/ports/link-media-repository";
+import type { McpConnections } from "@/application/ports/mcp-connections";
 import type { LinkReader, LinkWriter, SectionWriter } from "@/application/ports/link-repository";
 import type { PageReader, PageWriter } from "@/application/ports/page-repository";
 import type { StatsReader } from "@/application/ports/stats-reader";
@@ -12,6 +13,7 @@ import {
 import { SupabaseAvatarStorage } from "@/infrastructure/supabase/supabase-avatar-storage";
 import { SupabaseLinkMediaRepository } from "@/infrastructure/supabase/supabase-link-media-repository";
 import { SupabaseLinkRepository } from "@/infrastructure/supabase/supabase-link-repository";
+import { SupabaseMcpConnections } from "@/infrastructure/supabase/supabase-mcp-connections";
 import { SupabasePageRepository } from "@/infrastructure/supabase/supabase-page-repository";
 import { SupabaseStatsReader } from "@/infrastructure/supabase/supabase-stats-reader";
 import { SupabaseUserDirectory } from "@/infrastructure/supabase/supabase-user-directory";
@@ -30,6 +32,8 @@ export interface AdminRepositories {
   readonly users: UserDirectory;
   /** Visitas y clics de las páginas de la cuenta (la RLS deja ver solo las propias). */
   readonly stats: StatsReader;
+  /** Las apps de IA conectadas por MCP (consentimiento y permisos). */
+  readonly connections: McpConnections;
 }
 
 /**
@@ -51,5 +55,6 @@ export function createAdminRepositories(
     mediaOf: (pageId) => new SupabaseLinkMediaRepository(client, pageId),
     users: new SupabaseUserDirectory(client, ownerId),
     stats: new SupabaseStatsReader(client),
+    connections: new SupabaseMcpConnections(client),
   };
 }

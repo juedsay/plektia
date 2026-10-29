@@ -713,3 +713,125 @@
     opacity: 0.5;
   }
 }
+
+/* Consentimiento de una app de IA (MCP): lo que se destaca es a dónde vuelve. */
+.consent {
+  display: grid;
+  gap: var(--space-4);
+  max-width: 34rem;
+  margin: var(--space-6) auto 0;
+}
+
+.consent h1 {
+  margin: 0;
+  font-family: var(--font-brand);
+  font-size: var(--text-xl);
+  line-height: 1.15;
+}
+
+.consent-app {
+  margin: 0;
+  font-size: var(--text-lg);
+}
+
+.consent-note {
+  margin: 0;
+  color: var(--color-fg-muted);
+  font-size: var(--text-sm);
+}
+
+.consent-host {
+  display: grid;
+  gap: var(--space-1);
+  padding: var(--space-4);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+}
+
+.consent-host-label,
+.consent-host-hint {
+  color: var(--color-fg-muted);
+  font-size: var(--text-sm);
+}
+
+.consent-host-value {
+  font-family: var(--font-brand);
+  font-size: var(--text-xl);
+  overflow-wrap: anywhere;
+}
+
+.consent-host-hint.is-warning {
+  color: var(--color-fg);
+}
+
+.consent-form {
+  display: grid;
+  gap: var(--space-4);
+}
+
+.consent-access {
+  display: grid;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.consent-access legend {
+  margin-bottom: var(--space-2);
+  padding: 0;
+  font-weight: 600;
+}
+
+.consent-option {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--space-1) var(--space-3);
+  align-items: start;
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+}
+
+.consent-option:has(input:checked) {
+  border-color: var(--color-fg);
+}
+
+.consent-option input {
+  grid-row: span 2;
+  width: 1.125rem;
+  height: 1.125rem;
+  margin: 0.2rem 0 0;
+  accent-color: var(--color-fg);
+}
+
+.consent-option-name {
+  font-weight: 600;
+}
+
+.consent-option-hint {
+  grid-column: 2;
+  color: var(--color-fg-muted);
+  font-size: var(--text-sm);
+}
+
+.consent-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  justify-content: flex-end;
+}
+
+/* En el celular, a lo ancho y "Autorizar" arriba, al alcance del pulgar. */
+@media (max-width: 30rem) {
+  .consent-actions {
+    display: grid;
+    justify-content: stretch;
+  }
+
+  .consent-actions .button[value="approve"] {
+    order: -1;
+  }
+}

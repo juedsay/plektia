@@ -397,13 +397,14 @@
   - **Archivos:** `supabase/migrations/20261107000000_mcp.sql`, `supabase/tests/0017_mcp.test.sql`.
   - **Hecho:** también cierra por `client_id` las funciones de owner y la subida y el borrado del avatar. La auditoría va a `private.mcp_audit_log` (usuario, app, herramienta y elemento). El alta y la revocación del grant son funciones solo del panel (`mcp_save_grant`, `mcp_revoke_grant`).
 
-- [ ] **Tarea 30: OAuth, metadatos y consentimiento** · M · Deps: 29, 9
+- [x] **Tarea 30: OAuth, metadatos y consentimiento** · M · Deps: 29, 9
   - `wizard` para activar el servidor OAuth de Supabase. `/.well-known/oauth-protected-resource`, el verificador de tokens (JWKS, `iss`, `aud`, `exp`, `client_id` y grant) y `/oauth/consent` (host destacado, solo lectura por defecto).
   - **Aceptación:**
     - Integración del flujo completo DCR → token.
     - Tokens alterados, vencidos o sin `client_id` → 401.
   - **Verificar:** `pnpm test && pnpm test:e2e`.
-  - **Archivos:** `src/pages/.well-known/oauth-protected-resource.ts`, `src/infrastructure/mcp/token-verifier.ts`, `src/pages/oauth/consent.astro`, `src/actions/oauth.ts`.
+  - **Archivos:** `src/pages/.well-known/oauth-protected-resource/[...path].ts`, `src/infrastructure/mcp/token-verifier.ts`, `src/pages/oauth/consent.astro`, la Action `oauth.decide` en `src/actions/index.ts`, `scripts/wizard-mcp.sh`.
+  - **Hecho:** el verificador usa `getClaims` de supabase-js (JWKS) y `mcp_authorize` para el grant: sin dependencias nuevas. La vuelta a la app después de decidir va con `meta refresh` en la respuesta del POST, porque la CSP `form-action 'self'` no deja terminar un formulario en otro sitio.
 
 - [ ] **Tarea 31: Servidor MCP y herramientas** · M · Deps: 30
   - `/mcp` stateless con el SDK 1.x; las 14 tools sobre los casos de uso (`McpRpcLinkWriter`); `confirm_title`; rate limit; contenido marcado como datos.
