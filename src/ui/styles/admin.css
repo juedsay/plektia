@@ -761,6 +761,57 @@
   font-variant-numeric: tabular-nums;
 }
 
+/* Acentos (SPEC-appearance, 36a): la muestra parte en diagonal el tono para
+   oscuro y el tono para claro, que salen de los mismos tokens que la página. */
+.accent-options {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(8.5rem, 1fr));
+  gap: var(--space-2);
+}
+
+.field .accent-option {
+  display: flex;
+  gap: var(--space-2);
+  align-items: center;
+  min-height: var(--target-min);
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--color-line-soft);
+  border-radius: var(--radius-md);
+  font-family: var(--font-body);
+  cursor: pointer;
+}
+
+.field .accent-option:has(input:checked) {
+  border-color: var(--color-fg);
+  box-shadow: inset 0 0 0 1px var(--color-fg);
+}
+
+.field .accent-option input {
+  flex: none;
+  width: 18px;
+  height: 18px;
+  min-height: 0;
+  margin: 0;
+  padding: 0;
+  accent-color: var(--color-fg);
+  cursor: inherit;
+}
+
+.accent-swatch {
+  flex: none;
+  width: 22px;
+  height: 22px;
+  border: 1px solid var(--color-line);
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent-on-dark) 0 50%, var(--accent-on-light) 50% 100%);
+}
+
+@media (forced-colors: active) {
+  .accent-swatch {
+    forced-color-adjust: none;
+  }
+}
+
 /* ── Editor de links ──────────────────────────────────────────────────────── */
 
 .editor {

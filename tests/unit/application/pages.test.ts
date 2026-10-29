@@ -124,6 +124,7 @@ describe("createPage", () => {
         bio: null,
         theme: "tecnico",
         colorMode: "auto",
+        accent: "hueso",
         showHandle: true,
         avatarPath: null,
       };

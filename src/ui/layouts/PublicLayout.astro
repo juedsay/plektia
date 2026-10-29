@@ -9,7 +9,7 @@ import Footer from "@/ui/components/Footer.astro";
 import Seo from "@/ui/components/Seo.astro";
 import ShareDialog from "@/ui/components/ShareDialog.astro";
 import Topbar from "@/ui/components/Topbar.astro";
-import type { ColorMode } from "@/domain/page";
+import type { Accent, ColorMode } from "@/domain/page";
 
 interface Props {
   title: string;
@@ -19,6 +19,8 @@ interface Props {
   theme?: "tecnico";
   /** Claro, oscuro o el del dispositivo de quien visita (SPEC-appearance). */
   mode?: ColorMode;
+  /** Acento curado de la página (SPEC-appearance, 36a). */
+  accent?: Accent;
   type?: "website" | "profile";
   structuredData?: Record<string, unknown> | undefined;
   share?: boolean;
@@ -40,6 +42,7 @@ const {
   canonical,
   theme = "tecnico",
   mode = "auto",
+  accent = "hueso",
   type,
   structuredData,
   share = true,
@@ -78,7 +81,7 @@ const shareUrl = (canonical ?? publicUrl ?? new URL(Astro.url.pathname, Astro.ur
     />
     <slot name="head" />
   </head>
-  <body data-theme={theme} data-mode={mode}>
+  <body data-theme={theme} data-mode={mode} data-accent={accent}>
     <div class:list={["page", { "is-wide": width === "wide" }]}>
       <Topbar share={share} siteNav={width === "wide"} />
       <main>

@@ -94,18 +94,82 @@ Decisiones del 2026-10-29:
   - AAA de contraste medido sobre la página en los dos modos.
 - **Revisión visual** de la página y del panel en los dos modos, a 390 px y en escritorio.
 
-## Entrega 6b · Ajustes de estilo (resumen; se detalla antes de empezarla)
+## Entrega 6b · Ajustes de estilo
 
-| Ajuste | Opciones | Notas |
-|---|---|---|
-| **Color de acento** | 8 a 10 por estilo, cada uno con su tono claro y oscuro validado AAA | Filetes de sección, hilo y detalles. **No** el en vivo, que sigue con su señal única |
-| **Forma de los links** | Filas (actual), tarjetas o pastillas; esquinas rectas o redondeadas | Variantes de componente con tokens; el objetivo táctil de 44 px se mantiene |
-| **Tipografía de los nombres** | 3 o 4 pares curados servidos desde el sitio | Se precarga solo la fuente que usa la página; presupuesto de peso por página |
-| **Fila de íconos de redes** | Links marcados como "red", mostrados como íconos bajo la bio | Usa los íconos que ya tiene el proyecto; cada ícono con nombre accesible |
-| **Link destacado** | Un link resaltado arriba de todo | Uno por página |
+Decisiones del 2026-10-29: los 8 acentos, las 4 tipografías, la fila de íconos elegida link por
+link y los destacados con dos estilos, más de uno por página.
 
 Todo se guarda en columnas con valores enumerados (nunca CSS ni colores libres), se aplica con
-atributos `data-*` y clases, y se ve en la vista previa en vivo del panel.
+atributos `data-*` y clases, y se ve en la vista previa en vivo del panel. Los ajustes de la página
+los cambia solo el dueño desde el panel (mismo grant por columna y RLS que `theme`). Por MCP no se
+cambian, igual que el tema y el modo.
+
+### 36a · Color de acento
+
+- **Qué pinta:** el hilo, el anillo de los jacks y el filete bajo el título de cada sección. El en
+  vivo conserva su señal única, y el texto sigue en `--color-fg`.
+- **Opciones:** `pages.accent`, enum `public.accent_color`, `default 'hueso'` (el aspecto de hoy):
+
+  | Acento | Sobre oscuro | Sobre claro |
+  |---|---|---|
+  | Hueso | `#f2f2ee` | `#16171a` |
+  | Coral | `#ff9b85` | `#86230f` |
+  | Ámbar | `#f5c25b` | `#663e00` |
+  | Cielo | `#8cc8ff` | `#0a4880` |
+  | Lavanda | `#c3b1ff` | `#4d3093` |
+  | Rosa | `#ff9fcb` | `#82194e` |
+  | Turquesa | `#6fd8d2` | `#09504c` |
+  | Arena | `#dcc6a4` | `#5a4123` |
+
+  Cada tono cumple AAA (7:1) contra el fondo y la superficie de su modo, aunque hoy no pinte texto:
+  así puede hacerlo después sin recalcular. Lo verifica `tests/unit/ui/tokens.test.ts`.
+- **Tokens:** `[data-accent="…"]` define `--accent-on-dark` y `--accent-on-light`. Cada modo elige
+  el suyo en `--color-accent`, y `--color-thread` lo toma.
+- **Panel:** Panel → Página → "Acento": radios con una muestra de los dos tonos y el nombre.
+
+### 36b · Forma de los links
+
+- `pages.link_shape`, enum `public.link_shape`: `rows` (la actual, por defecto), `cards` (cada link
+  en una superficie con borde y esquinas redondeadas) y `pills` (cápsula).
+- El jack y el hilo se mantienen en las tres. El objetivo táctil (44 px) y el foco visible no
+  cambian.
+
+### 36c · Tipografía de los nombres
+
+- `pages.name_font`, enum `public.name_font`: `marca` (la actual, por defecto), `bricolage`,
+  `fraunces`, `nunito` y `space_mono`.
+- Pinta el nombre de la página y los títulos de sección. Los links y la bio siguen con su fuente.
+- Los archivos se sirven desde el sitio, sin Google Fonts en la página. El paquete se audita antes de
+  instalarlo. Se precarga solo la fuente de la página, en woff2 con los subconjuntos latinos, y se
+  usa un respaldo métrico ajustado para que no haya salto de diseño.
+
+### 36d · Fila de íconos
+
+- `links.placement`, enum `public.link_placement`: `list` (por defecto), `icon` (solo en la fila de
+  íconos) y `both` (en la fila y en la lista). Lo elige el dueño link por link: muestra solo los que
+  quiere.
+- La fila va bajo la bio, en el orden de la página. Usa los íconos de red que ya tiene el proyecto,
+  y la inicial del título cuando el link no es de una red conocida.
+- Cada ícono es un link con nombre accesible (el título del link), un objetivo de 44 px y el mismo
+  conteo de clics.
+
+### 36e · Links destacados
+
+- `links.highlight`, enum `public.link_highlight`: `none` (por defecto), `accent` (en su lugar, con
+  borde y fondo suave del acento) y `top` (arriba de todo, en tamaño de tarjeta).
+- Puede haber varios. Los `top` van en un bloque propio entre la fila de íconos y las secciones, en
+  el orden de la página, y no se repiten en su sección. Se admiten hasta 3, y la base lo valida.
+- Son distintos del "contenido destacado" (el último video) que ya muestran algunos links.
+
+### Pruebas de la 6b
+
+- **pgTAP:** valores válidos y por defecto, quién puede escribir cada columna, y el límite de 3
+  destacados arriba.
+- **Unit:** los parsers, el contraste AAA de cada acento en los dos modos, y el armado de la fila de
+  íconos y del bloque de destacados.
+- **E2E:** cada ajuste elegido en el panel se ve en la página pública, con axe AAA en las
+  combinaciones nuevas.
+- **Revisión visual** a 390 px y en escritorio, en claro y en oscuro.
 
 ## Fuera de alcance
 

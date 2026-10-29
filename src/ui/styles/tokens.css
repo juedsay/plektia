@@ -16,7 +16,8 @@
   --color-surface: #1b1d20;
   --color-live: #c6f432;
   --color-live-ink: #121315;
-  --color-thread: #f2f2ee;
+  --color-accent: var(--accent-on-dark, #f2f2ee);
+  --color-thread: var(--color-accent);
   --color-thread-twist: #121315;
   /* La lima es exclusiva del en vivo: foco y selección usan hueso. */
   --color-focus: #f2f2ee;
@@ -80,7 +81,8 @@
   --color-surface: #eceae3;
   --color-live: #2e5200;
   --color-live-ink: #f5f4ef;
-  --color-thread: #16171a;
+  --color-accent: var(--accent-on-light, #16171a);
+  --color-thread: var(--color-accent);
   --color-thread-twist: #f5f4ef;
   --color-focus: #16171a;
   --color-selection-bg: #16171a;
@@ -99,12 +101,59 @@
     --color-surface: #eceae3;
     --color-live: #2e5200;
     --color-live-ink: #f5f4ef;
-    --color-thread: #16171a;
+    --color-accent: var(--accent-on-light, #16171a);
+    --color-thread: var(--color-accent);
     --color-thread-twist: #f5f4ef;
     --color-focus: #16171a;
     --color-selection-bg: #16171a;
     --color-selection-fg: #f5f4ef;
   }
+}
+
+/*
+ * Acentos de la página (SPEC-appearance, 36a): cada uno con su tono para oscuro
+ * y para claro, y cada modo toma el suyo en --color-accent. Pintan el hilo, los
+ * jacks y los filetes; nunca la señal en vivo. AAA contra el fondo y la
+ * superficie de su modo (lo verifica tests/unit/ui/tokens.test.ts).
+ */
+[data-accent="hueso"] {
+  --accent-on-dark: #f2f2ee;
+  --accent-on-light: #16171a;
+}
+
+[data-accent="coral"] {
+  --accent-on-dark: #ff9b85;
+  --accent-on-light: #86230f;
+}
+
+[data-accent="ambar"] {
+  --accent-on-dark: #f5c25b;
+  --accent-on-light: #663e00;
+}
+
+[data-accent="cielo"] {
+  --accent-on-dark: #8cc8ff;
+  --accent-on-light: #0a4880;
+}
+
+[data-accent="lavanda"] {
+  --accent-on-dark: #c3b1ff;
+  --accent-on-light: #4d3093;
+}
+
+[data-accent="rosa"] {
+  --accent-on-dark: #ff9fcb;
+  --accent-on-light: #82194e;
+}
+
+[data-accent="turquesa"] {
+  --accent-on-dark: #6fd8d2;
+  --accent-on-light: #09504c;
+}
+
+[data-accent="arena"] {
+  --accent-on-dark: #dcc6a4;
+  --accent-on-light: #5a4123;
 }
 
 @media (min-width: 48rem) {

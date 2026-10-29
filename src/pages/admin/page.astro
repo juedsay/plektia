@@ -3,7 +3,13 @@
 // desde la tarea 17c es de cada página): avatar, nombre, bio, tema y @handle.
 import { actions } from "astro:actions";
 
-import { AVAILABLE_THEMES, BIO_MAX_LENGTH, COLOR_MODES, UPCOMING_THEMES } from "@/domain/page";
+import {
+  ACCENTS,
+  AVAILABLE_THEMES,
+  BIO_MAX_LENGTH,
+  COLOR_MODES,
+  UPCOMING_THEMES,
+} from "@/domain/page";
 import { loadWorkspace } from "@/ui/admin/workspace";
 import Alert from "@/ui/components/Alert.astro";
 import AdminLayout from "@/ui/layouts/AdminLayout.astro";
@@ -25,6 +31,7 @@ const values = {
   bio: failure ? (failure.values["bio"] ?? "") : (currentPage?.bio ?? ""),
   showHandle: failure ? failure.values["showHandle"] === "on" : (currentPage?.showHandle ?? true),
   colorMode: failure?.values["colorMode"] ?? currentPage?.colorMode ?? "auto",
+  accent: failure?.values["accent"] ?? currentPage?.accent ?? "hueso",
 };
 const message = failure
   ? failure.message
@@ -57,6 +64,17 @@ const MODE_NAMES: Record<string, { name: string; hint: string }> = {
   auto: { name: "Automático", hint: "Clara u oscura según el celular de cada visitante." },
   dark: { name: "Oscuro", hint: "Siempre oscura." },
   light: { name: "Claro", hint: "Siempre clara." },
+};
+
+const ACCENT_NAMES: Record<string, string> = {
+  hueso: "Hueso",
+  coral: "Coral",
+  ambar: "Ámbar",
+  cielo: "Cielo",
+  lavanda: "Lavanda",
+  rosa: "Rosa",
+  turquesa: "Turquesa",
+  arena: "Arena",
 };
 
 const THEME_NAMES: Record<string, string> = {
@@ -274,6 +292,29 @@ const THEME_NAMES: Record<string, string> = {
             </label>
           ))}
           {fields.colorMode && <p class="field-error">{fields.colorMode}</p>}
+        </fieldset>
+
+        <fieldset class="field choice-group" aria-describedby="accent-hint">
+          <legend>Acento</legend>
+          <p class="field-hint" id="accent-hint">
+            El color del hilo, los jacks y los títulos de sección. Cada uno tiene su tono para claro
+            y para oscuro.
+          </p>
+          <div class="accent-options">
+            {ACCENTS.map((accent) => (
+              <label class="accent-option">
+                <input
+                  type="radio"
+                  name="accent"
+                  value={accent}
+                  checked={values.accent === accent}
+                />
+                <span class="accent-swatch" data-accent={accent} aria-hidden="true" />
+                <span class="choice-name">{ACCENT_NAMES[accent]}</span>
+              </label>
+            ))}
+          </div>
+          {fields.accent && <p class="field-error">{fields.accent}</p>}
         </fieldset>
 
         <div class="field">

@@ -131,6 +131,7 @@ export function registerMediaTools(server: McpServer, workspace: McpWorkspace): 
           bio: bio ?? page.bio ?? "",
           theme: page.theme,
           colorMode: page.colorMode,
+          accent: page.accent,
           showHandle: page.showHandle,
         });
         if (!settings.ok) return useCaseFailure(settings.error);

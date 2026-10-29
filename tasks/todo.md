@@ -458,9 +458,21 @@
     - el panel sigue al sistema;
     - fijar Claro u Oscuro vale en cualquier dispositivo;
     - axe AA en claro.
-- [ ] **Tarea 36: Ajustes de estilo (Entrega 6b)** · M · Deps: 34
-  - Acento curado, forma de los links, tipografía de los nombres, fila de íconos de redes y link destacado.
-  - Se detalla en la spec antes de empezar.
+- [ ] **Tarea 36a: Color de acento** · S · Deps: 34
+  - `pages.accent` (8 acentos, `hueso` por defecto), expuesto en `public_page_v`.
+  - Tokens `--accent-on-dark` y `--accent-on-light`, y `--color-accent` por modo; pinta el hilo, los jacks y los filetes.
+  - Elección en Panel → Página.
+  - **Aceptación:**
+    - el acento elegido se ve en la página pública, en los dos modos;
+    - AAA de cada acento contra el fondo y la superficie.
+- [ ] **Tarea 36b: Forma de los links** · S · Deps: 36a
+  - `pages.link_shape`: filas, tarjetas o pastillas.
+- [ ] **Tarea 36c: Tipografía de los nombres** · M · Deps: 36a
+  - `pages.name_font`, con 4 fuentes propias auditadas y solo la de la página precargada.
+- [ ] **Tarea 36d: Fila de íconos** · M · Deps: 36a
+  - `links.placement`: en la lista, como ícono o en los dos lugares, elegido link por link.
+- [ ] **Tarea 36e: Links destacados** · M · Deps: 36a
+  - `links.highlight`: con borde de acento en su lugar o arriba de todo (hasta 3).
 
 ### ✅ Checkpoint F9 · ENTREGA 6
 - [ ] Tu página y el panel se ven bien en claro y en oscuro, y la personalizás sin romperla.

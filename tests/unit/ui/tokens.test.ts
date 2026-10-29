@@ -3,6 +3,8 @@ import { join } from "node:path";
 
 import { describe, expect, it } from "vitest";
 
+import { ACCENTS } from "@/domain/page";
+
 // Contrato de tokens (DESIGN.md, SPEC-appearance): cada modo de "técnico"
 // cumple WCAG 2.2 AAA en la página pública, y "automático" en claro repite
 // exactamente los valores de "claro" (nadie edita uno y se olvida del otro).
@@ -10,12 +12,13 @@ import { describe, expect, it } from "vitest";
 const css = readFileSync(join(process.cwd(), "src/ui/styles/tokens.css"), "utf8");
 
 /** Las variables de color del primer bloque que empieza con `selector`. */
-function colorsOf(selector: string): Record<string, string> {
+function colorsOf(selector: string, prefix = "--color-"): Record<string, string> {
   const start = css.indexOf(`${selector} {`);
   if (start === -1) throw new Error(`no está el bloque ${selector}`);
   const block = css.slice(start, css.indexOf("}", start));
+  const declaration = new RegExp(String.raw`(${prefix}[\w-]+):\s*(#[0-9a-f]{6})`, "gi");
   return Object.fromEntries(
-    [...block.matchAll(/(--color-[\w-]+):\s*(#[0-9a-f]{6})/gi)].map((match) => [
+    [...block.matchAll(declaration)].map((match) => [
       match[1] ?? "",
       (match[2] ?? "").toLowerCase(),
     ]),
@@ -61,5 +64,28 @@ describe("tokens de color", () => {
     expect(
       contrast(colors["--color-selection-fg"] ?? "", colors["--color-selection-bg"] ?? ""),
     ).toBeGreaterThanOrEqual(7);
+  });
+});
+
+describe("acentos", () => {
+  it.each(ACCENTS)("%s cumple AAA contra el fondo y la superficie de cada modo", (accent) => {
+    const tones = colorsOf(`[data-accent="${accent}"]`, "--accent-");
+    for (const [tone, colors] of [
+      ["--accent-on-dark", dark],
+      ["--accent-on-light", light],
+    ] as const) {
+      expect(tones[tone], `${accent} sin ${tone}`).toMatch(/^#[0-9a-f]{6}$/);
+      for (const background of ["--color-bg", "--color-surface"]) {
+        const ratio = contrast(tones[tone] ?? "", colors[background] ?? "");
+        expect(ratio, `${accent} ${tone} sobre ${background}`).toBeGreaterThanOrEqual(7);
+      }
+    }
+  });
+
+  it("hueso repite el texto de cada modo: las páginas de siempre no cambian", () => {
+    expect(colorsOf('[data-accent="hueso"]', "--accent-")).toEqual({
+      "--accent-on-dark": dark["--color-fg"],
+      "--accent-on-light": light["--color-fg"],
+    });
   });
 });

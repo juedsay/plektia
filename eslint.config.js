@@ -10,6 +10,7 @@ export default defineConfig(
   {
     ignores: [
       "dist/",
+      ".claude/",
       ".astro/",
       ".wrangler/",
       "coverage/",
