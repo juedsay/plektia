@@ -1,0 +1,144 @@
+---
+// Consentimiento de una app de IA (SPEC-mcp-server, historia 1). Supabase Auth
+// manda acá al dueño con `authorization_id`; sin sesión, el middleware lo lleva
+// al login y vuelve. Lo que se destaca es el host al que vuelve la app (el
+// nombre lo declara ella y no está verificado), y el permiso por defecto es
+// solo lectura.
+//
+// La vuelta a la app después de decidir va con `meta refresh` (y un link) en
+// la respuesta del POST: la CSP `form-action 'self'` no deja que un formulario
+// termine en otro sitio, y así sigue igual de estricta.
+import { actions } from "astro:actions";
+
+import { loadConsent } from "@/application/mcp/consent";
+import { adminRepositoriesFor } from "@/composition/runtime";
+import { consentHost } from "@/ui/view/consent";
+import Alert from "@/ui/components/Alert.astro";
+import PublicLayout from "@/ui/layouts/PublicLayout.astro";
+
+import "@/ui/styles/site.css";
+
+const user = Astro.locals.user;
+if (!user) return Astro.redirect("/login", 303);
+
+const decided = Astro.getActionResult(actions.oauth.decide);
+const redirectUrl = decided?.data?.ok ? decided.data.value.redirectUrl : null;
+const decisionError = decided?.data && !decided.data.ok ? decided.data.message : null;
+const actionFailed = decided?.error ? "No se pudo completar. Probá de nuevo en un minuto." : null;
+
+const authorizationId = Astro.url.searchParams.get("authorization_id") ?? "";
+const { connections } = adminRepositoriesFor(Astro.request, Astro.cookies, user.id);
+const request = redirectUrl ? null : await loadConsent(connections)(authorizationId);
+
+// Ya autorizada antes: se vuelve a la app sin preguntar (un GET, no un formulario).
+if (request?.ok && "redirectUrl" in request.value) {
+  return Astro.redirect(request.value.redirectUrl, 302);
+}
+const pending = request?.ok && "clientId" in request.value ? request.value : null;
+const host = pending ? consentHost(pending.redirectUri) : null;
+const returning = redirectUrl ? consentHost(redirectUrl) : null;
+---
+
+<PublicLayout
+  title="Conectar una app · Plektia"
+  description="Autorizá a una app de IA a usar tu página de Plektia."
+  share={false}
+  width="wide"
+>
+  {redirectUrl && <meta slot="head" http-equiv="refresh" content={`0;url=${redirectUrl}`} />}
+
+  <section class="consent" aria-labelledby="consent-title">
+    {redirectUrl && returning ? (
+      <>
+        <h1 id="consent-title">Listo</h1>
+        <p class="bio">Volviendo a {returning.label}…</p>
+        <p>
+          <a class="button" href={redirectUrl}>
+            Volver a la app
+          </a>
+        </p>
+      </>
+    ) : pending && host ? (
+      <>
+        <h1 id="consent-title">Conectar una app a tu Plektia</h1>
+        {(decisionError ?? actionFailed) && (
+          <Alert variant="error" message={decisionError ?? actionFailed} />
+        )}
+        <p class="consent-app">
+          <strong>{pending.clientName}</strong> quiere usar tu cuenta de Plektia.
+        </p>
+        <p class="consent-note">Ese nombre lo declara la app: Plektia no lo verificó.</p>
+
+        <div class="consent-host">
+          <span class="consent-host-label">Al terminar vuelve a</span>
+          <strong class="consent-host-value">{host.label}</strong>
+          {host.local && <span class="consent-host-hint">Un programa en esta computadora.</span>}
+          {host.insecure && (
+            <span class="consent-host-hint is-warning">
+              Sin conexión segura (http). Autorizala solo si sabés qué app es.
+            </span>
+          )}
+        </div>
+
+        <form
+          method="post"
+          action={`${actions.oauth.decide}&authorization_id=${encodeURIComponent(pending.authorizationId)}`}
+          class="consent-form"
+          data-consent
+        >
+          <input type="hidden" name="authorization_id" value={pending.authorizationId} />
+          <fieldset class="consent-access">
+            <legend>Qué puede hacer</legend>
+            <label class="consent-option">
+              <input type="radio" name="access" value="read" checked />
+              <span class="consent-option-name">Solo lectura</span>
+              <span class="consent-option-hint">
+                Ve tu página, tus links y tus estadísticas. No cambia nada.
+              </span>
+            </label>
+            <label class="consent-option">
+              <input type="radio" name="access" value="write" />
+              <span class="consent-option-name">Lectura y edición</span>
+              <span class="consent-option-hint">
+                Además crea, edita, oculta, mueve y borra links y secciones, y cambia tu nombre y
+                bio. Para borrar tiene que repetir el título exacto.
+              </span>
+            </label>
+          </fieldset>
+          <p class="consent-note">
+            Podés cambiarle el permiso o desconectarla cuando quieras desde el panel.
+          </p>
+          <div class="consent-actions">
+            <button class="button is-quiet" type="submit" name="decision" value="deny">
+              Rechazar
+            </button>
+            <button class="button" type="submit" name="decision" value="approve">
+              Autorizar
+            </button>
+          </div>
+        </form>
+      </>
+    ) : (
+      <>
+        <h1 id="consent-title">Este pedido ya no es válido</h1>
+        <p class="bio">
+          Venció o ya se usó. Volvé a conectar la app desde el principio (desde la app, no desde
+          Plektia).
+        </p>
+        <p>
+          <a class="button is-quiet" href="/admin">
+            Ir al panel
+          </a>
+        </p>
+      </>
+    )}
+  </section>
+</PublicLayout>
+
+<script>
+  import { guardSingleSubmit } from "@/ui/scripts/single-submit";
+
+  for (const form of document.querySelectorAll<HTMLFormElement>("[data-consent]")) {
+    guardSingleSubmit(form);
+  }
+</script>

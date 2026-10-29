@@ -1,0 +1,6 @@
+# Falsos positivos revisados a mano. Cada línea es la huella de un hallazgo puntual
+# (commit:archivo:regla:línea), no una regla general.
+
+# Un JWT de mentira en el test del verificador de /mcp (tarea 30): "eyJ…" + "firma",
+# sin firma real ni proyecto. El commit siguiente lo reemplazó por un texto plano.
+e02f0ff7f54c85f20497940ae69fbca7c0d61942:tests/unit/infrastructure/mcp-token-verifier.test.ts:generic-api-key:7

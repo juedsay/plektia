@@ -4,8 +4,9 @@
 // responde con `Set-Cookie` y se puede cachear (ADR 0003). `/_actions` son las
 // Astro Actions que llama el editor del panel: cada una exige sesión.
 // `/api/e` (el beacon de estadísticas) la lee para no contar al dueño.
-const SESSION_PREFIXES = ["/admin", "/login", "/auth", "/_actions", "/api/e"] as const;
-const PROTECTED_PREFIXES = ["/admin"] as const;
+// `/oauth` es el consentimiento de las apps de IA (MCP): exige sesión.
+const SESSION_PREFIXES = ["/admin", "/login", "/auth", "/_actions", "/api/e", "/oauth"] as const;
+const PROTECTED_PREFIXES = ["/admin", "/oauth"] as const;
 // Acciones de login: las que un atacante repetiría para abusar del proveedor.
 const RATE_LIMITED_PREFIXES = ["/auth"] as const;
 

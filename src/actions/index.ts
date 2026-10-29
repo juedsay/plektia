@@ -6,6 +6,7 @@ import { ActionError, type ActionAPIContext, defineAction } from "astro:actions"
 import { z } from "zod";
 
 import { inviteUser, revokeUser } from "@/application/admin/users";
+import { decideConsent } from "@/application/mcp/consent";
 import { createLink } from "@/application/links/create-link";
 import type { OwnLinks } from "@/application/ports/link-repository";
 import { deleteLink } from "@/application/links/delete-link";
@@ -252,6 +253,35 @@ export const server = {
       handler: async (form, context) => {
         const { users } = await repositoriesOf(context);
         return toFormResult(await revokeUser({ users, cache: pageCache() })(formFields(form)));
+      },
+    }),
+  },
+  oauth: {
+    /**
+     * `{ authorization_id, decision, access }`: aprobar o rechazar una app de IA
+     * en `/oauth/consent`. El permiso por defecto es solo lectura. Devuelve a
+     * dónde volver a la app (la página la redirige).
+     */
+    decide: defineAction({
+      accept: "form",
+      handler: async (form, context) => {
+        const { connections } = await repositoriesOf(context);
+        const values = formFields(form);
+        const decided = await decideConsent(connections)({
+          authorizationId: values["authorization_id"] ?? "",
+          approve: values["decision"] === "approve",
+          access: values["access"] === "write" ? "write" : "read",
+        });
+        if (decided.ok) return { ok: true as const, value: { redirectUrl: decided.value } };
+        return {
+          ok: false as const,
+          message:
+            decided.error === "forbidden"
+              ? "Tu cuenta no puede autorizar apps."
+              : "Este pedido ya no es válido. Volvé a conectar la app desde el principio.",
+          fields: {},
+          values: {},
+        };
       },
     }),
   },

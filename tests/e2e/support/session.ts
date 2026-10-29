@@ -1,4 +1,5 @@
 import { execFileSync } from "node:child_process";
+import { createHash, randomBytes } from "node:crypto";
 import { join } from "node:path";
 
 import type { BrowserContext } from "@playwright/test";
@@ -249,4 +250,57 @@ export async function statsToday(pageId: string, linkId: string) {
     clicks: page.data?.clicks ?? 0,
     linkClicks: link.data?.clicks ?? 0,
   };
+}
+
+export const OAUTH_REDIRECT_URI = "http://127.0.0.1:9/callback";
+
+/**
+ * Un cliente MCP que se registra (DCR) y pide autorización con PKCE, como hace
+ * Claude. Devuelve el `authorization_id` con el que Supabase manda al consentimiento.
+ */
+export async function startOAuthAuthorization(clientName: string) {
+  const supabase = localSupabase();
+  const auth = `${supabase.url}/auth/v1`;
+  const registered = await fetch(`${auth}/oauth/clients/register`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      client_name: clientName,
+      redirect_uris: [OAUTH_REDIRECT_URI],
+      token_endpoint_auth_method: "none",
+      grant_types: ["authorization_code", "refresh_token"],
+      response_types: ["code"],
+    }),
+  });
+  if (!registered.ok) throw new Error(`registro OAuth: ${String(registered.status)}`);
+  const { client_id: clientId } = await registered.json<{ client_id: string }>();
+
+  const codeVerifier = randomBytes(32).toString("base64url");
+  const authorize = new URL(`${auth}/oauth/authorize`);
+  authorize.search = new URLSearchParams({
+    response_type: "code",
+    client_id: clientId,
+    redirect_uri: OAUTH_REDIRECT_URI,
+    code_challenge: createHash("sha256").update(codeVerifier).digest("base64url"),
+    code_challenge_method: "S256",
+    state: "estado-e2e",
+  }).toString();
+  const toConsent = await fetch(authorize, { redirect: "manual" });
+  const location = new URL(toConsent.headers.get("location") ?? "", supabase.url);
+  const authorizationId = location.searchParams.get("authorization_id");
+  if (!authorizationId) throw new Error(`autorización OAuth sin id: ${location.href}`);
+  return { clientId, codeVerifier, authorizationId };
+}
+
+/** La conexión guardada al consentir (o `null`). */
+export async function grantOf(clientId: string) {
+  const supabase = localSupabase();
+  const admin = createClient(supabase.url, supabase.secretKey, { auth: { persistSession: false } });
+  const { data, error } = await admin
+    .from("mcp_grants")
+    .select("client_name, redirect_host, can_write, revoked_at")
+    .eq("client_id", clientId)
+    .maybeSingle();
+  if (error) throw error;
+  return data;
 }

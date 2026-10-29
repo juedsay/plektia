@@ -64,6 +64,7 @@ const shareUrl = (canonical ?? publicUrl ?? new URL(Astro.url.pathname, Astro.ur
       type={type}
       structuredData={structuredData}
     />
+    <slot name="head" />
   </head>
   <body data-theme={theme}>
     <div class:list={["page", { "is-wide": width === "wide" }]}>

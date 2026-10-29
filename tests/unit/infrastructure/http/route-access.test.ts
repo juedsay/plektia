@@ -27,9 +27,12 @@ describe("isFrameable", () => {
 });
 
 describe("requiresSession", () => {
-  it.each(["/admin", "/admin/", "/admin/links", "/ADMIN", "/Admin/links"])("protege %j", (path) => {
-    expect(requiresSession(path)).toBe(true);
-  });
+  it.each(["/admin", "/admin/", "/admin/links", "/ADMIN", "/Admin/links", "/oauth/consent"])(
+    "protege %j",
+    (path) => {
+      expect(requiresSession(path)).toBe(true);
+    },
+  );
 
   // Variantes que el router de Astro resuelve igual que /admin: tienen que
   // quedar protegidas aunque no se escriban así.
@@ -40,12 +43,17 @@ describe("requiresSession", () => {
     },
   );
 
-  it.each(["/", "/juedsay", "/administrador", "/login", "/auth/callback", "/admin-x"])(
-    "no protege %j",
-    (path) => {
-      expect(requiresSession(path)).toBe(false);
-    },
-  );
+  it.each([
+    "/",
+    "/juedsay",
+    "/administrador",
+    "/login",
+    "/auth/callback",
+    "/admin-x",
+    "/.well-known/oauth-protected-resource",
+  ])("no protege %j", (path) => {
+    expect(requiresSession(path)).toBe(false);
+  });
 
   it("no falla con una ruta mal codificada", () => {
     expect(requiresSession("/%E0%A4%A")).toBe(false);
