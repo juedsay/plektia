@@ -390,11 +390,12 @@
 
 ## F8 · MCP server
 
-- [ ] **Tarea 29: Grants y escrituras `mcp_*`** · M · Deps: 12, 24
+- [x] **Tarea 29: Grants y escrituras `mcp_*`** · M · Deps: 12, 24
   - `mcp_grants`, funciones `mcp_*` (`security definer`: grant activo, `can_write`, dueño y auditoría) y verificación de que las políticas bloquean escrituras directas con `client_id`.
   - **Aceptación:** pgTAP: un JWT con `client_id` no escribe directo; con grant de solo lectura no escribe por `mcp_*`.
   - **Verificar:** `pnpm test:db`.
-  - **Archivos:** `supabase/migrations/0008_mcp.sql`, `supabase/tests/mcp.test.sql`.
+  - **Archivos:** `supabase/migrations/20261107000000_mcp.sql`, `supabase/tests/0017_mcp.test.sql`.
+  - **Hecho:** también cierra por `client_id` las funciones de owner y la subida y el borrado del avatar. La auditoría va a `private.mcp_audit_log` (usuario, app, herramienta y elemento). El alta y la revocación del grant son funciones solo del panel (`mcp_save_grant`, `mcp_revoke_grant`).
 
 - [ ] **Tarea 30: OAuth, metadatos y consentimiento** · M · Deps: 29, 9
   - `wizard` para activar el servidor OAuth de Supabase. `/.well-known/oauth-protected-resource`, el verificador de tokens (JWKS, `iss`, `aud`, `exp`, `client_id` y grant) y `/oauth/consent` (host destacado, solo lectura por defecto).
@@ -417,6 +418,13 @@
   - **Aceptación:** E2E: revocar hace que la siguiente llamada dé 401.
   - **Verificar:** `pnpm test:e2e`; prueba manual desde Claude.
   - **Archivos:** `src/pages/admin/conexiones.astro`, `src/actions/connections.ts`.
+
+- [ ] **Tarea 32c: CLI `pnpm plektia`** · S · Deps: 31
+  - Cliente fino del mismo `/mcp` con el cliente del SDK: login OAuth con PKCE y redirección a `127.0.0.1` (abre el navegador), y comandos para ver la página, agregar, editar, ocultar, mover, borrar (pide el título exacto) y ver estadísticas.
+  - Mismos permisos, auditoría y revocación que cualquier conexión: aparece en `/admin/conexiones`. No agrega rutas al servidor.
+  - El refresh token queda solo en la carpeta de configuración del usuario, con permisos restringidos; `pnpm plektia logout` lo borra y revoca. Sin publicar en npm por ahora (decisión del 2026-10-28).
+  - **Aceptación:** con una conexión de solo lectura, `pnpm plektia add` falla con un mensaje claro; revocar desde el panel hace que el siguiente comando pida login.
+  - **Archivos:** `scripts/plektia/*.ts`.
 
 ### ✅ Checkpoint F8
 - [ ] Desde Claude agregás un link y aparece en tu página; con solo lectura no puede modificar nada.
