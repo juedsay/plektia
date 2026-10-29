@@ -31,6 +31,9 @@ function connectionsWith(overrides: Partial<McpConnections> = {}) {
     },
     saveGrant: saveGrantMock,
     decide: decideMock,
+    list: () => Promise.resolve([]),
+    setPermission: () => Promise.resolve(ok(undefined)),
+    revoke: () => Promise.resolve(ok(undefined)),
     ...overrides,
   };
   return Object.assign(connections, { calls, saveGrantMock, decideMock });

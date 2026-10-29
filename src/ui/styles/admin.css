@@ -322,6 +322,22 @@
   font-weight: 600;
 }
 
+/*
+ * En la barra del celular entran hasta seis destinos: los nombres largos van
+ * cortos. `display: none` también los saca del lector de pantalla, así que el
+ * nombre accesible es siempre el que se ve.
+ */
+.admin-nav .nav-label {
+  display: none;
+}
+
+.admin-nav .nav-label-short {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 /* ── Área de trabajo ──────────────────────────────────────────────────────── */
 
 .admin-main {
@@ -563,6 +579,14 @@
 
   .admin-nav a[aria-current="page"]::before {
     content: none;
+  }
+
+  .admin-nav .nav-label {
+    display: inline;
+  }
+
+  .admin-nav .nav-label-short {
+    display: none;
   }
 
   .admin-session {
@@ -1420,6 +1444,41 @@
   margin: 0;
   color: var(--color-fg-muted);
   font-size: var(--text-sm);
+}
+
+/* Conexiones de IA: cómo conectar y la lista de apps (reusa la de usuarios). */
+.connections-how {
+  max-width: var(--admin-measure);
+  margin-bottom: var(--space-8);
+  padding-bottom: var(--space-6);
+  border-bottom: 1px solid var(--color-line);
+}
+
+.connections-url {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-3);
+  align-items: center;
+  margin: var(--space-3) 0 0;
+}
+
+.connections-url code {
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-md);
+  overflow-wrap: anywhere;
+}
+
+.connections-actions {
+  display: flex;
+  flex-wrap: wrap;
+  flex-basis: 100%;
+  gap: var(--space-2);
+  align-items: start;
+}
+
+.connections-actions .users-revoke {
+  flex-basis: auto;
 }
 
 /* "Comprobar ahora": debajo del encabezado del inicio. */

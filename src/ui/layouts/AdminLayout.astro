@@ -15,7 +15,7 @@ import Alert from "@/ui/components/Alert.astro";
 import Isotype from "@/ui/components/Isotype.astro";
 import PageSwitcher from "@/ui/components/admin/PageSwitcher.astro";
 
-type Section = "home" | "page" | "stats" | "new-page" | "users";
+type Section = "home" | "page" | "stats" | "connections" | "new-page" | "users";
 
 interface Props {
   title: string;
@@ -104,7 +104,28 @@ const publicUrl = currentPage ? new URL(`/${currentPage.handle}`, Astro.url).hre
                 >
                   <path d="M5 20V11M12 20V5M19 20v-6"></path>
                 </svg>
-                <span>Estadísticas</span>
+                <span class="nav-label">Estadísticas</span>
+                <span class="nav-label-short">Métricas</span>
+              </a>
+            </li>
+            <li>
+              <a
+                href="/admin/conexiones"
+                aria-current={section === "connections" ? "page" : undefined}
+              >
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <path d="M9 7V3M15 7V3M7 7h10v4a5 5 0 0 1-10 0V7ZM12 16v5"></path>
+                </svg>
+                <span class="nav-label">Conexiones</span>
+                <span class="nav-label-short">Apps</span>
               </a>
             </li>
             {showUsers && (
@@ -140,8 +161,11 @@ const publicUrl = currentPage ? new URL(`/${currentPage.handle}`, Astro.url).hre
                   >
                     <path d="M7 17 17 7M9 7h8v8" />
                   </svg>
-                  <span>
+                  <span class="nav-label">
                     Ver página<span class="visually-hidden"> (se abre en otra pestaña)</span>
+                  </span>
+                  <span class="nav-label-short">
+                    Ver<span class="visually-hidden"> página (se abre en otra pestaña)</span>
                   </span>
                 </a>
               </li>

@@ -1,0 +1,147 @@
+---
+// Conexiones de IA (SPEC-mcp-server, historia 4): cada app conectada por MCP
+// con su nombre (declarado, no verificado), el host al que vuelve, el permiso,
+// el alta y el último uso. Se le cambia el permiso o se la desconecta; la
+// desconexión corta el acceso en su próxima llamada.
+import { actions } from "astro:actions";
+
+import { listConnections } from "@/application/mcp/connections";
+import { mcpResourceUrl } from "@/infrastructure/mcp/resource-metadata";
+import { loadWorkspace } from "@/ui/admin/workspace";
+import Alert from "@/ui/components/Alert.astro";
+import AdminLayout from "@/ui/layouts/AdminLayout.astro";
+
+const switched = Astro.getActionResult(actions.pages.select);
+if (switched?.data?.ok) return Astro.redirect("/admin/conexiones", 303);
+const changed = Astro.getActionResult(actions.connections.setPermission);
+if (changed?.data?.ok) return Astro.redirect("/admin/conexiones?permiso", 303);
+const revoked = Astro.getActionResult(actions.connections.revoke);
+if (revoked?.data?.ok) return Astro.redirect("/admin/conexiones?desconectada", 303);
+
+const { repositories, pages, currentPage, account } = await loadWorkspace(Astro);
+let connections: Awaited<ReturnType<ReturnType<typeof listConnections>>> = [];
+let failed = false;
+try {
+  connections = await listConnections({ connections: repositories.connections })();
+} catch (error) {
+  console.error("conexiones: no se pudieron leer", error);
+  failed = true;
+}
+
+const actionFailure = [changed, revoked].find((result) => result?.data && !result.data.ok);
+const errorMessage =
+  actionFailure?.data && !actionFailure.data.ok
+    ? actionFailure.data.message
+    : changed?.error || revoked?.error
+      ? "No se pudo completar. Probá de nuevo en un minuto."
+      : null;
+const success = Astro.url.searchParams.has("permiso")
+  ? "Permiso actualizado. Rige desde la próxima llamada de la app."
+  : Astro.url.searchParams.has("desconectada")
+    ? "App desconectada: ya no puede ver ni cambiar nada."
+    : null;
+const notice =
+  switched?.data && !switched.data.ok
+    ? switched.data.message
+    : switched?.error
+      ? "No pudimos cambiar de página. Probá de nuevo."
+      : null;
+
+const connectorUrl = mcpResourceUrl(Astro.url.origin);
+const dateFormat = new Intl.DateTimeFormat("es-AR", { dateStyle: "medium" });
+const formatDate = (iso: string) => dateFormat.format(new Date(iso));
+---
+
+<AdminLayout
+  title="Conexiones"
+  section="connections"
+  pages={pages}
+  currentPage={currentPage}
+  account={account}
+  notice={notice}
+>
+  <header class="admin-heading">
+    <h1>Conexiones</h1>
+    <p class="admin-bio">Apps de IA, como Claude, que pueden usar tu Plektia.</p>
+  </header>
+
+  {success && <Alert variant="success" message={success} />}
+  {errorMessage && <Alert variant="error" message={errorMessage} />}
+
+  <section class="connections-how" aria-labelledby="connections-how-title">
+    <h2 class="users-title" id="connections-how-title">
+      Conectar una app
+    </h2>
+    <p class="field-hint">
+      En tu app de IA, agregá un conector remoto (MCP) con esta dirección. Te va a pedir entrar a
+      Plektia y elegir qué puede hacer: por defecto, solo lectura.
+    </p>
+    <p class="connections-url">
+      <code>{connectorUrl}</code>
+      <button type="button" class="button is-quiet" data-copy={connectorUrl}>
+        Copiar
+      </button>
+      <span class="field-hint" role="status" data-copy-status></span>
+    </p>
+  </section>
+
+  <section class="users-list" aria-labelledby="connections-list-title">
+    <h2 class="users-title" id="connections-list-title">
+      Apps conectadas
+    </h2>
+    {failed ? (
+      <Alert variant="error" message="No pudimos leer tus conexiones. Probá de nuevo en un rato." />
+    ) : connections.length === 0 ? (
+      <p class="field-hint">Todavía no conectaste ninguna app.</p>
+    ) : (
+      <ul>
+        {connections.map((connection) => (
+          <li class="users-row connections-row">
+            <div class="users-who">
+              <span class="users-email">{connection.clientName}</span>
+              <span class="users-handle">
+                Vuelve a <strong>{connection.redirectHost}</strong> · nombre declarado por la app
+              </span>
+            </div>
+            <div class="users-state">
+              <span class="users-status">
+                {connection.canWrite ? "Lectura y edición" : "Solo lectura"}
+              </span>
+              <span class="users-date">
+                {`Conectada el ${formatDate(connection.createdAt)} · `}
+                {connection.lastUsedAt
+                  ? `último uso: ${formatDate(connection.lastUsedAt)}`
+                  : "todavía no la usó"}
+              </span>
+            </div>
+            <div class="connections-actions">
+              <form method="post" action={actions.connections.setPermission}>
+                <input type="hidden" name="clientId" value={connection.clientId} />
+                <input type="hidden" name="access" value={connection.canWrite ? "read" : "write"} />
+                <button type="submit" class="button is-quiet">
+                  {connection.canWrite ? "Pasar a solo lectura" : "Permitir edición"}
+                  <span class="visually-hidden"> a {connection.clientName}</span>
+                </button>
+              </form>
+              <details class="users-revoke">
+                <summary class="button is-quiet">
+                  Desconectar<span class="visually-hidden"> {connection.clientName}</span>
+                </summary>
+                <form method="post" action={actions.connections.revoke}>
+                  <input type="hidden" name="clientId" value={connection.clientId} />
+                  <p>
+                    Deja de poder ver y cambiar tu página en su próxima llamada. Para volver a
+                    usarla, conectala de nuevo desde la app.
+                  </p>
+                  <button type="submit" class="button">
+                    Sí, desconectar<span class="visually-hidden"> {connection.clientName}</span>
+                  </button>
+                </form>
+              </details>
+            </div>
+          </li>
+        ))}
+      </ul>
+    )}
+  </section>
+</AdminLayout>
