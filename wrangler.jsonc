@@ -64,6 +64,12 @@
       "namespace_id": "1004",
       "simple": { "limit": 1, "period": 60 },
     },
+    // Servidor MCP: 60 llamadas por minuto por usuario y app (SPEC-mcp-server).
+    {
+      "name": "MCP_RATE_LIMITER",
+      "namespace_id": "1006",
+      "simple": { "limit": 60, "period": 60 },
+    },
   ],
   "observability": {
     "enabled": true,

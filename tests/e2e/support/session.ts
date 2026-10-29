@@ -304,3 +304,54 @@ export async function grantOf(clientId: string) {
   if (error) throw error;
   return data;
 }
+
+/**
+ * Un cliente MCP ya conectado: autoriza por API (lo mismo que hace
+ * `/oauth/consent`) y canjea el código. Devuelve el access token y el cliente.
+ */
+export async function connectMcpClient(email: string, canWrite: boolean) {
+  const supabase = localSupabase();
+  const { clientId, codeVerifier, authorizationId } = await startOAuthAuthorization("E2E MCP");
+  const session = await verifiedSession(supabase, email);
+  const owner = createClient(supabase.url, supabase.publishableKey, {
+    auth: { persistSession: false, autoRefreshToken: false },
+  });
+  await owner.auth.setSession({
+    access_token: session.access_token,
+    refresh_token: session.refresh_token,
+  });
+  // Como la pantalla de consentimiento: primero el detalle (ata el pedido al usuario).
+  const details = await owner.auth.oauth.getAuthorizationDetails(authorizationId);
+  if (details.error) throw details.error;
+  const saved = await owner.rpc("mcp_save_grant", {
+    p_client_id: clientId,
+    p_client_name: "E2E MCP",
+    p_redirect_host: new URL(OAUTH_REDIRECT_URI).host,
+    p_can_write: canWrite,
+  });
+  if (saved.error) throw saved.error;
+  const approved = await owner.auth.oauth.approveAuthorization(authorizationId, {
+    skipBrowserRedirect: true,
+  });
+  if (approved.error) throw approved.error;
+  const code = new URL(approved.data.redirect_url).searchParams.get("code") ?? "";
+  const token = await fetch(`${supabase.url}/auth/v1/oauth/token`, {
+    method: "POST",
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    body: new URLSearchParams({
+      grant_type: "authorization_code",
+      code,
+      redirect_uri: OAUTH_REDIRECT_URI,
+      client_id: clientId,
+      code_verifier: codeVerifier,
+    }),
+  });
+  if (!token.ok) throw new Error(`token OAuth: ${String(token.status)}`);
+  const { access_token: accessToken } = await token.json<{ access_token: string }>();
+  /** Revoca la conexión desde el panel (lo que hará `/admin/conexiones`). */
+  const revoke = async () => {
+    await owner.rpc("mcp_revoke_grant", { p_client_id: clientId });
+    await owner.auth.oauth.revokeGrant({ clientId });
+  };
+  return { clientId, accessToken, revoke };
+}

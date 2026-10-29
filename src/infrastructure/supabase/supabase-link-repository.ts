@@ -232,7 +232,9 @@ function unexpected(error: PostgrestError): Error {
   return unexpectedDatabaseError("links", error);
 }
 
-function toLink(row: Omit<LinkRow, "owner_id" | "page_id" | "created_at" | "updated_at">): Link {
+export function toLink(
+  row: Omit<LinkRow, "owner_id" | "page_id" | "created_at" | "updated_at">,
+): Link {
   return {
     id: row.id,
     sectionId: row.section_id,
@@ -248,7 +250,7 @@ function toLink(row: Omit<LinkRow, "owner_id" | "page_id" | "created_at" | "upda
   };
 }
 
-function toSection(
+export function toSection(
   row: Omit<SectionRow, "owner_id" | "page_id" | "created_at" | "updated_at">,
 ): Section {
   return {

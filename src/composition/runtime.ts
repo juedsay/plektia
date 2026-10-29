@@ -6,7 +6,10 @@ import { cache, env } from "cloudflare:workers";
 import { checkNow } from "@/application/live/check-now";
 import { recordEvent } from "@/application/stats/record-event";
 import type { AuthGateway } from "@/application/ports/auth-gateway";
-import type { McpTokenVerifier } from "@/application/ports/mcp-auth";
+import type { McpCaller, McpTokenVerifier } from "@/application/ports/mcp-auth";
+import { createMcpWorkspace } from "@/composition/mcp";
+import { ok } from "@/domain/result";
+import type { McpWorkspace } from "@/infrastructure/mcp/workspace";
 import type { PageCache } from "@/application/ports/page-cache";
 import type {
   PublicPageReader,
@@ -45,6 +48,19 @@ export const authGatewayFor = (request: Request, cookies: AstroCookies): AuthGat
 export const mcpAuthorizationServerUrl = (): string => env.SUPABASE_URL;
 
 export const mcpTokenVerifier = (): McpTokenVerifier => new SupabaseMcpTokenVerifier(supabase());
+
+/** 60 llamadas por minuto por usuario y app conectada. */
+export const mcpRateLimiter = (): RateLimiter => new CloudflareRateLimiter(env.MCP_RATE_LIMITER);
+
+export const mcpWorkspaceFor = (caller: McpCaller, origin: string): McpWorkspace =>
+  createMcpWorkspace(supabase(), caller, {
+    origin,
+    cache: pageCache(),
+    checkLive: async (ownerId) => {
+      const checked = await liveCheckNow()(ownerId);
+      return checked.ok ? ok(checked.value.checked) : checked;
+    },
+  });
 
 /** Repositorios del panel con la sesión del usuario que hace el pedido. */
 export const adminRepositoriesFor = (
