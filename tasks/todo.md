@@ -451,7 +451,7 @@
     - con Automático, el modo del dispositivo decide;
     - AAA en los dos modos.
   - **Verificar:** `pnpm test:db`, `pnpm test`, `pnpm test:e2e`.
-- [ ] **Tarea 35: Modo del panel** · S · Deps: 34
+- [x] **Tarea 35: Modo del panel** · S · Deps: 34
   - `account_preferences.panel_mode` (`auto` por defecto; tabla solo del dueño), con la elección en el menú de la cuenta.
   - Tokens claros del panel, con AA.
   - **Aceptación:**

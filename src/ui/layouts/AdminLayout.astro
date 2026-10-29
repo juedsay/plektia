@@ -10,6 +10,7 @@ import "@/ui/styles/admin.css";
 
 import type { Page } from "@/application/ports/page-repository";
 import type { CurrentAccount } from "@/application/ports/user-directory";
+import { type ColorMode, COLOR_MODES } from "@/domain/page";
 import { isActiveOwner } from "@/ui/admin/workspace";
 import Alert from "@/ui/components/Alert.astro";
 import Isotype from "@/ui/components/Isotype.astro";
@@ -24,13 +25,29 @@ interface Props {
   currentPage: Page | null;
   /** La cuenta de la sesión: "Usuarios" solo para un owner activo; aviso si fue dada de baja. */
   account: CurrentAccount;
+  /** Claro, oscuro o el del sistema (SPEC-appearance); `auto` mientras no elija. */
+  panelMode?: ColorMode;
   /** Error de una acción del marco (por ejemplo, al cambiar de página). */
   notice?: string | null;
   /** El inicio usa todo el ancho: el editor y, en escritorio, la vista previa al lado. */
   wide?: boolean;
 }
-const { title, section, pages, currentPage, account, notice = null, wide = false } = Astro.props;
+const {
+  title,
+  section,
+  pages,
+  currentPage,
+  account,
+  panelMode = "auto",
+  notice = null,
+  wide = false,
+} = Astro.props;
 const showUsers = isActiveOwner(account);
+const MODE_NAMES: Record<ColorMode, string> = {
+  auto: "Automático",
+  dark: "Oscuro",
+  light: "Claro",
+};
 const publicUrl = currentPage ? new URL(`/${currentPage.handle}`, Astro.url).href : null;
 ---
 
@@ -39,12 +56,19 @@ const publicUrl = currentPage ? new URL(`/${currentPage.handle}`, Astro.url).hre
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#121315" />
+    {panelMode === "auto" ? (
+      <>
+        <meta name="theme-color" media="(prefers-color-scheme: light)" content="#f5f4ef" />
+        <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#121315" />
+      </>
+    ) : (
+      <meta name="theme-color" content={panelMode === "light" ? "#f5f4ef" : "#121315"} />
+    )}
     <meta name="robots" content="noindex" />
     <Font cssVariable="--font-brand" />
     <title>{title} · Panel · Plektia</title>
   </head>
-  <body data-theme="tecnico" class="admin">
+  <body data-theme="tecnico" data-mode={panelMode} class="admin">
     <a class="skip-link" href="#contenido">
       Saltar al contenido
     </a>
@@ -172,6 +196,38 @@ const publicUrl = currentPage ? new URL(`/${currentPage.handle}`, Astro.url).hre
             )}
           </ul>
         </nav>
+        <details class="admin-appearance">
+          <summary class="admin-session-button">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <circle cx="12" cy="12" r="8"></circle>
+              <path d="M12 4a8 8 0 0 1 0 16Z" fill="currentColor"></path>
+            </svg>
+            <span class="admin-session-label">Apariencia: {MODE_NAMES[panelMode]}</span>
+          </summary>
+          <form method="post" action="/admin/apariencia" class="admin-appearance-menu">
+            <input type="hidden" name="next" value={`${Astro.url.pathname}${Astro.url.search}`} />
+            <p class="admin-appearance-title">Apariencia del panel</p>
+            {COLOR_MODES.map((mode) => (
+              <button
+                type="submit"
+                name="panelMode"
+                value={mode}
+                class="admin-appearance-option"
+                aria-pressed={mode === panelMode ? "true" : "false"}
+              >
+                {MODE_NAMES[mode]}
+              </button>
+            ))}
+          </form>
+        </details>
         <form class="admin-session" method="post" action="/auth/logout">
           <button type="submit" class="admin-session-button">
             <svg
