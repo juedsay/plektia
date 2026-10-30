@@ -58,3 +58,17 @@ FIRST VIEWPORT: Barra superior; avatar con doble filete de ex libris; nombre en 
 FORM: Lomo cosido, candidata 7 de mi lista (asignada por el dado), seed 18f8976e. Firma: las puntadas del primer cuadernillo se cosen una por una al cargar; quietas con movimiento reducido.
 
 FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, DESIGN.md, and every shipping raster carrying its provenance
+
+## Direction contract — Lado A / B (familia Cercano)
+
+THESIS: La página es la carátula de un cassette compilado a mano: cada sección es un lado ("Lado A", "Lado B"…) escrito con birome, y cada link es un tema de la lista sobre el papel rayado. Rechaza la nostalgia de stickers: lo cercano sale de la mano que escribe la lista, no de efectos retro.
+
+OWN-WORLD: Carátula de papel (#fbfbf7) con tinta de birome azul (#1d2c6b) y renglones celestes; en oscuro, el cuerpo negro del cassette (#16171b) con tinta clara. Una franja de marca arriba en el color del acento (azul, dorado Maxell, verde, violeta o la tinta). Títulos de lado en Kalam 700 (manuscrita firme); temas en Nunito. Rojo reservado a los carretes del en vivo.
+
+STORY: El visitante ve la carátula con el nombre, nota los carretes rojos si está en vivo, recorre los lados y toca el tema que busca.
+
+FIRST VIEWPORT: Franja de marca arriba; avatar con aro de tinta; nombre y bio; "Lado A · Redes" escrito a mano con su subrayado; los temas sobre renglones, el en vivo con sus dos carretes rojos.
+
+FORM: Lado A / B, desafiante competitivo del seed 6c013a65 elegido por el usuario. Firma: el título del primer lado se escribe de izquierda a derecha al cargar; quieto con movimiento reducido.
+
+FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, DESIGN.md, and every shipping raster carrying its provenance

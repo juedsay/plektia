@@ -532,7 +532,9 @@
 - [x] **Tarea 38b: Subte** (Enérgico) · M · Deps: 38a
 - [x] **Tarea 38c: Lomo cosido** (Editorial) · M · Deps: 38a
 - [ ] **Tarea 38d: Segunda tanda** · L · Deps: 38a
-  - Lado A/B, Corcho, Pedalera, Bitmap, Manual y Sumario, una por PR.
+  - [x] Lado A/B (con "Cinta 2 · Lado A" desde la tercera sección).
+  - [ ] Etiqueta de sección editable por el dueño (reemplaza "Lado A", "L1", "I"…).
+  - [ ] Corcho, Pedalera, Bitmap, Manual y Sumario, una por PR.
 
 ### ✅ Checkpoint F11 · ENTREGA 8
 - [ ] Elegís un estilo que te represente y tu página sigue rápida, clara y AAA.

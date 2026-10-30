@@ -1,0 +1,286 @@
+/*
+ * Lado A / B (familia Cercano, SPEC-styles): la carátula de un cassette
+ * compilado a mano. Cada sección es un lado escrito con birome y cada link, un
+ * tema sobre el papel rayado. El rojo es solo de los carretes del en vivo. Se
+ * carga solo en las páginas con este estilo. AAA medido en
+ * tests/unit/ui/theme-tokens.test.ts.
+ */
+[data-theme="cassette"] {
+  color-scheme: dark;
+
+  --color-bg: #16171b;
+  --color-fg: #ecebe4;
+  --color-fg-muted: #c4c3bb;
+  --color-line: #4a4b55;
+  --color-line-soft: #2c2e36;
+  --color-surface: #1f2026;
+  --color-live: #ffa49b;
+  --color-live-ink: #16171b;
+  --color-accent: var(--accent-on-dark, #9cc2ff);
+  --color-thread: var(--color-accent);
+  --color-thread-twist: #16171b;
+  --color-focus: #ecebe4;
+  --color-selection-bg: #ecebe4;
+  --color-selection-fg: #16171b;
+
+  /* Los renglones del papel (decorativos). */
+  --rule: #2f3442;
+  --jack-col: 0px;
+  --radius-md: 4px;
+}
+
+[data-theme="cassette"][data-mode="light"] {
+  color-scheme: light;
+
+  --color-bg: #fbfbf7;
+  --color-fg: #1d2c6b;
+  --color-fg-muted: #3e4a7d;
+  --color-line: #9aa6cf;
+  --color-line-soft: #dfe5f4;
+  --color-surface: #ffffff;
+  --color-live: #8c1116;
+  --color-live-ink: #ffffff;
+  --color-accent: var(--accent-on-light, #0b4f99);
+  --color-thread: var(--color-accent);
+  --color-thread-twist: #fbfbf7;
+  --color-focus: #1d2c6b;
+  --color-selection-bg: #1d2c6b;
+  --color-selection-fg: #fbfbf7;
+
+  --rule: #c9d4ee;
+}
+
+@media (prefers-color-scheme: light) {
+  [data-theme="cassette"][data-mode="auto"] {
+    color-scheme: light;
+
+    --color-bg: #fbfbf7;
+    --color-fg: #1d2c6b;
+    --color-fg-muted: #3e4a7d;
+    --color-line: #9aa6cf;
+    --color-line-soft: #dfe5f4;
+    --color-surface: #ffffff;
+    --color-live: #8c1116;
+    --color-live-ink: #ffffff;
+    --color-accent: var(--accent-on-light, #0b4f99);
+    --color-thread: var(--color-accent);
+    --color-thread-twist: #fbfbf7;
+    --color-focus: #1d2c6b;
+    --color-selection-bg: #1d2c6b;
+    --color-selection-fg: #fbfbf7;
+
+    --rule: #c9d4ee;
+  }
+}
+
+/* Franjas de marca: azul, dorado, verde, violeta o la tinta (el rojo es del en vivo). */
+[data-theme="cassette"][data-accent="cielo"] {
+  --accent-on-dark: #9cc2ff;
+  --accent-on-light: #0b4f99;
+}
+
+[data-theme="cassette"][data-accent="ambar"] {
+  --accent-on-dark: #f2c35b;
+  --accent-on-light: #6b4700;
+}
+
+[data-theme="cassette"][data-accent="turquesa"] {
+  --accent-on-dark: #7fd1c4;
+  --accent-on-light: #0d5249;
+}
+
+[data-theme="cassette"][data-accent="lavanda"] {
+  --accent-on-dark: #c3b3f5;
+  --accent-on-light: #4a3a8a;
+}
+
+[data-theme="cassette"][data-accent="hueso"] {
+  --accent-on-dark: #ecebe4;
+  --accent-on-light: #1d2c6b;
+}
+
+/* ── La carátula: franja de marca arriba ────────────────────────────────── */
+body[data-theme="cassette"] {
+  border-top: 8px solid var(--color-accent);
+}
+
+[data-theme="cassette"] .avatar {
+  box-shadow:
+    0 0 0 3px var(--color-bg),
+    0 0 0 5px var(--color-fg);
+}
+
+/* ── Cada sección es un lado, escrito a mano y subrayado con birome ────── */
+[data-theme="cassette"] .patchbay {
+  counter-reset: cassette-cinta;
+}
+
+/* Cada dos secciones, una cinta nueva. */
+[data-theme="cassette"] .bank:nth-of-type(odd) {
+  counter-increment: cassette-cinta;
+}
+
+[data-theme="cassette"] .bank h2 {
+  margin-left: 0;
+  padding-bottom: var(--space-1);
+  border-bottom: 2px solid var(--color-fg);
+  font-family: var(--font-hand, var(--font-name));
+  font-size: 1.375rem;
+  font-weight: 700;
+  letter-spacing: 0;
+}
+
+[data-theme="cassette"] .bank:nth-of-type(odd) h2::before {
+  content: "Lado A · ";
+}
+
+[data-theme="cassette"] .bank:nth-of-type(even) h2::before {
+  content: "Lado B · ";
+}
+
+[data-theme="cassette"] .bank:nth-of-type(n + 3):nth-of-type(odd) h2::before {
+  content: "Cinta " counter(cassette-cinta) " · Lado A · ";
+}
+
+[data-theme="cassette"] .bank:nth-of-type(n + 3):nth-of-type(even) h2::before {
+  content: "Cinta " counter(cassette-cinta) " · Lado B · ";
+}
+
+/* La firma: el título del primer lado se escribe de izquierda a derecha. */
+[data-theme="cassette"] .bank:first-of-type h2 {
+  animation: cassette-escribir 900ms steps(24, end) backwards;
+}
+
+@keyframes cassette-escribir {
+  from {
+    clip-path: inset(0 100% 0 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+/* ── Los temas, sobre el papel rayado ───────────────────────────────────── */
+[data-theme="cassette"] .port {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+[data-theme="cassette"] .jack {
+  display: none;
+}
+
+[data-theme="cassette"] .port-body {
+  border-bottom: 1px solid var(--rule);
+}
+
+[data-theme="cassette"] .port-name {
+  font-weight: 700;
+}
+
+/* En vivo: los dos carretes del cassette, en rojo, delante del tema. */
+[data-theme="cassette"] .port.is-live .port-name::before {
+  content: "";
+  flex: none;
+  width: 24px;
+  height: 11px;
+  background:
+    radial-gradient(
+      circle at 5.5px 5.5px,
+      transparent 2px,
+      var(--color-live) 2.5px 5px,
+      transparent 5.5px
+    ),
+    radial-gradient(
+      circle at 18.5px 5.5px,
+      transparent 2px,
+      var(--color-live) 2.5px 5px,
+      transparent 5.5px
+    );
+}
+
+/* Destacado con acento: el tema subrayado dos veces, como se marca a mano. */
+[data-theme="cassette"] .port.is-highlighted .port-body {
+  margin-bottom: 0;
+  padding: 0;
+  border: 0;
+  border-bottom: 1px solid var(--rule);
+  border-radius: 0;
+  background: none;
+}
+
+/* El tema marcado a mano: dos trazos de birome en el color del acento. */
+[data-theme="cassette"] .port.is-highlighted .port-name {
+  text-decoration: underline double var(--color-accent);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 5px;
+}
+
+[data-theme="cassette"] .highlight-card {
+  border: 2px solid var(--color-fg);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+}
+
+[data-theme="cassette"] .icon-link {
+  border: 2px solid var(--color-fg);
+}
+
+[data-theme="cassette"] .patchbay[data-shape="cards"] .port-body {
+  margin-bottom: var(--space-2);
+  padding: 0 var(--space-4);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+}
+
+/* ── Miniatura del panel: franja, renglones y los carretes ──────────────── */
+[data-theme="cassette"].theme-sample {
+  border-top: 4px solid var(--color-accent);
+}
+
+[data-theme="cassette"].theme-sample .theme-sample-row {
+  border-bottom: 1px solid var(--rule);
+}
+
+[data-theme="cassette"].theme-sample::before {
+  content: "";
+  grid-column: 1 / -1;
+  width: 64%;
+  height: 10px;
+  background: var(--color-fg);
+  /* Un trazo de birome (la letra manuscrita no se carga en el panel). */
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 10' preserveAspectRatio='none'%3E%3Cpath d='M1 7c4-6 6 4 10-1s5-5 8 0 6 3 9-2 6 4 10 0 5-5 9 0 7 2 11-2 4 1 5 1' fill='none' stroke='black' stroke-width='1.6' stroke-linecap='round'/%3E%3C/svg%3E")
+    no-repeat center / 100% 100%;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 10' preserveAspectRatio='none'%3E%3Cpath d='M1 7c4-6 6 4 10-1s5-5 8 0 6 3 9-2 6 4 10 0 5-5 9 0 7 2 11-2 4 1 5 1' fill='none' stroke='black' stroke-width='1.6' stroke-linecap='round'/%3E%3C/svg%3E")
+    no-repeat center / 100% 100%;
+}
+
+[data-theme="cassette"].theme-sample .theme-sample-mark {
+  display: none;
+}
+
+[data-theme="cassette"].theme-sample .theme-sample-row.is-live .theme-sample-mark {
+  display: block;
+  width: 14px;
+  height: 7px;
+  border: 0;
+  border-radius: 0;
+  background:
+    radial-gradient(circle at 3.5px 3.5px, var(--color-live) 3px, transparent 3.5px),
+    radial-gradient(circle at 10.5px 3.5px, var(--color-live) 3px, transparent 3.5px);
+}
+
+[data-theme="cassette"].theme-sample .theme-sample-row + .theme-sample-row::before {
+  display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-theme="cassette"] .bank:first-of-type h2 {
+    animation: none;
+  }
+}
+
+/* El subrayado del lado es de birome (la tinta), no del acento. */
+[data-theme="cassette"][data-accent][data-mode] .bank h2 {
+  border-bottom-color: var(--color-fg);
+}

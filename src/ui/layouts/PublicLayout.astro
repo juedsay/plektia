@@ -90,6 +90,8 @@ const shareUrl = (canonical ?? publicUrl ?? new URL(Astro.url.pathname, Astro.ur
       structuredData={structuredData}
     />
     {THEME_STYLESHEETS[theme] && <link rel="stylesheet" href={THEME_STYLESHEETS[theme]} />}
+    {/* Lado A / B escribe sus títulos a mano: la fuente se declara solo ahí. */}
+    {theme === "cassette" && <Font cssVariable="--font-hand" />}
     <slot name="head" />
   </head>
   <body data-theme={theme} data-mode={mode} data-accent={accent} data-name-font={nameFont}>

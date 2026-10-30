@@ -87,7 +87,18 @@ export const THEME_RULES: Readonly<Record<Theme, ThemeRules>> = {
     fonts: ["fraunces", "nunito", "bricolage"],
     defaultFont: "fraunces",
   },
-  cassette: upcoming("cercano"),
+  // Carátula de cassette: tinta azul por defecto; el rojo es de los carretes (en vivo).
+  cassette: {
+    family: "cercano",
+    available: true,
+    thread: false,
+    accents: ["cielo", "ambar", "turquesa", "lavanda", "hueso"],
+    defaultAccent: "cielo",
+    shapes: ["rows", "cards"],
+    defaultShape: "rows",
+    fonts: ["nunito", "bricolage", "space_mono"],
+    defaultFont: "nunito",
+  },
   corcho: upcoming("cercano"),
   // Plano de subte: coral como línea por defecto; el ámbar queda para el en vivo.
   subte: {
