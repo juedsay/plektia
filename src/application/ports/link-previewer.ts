@@ -15,8 +15,16 @@ export interface LinkPreview {
  * - `not_a_page`: respondió algo que no es una página web.
  * - `empty`: la página no tiene título ni descripción.
  */
-export type LinkPreviewError = "blocked" | "unreachable" | "not_a_page" | "empty";
+export type LinkPreviewError = "blocked" | "unreachable" | "not_a_page" | "empty" | "not_an_image";
+
+/** Una imagen del sitio, con el tipo que dicen sus bytes (todavía sin re-codificar). */
+export interface PreviewSourceImage {
+  readonly bytes: Uint8Array;
+  readonly contentType: string;
+}
 
 export interface LinkPreviewer {
   preview(url: URL): Promise<Result<LinkPreview, LinkPreviewError>>;
+  /** La imagen de la vista previa: JPEG, PNG, WebP o GIF por sus bytes, hasta 2 MB. */
+  image(url: URL): Promise<Result<PreviewSourceImage, LinkPreviewError>>;
 }

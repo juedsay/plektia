@@ -1,5 +1,8 @@
+import { SupabaseImageStorage } from "@/infrastructure/supabase/supabase-image-storage";
+import { previewImageContentType } from "@/domain/link-preview-image";
 import type { AccountPreferences } from "@/application/ports/account-preferences";
 import type { AvatarStorage } from "@/application/ports/avatar-storage";
+import type { ImageStorage } from "@/application/ports/image-storage";
 import type { LinkMediaRepository } from "@/application/ports/link-media-repository";
 import type { McpConnections } from "@/application/ports/mcp-connections";
 import type { LinkReader, LinkWriter, SectionWriter } from "@/application/ports/link-repository";
@@ -26,6 +29,8 @@ export interface AdminRepositories {
   readonly pages: PageReader & PageWriter;
   /** Los avatares de la cuenta (su carpeta del bucket). */
   readonly avatars: AvatarStorage;
+  /** Las imágenes de las vistas previas de sus artículos (bucket `link-previews`). */
+  readonly previewImages: ImageStorage;
   /** Secciones y links de una página de la cuenta. */
   linksOf(pageId: string): LinkReader & LinkWriter & SectionWriter;
   /** "Transmito en este canal" y el contenido destacado de los links de una página. */
@@ -55,6 +60,7 @@ export function createAdminRepositories(
     ownerId,
     pages: new SupabasePageRepository(client, ownerId),
     avatars: new SupabaseAvatarStorage(client),
+    previewImages: new SupabaseImageStorage(client, "link-previews", previewImageContentType),
     linksOf: (pageId) => new SupabaseLinkRepository(client, pageId),
     mediaOf: (pageId) => new SupabaseLinkMediaRepository(client, pageId),
     users: new SupabaseUserDirectory(client, ownerId),

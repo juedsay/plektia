@@ -117,6 +117,11 @@ export interface LinkDraft {
 export type LinkPatch = Partial<Omit<LinkDraft, "sectionId">> & {
   readonly placement?: LinkPlacement;
   readonly highlight?: LinkHighlight;
+  /**
+   * La imagen de la vista previa (7c-2). Solo la fija su caso de uso, después de
+   * validar y subir el archivo: no está en el esquema de `parseLinkPatch`.
+   */
+  readonly previewImagePath?: string | null;
 };
 
 export function parseLinkInput(raw: unknown): Result<LinkDraft, InvalidInput> {

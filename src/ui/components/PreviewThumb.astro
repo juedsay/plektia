@@ -1,0 +1,25 @@
+---
+import type { PublicLink } from "@/application/ports/public-page-reader";
+import { PREVIEW_IMAGE_HEIGHT, PREVIEW_IMAGE_WIDTH } from "@/domain/link-preview-image";
+import { kindOf } from "@/ui/view/link-kind";
+
+// La imagen de la vista previa de un artículo (SPEC-link-form, 7c-2), chica y al
+// costado del texto. Decorativa: el título ya dice qué es.
+interface Props {
+  link: Pick<PublicLink, "url" | "kind" | "previewImagePath">;
+}
+const { link } = Astro.props;
+const path = kindOf(link) === "article" ? link.previewImagePath : null;
+---
+
+{path && (
+  <img
+    class="preview-thumb"
+    src={`/link-previews/${path}`}
+    alt=""
+    width={PREVIEW_IMAGE_WIDTH}
+    height={PREVIEW_IMAGE_HEIGHT}
+    loading="lazy"
+    decoding="async"
+  />
+)}

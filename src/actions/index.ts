@@ -2,6 +2,10 @@
 // con la sesión del usuario. Sin API paralela: panel, MCP y tests pasan por las
 // mismas funciones. Los formularios funcionan sin JavaScript; las de links las
 // llama la isla del editor (JSON).
+import {
+  removeLinkPreviewImage,
+  setLinkPreviewImage,
+} from "@/application/links/link-preview-image";
 import { PREVIEW_MESSAGES } from "@/application/links/fetch-link-preview";
 import { ActionError, type ActionAPIContext, defineAction } from "astro:actions";
 import { z } from "zod";
@@ -31,6 +35,7 @@ import {
   actionsRateLimiter,
   adminRepositoriesFor,
   linkPreview,
+  linkPreviewSourceImage,
   liveCheckNow,
   pageCache,
 } from "@/composition/runtime";
@@ -68,6 +73,9 @@ async function linksOfPage(context: ActionAPIContext, input: unknown) {
   return {
     links: repositories.linksOf(pageId),
     media: repositories.mediaOf(pageId),
+    /** La cuenta de la sesión y su carpeta del bucket de vistas previas. */
+    ownerId: repositories.ownerId,
+    previewImages: repositories.previewImages,
     /** Purga la página pública después de un cambio (se ve al instante). */
     purge: async () => {
       const page = (await repositories.pages.listOwn()).find(
@@ -114,8 +122,11 @@ export const server = {
     delete: defineAction({
       accept: "json",
       handler: async (input: unknown, context) => {
-        const { links, purge } = await linksOfPage(context, input);
-        const deleted = await deleteLink({ links })(input);
+        const { links, previewImages, purge } = await linksOfPage(context, input);
+        const deleted = await deleteLink({
+          links,
+          previewImages: { reader: links, storage: previewImages },
+        })(input);
         if (deleted.ok) await purge();
         return toFormResult(deleted);
       },
@@ -147,7 +158,11 @@ export const server = {
         if (preview.ok) {
           return {
             ok: true as const,
-            value: { title: preview.value.title, description: preview.value.description },
+            value: {
+              title: preview.value.title,
+              description: preview.value.description,
+              imageUrl: preview.value.imageUrl,
+            },
           };
         }
         return {
@@ -156,6 +171,59 @@ export const server = {
           fields: {},
           values: {},
         };
+      },
+    }),
+    /**
+     * `{ url }`: la imagen de la vista previa como `data:` URL, para que el panel
+     * la recorte y la re-codifique (7c-2). No guarda nada.
+     */
+    fetchPreviewImage: defineAction({
+      accept: "json",
+      handler: async (input: unknown, context) => {
+        const { ownerId } = await repositoriesOf(context);
+        const image = await linkPreviewSourceImage(new URL(context.request.url).hostname)(
+          ownerId,
+          input,
+        );
+        if (image.ok) return { ok: true as const, value: image.value };
+        return {
+          ok: false as const,
+          message: PREVIEW_MESSAGES[image.error],
+          fields: {},
+          values: {},
+        };
+      },
+    }),
+    /**
+     * `{ pageId, id, version, image }`: la imagen ya re-codificada (480 × 252).
+     * Se vuelve a validar con sus bytes antes de guardarla.
+     */
+    setPreviewImage: defineAction({
+      accept: "form",
+      handler: async (form, context) => {
+        const values = formFields(form);
+        const { links, ownerId, previewImages, purge } = await linksOfPage(context, values);
+        const file = form.get("image");
+        const image =
+          file instanceof File && file.size > 0
+            ? { size: file.size, bytes: async () => new Uint8Array(await file.arrayBuffer()) }
+            : null;
+        const updated = await setLinkPreviewImage({ links, images: previewImages, ownerId })(
+          values,
+          image,
+        );
+        if (updated.ok) await purge();
+        return toFormResult(updated);
+      },
+    }),
+    /** `{ pageId, id, version }`: saca la imagen de la vista previa y borra el archivo. */
+    removePreviewImage: defineAction({
+      accept: "json",
+      handler: async (input: unknown, context) => {
+        const { links, previewImages, purge } = await linksOfPage(context, input);
+        const updated = await removeLinkPreviewImage({ links, images: previewImages })(input);
+        if (updated.ok) await purge();
+        return toFormResult(updated);
       },
     }),
     /** `{ pageId, id, version, visible }`: mostrar u ocultar en la página pública. */

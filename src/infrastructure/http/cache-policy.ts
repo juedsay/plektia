@@ -26,6 +26,9 @@ const OFFICIAL_PATH = `/${OFFICIAL_HANDLE}`;
 /** `/avatars/{owner}/{uuid}.webp|jpg`: los avatares, servidos desde el propio sitio. */
 const AVATAR_PATH = /^\/avatars\/[0-9a-f-]{36}\/[0-9a-f-]{36}\.(webp|jpg)$/;
 const AVATARS_TAG = "avatars";
+/** `/link-previews/{owner}/{uuid}.webp|jpg`: imágenes de las vistas previas (SPEC-link-form). */
+const PREVIEW_IMAGE_PATH = /^\/link-previews\/[0-9a-f-]{36}\/[0-9a-f-]{36}\.(webp|jpg)$/;
+const PREVIEW_IMAGES_TAG = "link-previews";
 /** `/thumbs/{videoId}.jpg`: miniaturas de YouTube, servidas desde el propio sitio. */
 const THUMB_PATH = /^\/thumbs\/[A-Za-z0-9_-]{11}\.jpg$/;
 const THUMBS_TAG = "thumbs";
@@ -51,6 +54,11 @@ export function cachePolicy(request: {
   // Un avatar nunca cambia: uno nuevo es otro archivo (otra ruta).
   if (AVATAR_PATH.test(pathname) && status === 200) {
     return { cacheControl: "public, max-age=31536000, immutable", tags: [AVATARS_TAG] };
+  }
+
+  // Igual que un avatar: una imagen nueva es otro archivo.
+  if (PREVIEW_IMAGE_PATH.test(pathname) && status === 200) {
+    return { cacheControl: "public, max-age=31536000, immutable", tags: [PREVIEW_IMAGES_TAG] };
   }
 
   // Una miniatura casi nunca cambia, pero puede (el dueño del video la edita): un día.

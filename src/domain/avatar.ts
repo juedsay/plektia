@@ -225,19 +225,32 @@ function readJpeg(bytes: Uint8Array): Result<Dimensions, AvatarError> {
 // ── Validación ──────────────────────────────────────────────────────────────
 
 /**
- * Valida un avatar ya re-codificado: peso, WebP o JPEG de verdad (por su
- * estructura), quieto, sin metadatos, sin bytes de más y de 512 × 512.
+ * Valida una imagen ya re-codificada en el navegador: peso, WebP o JPEG de verdad
+ * (por su estructura), quieta, sin metadatos, sin bytes de más y del tamaño
+ * exacto. La usan el avatar y la vista previa de un artículo (SPEC-link-form).
  */
-export function inspectAvatar(bytes: Uint8Array): Result<InspectedAvatar, AvatarError> {
-  if (bytes.length > AVATAR_MAX_BYTES) return err("too_large");
+export function inspectStillImage(
+  bytes: Uint8Array,
+  expected: { readonly width: number; readonly height: number; readonly maxBytes: number },
+): Result<InspectedAvatar, AvatarError> {
+  if (bytes.length > expected.maxBytes) return err("too_large");
   const format: AvatarFormat | null = isWebp(bytes) ? "webp" : isJpeg(bytes) ? "jpeg" : null;
   if (!format) return err("not_an_image");
   const read = format === "webp" ? readWebp(bytes) : readJpeg(bytes);
   if (!read.ok) return read;
-  if (read.value.width !== AVATAR_SIZE || read.value.height !== AVATAR_SIZE) {
+  if (read.value.width !== expected.width || read.value.height !== expected.height) {
     return err("wrong_dimensions");
   }
   return ok({ format, ...read.value });
+}
+
+/** Valida un avatar: una imagen quieta de 512 × 512 y hasta 200 KB. */
+export function inspectAvatar(bytes: Uint8Array): Result<InspectedAvatar, AvatarError> {
+  return inspectStillImage(bytes, {
+    width: AVATAR_SIZE,
+    height: AVATAR_SIZE,
+    maxBytes: AVATAR_MAX_BYTES,
+  });
 }
 
 // ── Rutas y tipos ───────────────────────────────────────────────────────────

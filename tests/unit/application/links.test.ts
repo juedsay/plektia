@@ -8,6 +8,7 @@ import { updateLink } from "@/application/links/update-link";
 import type { Link } from "@/application/ports/link-repository";
 import { LIMITS } from "@/domain/link";
 
+import { InMemoryAvatarStorage } from "./fakes/in-memory-avatar-storage";
 import { InMemoryLinkRepository } from "./fakes/in-memory-link-repository";
 
 const REQUEST_ID = "9f1c2d3e-4b5a-4c6d-8e7f-0a1b2c3d4e5f";
@@ -182,6 +183,25 @@ describe("deleteLink", () => {
 
   it("valida el comando", async () => {
     expect((await deleteLink(deps)({})).ok).toBe(false);
+  });
+
+  it("desde el panel, borra también la imagen de la vista previa (sin dejar huérfanos)", async () => {
+    const link = await created({ title: "Nota", url: "https://medium.com/@juedsay/una-nota" });
+    const path = "22222222-2222-4222-8222-222222222222/0b1d2c3e-4f5a-4b6c-8d7e-000000000001.webp";
+    await repo.updateLink(link.id, link.version, { previewImagePath: path });
+    const storage = new InMemoryAvatarStorage();
+    const removeWithImage = deleteLink({
+      links: repo,
+      previewImages: { reader: repo, storage },
+    });
+
+    expect(await removeWithImage({ id: link.id, version: 1 })).toEqual({
+      ok: false,
+      error: "conflict",
+    });
+    expect(storage.removed).toEqual([]);
+    expect((await removeWithImage({ id: link.id, version: 2 })).ok).toBe(true);
+    expect(storage.removed).toEqual([path]);
   });
 });
 

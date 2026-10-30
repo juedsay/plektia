@@ -4,6 +4,7 @@ import {
   AVATAR_UPLOAD_LIMIT,
   checkBodySize,
   DEFAULT_BODY_LIMIT,
+  PREVIEW_IMAGE_UPLOAD_LIMIT,
 } from "@/infrastructure/http/request-limits";
 
 const post = (pathname: string, contentLength: string | null, search = "") =>
@@ -44,6 +45,17 @@ describe("checkBodySize", () => {
       ok: true,
     });
     expect(post("/admin/page", String(200 * 1024))).toEqual({ ok: false, status: 413 });
+  });
+
+  it("la imagen de la vista previa tiene su propio límite (128 KB)", () => {
+    const path = "/_actions/links.setPreviewImage";
+    expect(post(path, String(PREVIEW_IMAGE_UPLOAD_LIMIT))).toEqual({ ok: true });
+    expect(post(path, String(PREVIEW_IMAGE_UPLOAD_LIMIT + 1))).toEqual({ ok: false, status: 413 });
+    // Las demás Actions de links siguen con el límite común.
+    expect(post("/_actions/links.update", String(DEFAULT_BODY_LIMIT + 1))).toEqual({
+      ok: false,
+      status: 413,
+    });
   });
 
   it("un archivo de 10 MB se corta sin leerlo", () => {

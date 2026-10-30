@@ -72,6 +72,22 @@ function actionsApi(pageId: string): EditorApi {
     setMedia: async (linkId, settings) =>
       resultOf(await actions.links.setMedia({ pageId, linkId, ...settings })),
     fetchPreview: async (url) => resultOf(await actions.links.fetchPreview({ url })),
+    fetchPreviewImage: async (url) => resultOf(await actions.links.fetchPreviewImage({ url })),
+    setPreviewImage: async (target, image) => {
+      const form = new FormData();
+      form.set("pageId", pageId);
+      form.set("id", target.id);
+      form.set("version", String(target.version));
+      form.set(
+        "image",
+        new File([image], image.type === "image/webp" ? "preview.webp" : "preview.jpg", {
+          type: image.type,
+        }),
+      );
+      return resultOf(await actions.links.setPreviewImage(form));
+    },
+    removePreviewImage: async (target) =>
+      resultOf(await actions.links.removePreviewImage({ pageId, ...target })),
   };
 }
 

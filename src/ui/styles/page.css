@@ -363,6 +363,21 @@
   overflow-wrap: anywhere;
 }
 
+/* Imagen de la vista previa de un artículo (SPEC-link-form, 7c-2). */
+.preview-thumb {
+  width: 5.5rem;
+  height: auto;
+  aspect-ratio: 480 / 252;
+  border: 1px solid var(--color-line-soft);
+  border-radius: var(--radius-sm);
+  object-fit: cover;
+}
+
+.port-link:has(.preview-thumb),
+.highlight-card:has(.preview-thumb) {
+  grid-template-columns: minmax(0, 1fr) auto auto;
+}
+
 /* Ícono de la red al lado del nombre: mismo color que el texto secundario,
    para que acompañe sin competir con el título. */
 .port-icon {

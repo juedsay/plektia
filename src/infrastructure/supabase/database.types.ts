@@ -189,6 +189,7 @@ export type Database = {
           page_id: string;
           placement: Database["public"]["Enums"]["link_placement"];
           position: number;
+          preview_image_path: string | null;
           provider: Database["public"]["Enums"]["link_provider"];
           provider_handle: string | null;
           section_id: string | null;
@@ -210,6 +211,7 @@ export type Database = {
           page_id: string;
           placement?: Database["public"]["Enums"]["link_placement"];
           position?: number;
+          preview_image_path?: string | null;
           provider?: Database["public"]["Enums"]["link_provider"];
           provider_handle?: string | null;
           section_id?: string | null;
@@ -230,6 +232,7 @@ export type Database = {
           page_id?: string;
           placement?: Database["public"]["Enums"]["link_placement"];
           position?: number;
+          preview_image_path?: string | null;
           provider?: Database["public"]["Enums"]["link_provider"];
           provider_handle?: string | null;
           section_id?: string | null;
@@ -699,6 +702,7 @@ export type Database = {
           page_id: string;
           placement: Database["public"]["Enums"]["link_placement"];
           position: number;
+          preview_image_path: string | null;
           provider: Database["public"]["Enums"]["link_provider"];
           provider_handle: string | null;
           section_id: string | null;
@@ -798,6 +802,7 @@ export type Database = {
           page_id: string;
           placement: Database["public"]["Enums"]["link_placement"];
           position: number;
+          preview_image_path: string | null;
           provider: Database["public"]["Enums"]["link_provider"];
           provider_handle: string | null;
           section_id: string | null;

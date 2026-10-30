@@ -94,6 +94,7 @@ describe("fila de íconos", () => {
     placement,
     highlight,
     kind: null,
+    previewImagePath: null,
   });
   const page = {
     sections: [
@@ -133,6 +134,7 @@ describe("destacados arriba de todo", () => {
     placement,
     highlight,
     kind: null,
+    previewImagePath: null,
   });
   const page = {
     sections: [

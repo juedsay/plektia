@@ -514,7 +514,7 @@
   - `links.kind`: red social, artículo, video o sitio. Se detecta, se puede cambiar, y se ve como etiqueta en la página.
 - [x] **Tarea 37c-1: Vista previa del artículo: título y descripción** · M · Deps: 37b
   - "Traer vista previa" en un artículo, al agregarlo y al editarlo. Fetch de la web abierta con salvaguardas, parser de `og:*` y su propio límite de 20 por minuto.
-- [ ] **Tarea 37c-2: Vista previa del artículo: la imagen** · M · Deps: 37c-1
+- [x] **Tarea 37c-2: Vista previa del artículo: la imagen** · M · Deps: 37c-1
   - La imagen se recodifica en el navegador, se valida en el servidor como el avatar, va al bucket `link-previews` y se muestra chica en la página.
 
 ### ✅ Checkpoint F10 · ENTREGA 7

@@ -50,6 +50,7 @@ const LINK: Link = {
   placement: "list",
   highlight: "none",
   kind: null,
+  previewImagePath: null,
   position: 0,
   version: 3,
 };

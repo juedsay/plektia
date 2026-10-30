@@ -233,6 +233,30 @@ export function LinkRow({
     } else setFailure(result);
   };
 
+  /** Guarda la imagen de la vista previa, después del guardado de texto en curso. */
+  const savePreviewImage = async (image: Blob) => {
+    await runningSave.current;
+    const base = latestLink.current;
+    setBusy(true);
+    const result = await api
+      .setPreviewImage({ id: base.id, version: base.version }, image)
+      .catch(() => UNREACHABLE);
+    setBusy(false);
+    if (result.ok) accept(result.value, `${base.title}: imagen guardada`);
+    else setFailure(result);
+  };
+
+  const removePreviewImage = async () => {
+    const base = latestLink.current;
+    setBusy(true);
+    const result = await api
+      .removePreviewImage({ id: base.id, version: base.version })
+      .catch(() => UNREACHABLE);
+    setBusy(false);
+    if (result.ok) accept(result.value, `${base.title}: imagen sacada`);
+    else setFailure(result);
+  };
+
   const reload = async () => {
     await onReload();
     setFailure(null);
@@ -397,7 +421,27 @@ export function LinkRow({
                     });
                     void save();
                   }}
+                  onImage={(candidate) => void savePreviewImage(candidate.blob)}
                 />
+              )}
+              {kindOf(link) === "article" && link.previewImagePath && (
+                <figure className="preview-candidate">
+                  <img
+                    src={`/link-previews/${link.previewImagePath}`}
+                    alt={`Imagen de la vista previa de ${link.title}`}
+                    width={240}
+                    height={126}
+                  />
+                  <button
+                    type="button"
+                    className="link-button"
+                    disabled={busy}
+                    aria-label={`Sacar imagen de ${link.title}`}
+                    onClick={() => void removePreviewImage()}
+                  >
+                    Sacar imagen
+                  </button>
+                </figure>
               )}
               {fieldError("description") && (
                 <p className="field-error" id={`${idPrefix}-description-error`}>

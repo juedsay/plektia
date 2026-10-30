@@ -63,6 +63,7 @@ function link(id: string, extra: Partial<Link> = {}): Link {
     placement: "list",
     highlight: "none",
     kind: null,
+    previewImagePath: null,
     position: 0,
     version: 1,
     ...extra,
@@ -77,6 +78,9 @@ const failure = (message: string, fields: Record<string, string> = {}): FormResu
 });
 
 /** Servidor falso: guarda lo que se le pidió y responde con versiones nuevas. */
+/** La carpeta del bucket de la cuenta de prueba. */
+const OWNER = "44444444-4444-4444-8444-444444444444";
+
 class FakeApi implements EditorApi {
   content: OwnLinks;
   created: NewLink[] = [];
@@ -167,6 +171,24 @@ class FakeApi implements EditorApi {
   fetchPreview(url: string) {
     this.previewed.push(url);
     return Promise.resolve(this.preview);
+  }
+
+  /** jsdom no dibuja en un canvas: la imagen del artículo no se puede re-codificar acá. */
+  fetchPreviewImage(): Promise<FormResult<{ dataUrl: string }>> {
+    return Promise.resolve({ ok: false, message: "sin imagen en jsdom", fields: {}, values: {} });
+  }
+
+  uploadedImages: { id: string; type: string }[] = [];
+
+  setPreviewImage(target: { id: string; version: number }, image: Blob) {
+    this.uploadedImages.push({ id: target.id, type: image.type });
+    return Promise.resolve(
+      this.save(target, { previewImagePath: `${OWNER}/00000000-0000-4000-8000-000000000001.webp` }),
+    );
+  }
+
+  removePreviewImage(target: { id: string; version: number }) {
+    return Promise.resolve(this.save(target, { previewImagePath: null }));
   }
 
   setMedia(linkId: string, choice: MediaChoice): Promise<FormResult<LinkMedia>> {
@@ -752,6 +774,30 @@ describe("Editor · dónde se ve", () => {
     await waitFor(() => {
       expect(api.updates.at(-1)?.changes).toEqual({ kind: null });
     });
+  });
+
+  it("un artículo con imagen la muestra al editarlo, y 'Sacar imagen' la saca", async () => {
+    const { user } = setup({
+      sections: [REDES],
+      links: [
+        link("nota", {
+          title: "Nota",
+          url: "https://medium.com/@juedsay/una-nota",
+          previewImagePath: `${OWNER}/00000000-0000-4000-8000-000000000009.webp`,
+        }),
+      ],
+    });
+    await user.click(screen.getByRole("button", { name: "Editar Nota" }));
+    expect(screen.getByRole("img", { name: "Imagen de la vista previa de Nota" })).toHaveProperty(
+      "src",
+      expect.stringContaining(`/link-previews/${OWNER}/`) as unknown,
+    );
+    await user.click(screen.getByRole("button", { name: "Sacar imagen de Nota" }));
+
+    await waitFor(() => {
+      expect(editorStatus()).toBe("Nota: imagen sacada");
+    });
+    expect(screen.queryByRole("img", { name: "Imagen de la vista previa de Nota" })).toBeNull();
   });
 
   it("elegir el lugar que ya tiene no llama al servidor", async () => {

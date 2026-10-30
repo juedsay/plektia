@@ -24,6 +24,8 @@ export interface Link {
   readonly highlight: LinkHighlight;
   /** Red social, artículo, video o sitio; `null` es automático (por la URL). */
   readonly kind: LinkKind | null;
+  /** La imagen de la vista previa de un artículo (`{dueño}/{uuid}.webp`), o `null`. */
+  readonly previewImagePath: string | null;
   readonly position: number;
   readonly version: number;
 }

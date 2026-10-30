@@ -40,5 +40,6 @@ export function toLink(entry: Entry, id: string): PublicLink {
     placement: "list",
     highlight: "none",
     kind: draft.value.kind,
+    previewImagePath: null,
   };
 }

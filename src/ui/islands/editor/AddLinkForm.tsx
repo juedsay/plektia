@@ -4,6 +4,7 @@ import type { Link, Section } from "@/application/ports/link-repository";
 import type { LinkKind } from "@/domain/link-presentation";
 import { suggestTitle } from "@/ui/view/editor-state";
 import { kindOf } from "@/ui/view/link-kind";
+import type { PreviewCandidate } from "@/ui/view/preview-image";
 import { profilePrefix, profileUrlFor } from "@/ui/view/profile-url";
 import { networkLabel, socialProfileFor } from "@/ui/view/social-profile";
 
@@ -36,6 +37,8 @@ export function AddLinkForm({ api, sections, onCreated }: Props) {
   /** `null`: automático, lo que se deduce de la URL. */
   const [kind, setKind] = useState<LinkKind | null>(null);
   const [description, setDescription] = useState("");
+  /** La imagen re-codificada de la vista previa: se sube después de crear el link. */
+  const [previewImage, setPreviewImage] = useState<PreviewCandidate | null>(null);
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
   const [fieldErrors, setFieldErrors] = useState<Readonly<Record<string, string>>>({});
@@ -95,15 +98,27 @@ export function AddLinkForm({ api, sections, onCreated }: Props) {
       return;
     }
     requestId.current = crypto.randomUUID();
-    onCreated(result.value);
+    // La imagen va en un segundo pedido, con el link ya creado. Si falla, el link
+    // queda igual (sin imagen) y se avisa.
+    let created = result.value;
+    let imageFailed = false;
+    if (isArticle && previewImage) {
+      const withImage = await api
+        .setPreviewImage({ id: created.id, version: created.version }, previewImage.blob)
+        .catch(() => UNREACHABLE);
+      if (withImage.ok) created = withImage.value;
+      else imageFailed = true;
+    }
+    onCreated(created);
     // La red elegida queda, para cargar otra del mismo tipo.
     setUrl("");
     setUsername("");
     setKind(null);
     setDescription("");
+    setPreviewImage(null);
     setTitle(source === "other" ? "" : networkLabel(source));
     setTitleTouched(false);
-    setMessage(null);
+    setMessage(imageFailed ? "El link se agregó, pero no pudimos guardar su imagen." : null);
     setFieldErrors({});
     urlInput.current?.focus();
   };
@@ -243,7 +258,27 @@ export function AddLinkForm({ api, sections, onCreated }: Props) {
                 }
                 if (suggestion.description) setDescription(suggestion.description);
               }}
+              onImage={setPreviewImage}
             />
+            {previewImage && (
+              <figure className="preview-candidate">
+                <img
+                  src={previewImage.dataUrl}
+                  alt="Imagen de la vista previa"
+                  width={240}
+                  height={126}
+                />
+                <button
+                  type="button"
+                  className="link-button"
+                  onClick={() => {
+                    setPreviewImage(null);
+                  }}
+                >
+                  Sacar imagen
+                </button>
+              </figure>
+            )}
           </div>
         )}
         {sections.length > 0 && (
