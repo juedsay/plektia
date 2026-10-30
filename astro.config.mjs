@@ -67,7 +67,7 @@ export default defineConfig({
             weight: "100 900",
             style: "normal",
             src: [
-              "./node_modules/@fontsource-variable/fraunces/files/fraunces-latin-wght-normal.woff2",
+              "./node_modules/@fontsource-variable/fraunces/files/fraunces-latin-soft-normal.woff2",
             ],
           },
         ],

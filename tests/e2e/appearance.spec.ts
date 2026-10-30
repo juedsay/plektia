@@ -283,3 +283,40 @@ test("un destacado arriba va en tarjeta antes de las secciones; el de acento, en
     await deleteLinksTitled(AVATAR_ID, HIGHLIGHT_TITLES);
   }
 });
+
+// Estilo Punto (SPEC-styles): elegirlo en el panel lo aplica en la página
+// pública, con su propia hoja de estilos, y cumple AAA en claro y en oscuro.
+test("el estilo Punto se elige en el panel y se ve en la página, AAA en los dos modos", async ({
+  page,
+  context,
+  browser,
+  baseURL,
+}) => {
+  await signIn(context, baseURL ?? "", "avatar@plektia.test");
+  await page.goto("/admin/page");
+  await page.getByRole("radio", { name: /^Punto/ }).check();
+  await page.getByRole("button", { name: "Guardar" }).click();
+  await expect(page).toHaveURL(/\/admin\/page\?guardado$/);
+  try {
+    for (const scheme of ["dark", "light"] as const) {
+      const { visitor, close } = await visit(browser, baseURL ?? "", scheme);
+      await expect(visitor.locator("body")).toHaveAttribute("data-theme", "punto");
+      // Hueso no es un acento de Punto: usa el suyo (terracota). Bricolage sí lo admite.
+      await expect(visitor.locator("body")).toHaveAttribute("data-accent", "coral");
+      await expect(visitor.locator("body")).toHaveAttribute("data-name-font", "bricolage");
+      await expect(visitor.locator("[data-patchbay]")).toHaveAttribute("data-shape", "cards");
+      await expect(visitor.locator('link[rel="stylesheet"][href*="punto"]')).toHaveCount(1);
+      await expect(visitor.locator("svg.thread")).toHaveCount(0);
+      const results = await new AxeBuilder({ page: visitor })
+        .withTags(["wcag2a", "wcag2aa", "wcag2aaa", "wcag21aa", "wcag22aa"])
+        .analyze();
+      expect(results.violations.map((violation) => violation.id)).toEqual([]);
+      await close();
+    }
+  } finally {
+    await page.goto("/admin/page");
+    await page.getByRole("radio", { name: /^Patchera/ }).check();
+    await page.getByRole("button", { name: "Guardar" }).click();
+    await expect(page).toHaveURL(/\/admin\/page\?guardado$/);
+  }
+});

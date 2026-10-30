@@ -898,7 +898,17 @@ export type Database = {
         "generic" | "youtube" | "twitch" | "kick" | "whatsapp" | "github" | "instagram";
       link_shape: "rows" | "cards" | "pills";
       name_font: "bricolage" | "fraunces" | "nunito" | "space_mono";
-      profile_theme: "tecnico";
+      profile_theme:
+        | "tecnico"
+        | "punto"
+        | "cassette"
+        | "corcho"
+        | "subte"
+        | "pedalera"
+        | "bitmap"
+        | "lomo"
+        | "manual"
+        | "sumario";
       user_role: "owner" | "member";
     };
     CompositeTypes: {
@@ -1019,7 +1029,18 @@ export const Constants = {
       link_provider: ["generic", "youtube", "twitch", "kick", "whatsapp", "github", "instagram"],
       link_shape: ["rows", "cards", "pills"],
       name_font: ["bricolage", "fraunces", "nunito", "space_mono"],
-      profile_theme: ["tecnico"],
+      profile_theme: [
+        "tecnico",
+        "punto",
+        "cassette",
+        "corcho",
+        "subte",
+        "pedalera",
+        "bitmap",
+        "lomo",
+        "manual",
+        "sumario",
+      ],
       user_role: ["owner", "member"],
     },
   },

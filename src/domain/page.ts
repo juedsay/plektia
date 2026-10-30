@@ -1,3 +1,4 @@
+import { isAvailableTheme, type Theme as ThemeId } from "@/domain/theme";
 import { z } from "zod";
 
 import type { InvalidInput } from "@/domain/errors";
@@ -39,10 +40,8 @@ export function parsePageInput(raw: unknown): Result<PageDraft, InvalidInput> {
 }
 
 // Presentación de una página: lo que se edita en /admin/page (SPEC-admin-panel,
-// "Perfil"). La v1 trae un solo tema; los otros figuran como "Próximamente".
-export const AVAILABLE_THEMES = ["tecnico"] as const;
-export const UPCOMING_THEMES = ["cercano", "energico", "editorial"] as const;
-export type Theme = (typeof AVAILABLE_THEMES)[number];
+// "Perfil"). Los estilos (variantes de tema) viven en theme.ts (SPEC-styles).
+export { AVAILABLE_THEMES, type Theme } from "@/domain/theme";
 
 /**
  * Modo de la página (SPEC-appearance): `auto` sigue al dispositivo de cada
@@ -92,7 +91,9 @@ const PageSettingsSchema = z.object(
   {
     displayName: safeLine("El nombre", 60),
     bio: Bio.default(""),
-    theme: z.enum(AVAILABLE_THEMES, { error: "Ese tema todavía no está disponible." }),
+    theme: z
+      .string({ error: "Elegí un estilo de la lista." })
+      .refine(isAvailableTheme, { error: "Ese estilo todavía no está disponible." }),
     colorMode: z.enum(COLOR_MODES, { error: "Elegí automático, oscuro o claro." }).default("auto"),
     accent: z.enum(ACCENTS, { error: "Elegí uno de los acentos de la lista." }).default("hueso"),
     linkShape: z.enum(LINK_SHAPES, { error: "Elegí filas, tarjetas o pastillas." }).default("rows"),
@@ -107,7 +108,7 @@ const PageSettingsSchema = z.object(
 export interface PageSettings {
   readonly displayName: string;
   readonly bio: string | null;
-  readonly theme: Theme;
+  readonly theme: ThemeId;
   readonly colorMode: ColorMode;
   readonly accent: Accent;
   readonly linkShape: LinkShape;

@@ -1,3 +1,4 @@
+import { THEMES } from "@/domain/theme";
 import { isPreviewImagePath } from "@/domain/link-preview-image";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { z } from "zod";
@@ -60,7 +61,7 @@ const RowSchema = z.object({
   show_handle: z.boolean(),
   bio: z.string().nullable(),
   avatar_path: z.string().nullable(),
-  theme: z.literal("tecnico"),
+  theme: z.enum(THEMES),
   color_mode: z.enum(COLOR_MODES),
   accent: z.enum(ACCENTS),
   link_shape: z.enum(LINK_SHAPES),
