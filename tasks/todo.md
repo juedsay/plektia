@@ -420,7 +420,7 @@
   - **Aceptación:** E2E: revocar hace que la siguiente llamada dé 401.
   - **Verificar:** `pnpm test:e2e`; prueba manual desde Claude.
   - **Archivos:** `src/pages/admin/conexiones.astro`, las Actions `connections.*` en `src/actions/index.ts`, `src/application/mcp/connections.ts`.
-  - **Hecho:** revocar marca el grant primero (corte inmediato en `/mcp`) y después invalida los tokens en Supabase. En la barra del celular, con hasta seis destinos, los nombres largos van cortos ("Métricas", "Apps", "Ver"). Pendiente de la historia 5: el aviso "Editado desde Claude" en el conflicto del editor.
+  - **Hecho:** revocar marca el grant primero (corte inmediato en `/mcp`) y después invalida los tokens en Supabase. En la barra del celular, con hasta seis destinos, los nombres largos van cortos ("Métricas", "Apps", "Ver"). El aviso "Editado desde Claude" en el conflicto del editor llegó después (`mcp_last_edit`, solo el dueño desde el panel y solo la última hora).
 
 - [x] **Tarea 32c: CLI `pnpm plektia`** · S · Deps: 31
   - Cliente fino del mismo `/mcp` con el cliente del SDK: login OAuth con PKCE y redirección a `127.0.0.1` (abre el navegador), y comandos para ver la página, agregar, editar, ocultar, mover, borrar (pide el título exacto) y ver estadísticas.

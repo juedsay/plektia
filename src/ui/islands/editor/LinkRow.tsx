@@ -85,6 +85,8 @@ export function LinkRow({
   const [draft, setDraft] = useState(() => draftOf(link));
   const [failure, setFailure] = useState<Failure | null>(null);
   const [busy, setBusy] = useState(false);
+  /** En un conflicto: si lo cambió una app conectada por MCP ("Editado desde Claude"). */
+  const [appEdit, setAppEdit] = useState<{ appName: string; editedAt: string } | null>(null);
 
   // Los guardados van de a uno: si se sale de un campo mientras otro se está
   // guardando, se guarda después, con la versión que devolvió el anterior. Las
@@ -109,6 +111,25 @@ export function LinkRow({
     latestDraft.current = fresh;
     setDraft(fresh);
   }, [link, editing]);
+
+  // En un conflicto se pregunta si fue una app conectada; si no, queda el aviso común.
+  const conflicted = failure?.message === CONFLICT_MESSAGE;
+  useEffect(() => {
+    if (!conflicted) {
+      setAppEdit(null);
+      return;
+    }
+    let current = true;
+    void api
+      .lastAppEdit(link.id)
+      .catch(() => null)
+      .then((edit) => {
+        if (current) setAppEdit(edit);
+      });
+    return () => {
+      current = false;
+    };
+  }, [conflicted, api, link.id]);
 
   // Al abrir la edición, el foco va al primer campo.
   useEffect(() => {
@@ -338,6 +359,12 @@ export function LinkRow({
       {failure && (
         <div className="editor-error" role="alert">
           <p>{failure.message}</p>
+          {isConflict && appEdit && (
+            <p>
+              Lo cambió «{appEdit.appName}» {sinceLabel(appEdit.editedAt, Date.now())}, desde una
+              app conectada.
+            </p>
+          )}
           {isConflict && (
             <button type="button" className="button is-quiet" onClick={() => void reload()}>
               Recargar
@@ -616,6 +643,13 @@ const HIGHLIGHT_TAGS: Record<Exclude<LinkHighlight, "none">, string> = {
 
 const LIMIT_MESSAGE = errorMessage("limit_reached");
 const TOP_LIMIT_MESSAGE = `Ya tenés ${String(TOP_LINKS_LIMIT)} links arriba de todo: sacá uno antes de sumar otro.`;
+
+/** "hace un momento", "hace 5 min" o "hace 1 h" (la consulta mira la última hora). */
+function sinceLabel(editedAt: string, now: number): string {
+  const minutes = Math.floor((now - new Date(editedAt).getTime()) / 60000);
+  if (minutes < 1) return "hace un momento";
+  return minutes < 60 ? `hace ${String(minutes)} min` : "hace 1 h";
+}
 
 interface Draft {
   title: string;

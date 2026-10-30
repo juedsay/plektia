@@ -40,6 +40,15 @@ describe("HttpLinkPreviewer", () => {
     );
   });
 
+  it("algo que no es una página, o un sitio que no responde", async () => {
+    const wrongType = new HttpLinkPreviewer(() => Promise.resolve(err("wrong_type")));
+    expect(await wrongType.preview(new URL("https://ejemplo.com/"))).toEqual(err("not_a_page"));
+    expect(await wrongType.image(new URL("https://ejemplo.com/a"))).toEqual(err("not_an_image"));
+    const down = new HttpLinkPreviewer(() => Promise.resolve(err("timeout")));
+    expect(await down.preview(new URL("https://ejemplo.com/"))).toEqual(err("unreachable"));
+    expect(await down.image(new URL("https://ejemplo.com/a"))).toEqual(err("unreachable"));
+  });
+
   it("un destino bloqueado se informa como tal", async () => {
     const previewer = new HttpLinkPreviewer(() => Promise.resolve(err("blocked")));
     expect(await previewer.image(new URL("https://ejemplo.com/a.png"))).toEqual(err("blocked"));

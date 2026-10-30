@@ -93,6 +93,39 @@ describe("createOpenWebFetch", () => {
     expect(requested.map((request) => request.url)).toEqual(["https://a.com/"]);
   });
 
+  it("una redirección sin destino, o con uno inválido, es un error", async () => {
+    const { fetcher } = server({
+      "https://a.com/": () => new Response(null, { status: 302 }),
+      "https://b.com/": () => redirect("https://[mal"),
+    });
+    const fetchPage = createOpenWebFetch({ ...OPTIONS, userAgent: "x", fetcher });
+    expect(await fetchPage(new URL("https://a.com/"), HTML)).toEqual({
+      ok: false,
+      error: "too_many_redirects",
+    });
+    expect(await fetchPage(new URL("https://b.com/"), HTML)).toEqual({
+      ok: false,
+      error: "network",
+    });
+  });
+
+  it("un cuerpo que declara más del máximo se corta sin leerlo, y una caída de red es `network`", async () => {
+    const { fetcher } = server({
+      "https://a.com/": () => html("x", { "content-length": "999999" }),
+    });
+    const fetchPage = createOpenWebFetch({ ...OPTIONS, userAgent: "x", fetcher });
+    expect(await fetchPage(new URL("https://a.com/"), HTML)).toEqual({
+      ok: false,
+      error: "too_large",
+    });
+    const offline = createOpenWebFetch({
+      ...OPTIONS,
+      userAgent: "x",
+      fetcher: () => Promise.reject(new TypeError("sin red")),
+    });
+    expect(await offline(new URL("https://a.com/"), HTML)).toEqual({ ok: false, error: "network" });
+  });
+
   it("más de 3 redirecciones es un error", async () => {
     const { fetcher } = server({
       "https://a.com/1": () => redirect("/2"),
