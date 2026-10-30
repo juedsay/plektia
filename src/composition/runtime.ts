@@ -1,6 +1,6 @@
 // Lo único que lee la configuración del Worker. Páginas y middlewares piden
 // sus dependencias acá, ya armadas.
-import { fetchLinkPreview } from "@/application/links/fetch-link-preview";
+import { fetchLinkPreview, fetchPreviewImage } from "@/application/links/fetch-link-preview";
 import { HttpLinkPreviewer } from "@/infrastructure/http/http-link-previewer";
 import { createOpenWebFetch } from "@/infrastructure/http/open-web-fetch";
 import type { AstroCookies } from "astro";
@@ -35,7 +35,7 @@ import {
   THUMBNAIL_HOST,
   youtubeThumbnails,
 } from "@/infrastructure/providers/youtube/youtube-thumbnails";
-import { avatarImages } from "@/infrastructure/supabase/avatar-images";
+import { avatarImages, linkPreviewImages } from "@/infrastructure/supabase/avatar-images";
 import { SupabaseStatsRecorder } from "@/infrastructure/supabase/supabase-stats-recorder";
 import { createIngestClient } from "@/infrastructure/supabase/ingest-client";
 
@@ -95,6 +95,9 @@ export const turnstileSiteKey = (): string => env.TURNSTILE_SITE_KEY;
 /** Los avatares del bucket público, para servirlos desde `/avatars/...`. */
 export const avatarImage = (path: string) => avatarImages(env.SUPABASE_URL)(path);
 
+/** Las imágenes de las vistas previas, para servirlas desde `/link-previews/...`. */
+export const linkPreviewImage = (path: string) => linkPreviewImages(env.SUPABASE_URL)(path);
+
 /** Purga de la caché de páginas. En local `cache` no existe: purgar no hace nada. */
 export const pageCache = (): PageCache =>
   new WorkerPageCache(typeof cache === "undefined" ? undefined : (options) => cache.purge(options));
@@ -116,17 +119,21 @@ export const liveCheckNow = () =>
  * "Traer vista previa" de un artículo (SPEC-link-form, 7c): 20 por minuto por
  * cuenta, y nunca contra el propio sitio (`ownHost`) ni `workers.dev`.
  */
-export const linkPreview = (ownHost: string) =>
-  fetchLinkPreview({
-    previewer: new HttpLinkPreviewer(
-      createOpenWebFetch({
-        blockedHosts: [ownHost],
-        blockedDomains: ["workers.dev"],
-        userAgent: "PlektiaPreview/1.0 (+https://app.plektia.workers.dev)",
-      }),
-    ),
-    limiter: new CloudflareRateLimiter(env.PREVIEW_RATE_LIMITER),
-  });
+const previewDeps = (ownHost: string) => ({
+  previewer: new HttpLinkPreviewer(
+    createOpenWebFetch({
+      blockedHosts: [ownHost],
+      blockedDomains: ["workers.dev"],
+      userAgent: "PlektiaPreview/1.0 (+https://app.plektia.workers.dev)",
+    }),
+  ),
+  limiter: new CloudflareRateLimiter(env.PREVIEW_RATE_LIMITER),
+});
+
+export const linkPreview = (ownHost: string) => fetchLinkPreview(previewDeps(ownHost));
+
+/** La imagen de la vista previa, con las mismas salvaguardas y el mismo límite. */
+export const linkPreviewSourceImage = (ownHost: string) => fetchPreviewImage(previewDeps(ownHost));
 
 /** Miniaturas de YouTube servidas desde `/thumbs/{id}.jpg`. */
 export const youtubeThumbnail = youtubeThumbnails(

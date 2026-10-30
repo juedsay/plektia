@@ -1,4 +1,5 @@
 ---
+import PreviewThumb from "@/ui/components/PreviewThumb.astro";
 import type { PublicLink } from "@/application/ports/public-page-reader";
 import NetworkIcon from "@/ui/components/NetworkIcon.astro";
 import { isProfileLink, linkMeta } from "@/ui/view/public-link";
@@ -37,6 +38,7 @@ const { links } = Astro.props;
                 <span class="port-meta">{linkMeta(link)}</span>
               )}
             </span>
+            <PreviewThumb link={link} />
             <svg
               class="go"
               viewBox="0 0 24 24"

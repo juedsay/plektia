@@ -24,6 +24,8 @@ export interface NewLink {
 export interface PreviewSuggestion {
   readonly title: string | null;
   readonly description: string | null;
+  /** La imagen que declara el artículo (se trae aparte, con `fetchPreviewImage`). */
+  readonly imageUrl?: string | null;
 }
 
 export interface LinkChanges {
@@ -73,6 +75,12 @@ export interface EditorApi {
   setMedia(linkId: string, settings: MediaChoice): Promise<FormResult<LinkMedia>>;
   /** El título y la descripción de un artículo; no guarda nada. */
   fetchPreview(url: string): Promise<FormResult<PreviewSuggestion>>;
+  /** La imagen del artículo como `data:` URL, para re-codificarla acá (7c-2). */
+  fetchPreviewImage(url: string): Promise<FormResult<{ readonly dataUrl: string }>>;
+  /** Guarda la imagen ya re-codificada (480 × 252) en el link. */
+  setPreviewImage(target: { id: string; version: number }, image: Blob): Promise<FormResult<Link>>;
+  /** Saca la imagen del link y borra el archivo. */
+  removePreviewImage(target: { id: string; version: number }): Promise<FormResult<Link>>;
 }
 
 export interface MediaChoice {

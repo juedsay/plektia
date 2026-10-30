@@ -42,6 +42,17 @@ describe("cachePolicy", () => {
     expect(get("/avatars/otra-cosa.png").cacheControl).toBe("private, no-store");
   });
 
+  it("la imagen de una vista previa se cachea un año, como un avatar", () => {
+    const image =
+      "/link-previews/22222222-2222-4222-8222-222222222222/0b1d2c3e-4f5a-4b6c-8d7e-9f0a1b2c3d4e.jpg";
+    expect(get(image)).toEqual({
+      cacheControl: "public, max-age=31536000, immutable",
+      tags: ["link-previews"],
+    });
+    expect(get(image, 404).cacheControl).not.toContain("immutable");
+    expect(get("/link-previews/otra-cosa.svg").cacheControl).toBe("private, no-store");
+  });
+
   it("una miniatura de YouTube se cachea un día", () => {
     expect(get("/thumbs/aBcDeFgHiJk.jpg")).toEqual({
       cacheControl: "public, max-age=86400",

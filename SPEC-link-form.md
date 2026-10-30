@@ -154,7 +154,8 @@ Va en dos partes chicas.
    - Va al bucket `link-previews`, en `{dueño}/{uuid}.webp`, con las mismas políticas de storage
      que los avatares.
    - `links.preview_image_path` guarda la ruta, con un `check` del formato.
-   - Al cambiar o sacar la imagen, o al borrar el link, se borra el archivo anterior.
+   - Al cambiar o sacar la imagen, o al borrar el link desde el panel, se borra el archivo anterior.
+    Un link borrado por MCP deja su archivo en la carpeta del dueño (sin enlazar), como un avatar viejo.
 4. **Mostrarla.** Se sirve desde `/link-previews/{dueño}/{archivo}` con `nosniff` y caché larga, así
    que la CSP no cambia (`img-src 'self'`). En la página, un artículo con imagen la muestra chica a la
    derecha del texto, con `width`, `height` y `loading="lazy"` y `alt=""`, porque el título ya dice qué

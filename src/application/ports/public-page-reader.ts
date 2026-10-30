@@ -37,6 +37,8 @@ export interface PublicLink {
   readonly highlight: LinkHighlight;
   /** El elegido por el dueño, o `null` (se deduce de la URL al mostrarlo). */
   readonly kind: LinkKind | null;
+  /** La imagen de la vista previa de un artículo (`{dueño}/{uuid}.webp`), o `null`. */
+  readonly previewImagePath: string | null;
   readonly featured?: PublicFeatured | null;
   /** Solo si el dueño marcó "Transmito en este canal" y está en vivo. */
   readonly live?: PublicLive | null;

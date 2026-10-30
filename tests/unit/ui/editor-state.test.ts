@@ -44,6 +44,7 @@ function link(
     placement: "list",
     highlight: "none",
     kind: null,
+    previewImagePath: null,
     position,
     version: 1,
     ...extra,

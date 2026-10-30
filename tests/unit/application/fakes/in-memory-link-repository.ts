@@ -47,6 +47,7 @@ export class InMemoryLinkRepository implements LinkReader, LinkWriter, SectionWr
       ...draft,
       placement: "list",
       highlight: "none",
+      previewImagePath: null,
       id: id ?? this.id(),
       position: group.length,
       version: 1,

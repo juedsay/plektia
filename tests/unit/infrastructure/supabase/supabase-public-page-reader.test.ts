@@ -28,6 +28,7 @@ const link = {
   placement: "both",
   highlight: "top",
   kind: "article",
+  previewImagePath: null,
 };
 const row = {
   handle: "juedsay",

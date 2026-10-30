@@ -4,6 +4,8 @@
 
 /** La subida del avatar: la imagen (≤ 200 KB) más el resto del formulario. */
 export const AVATAR_UPLOAD_LIMIT = 256 * 1024;
+/** La imagen de la vista previa de un artículo (≤ 80 KB) más el formulario. */
+export const PREVIEW_IMAGE_UPLOAD_LIMIT = 128 * 1024;
 /** Cualquier otro envío (formularios y Actions del panel). */
 export const DEFAULT_BODY_LIMIT = 64 * 1024;
 
@@ -29,6 +31,11 @@ export function checkBodySize(request: {
   const path = request.pathname.toLowerCase();
   const action = new URLSearchParams(request.search).get("_action")?.toLowerCase();
   const isAvatarUpload = AVATAR_UPLOAD_PATHS.has(path) || action === "pages.setavatar";
-  const limit = isAvatarUpload ? AVATAR_UPLOAD_LIMIT : DEFAULT_BODY_LIMIT;
+  const isPreviewUpload = path === "/_actions/links.setpreviewimage";
+  const limit = isAvatarUpload
+    ? AVATAR_UPLOAD_LIMIT
+    : isPreviewUpload
+      ? PREVIEW_IMAGE_UPLOAD_LIMIT
+      : DEFAULT_BODY_LIMIT;
   return declared > limit ? { ok: false, status: 413 } : { ok: true };
 }

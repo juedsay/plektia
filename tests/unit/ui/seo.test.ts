@@ -13,6 +13,7 @@ const link = (url: string, providerHandle: string | null) => ({
   placement: "list" as const,
   highlight: "none" as const,
   kind: null,
+  previewImagePath: null,
 });
 
 const page: PublicPage = {

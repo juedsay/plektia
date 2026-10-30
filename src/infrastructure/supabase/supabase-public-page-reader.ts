@@ -1,3 +1,4 @@
+import { isPreviewImagePath } from "@/domain/link-preview-image";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { z } from "zod";
 
@@ -46,6 +47,11 @@ const PublicLinkSchema = z.object({
   placement: z.enum(LINK_PLACEMENTS),
   highlight: z.enum(LINK_HIGHLIGHTS),
   kind: z.enum(LINK_KINDS).nullable(),
+  previewImagePath: z
+    .string()
+    .refine(isPreviewImagePath)
+    .nullish()
+    .transform((path) => path ?? null),
 });
 
 const RowSchema = z.object({
