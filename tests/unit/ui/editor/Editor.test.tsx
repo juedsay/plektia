@@ -157,6 +157,18 @@ class FakeApi implements EditorApi {
 
   mediaSaves: { linkId: string; choice: MediaChoice }[] = [];
 
+  /** Lo que devuelve "Traer vista previa" (o un error, si se lo cambia). */
+  preview: FormResult<{ title: string | null; description: string | null }> = {
+    ok: true,
+    value: { title: "Cómo testeo RLS", description: "Con pgTAP, paso a paso" },
+  };
+  previewed: string[] = [];
+
+  fetchPreview(url: string) {
+    this.previewed.push(url);
+    return Promise.resolve(this.preview);
+  }
+
   setMedia(linkId: string, choice: MediaChoice): Promise<FormResult<LinkMedia>> {
     this.mediaSaves.push({ linkId, choice });
     if (choice.featuredMode === "pinned" && choice.pinnedVideo === "no-es-un-video") {
@@ -330,6 +342,55 @@ async function deleteLink(user: ReturnType<typeof userEvent.setup>, title: strin
 }
 
 describe("Editor · agregar", () => {
+  it("en un artículo, 'Traer vista previa' propone el título y la descripción", async () => {
+    const { api, user } = setup({ sections: [], links: [] });
+    await user.type(screen.getByLabelText("URL"), "https://medium.com/@juedsay/como-testeo-rls");
+    await user.click(screen.getByRole("button", { name: "Traer vista previa" }));
+
+    expect(api.previewed).toEqual(["https://medium.com/@juedsay/como-testeo-rls"]);
+    expect(screen.getByLabelText("Título")).toHaveProperty("value", "Cómo testeo RLS");
+    expect(screen.getByLabelText("Descripción")).toHaveProperty("value", "Con pgTAP, paso a paso");
+    await user.click(screen.getByRole("button", { name: "Agregar link" }));
+    expect(api.created.at(-1)).toMatchObject({
+      title: "Cómo testeo RLS",
+      description: "Con pgTAP, paso a paso",
+    });
+  });
+
+  it("si el sitio no responde, lo dice y no toca lo escrito", async () => {
+    const { api, user } = setup({ sections: [], links: [] });
+    api.preview = { ok: false, message: "El sitio no respondió a tiempo.", fields: {}, values: {} };
+    await user.type(screen.getByLabelText("URL"), "https://medium.com/@juedsay/como-testeo-rls");
+    await user.clear(screen.getByLabelText("Título"));
+    await user.type(screen.getByLabelText("Título"), "Mi nota");
+    await user.click(screen.getByRole("button", { name: "Traer vista previa" }));
+
+    expect(await screen.findByText("El sitio no respondió a tiempo.")).toBeTruthy();
+    expect(screen.getByLabelText("Título")).toHaveProperty("value", "Mi nota");
+  });
+
+  it("un sitio que no es artículo no ofrece la vista previa", async () => {
+    const { user } = setup({ sections: [], links: [] });
+    await user.type(screen.getByLabelText("URL"), "https://plektia.app/");
+    expect(screen.queryByRole("button", { name: "Traer vista previa" })).toBeNull();
+  });
+
+  it("al editar un artículo, la vista previa completa los campos y los guarda", async () => {
+    const { api, user } = setup({
+      sections: [REDES],
+      links: [link("nota", { title: "Nota", url: "https://medium.com/@juedsay/una-nota" })],
+    });
+    await user.click(screen.getByRole("button", { name: "Editar Nota" }));
+    await user.click(screen.getByRole("button", { name: "Traer vista previa de Nota" }));
+
+    await waitFor(() => {
+      expect(api.updates.at(-1)?.changes).toEqual({
+        title: "Cómo testeo RLS",
+        description: "Con pgTAP, paso a paso",
+      });
+    });
+  });
+
   it("con una red, alcanza el usuario: arma la URL, la muestra y recuerda la red", async () => {
     const { api, user } = setup({ sections: [], links: [] });
     await user.click(screen.getByRole("button", { name: "Instagram" }));

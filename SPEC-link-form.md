@@ -105,21 +105,75 @@ Decisiones del 2026-10-29:
   sitios se ven como siempre: el ícono de la red y "@usuario", o la dirección.
 - **MCP:** `create_link` y `update_link` aceptan `kind` opcional; sin él (o con `null`), se deduce.
 
-## Entrega 7c · Vista previa del artículo (se detalla y se aprueba antes de empezar)
+## Entrega 7c · Vista previa del artículo
 
-Al agregar un `article`, Plektia lee la página y propone el título, la descripción y la imagen
-(`og:title`, `og:description`, `og:image`). Es pedir páginas de terceros desde el servidor, así que
-lleva estas salvaguardas mínimas:
+Decisiones del 2026-10-29:
 
-- **Quién y cómo:** solo el dueño, desde el panel y con rate limit. Solo `https:`, sin
-  credenciales, solo puertos 443 o por defecto, hasta 3 redirecciones (cada una se revalida),
-  `timeout` de 5 s y lectura de hasta 512 KB de HTML.
-- **Qué se usa:** solo se parsean esas tres etiquetas, y el texto pasa por las mismas reglas de
-  título y descripción. Nunca se guarda ni se muestra HTML del sitio.
-- **La imagen:** se descarga una sola vez y solo si es JPEG, PNG o WebP. Se verifican los bytes
-  mágicos, el tamaño (hasta 1 MB) y las dimensiones. Se guarda en el bucket propio y se sirve desde
-  el sitio, así que la CSP no cambia (`img-src 'self'`). Nunca se enlaza la imagen original.
-- **Si algo falla:** el link se agrega igual, sin vista previa.
+- La vista previa se usa **en la página pública**: el artículo se ve con su imagen chica.
+- Se busca **solo con un botón**, "Traer vista previa". Plektia no visita ningún sitio por su
+  cuenta.
+
+Va en dos partes chicas.
+
+### 7c-1 · Traer el título y la descripción
+
+1. **El botón.** En el alta ("Otro link") y al editar un link, si su tipo es artículo, aparece "Traer
+   vista previa". Propone el título y la descripción del artículo en los campos, y el dueño puede
+   cambiarlos antes de guardar. Si el sitio no responde o no tiene esos datos, lo dice y no cambia
+   nada.
+2. **El pedido** es una Action del panel (`links.fetchPreview`, con la página de la sesión). Solo la
+   usa el dueño, tiene su propio rate limit (20 por minuto por cuenta) y no está expuesta por MCP.
+3. **Salvaguardas** (`src/infrastructure/http/safe-fetch.ts`):
+   - **URL:** solo `https:`, sin usuario ni contraseña, y solo el puerto 443.
+   - **Host:** se rechaza una IP literal (v4 o v6), `localhost` y los dominios `.local`, `.internal`,
+     `.localhost`, `.test`, `.invalid` y `.arpa`. También el propio dominio de Plektia y
+     `*.workers.dev`, para que no pueda llamarse a sí mismo.
+   - **Redirecciones:** hasta 3, en modo `manual`, y cada destino se vuelve a validar.
+   - **Lectura:** `timeout` de 5 s, solo `text/html`, y se leen como máximo 512 KB del cuerpo; lo demás
+     se cancela.
+   - **Pedido:** sin cookies ni cabeceras del usuario, con un `User-Agent` propio
+     ("PlektiaPreview").
+4. **Qué se usa:** solo `og:title`, `og:description`, `og:image` y, como respaldo, `<title>`. Se
+   leen con un parser de etiquetas `meta`, no con un DOM. Las entidades HTML se decodifican y el texto
+   pasa por las reglas de título (80) y descripción (120), con `…` si se corta. Nunca se guarda ni
+   se muestra HTML del sitio.
+
+### 7c-2 · La imagen
+
+1. **Traerla.** Si hay `og:image` (validada con las mismas salvaguardas de 7c-1), el servidor la
+   descarga y se la pasa al panel:
+   - pesa hasta 2 MB;
+   - por sus bytes es JPEG, PNG, WebP o GIF (el `Content-Type` no alcanza);
+   - va en base64.
+2. **Recodificarla en el navegador.** El panel la dibuja en un canvas recortado a 1.91:1, de 480 × 252,
+   y la exporta a WebP, o a JPEG en Safari. Eso descarta metadatos, animaciones y contenido
+   escondido, como en el avatar. El dueño la ve antes de guardar y puede sacarla.
+3. **Guardarla.** Se sube con una Action (`links.setPreviewImage`) y se valida en el servidor con la
+   misma inspección estricta del avatar, generalizada: formato real, 480 × 252, hasta 80 KB, sin
+   metadatos y sin animación.
+   - Va al bucket `link-previews`, en `{dueño}/{uuid}.webp`, con las mismas políticas de storage
+     que los avatares.
+   - `links.preview_image_path` guarda la ruta, con un `check` del formato.
+   - Al cambiar o sacar la imagen, o al borrar el link, se borra el archivo anterior.
+4. **Mostrarla.** Se sirve desde `/link-previews/{dueño}/{archivo}` con `nosniff` y caché larga, así
+   que la CSP no cambia (`img-src 'self'`). En la página, un artículo con imagen la muestra chica a la
+   derecha del texto, con `width`, `height` y `loading="lazy"` y `alt=""`, porque el título ya dice qué
+   es. Funciona en las tres formas de link y en el destacado "arriba de todo".
+
+### Pruebas de la 7c
+
+- **Unit:**
+  - `safe-fetch` rechaza cada host prohibido, puertos, credenciales, `http:`, y redirecciones de más
+    o hacia un host prohibido;
+  - corta a los 512 KB y a los 5 s;
+  - el parser lee `og:*` con comillas simples, dobles y en otro orden, decodifica entidades y no se
+    deja engañar por `<meta>` dentro de un comentario o un `<script>`;
+  - la inspección de la imagen recodificada.
+- **Integración:** la Action con un servidor falso que responde HTML, redirecciones y una imagen.
+- **pgTAP:** `preview_image_path` solo con el formato propio, solo el dueño, y las políticas del
+  bucket.
+- **E2E:** con un sitio de prueba local, "Traer vista previa" completa título y descripción, la imagen
+  se ve en la página pública, y sacarla la borra.
 
 ## Fuera de alcance
 
@@ -129,5 +183,4 @@ lleva estas salvaguardas mínimas:
 
 ## Preguntas abiertas
 
-1. ¿La vista previa (7c) se muestra en la página pública como tarjeta con imagen, o solo propone el
-   título y la descripción en el panel? Se decide al detallar 7c.
+Ninguna por ahora.

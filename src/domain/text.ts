@@ -20,6 +20,23 @@ export function safeLine(label: string, max: number) {
     });
 }
 
+/**
+ * Un texto de afuera (la vista previa de un artículo) llevado a una línea
+ * segura: sin caracteres de control, invisibles ni de dirección, con los
+ * espacios juntos y cortado en `max` con "…". `null` si no queda nada.
+ */
+export function toSafeLine(value: string, max: number): string | null {
+  const line = value.replace(new RegExp(UNSAFE.source, "g"), " ").replace(/\s+/g, " ").trim();
+  if (line === "") return null;
+  const characters = Array.from(line);
+  return characters.length <= max
+    ? line
+    : `${characters
+        .slice(0, max - 1)
+        .join("")
+        .trimEnd()}…`;
+}
+
 // Igual que UNSAFE, pero admite saltos de línea y tabulaciones (texto de varios párrafos).
 const UNSAFE_MULTILINE =
   // eslint-disable-next-line no-control-regex -- detectar caracteres de control es el objetivo.

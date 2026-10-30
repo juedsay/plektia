@@ -90,7 +90,7 @@ export function createSafeFetch(options: SafeFetchOptions): SafeFetch {
 }
 
 /** Lee el cuerpo cortando en `maxBytes` (el `content-length` puede mentir o faltar). */
-async function readLimited(
+export async function readLimited(
   response: Response,
   maxBytes: number,
 ): Promise<Uint8Array<ArrayBuffer> | null> {
@@ -117,7 +117,7 @@ async function readLimited(
   return bytes;
 }
 
-function isTimeout(error: unknown): boolean {
+export function isTimeout(error: unknown): boolean {
   return (
     error instanceof DOMException && (error.name === "TimeoutError" || error.name === "AbortError")
   );

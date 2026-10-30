@@ -3,11 +3,13 @@ import { type SubmitEvent, useId, useRef, useState } from "react";
 import type { Link, Section } from "@/application/ports/link-repository";
 import type { LinkKind } from "@/domain/link-presentation";
 import { suggestTitle } from "@/ui/view/editor-state";
+import { kindOf } from "@/ui/view/link-kind";
 import { profilePrefix, profileUrlFor } from "@/ui/view/profile-url";
 import { networkLabel, socialProfileFor } from "@/ui/view/social-profile";
 
 import { type EditorApi, UNREACHABLE } from "./editor-api";
 import { KindSelect } from "./KindSelect";
+import { PreviewButton } from "./PreviewButton";
 import { type LinkSource, NetworkPicker } from "./NetworkPicker";
 
 interface Props {
@@ -33,6 +35,7 @@ export function AddLinkForm({ api, sections, onCreated }: Props) {
   const [sectionId, setSectionId] = useState<string>("");
   /** `null`: automático, lo que se deduce de la URL. */
   const [kind, setKind] = useState<LinkKind | null>(null);
+  const [description, setDescription] = useState("");
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
   const [fieldErrors, setFieldErrors] = useState<Readonly<Record<string, string>>>({});
@@ -59,6 +62,8 @@ export function AddLinkForm({ api, sections, onCreated }: Props) {
   const profile = source === "other" ? null : profileUrlFor(source, username);
   // En "Otro link", un perfil de una red conocida se ofrece cargar como esa red.
   const pastedProfile = source === "other" ? socialProfileFor(url.trim()) : null;
+  // Un artículo puede traer su vista previa y llevar descripción (7c).
+  const isArticle = source === "other" && kindOf({ url: url.trim(), kind }) === "article";
 
   const submit = async (event: SubmitEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -79,6 +84,7 @@ export function AddLinkForm({ api, sections, onCreated }: Props) {
         sectionId: sectionId === "" ? null : sectionId,
         // Con una red es un perfil: se deduce solo.
         kind: source === "other" ? kind : null,
+        ...(isArticle && description.trim() !== "" ? { description } : {}),
       })
       .catch(() => UNREACHABLE);
     inFlight.current = false;
@@ -94,6 +100,7 @@ export function AddLinkForm({ api, sections, onCreated }: Props) {
     setUrl("");
     setUsername("");
     setKind(null);
+    setDescription("");
     setTitle(source === "other" ? "" : networkLabel(source));
     setTitleTouched(false);
     setMessage(null);
@@ -209,6 +216,35 @@ export function AddLinkForm({ api, sections, onCreated }: Props) {
         </div>
         {source === "other" && (
           <KindSelect id={`${idPrefix}-kind`} url={url} value={kind} onChange={setKind} />
+        )}
+        {isArticle && (
+          <div className="field add-link-url">
+            <label htmlFor={`${idPrefix}-description`}>Descripción</label>
+            <input
+              id={`${idPrefix}-description`}
+              autoComplete="off"
+              maxLength={120}
+              value={description}
+              onChange={(event) => {
+                setDescription(event.target.value);
+              }}
+              aria-invalid={fieldErrors["description"] ? true : undefined}
+            />
+            {fieldErrors["description"] && (
+              <p className="field-error">{fieldErrors["description"]}</p>
+            )}
+            <PreviewButton
+              api={api}
+              url={url}
+              onSuggestion={(suggestion) => {
+                if (suggestion.title) {
+                  setTitle(suggestion.title);
+                  setTitleTouched(true);
+                }
+                if (suggestion.description) setDescription(suggestion.description);
+              }}
+            />
+          </div>
         )}
         {sections.length > 0 && (
           <div className="field">

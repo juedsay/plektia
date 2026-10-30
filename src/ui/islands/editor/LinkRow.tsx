@@ -25,6 +25,7 @@ import {
 } from "./editor-api";
 import { DragIcon } from "./EditorGroup";
 import { KindSelect } from "./KindSelect";
+import { PreviewButton } from "./PreviewButton";
 import { MediaSettings } from "./MediaSettings";
 
 interface Props {
@@ -382,6 +383,22 @@ export function LinkRow({
               <p className="field-hint" id={`${idPrefix}-description-hint`}>
                 Opcional. Se ve debajo del título.
               </p>
+              {kindOf(link) === "article" && (
+                <PreviewButton
+                  api={api}
+                  url={draft.url}
+                  label={link.title}
+                  onSuggestion={(suggestion) => {
+                    // Se completa y se guarda como si lo hubiera escrito (con "Deshacer").
+                    updateDraft({
+                      ...latestDraft.current,
+                      title: suggestion.title ?? latestDraft.current.title,
+                      description: suggestion.description ?? latestDraft.current.description,
+                    });
+                    void save();
+                  }}
+                />
+              )}
               {fieldError("description") && (
                 <p className="field-error" id={`${idPrefix}-description-error`}>
                   {fieldError("description")}
