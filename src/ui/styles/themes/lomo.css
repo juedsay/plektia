@@ -1,0 +1,326 @@
+/*
+ * Lomo cosido (familia Editorial, SPEC-styles): la página es un libro
+ * encuadernado a mano. Cada sección es un cuadernillo con su capítulo en
+ * versalitas y numeración romana; la costura del lomo los une y cada link es
+ * una entrada de índice. El rojo es solo de la cinta marcapáginas (en vivo).
+ * Se carga solo en las páginas con este estilo. AAA medido en
+ * tests/unit/ui/theme-tokens.test.ts.
+ */
+[data-theme="lomo"] {
+  color-scheme: dark;
+
+  --color-bg: #17140f;
+  --color-fg: #efe8da;
+  --color-fg-muted: #c8bfae;
+  --color-line: #5c5446;
+  --color-line-soft: #3a342b;
+  --color-surface: #211d17;
+  --color-live: #ff9d8c;
+  --color-live-ink: #17140f;
+  --color-accent: var(--accent-on-dark, #9fc1ec);
+  --color-thread: var(--color-accent);
+  --color-thread-twist: #17140f;
+  --color-focus: #efe8da;
+  --color-selection-bg: #efe8da;
+  --color-selection-fg: #17140f;
+
+  /* La cinta marcapáginas: un rojo de verdad (gráfico, ≥ 3:1). El texto "En vivo" usa --color-live. */
+  --ribbon: #d4463a;
+
+  /* Un carril angosto: el lomo, con las puntadas. */
+  --jack-col: 1.75rem;
+  --radius-md: 2px;
+}
+
+[data-theme="lomo"][data-mode="light"] {
+  color-scheme: light;
+
+  --color-bg: #f3efe4;
+  --color-fg: #1f1b16;
+  --color-fg-muted: #4a4238;
+  --color-line: #b4ab9b;
+  --color-line-soft: #ddd6c7;
+  --color-surface: #faf7ef;
+  --color-live: #8a1f14;
+  --color-live-ink: #faf7ef;
+  --color-accent: var(--accent-on-light, #1f3d6b);
+  --color-thread: var(--color-accent);
+  --color-thread-twist: #f3efe4;
+  --color-focus: #1f1b16;
+  --color-selection-bg: #1f1b16;
+  --color-selection-fg: #f3efe4;
+
+  --ribbon: #8a1f14;
+}
+
+@media (prefers-color-scheme: light) {
+  [data-theme="lomo"][data-mode="auto"] {
+    color-scheme: light;
+
+    --color-bg: #f3efe4;
+    --color-fg: #1f1b16;
+    --color-fg-muted: #4a4238;
+    --color-line: #b4ab9b;
+    --color-line-soft: #ddd6c7;
+    --color-surface: #faf7ef;
+    --color-live: #8a1f14;
+    --color-live-ink: #faf7ef;
+    --color-accent: var(--accent-on-light, #1f3d6b);
+    --color-thread: var(--color-accent);
+    --color-thread-twist: #f3efe4;
+    --color-focus: #1f1b16;
+    --color-selection-bg: #1f1b16;
+    --color-selection-fg: #f3efe4;
+
+    --ribbon: #8a1f14;
+  }
+}
+
+/* Telas de encuadernación: tinta azul, verde botella, violeta, ocre y la tinta misma. */
+[data-theme="lomo"][data-accent="cielo"] {
+  --accent-on-dark: #9fc1ec;
+  --accent-on-light: #1f3d6b;
+}
+
+[data-theme="lomo"][data-accent="turquesa"] {
+  --accent-on-dark: #8ccdb6;
+  --accent-on-light: #1d4a3c;
+}
+
+[data-theme="lomo"][data-accent="lavanda"] {
+  --accent-on-dark: #c2b2e8;
+  --accent-on-light: #4a3878;
+}
+
+[data-theme="lomo"][data-accent="arena"] {
+  --accent-on-dark: #d9c39a;
+  --accent-on-light: #5a4422;
+}
+
+[data-theme="lomo"][data-accent="hueso"] {
+  --accent-on-dark: #efe8da;
+  --accent-on-light: #1f1b16;
+}
+
+/* ── Identidad: ex libris con doble filete; bio en itálica ──────────────── */
+[data-theme="lomo"] .avatar {
+  box-shadow:
+    0 0 0 3px var(--color-bg),
+    0 0 0 4px var(--color-fg);
+  outline: 1px solid var(--color-fg);
+  outline-offset: 7px;
+}
+
+[data-theme="lomo"] .bio {
+  font-style: italic;
+}
+
+/* ── El lomo: un filete fino a la izquierda, del primer capítulo al último ─ */
+[data-theme="lomo"] .patchbay {
+  counter-reset: lomo-capitulo;
+}
+
+[data-theme="lomo"] .patchbay::before {
+  content: "";
+  position: absolute;
+  top: var(--space-6);
+  bottom: 0;
+  left: calc(var(--jack-col) / 2 - 0.5px);
+  width: 1px;
+  background: var(--color-fg-muted);
+}
+
+/* Cada cuadernillo: su capítulo en versalitas con numeración romana. */
+[data-theme="lomo"] .bank {
+  counter-increment: lomo-capitulo;
+}
+
+[data-theme="lomo"] .bank h2 {
+  padding-bottom: var(--space-2);
+  border-bottom: 1px solid var(--color-fg);
+  font-size: calc(var(--text-section) * 0.8);
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+/* El numeral romano, a cuerpo completo; el título, en versalitas armadas. */
+[data-theme="lomo"] .bank h2::before {
+  content: counter(lomo-capitulo, upper-roman) " · ";
+  color: var(--color-accent);
+  font-size: 1.25em;
+  letter-spacing: 0.02em;
+}
+
+/* ── Entradas de índice: filete punteado; la puntada en el lomo ────────── */
+[data-theme="lomo"] .port-body {
+  border-bottom: 1px dotted var(--color-line);
+}
+
+[data-theme="lomo"] .port-name {
+  font-weight: 500;
+}
+
+[data-theme="lomo"] .jack {
+  width: 14px;
+  height: 3px;
+  margin-top: calc((var(--row-min) - 3px) / 2);
+  border: 0;
+  border-radius: 2px;
+  background: var(--color-accent);
+}
+
+[data-theme="lomo"] .jack::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto auto -5px;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: var(--color-fg-muted);
+  box-shadow: 21px 0 0 var(--color-fg-muted);
+}
+
+[data-theme="lomo"] .port:is(:hover, :focus-within) .jack {
+  transform: scaleX(1.3);
+}
+
+/* La firma: las puntadas del primer cuadernillo se cosen una por una. */
+[data-theme="lomo"] .bank:first-of-type .jack {
+  animation: lomo-puntada 260ms var(--ease-out) backwards;
+}
+
+[data-theme="lomo"] .bank:first-of-type .port:nth-child(2) .jack {
+  animation-delay: 140ms;
+}
+
+[data-theme="lomo"] .bank:first-of-type .port:nth-child(3) .jack {
+  animation-delay: 280ms;
+}
+
+[data-theme="lomo"] .bank:first-of-type .port:nth-child(4) .jack {
+  animation-delay: 420ms;
+}
+
+[data-theme="lomo"] .bank:first-of-type .port:nth-child(n + 5) .jack {
+  animation-delay: 560ms;
+}
+
+@keyframes lomo-puntada {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+/* ── En vivo: la cinta marcapáginas roja cuelga sobre la entrada ───────── */
+[data-theme="lomo"] .port.is-live .jack {
+  background: var(--ribbon);
+}
+
+[data-theme="lomo"] .port.is-live .jack::after {
+  display: none;
+}
+
+[data-theme="lomo"] .port.is-live .port-body {
+  position: relative;
+}
+
+[data-theme="lomo"] .port.is-live .port-body::after {
+  content: "";
+  position: absolute;
+  top: -4px;
+  right: calc(18px + var(--space-4));
+  width: 10px;
+  height: 38px;
+  background: var(--ribbon);
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 80%, 0 100%);
+}
+
+/* ── Destacado con acento: la entrada en el color de la tela, a 700 ───── */
+[data-theme="lomo"] .port.is-highlighted .port-body {
+  margin-bottom: 0;
+  padding: 0;
+  border: 0;
+  border-bottom: 1px dotted var(--color-line);
+  border-radius: 0;
+  background: none;
+}
+
+[data-theme="lomo"] .port.is-highlighted .port-name {
+  color: var(--color-accent);
+  font-weight: 700;
+}
+
+/* Destacados arriba: con doble filete, como un recuadro de página. */
+[data-theme="lomo"] .highlight-card {
+  border: 1px solid var(--color-fg);
+  border-top: 3px double var(--color-fg);
+  border-radius: 0;
+  background: none;
+}
+
+[data-theme="lomo"] .icon-link {
+  border: 1px solid var(--color-fg);
+}
+
+[data-theme="lomo"] .patchbay[data-shape="cards"] .port-body {
+  border: 1px solid var(--color-line);
+  border-radius: 0;
+  background: var(--color-surface);
+}
+
+/* ── Miniatura del panel: el lomo con dos puntadas y la cinta ──────────── */
+[data-theme="lomo"].theme-sample .theme-sample-avatar {
+  box-shadow:
+    0 0 0 2px var(--color-bg),
+    0 0 0 3px var(--color-fg);
+}
+
+[data-theme="lomo"].theme-sample .theme-sample-row {
+  border-bottom: 1px dotted var(--color-line);
+}
+
+[data-theme="lomo"].theme-sample .theme-sample-mark {
+  width: 10px;
+  height: 3px;
+  border: 0;
+  border-radius: 2px;
+  background: var(--color-accent);
+}
+
+[data-theme="lomo"].theme-sample .theme-sample-row.is-live .theme-sample-mark {
+  background: var(--ribbon);
+}
+
+[data-theme="lomo"].theme-sample .theme-sample-row.is-live::after {
+  content: "";
+  position: absolute;
+  top: -3px;
+  right: 6px;
+  width: 6px;
+  height: 16px;
+  background: var(--ribbon);
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 78%, 0 100%);
+}
+
+[data-theme="lomo"].theme-sample .theme-sample-row + .theme-sample-row::before {
+  bottom: 0;
+  left: 4.5px;
+  width: 1px;
+  height: 20px;
+  background: var(--color-fg-muted);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-theme="lomo"] .bank:first-of-type .jack {
+    animation: none;
+  }
+}
+
+/* El filete del capítulo es siempre de tinta: el acento es la tela, no el filete. */
+[data-theme="lomo"][data-accent][data-mode] .bank h2 {
+  border-bottom-color: var(--color-fg);
+}

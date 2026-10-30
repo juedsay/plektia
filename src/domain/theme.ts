@@ -103,7 +103,18 @@ export const THEME_RULES: Readonly<Record<Theme, ThemeRules>> = {
   },
   pedalera: upcoming("energico"),
   bitmap: upcoming("energico"),
-  lomo: upcoming("editorial"),
+  // Libro cosido: tinta azul por defecto; el rojo queda para la cinta (en vivo).
+  lomo: {
+    family: "editorial",
+    available: true,
+    thread: false,
+    accents: ["cielo", "turquesa", "lavanda", "arena", "hueso"],
+    defaultAccent: "cielo",
+    shapes: ["rows", "cards"],
+    defaultShape: "rows",
+    fonts: ["fraunces", "bricolage"],
+    defaultFont: "fraunces",
+  },
   manual: upcoming("editorial"),
   sumario: upcoming("editorial"),
 };

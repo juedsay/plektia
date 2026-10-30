@@ -55,6 +55,29 @@ colors:
   subte-lavanda-claro: "#5136a3"
   subte-rosa: "#ff9ccc"
   subte-rosa-claro: "#93204f"
+  lomo-negro-imprenta: "#17140f"
+  lomo-tinta-clara: "#efe8da"
+  lomo-tinta-clara-apagada: "#c8bfae"
+  lomo-filete: "#5c5446"
+  lomo-filete-tenue: "#3a342b"
+  lomo-superficie: "#211d17"
+  lomo-en-vivo: "#ff9d8c"
+  lomo-cinta: "#d4463a"
+  lomo-papel-crudo: "#f3efe4"
+  lomo-tinta: "#1f1b16"
+  lomo-tinta-apagada: "#4a4238"
+  lomo-filete-claro: "#b4ab9b"
+  lomo-filete-tenue-claro: "#ddd6c7"
+  lomo-superficie-claro: "#faf7ef"
+  lomo-cinta-claro: "#8a1f14"
+  lomo-tinta-azul: "#9fc1ec"
+  lomo-tinta-azul-claro: "#1f3d6b"
+  lomo-verde-botella: "#8ccdb6"
+  lomo-verde-botella-claro: "#1d4a3c"
+  lomo-violeta: "#c2b2e8"
+  lomo-violeta-claro: "#4a3878"
+  lomo-ocre: "#d9c39a"
+  lomo-ocre-claro: "#5a4422"
 typography:
   display:
     fontFamily: "Bricolage Grotesque, system-ui, sans-serif"
@@ -99,6 +122,12 @@ typography:
     fontWeight: 600
     lineHeight: 1.3
     fontVariation: "'SOFT' 100"
+  lomo-capitulo:
+    fontFamily: "Fraunces, Georgia, serif"
+    fontSize: "1rem"
+    fontWeight: 600
+    lineHeight: 1.2
+    letterSpacing: "0.09em"
 rounded:
   sm: "4px"
   md: "6px"
@@ -106,6 +135,7 @@ rounded:
   punto-retazo: "12px"
   punto-pastilla: "1.625rem"
   subte-capsula: "18px"
+  lomo-esquina: "2px"
 spacing:
   "1": "0.25rem"
   "2": "0.5rem"
@@ -216,6 +246,36 @@ components:
     rounded: "{rounded.sm}"
     padding: "2px 0"
     width: "2.75rem"
+  lomo-puntada:
+    backgroundColor: "{colors.lomo-tinta-azul}"
+    rounded: "{rounded.lomo-esquina}"
+    width: "14px"
+    height: "3px"
+  lomo-puntada-en-vivo:
+    backgroundColor: "{colors.lomo-cinta}"
+    rounded: "{rounded.lomo-esquina}"
+    width: "14px"
+    height: "3px"
+  lomo-capitulo:
+    textColor: "{colors.lomo-tinta-clara}"
+    typography: "{typography.lomo-capitulo}"
+    padding: "0 0 0.5rem"
+  lomo-entrada:
+    textColor: "{colors.lomo-tinta-clara}"
+    padding: "0.75rem 0"
+    height: "3.25rem"
+  lomo-entrada-tarjeta:
+    backgroundColor: "{colors.lomo-superficie}"
+    textColor: "{colors.lomo-tinta-clara}"
+    rounded: "0"
+  lomo-cinta:
+    backgroundColor: "{colors.lomo-cinta}"
+    width: "10px"
+    height: "38px"
+  lomo-cinta-claro:
+    backgroundColor: "{colors.lomo-cinta-claro}"
+    width: "10px"
+    height: "38px"
 ---
 
 # Design System: Plektia
@@ -395,7 +455,8 @@ Desde [SPEC-styles](SPEC-styles.md), los cuatro "temas" del contrato de tokens p
 | Cercano | Lado A / B (`cassette`), Corcho (`corcho`) | próximamente | | |
 | Enérgico | Subte (`subte`) | construida | Secciones como líneas de color con chapa "L<n>"; links como estaciones; la primera línea se traza al cargar | La estación rellena de ámbar que destella |
 | Enérgico | Pedalera (`pedalera`), Bitmap (`bitmap`) | próximamente | | |
-| Editorial | Lomo cosido (`lomo`), Manual (`manual`), Sumario (`sumario`) | próximamente | | |
+| Editorial | Lomo cosido (`lomo`) | construida | El lomo con sus puntadas en la tela; capítulos con numeral romano; links como entradas de índice; las puntadas del primer cuadernillo se cosen al cargar | La cinta marcapáginas roja colgando sobre la entrada |
+| Editorial | Manual (`manual`), Sumario (`sumario`) | próximamente | | |
 
 Todo lo documentado arriba (Overview a Do's and Don'ts) es el sistema de Técnico y la base de todas las variantes. Cada variante escribe su CSS en `src/ui/styles/themes/<variante>.css`, acotado a `[data-theme="<variante>"]`, y se carga en línea solo en las páginas que la eligieron.
 
@@ -591,3 +652,97 @@ Estas excepciones son propias de Subte y no se heredan a otras variantes ni a T�
 - **Don't** numerar los links: la chapa numera líneas.
 - **Don't** usar gradientes ni brillos de neón: color pleno en líneas y estaciones.
 - **Don't** sacar las excepciones de Subte de `[data-theme="subte"]`.
+
+### Lomo cosido (familia Editorial)
+
+**La página es un libro encuadernado a mano.** Cada sección es un cuadernillo con su capítulo en versalitas y numeración romana, la costura del lomo los une y cada link es una entrada de índice. Lo editorial sale de la tipografía y del oficio de encuadernación, no de la "tarjeta de blog" con sombra. No hay hilo: el carril de jacks se angosta a 1.75rem (`--jack-col`, en todos los anchos) y lo ocupa el lomo.
+
+#### Colors
+
+Papel crudo y tinta en claro, tinta clara sobre negro de imprenta en oscuro; el acento es la tela de la encuadernación y el rojo es solo de la cinta. Los valores normativos están en el frontmatter (`lomo-*`).
+
+- **Negro de imprenta** (`lomo-negro-imprenta`) / **Papel crudo** (`lomo-papel-crudo`): fondo de la página en oscuro y en claro. Cada uno es también la tinta de la selección del otro modo.
+- **Tinta clara** (`lomo-tinta-clara`) / **Tinta** (`lomo-tinta`): texto principal, foco, fondo de la selección, el filete de los capítulos, el doble filete del ex libris, el recuadro de los destacados de arriba y el borde de la fila de íconos.
+- **Tinta clara apagada** (`lomo-tinta-clara-apagada`) / **Tinta apagada** (`lomo-tinta-apagada`): bio, metadatos, el filete del lomo y los agujeros de costura.
+- **Superficie** (`lomo-superficie`, `lomo-superficie-claro`): solo el fondo de las entradas en la forma `cards`.
+- **Filete** (`lomo-filete`, `lomo-filete-claro`): el filete punteado de cada entrada y el borde de las tarjetas. **Filete tenue** (`lomo-filete-tenue`, `lomo-filete-tenue-claro`): filetes secundarios.
+- **Cinta** (`lomo-cinta`, `lomo-cinta-claro`): el token `--ribbon`, gráfico, separado del texto. Rellena la cinta marcapáginas y la puntada en vivo; pide al menos 3:1 contra el fondo (en claro llega a texto AAA).
+- **En vivo** (`lomo-en-vivo` en oscuro; en claro, el mismo `lomo-cinta-claro`): `--color-live`, el tono de la etiqueta "En vivo" y del cronómetro. En oscuro el rojo de la cinta no alcanza 7:1 como texto, por eso el texto va en un rojo claro aparte.
+
+**Acentos admitidos** (cinco de los ocho; por defecto, cielo). El acento es la tela: tiñe las puntadas, el numeral romano de cada capítulo y el nombre del destacado con acento. Nunca el filete del capítulo.
+
+| Acento | Tela | Oscuro | Claro |
+|---|---|---|---|
+| `cielo` (por defecto) | tinta azul | `#9fc1ec` | `#1f3d6b` |
+| `turquesa` | verde botella | `#8ccdb6` | `#1d4a3c` |
+| `lavanda` | violeta | `#c2b2e8` | `#4a3878` |
+| `arena` | ocre | `#d9c39a` | `#5a4422` |
+| `hueso` | la tinta misma | `#efe8da` | `#1f1b16` |
+
+`coral`, `ambar` y `rosa` no se admiten en Lomo cosido.
+
+**La regla de la cinta.** El rojo es la señal en vivo de Lomo cosido y de nada más: ninguna tela es roja ni rojiza (por eso coral, ámbar y rosa quedan afuera). La cinta (`--ribbon`) es gráfica y se mide a 3:1; el texto "En vivo" usa `--color-live`, que se mide a 7:1. No se intercambian.
+
+**La regla del filete de tinta.** El filete de cada capítulo es siempre de tinta (`--color-fg`), con cualquier acento y en cualquier modo: el acento es la tela, no el filete.
+
+#### Typography
+
+**Display Font:** Fraunces variable (subset latino, alojada localmente), por defecto en los nombres. Admite también **Bricolage Grotesque**; Nunito y Space Mono no se admiten.
+**Body Font:** la del sistema, igual que Técnico.
+
+- **Capítulo** (`lomo-capitulo`): versalitas armadas a mano, no `font-variant: small-caps`. El título va en mayúsculas al 0.8 del tamaño de sección (1rem), a 600 y con tracking de 0.09em; el numeral romano va adelante a cuerpo completo (1.25 veces el título), en el color de la tela, con tracking de 0.02em y un " · " que lo separa del título ("I · Redes").
+- **Bio en itálica** (`font-style: italic`), en la fuente del cuerpo.
+- El nombre de cada entrada queda en 500, como en Técnico; el del destacado con acento sube a 700.
+
+**La regla de la redonda.** Fraunces se sirve solo en redonda (normal): ningún nombre en display lleva itálica, que el navegador falsearía. La itálica de Lomo cosido es solo de la bio, en la fuente del cuerpo.
+
+#### Shapes
+
+- **El lomo:** un filete continuo de 1 px en tinta apagada, centrado en el carril, desde el primer capítulo hasta el final de la lista.
+- **Puntada:** reemplaza al jack. Una barra de 14 × 3 px en el color de la tela, esquinas de 2 px, centrada en la fila; a cada extremo, un agujero de costura de 3 px en tinta apagada (2 px antes del comienzo y 2 px después del final). Hover y foco la estiran a lo ancho (`scaleX(1.3)`).
+- **Ex libris (avatar):** doble filete de tinta. Un anillo de spread puro (3 px de fondo y 1 px de tinta) y un contorno de 1 px de tinta a 7 px de distancia.
+- **Esquinas casi rectas:** `--radius-md` baja a 2 px; tarjetas de entradas y destacados de arriba van a 0.
+- **Cinta marcapáginas:** una tira de 10 × 38 px en `--ribbon`, con la punta en cola de golondrina (el corte sube al 80% en el centro), que asoma 4 px por encima de la entrada y cuelga a la derecha, antes de la flecha.
+
+#### Components
+
+- **Capítulo (título de sección):** numeral romano y título en versalitas, con 0.5rem de aire y un filete sólido de 1 px de tinta debajo. Numera capítulos, nunca entradas.
+- **Entrada de índice (fila de link):** la puntada en el lomo y el texto a la derecha, con un filete punteado de 1 px en `--color-line` debajo.
+- **Entrada en tarjeta (forma `cards`):** el texto en una caja de borde sólido de 1 px en filete, sin esquinas redondeadas y con fondo de superficie. Lomo cosido admite `rows` (por defecto) y `cards`; nunca `pills`.
+- **En vivo:** la cinta marcapáginas cuelga sobre la entrada y la puntada se tiñe de cinta; la entrada no late (el pulso de la base se apaga). Etiqueta "En vivo" y cronómetro en `--color-live`.
+- **Destacado con acento:** el nombre en el color de la tela a 700, en redonda. Sin caja, sin fondo teñido y sin borde de acento: conserva el filete punteado de las demás entradas.
+- **Destacado arriba (tarjeta):** recuadro de página, con borde de 1 px de tinta y doble filete de 3 px arriba; sin fondo y sin esquinas.
+- **Fila de íconos:** cada botón con borde de 1 px de tinta.
+- **Miniatura del panel:** el ex libris de 28 px con anillo de 2 px de fondo y 1 px de tinta, el filete del lomo de 20 px, dos filas con filete punteado y puntadas de 10 × 3 px; la de arriba en vivo, con la puntada en cinta y una cinta de 6 × 16 px colgando a la derecha.
+
+#### Firma: las puntadas que se cosen
+
+Al cargar, las puntadas del primer cuadernillo se cosen una por una: cada una crece a lo ancho (`scaleX` de 0 a 1) en 260 ms con la curva `ease-out`, escalonadas cada 140 ms (la quinta y las siguientes, juntas a los 560 ms), una sola vez. Los demás cuadernillos están quietos desde el principio. Con `prefers-reduced-motion` las puntadas aparecen cosidas y quietas.
+
+#### Excepciones a Técnico, acotadas a `[data-theme="lomo"]`
+
+Estas excepciones son propias de Lomo cosido y no se heredan a otras variantes ni a Técnico:
+
+- **Sin hilo:** el carril se angosta a 1.75rem y lo ocupa el lomo con sus puntadas.
+- **Puntadas en vez de jacks**, y la entrada en vivo sin pulso: la señal es la cinta.
+- **Capítulos numerados** con romanos (nunca las entradas), en versalitas y con filete de tinta.
+- **Filete punteado** entre entradas en vez del filete sólido.
+- **Contorno decorativo de 1 px** en el ex libris, que no es foco: el foco sigue siendo el contorno sólido de 2 px en `--color-focus`.
+
+#### Do's and Don'ts
+
+##### Do:
+- **Do** coser cada entrada al lomo con su puntada de 14 × 3 px en la tela y sus dos agujeros de costura.
+- **Do** abrir cada cuadernillo con el numeral romano a cuerpo completo en la tela y el título en versalitas armadas (mayúsculas a 0.8, tracking 0.09em, 600).
+- **Do** trazar el filete del capítulo siempre en tinta, con cualquier acento.
+- **Do** reservar el rojo para el en vivo: la cinta y la puntada en `--ribbon`, el texto en `--color-live`.
+- **Do** marcar el destacado con acento solo con el nombre en la tela a 700, sin caja.
+- **Do** coser solo las puntadas del primer cuadernillo al cargar, y dejarlas quietas con movimiento reducido.
+
+##### Don't:
+- **Don't** admitir telas rojas o rojizas (coral, ámbar, rosa): el rojo es de la cinta.
+- **Don't** usar `--ribbon` para texto ni `--color-live` para la cinta.
+- **Don't** poner itálica en nombres de Fraunces: se sirve solo en redonda.
+- **Don't** pintar el filete del capítulo con el acento.
+- **Don't** usar tarjetas con sombra ni esquinas redondeadas: el libro es plano y recto.
+- **Don't** sacar las excepciones de Lomo cosido de `[data-theme="lomo"]`.

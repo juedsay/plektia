@@ -44,3 +44,17 @@ FIRST VIEWPORT: Barra superior; avatar con aro grueso de combinación; nombre y 
 FORM: Subte, desafiante competitivo del seed 45e9120b elegido por el usuario (coincide con la variante en reserva de DESIGN.md). Firma: la primera línea se traza de arriba abajo al cargar y la estación en vivo destella; quietas con movimiento reducido.
 
 FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, DESIGN.md, and every shipping raster carrying its provenance
+
+## Direction contract — Lomo cosido (familia Editorial)
+
+THESIS: La página es un libro encuadernado a mano: cada sección es un cuadernillo con su capítulo en versalitas y numeración romana, y la costura del lomo los une; cada link es una entrada de índice. Rechaza la "tarjeta de blog" con sombra: lo editorial sale de la tipografía y del oficio de encuadernación.
+
+OWN-WORLD: Papel crudo (#f3efe4) y tinta (#1f1b16) en claro; tinta clara sobre negro de imprenta (#17140f) en oscuro; el lomo como filete fino con puntadas de hilo en el color de la tela (tinta azul, verde botella, violeta u ocre); serif de lectura (Fraunces) en nombres, bio en itálica, filetes punteados entre entradas; rojo reservado a la cinta marcapáginas.
+
+STORY: El visitante ve el ex libris (avatar) y el nombre, encuentra la cinta roja si está en vivo, recorre los capítulos y toca la entrada que busca.
+
+FIRST VIEWPORT: Barra superior; avatar con doble filete de ex libris; nombre en Fraunces y bio en itálica; el capítulo "I · Redes" en versalitas con filete, el lomo con sus puntadas a la izquierda y la entrada en vivo con la cinta roja colgando.
+
+FORM: Lomo cosido, candidata 7 de mi lista (asignada por el dado), seed 18f8976e. Firma: las puntadas del primer cuadernillo se cosen una por una al cargar; quietas con movimiento reducido.
+
+FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, DESIGN.md, and every shipping raster carrying its provenance
