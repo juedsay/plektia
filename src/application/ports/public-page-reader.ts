@@ -49,6 +49,8 @@ export interface PublicSection {
   readonly id: string;
   readonly title: string;
   readonly showTitle: boolean;
+  /** El rótulo del dueño en lugar del automático ("Lado A", "L1"…), o `null`. */
+  readonly label: string | null;
   readonly links: readonly PublicLink[];
 }
 

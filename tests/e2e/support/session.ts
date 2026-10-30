@@ -134,6 +134,23 @@ export async function insertUnsectionedLinks(
   }
 }
 
+/** Crea una sección en una página (con la clave de servicio local); devuelve su id. */
+export async function insertSection(
+  ownerId: string,
+  pageId: string,
+  title: string,
+): Promise<string> {
+  const supabase = localSupabase();
+  const admin = createClient(supabase.url, supabase.secretKey, { auth: { persistSession: false } });
+  const { data, error } = await admin
+    .from("sections")
+    .insert({ owner_id: ownerId, page_id: pageId, title })
+    .select("id")
+    .single<{ id: string }>();
+  if (error) throw error;
+  return data.id;
+}
+
 /** Borra las secciones de prueba de una página por su título. */
 export async function deleteSectionsTitled(pageId: string, titles: readonly string[]) {
   const supabase = localSupabase();
@@ -188,7 +205,13 @@ export async function setChannelLive(
 export async function insertLink(
   ownerId: string,
   pageId: string,
-  link: { title: string; url: string; provider: string; provider_handle: string | null },
+  link: {
+    title: string;
+    url: string;
+    provider: string;
+    provider_handle: string | null;
+    section_id?: string;
+  },
 ): Promise<string> {
   const supabase = localSupabase();
   const admin = createClient(supabase.url, supabase.secretKey, { auth: { persistSession: false } });

@@ -195,6 +195,12 @@
   text-align: center;
 }
 
+/* El rótulo que escribió el dueño, en el cartel de la línea (crece si es largo). */
+[data-theme="subte"] .bank h2[data-label]::before {
+  content: attr(data-label);
+  padding-inline: var(--space-2);
+}
+
 /* Cada tramo va del centro de una estación al de la siguiente: la línea
    termina en la última, y una sección de una sola estación no tiene tramo. */
 [data-theme="subte"] .port {

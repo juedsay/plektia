@@ -35,6 +35,8 @@ export interface ThemeRules {
   readonly defaultShape: LinkShape;
   readonly fonts: readonly NameFont[];
   readonly defaultFont: NameFont;
+  /** El rótulo automático de la primera sección ("Lado A"), o `null` si no numera. */
+  readonly sectionMark: string | null;
 }
 
 const ALL_ACCENTS: readonly Accent[] = [
@@ -61,6 +63,7 @@ const upcoming = (family: ThemeFamily): ThemeRules => ({
   defaultShape: "rows",
   fonts: ALL_FONTS,
   defaultFont: "bricolage",
+  sectionMark: null,
 });
 
 export const THEME_RULES: Readonly<Record<Theme, ThemeRules>> = {
@@ -74,6 +77,7 @@ export const THEME_RULES: Readonly<Record<Theme, ThemeRules>> = {
     defaultShape: "rows",
     fonts: ALL_FONTS,
     defaultFont: "bricolage",
+    sectionMark: null,
   },
   // Lanas teñidas: terracota por defecto; los links son retazos, nunca filas sueltas.
   punto: {
@@ -86,6 +90,7 @@ export const THEME_RULES: Readonly<Record<Theme, ThemeRules>> = {
     defaultShape: "cards",
     fonts: ["fraunces", "nunito", "bricolage"],
     defaultFont: "fraunces",
+    sectionMark: null,
   },
   // Carátula de cassette: tinta azul por defecto; el rojo es de los carretes (en vivo).
   cassette: {
@@ -98,6 +103,7 @@ export const THEME_RULES: Readonly<Record<Theme, ThemeRules>> = {
     defaultShape: "rows",
     fonts: ["nunito", "bricolage", "space_mono"],
     defaultFont: "nunito",
+    sectionMark: "Lado A",
   },
   corcho: upcoming("cercano"),
   // Plano de subte: coral como línea por defecto; el ámbar queda para el en vivo.
@@ -111,6 +117,7 @@ export const THEME_RULES: Readonly<Record<Theme, ThemeRules>> = {
     defaultShape: "rows",
     fonts: ["bricolage", "nunito", "space_mono"],
     defaultFont: "bricolage",
+    sectionMark: "L1",
   },
   pedalera: upcoming("energico"),
   bitmap: upcoming("energico"),
@@ -125,6 +132,7 @@ export const THEME_RULES: Readonly<Record<Theme, ThemeRules>> = {
     defaultShape: "rows",
     fonts: ["fraunces", "bricolage"],
     defaultFont: "fraunces",
+    sectionMark: "I",
   },
   manual: upcoming("editorial"),
   sumario: upcoming("editorial"),

@@ -98,6 +98,8 @@ export interface SectionChanges {
   readonly title?: string;
   readonly showTitle?: boolean;
   readonly visible?: boolean;
+  /** `null` vuelve al rótulo automático del estilo. */
+  readonly label?: string | null;
 }
 
 /** Un resultado que salió mal: el mensaje general y el de cada campo. */

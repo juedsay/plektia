@@ -66,6 +66,7 @@ const sectionRow = {
   id: "s1",
   title: "Redes",
   show_title: false,
+  label: "Cara 1",
   visible: true,
   position: 0,
   version: 1,
@@ -87,7 +88,15 @@ describe("SupabaseLinkRepository · lecturas", () => {
   it("convierte las filas a entidades", async () => {
     const own = await repoAnswering(ok([sectionRow]), ok([linkRow])).listOwn();
     expect(own.sections).toEqual([
-      { id: "s1", title: "Redes", showTitle: false, visible: true, position: 0, version: 1 },
+      {
+        id: "s1",
+        title: "Redes",
+        showTitle: false,
+        label: "Cara 1",
+        visible: true,
+        position: 0,
+        version: 1,
+      },
     ]);
     expect(own.links[0]).toEqual({
       id: "l1",
@@ -263,8 +272,11 @@ describe("SupabaseLinkRepository · secciones", () => {
   });
 
   it("actualiza y detecta conflictos", async () => {
-    const patch = { title: "Redes", showTitle: true, visible: false };
-    expect((await repoAnswering(ok([sectionRow])).updateSection("s1", 1, patch)).ok).toBe(true);
+    const patch = { title: "Redes", showTitle: true, visible: false, label: "Cara 1" };
+    expect(await repoAnswering(ok([sectionRow])).updateSection("s1", 1, patch)).toMatchObject({
+      ok: true,
+      value: { label: "Cara 1" },
+    });
     expect(await repoAnswering(ok([]), ok({ id: "s1" })).updateSection("s1", 1, patch)).toEqual({
       ok: false,
       error: "conflict",

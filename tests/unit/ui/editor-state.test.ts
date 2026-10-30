@@ -22,7 +22,7 @@ import {
 } from "@/ui/view/editor-state";
 
 function section(id: string, position: number): Section {
-  return { id, title: id, showTitle: true, visible: true, position, version: 1 };
+  return { id, title: id, showTitle: true, label: null, visible: true, position, version: 1 };
 }
 
 function link(
@@ -283,12 +283,17 @@ describe("changesNothing", () => {
     expect(changesNothing(redes, { visible: false })).toBe(true);
     expect(changesNothing(redes, { title: " Redes " })).toBe(true);
     expect(changesNothing(redes, { showTitle: true, visible: false })).toBe(true);
+    expect(changesNothing(redes, { label: null })).toBe(true);
+    expect(changesNothing(redes, { label: "  " })).toBe(true);
+    expect(changesNothing({ ...redes, label: "Cara 1" }, { label: " Cara 1 " })).toBe(true);
   });
 
   it("cualquier campo distinto sí cambia", () => {
     expect(changesNothing(redes, { visible: true })).toBe(false);
     expect(changesNothing(redes, { title: "Otras" })).toBe(false);
     expect(changesNothing(redes, { showTitle: false })).toBe(false);
+    expect(changesNothing(redes, { label: "Cara 1" })).toBe(false);
+    expect(changesNothing({ ...redes, label: "Cara 1" }, { label: null })).toBe(false);
   });
 });
 

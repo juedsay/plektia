@@ -22,7 +22,7 @@ type SectionRow = Tables<"sections">;
 
 const LINK_COLUMNS =
   "id, section_id, title, url, description, provider, provider_handle, tags, visible, placement, highlight, kind, preview_image_path, position, version";
-const SECTION_COLUMNS = "id, title, show_title, visible, position, version";
+const SECTION_COLUMNS = "id, title, show_title, label, visible, position, version";
 
 /**
  * Secciones y links de una página, con el cliente de la sesión: la RLS decide
@@ -183,6 +183,7 @@ export class SupabaseLinkRepository implements LinkReader, LinkWriter, SectionWr
     const changes: TablesUpdate<"sections"> = {};
     if (patch.title !== undefined) changes.title = patch.title;
     if (patch.showTitle !== undefined) changes.show_title = patch.showTitle;
+    if (patch.label !== undefined) changes.label = patch.label;
     if (patch.visible !== undefined) changes.visible = patch.visible;
 
     const { data, error } = await this.client
@@ -268,6 +269,7 @@ export function toSection(
     id: row.id,
     title: row.title,
     showTitle: row.show_title,
+    label: row.label,
     visible: row.visible,
     position: row.position,
     version: row.version,

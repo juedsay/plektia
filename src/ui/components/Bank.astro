@@ -6,17 +6,22 @@ interface Props {
   /** Sin título (los links "Sin sección") el banco no tiene rótulo. */
   title?: string;
   showTitle?: boolean;
+  /** El rótulo del dueño; el CSS de los estilos que numeran lo usa en lugar del automático. */
+  label?: string | null;
   id: string;
   links: readonly PublicLink[];
 }
-const { title, showTitle = true, id, links } = Astro.props;
+const { title, showTitle = true, label, id, links } = Astro.props;
 const headingId = `bank-${id}`;
 ---
 
 {links.length > 0 &&
   (title && showTitle ? (
     <section class="bank" aria-labelledby={headingId}>
-      <h2 id={headingId}>{title}</h2>
+      {/* En el h2: `attr()` del `::before` lee los atributos del propio h2. */}
+      <h2 id={headingId} data-label={label ?? undefined}>
+        {title}
+      </h2>
       <ul class="ports">
         {links.map((link) => (
           <Port link={link} />

@@ -146,6 +146,12 @@ body[data-theme="cassette"] {
   content: "Cinta " counter(cassette-cinta) " · Lado B · ";
 }
 
+/* El rótulo que escribió el dueño, en lugar del lado (`.patchbay` empata la
+   especificidad de las reglas de arriba; gana por venir después). */
+[data-theme="cassette"] .patchbay .bank h2[data-label]::before {
+  content: attr(data-label) " · ";
+}
+
 /* La firma: el título del primer lado se escribe de izquierda a derecha. */
 [data-theme="cassette"] .bank:first-of-type h2 {
   animation: cassette-escribir 900ms steps(24, end) backwards;

@@ -9,6 +9,11 @@ import { safeLine, validate } from "@/domain/text";
 
 const Title = safeLine("El título", 40);
 const Flag = z.boolean({ error: "Tiene que ser sí o no." });
+/** El rótulo que reemplaza al automático ("Lado A", "L1"…); vacío vuelve al automático. */
+const Label = z.preprocess(
+  (value) => (typeof value === "string" && value.trim() === "" ? null : value),
+  safeLine("El rótulo", 16).nullable(),
+);
 
 const SectionInputSchema = z.object(
   { title: Title, showTitle: Flag.default(true), visible: Flag.default(true) },
@@ -17,7 +22,12 @@ const SectionInputSchema = z.object(
 
 const SectionPatchSchema = z
   .object(
-    { title: Title.optional(), showTitle: Flag.optional(), visible: Flag.optional() },
+    {
+      title: Title.optional(),
+      showTitle: Flag.optional(),
+      visible: Flag.optional(),
+      label: Label.optional(),
+    },
     { error: "Los datos de la sección no son válidos." },
   )
   .refine((patch) => Object.values(patch).some((value) => value !== undefined), {
@@ -30,7 +40,7 @@ export interface SectionDraft {
   readonly visible: boolean;
 }
 
-export type SectionPatch = Partial<SectionDraft>;
+export type SectionPatch = Partial<SectionDraft> & { readonly label?: string | null };
 
 export function parseSectionInput(raw: unknown): Result<SectionDraft, InvalidInput> {
   return validate(SectionInputSchema, raw);

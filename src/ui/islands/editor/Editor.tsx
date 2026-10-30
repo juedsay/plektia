@@ -48,6 +48,8 @@ import { type UndoOffer, UndoToast } from "./UndoToast";
 interface Props {
   readonly api: EditorApi;
   readonly initialContent: OwnLinks;
+  /** El rótulo automático del estilo guardado ("Lado A"), o `null` si no numera secciones. */
+  readonly sectionMark?: string | null;
 }
 
 /** Un cambio que todavía se puede deshacer. */
@@ -68,7 +70,7 @@ export type OfferUndo = (message: string, undo: () => void | Promise<void>) => v
  * Borrar se confirma recién pasados esos 6 s; si se cierra la pestaña antes,
  * el borrado igual se envía.
  */
-export function Editor({ api, initialContent }: Props) {
+export function Editor({ api, initialContent, sectionMark = null }: Props) {
   const [content, setContent] = useState(initialContent);
   /** Lo último que se ve: los movimientos y "Deshacer" parten de acá. */
   const latestContent = useRef(content);
@@ -247,6 +249,7 @@ export function Editor({ api, initialContent }: Props) {
       ...(changes.title === undefined ? {} : { title: section.title }),
       ...(changes.showTitle === undefined ? {} : { showTitle: section.showTitle }),
       ...(changes.visible === undefined ? {} : { visible: section.visible }),
+      ...(changes.label === undefined ? {} : { label: section.label }),
     };
     offerUndo(`Sección ${saved.title} guardada`, () =>
       inOrder(async () => {
@@ -452,6 +455,7 @@ export function Editor({ api, initialContent }: Props) {
                     section={group.section}
                     index={groupIndex}
                     sectionCount={sortedSections.length}
+                    sectionMark={sectionMark}
                     onSave={saveSection}
                     onMove={(section, index) => {
                       void moveSection(section.id, index);

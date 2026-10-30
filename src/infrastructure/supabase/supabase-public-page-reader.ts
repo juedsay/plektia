@@ -71,6 +71,8 @@ const RowSchema = z.object({
       id: z.uuid(),
       title: z.string(),
       showTitle: z.boolean(),
+      // Sin la columna (Worker nuevo antes que la migración), el automático.
+      label: z.string().nullable().default(null),
       links: z.array(PublicLinkSchema),
     }),
   ),
