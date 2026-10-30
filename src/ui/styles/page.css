@@ -476,11 +476,20 @@
 }
 
 .latest-text {
-  display: grid;
+  display: flex;
+  align-items: baseline;
   min-width: 0;
 }
 
+/* La fecha no se corta: si no entra, se acorta el título. */
+.latest-when {
+  flex: none;
+  overflow: visible;
+  white-space: pre;
+}
+
 .latest-title {
+  min-width: 0;
   overflow: hidden;
   font-size: var(--text-sm);
   text-overflow: ellipsis;

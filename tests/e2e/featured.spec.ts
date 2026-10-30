@@ -7,7 +7,9 @@ import { expect, test } from "@playwright/test";
 test.describe("contenido destacado", () => {
   test("la sub-fila muestra qué es y se despliega con el video", async ({ page }) => {
     await page.goto("/juedsay");
-    const toggle = page.getByRole("button", { name: /Último video · .+Cómo testeo RLS con pgTAP/ });
+    const toggle = page.getByRole("button", {
+      name: /Último video: Cómo testeo RLS con pgTAP · .+/,
+    });
     await expect(toggle).toHaveAttribute("aria-expanded", "false");
     const video = page.getByRole("link", {
       name: "Ver en YouTube: Cómo testeo RLS con pgTAP, 12 minutos 34 segundos",
