@@ -170,7 +170,7 @@ test.describe("panel: presentación de la página (/admin/page)", () => {
       "Perfil de prueba con 50 links para medir el rendimiento.",
     );
     await expect(page.getByRole("radio", { name: /^Patchera/ })).toBeChecked();
-    await expect(page.getByRole("radio", { name: /^Lado A \/ B/ })).toBeDisabled();
+    await expect(page.getByRole("radio", { name: /^Corcho/ })).toBeDisabled();
     await expect(page.getByRole("checkbox", { name: /Mostrar @miembro-demo/ })).toBeChecked();
     expect(await violations(page)).toEqual([]);
   });
