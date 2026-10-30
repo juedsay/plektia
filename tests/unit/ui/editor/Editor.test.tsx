@@ -715,6 +715,20 @@ describe("Editor · editado desde una app", () => {
     expect(screen.getByRole("button", { name: "Recargar" })).toBeTruthy();
   });
 
+  it.each([
+    [10_000, "hace un momento"],
+    [90 * 60_000, "hace 1 h"],
+  ])("hace %i ms se dice '%s'", async (ago, label) => {
+    const { api, user } = setup({
+      sections: [REDES],
+      links: [link("twitch", { title: "Twitch" })],
+    });
+    api.appEdit = { appName: "Claude", editedAt: new Date(Date.now() - ago).toISOString() };
+    api.nextFailure = failure(errorMessage("conflict"));
+    await user.click(screen.getByRole("button", { name: "Ocultar Twitch" }));
+    expect(await screen.findByText(new RegExp(`Lo cambió «Claude» ${label}`))).toBeTruthy();
+  });
+
   it("si no fue una app, queda el aviso de siempre", async () => {
     const { api, user } = setup({
       sections: [REDES],
