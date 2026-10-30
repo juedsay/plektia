@@ -15,8 +15,8 @@ describe("estilos", () => {
     }
   });
 
-  it("técnico, punto y subte están disponibles; las demás, todavía no", () => {
-    expect(AVAILABLE_THEMES).toEqual(["tecnico", "punto", "subte"]);
+  it("técnico, punto, subte y lomo están disponibles; las demás, todavía no", () => {
+    expect(AVAILABLE_THEMES).toEqual(["tecnico", "punto", "subte", "lomo"]);
   });
 
   it("se puede elegir un estilo disponible, pero no uno que todavía no está", () => {

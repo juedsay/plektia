@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-10-30T06:45:34.784Z",
+  "generatedAt": "2026-10-30T07:12:33.000Z",
   "title": "Design System: Plektia",
   "extensions": {
     "colorMeta": {
@@ -896,6 +896,397 @@
           "oklch(80% 0.154 1.3)",
           "oklch(95% 0.154 1.3)"
         ]
+      },
+      "lomo-negro-imprenta": {
+        "role": "neutral",
+        "displayName": "Negro de imprenta (Lomo)",
+        "canonical": "oklch(19.3% 0.011 80.5)",
+        "cssVar": "--color-bg (oscuro); --color-thread-twist y --color-live-ink (oscuro); --color-selection-fg (oscuro)",
+        "theme": "lomo",
+        "tonalRamp": [
+          "oklch(15% 0.011 80.5)",
+          "oklch(25% 0.011 80.5)",
+          "oklch(35% 0.011 80.5)",
+          "oklch(45% 0.011 80.5)",
+          "oklch(55% 0.011 80.5)",
+          "oklch(65% 0.011 80.5)",
+          "oklch(80% 0.011 80.5)",
+          "oklch(95% 0.011 80.5)"
+        ]
+      },
+      "lomo-tinta-clara": {
+        "role": "neutral",
+        "displayName": "Tinta clara (Lomo)",
+        "canonical": "oklch(93.3% 0.020 84.6)",
+        "cssVar": "--color-fg, --color-focus y --color-selection-bg (oscuro); filete de capítulo, ex libris, recuadro de destacados; acento hueso en oscuro",
+        "theme": "lomo",
+        "tonalRamp": [
+          "oklch(15% 0.020 84.6)",
+          "oklch(25% 0.020 84.6)",
+          "oklch(35% 0.020 84.6)",
+          "oklch(45% 0.020 84.6)",
+          "oklch(55% 0.020 84.6)",
+          "oklch(65% 0.020 84.6)",
+          "oklch(80% 0.020 84.6)",
+          "oklch(95% 0.020 84.6)"
+        ]
+      },
+      "lomo-tinta-clara-apagada": {
+        "role": "neutral",
+        "displayName": "Tinta clara apagada (Lomo)",
+        "canonical": "oklch(80.7% 0.025 83.4)",
+        "cssVar": "--color-fg-muted (oscuro); filete del lomo y agujeros de costura",
+        "theme": "lomo",
+        "tonalRamp": [
+          "oklch(15% 0.025 83.4)",
+          "oklch(25% 0.025 83.4)",
+          "oklch(35% 0.025 83.4)",
+          "oklch(45% 0.025 83.4)",
+          "oklch(55% 0.025 83.4)",
+          "oklch(65% 0.025 83.4)",
+          "oklch(80% 0.025 83.4)",
+          "oklch(95% 0.025 83.4)"
+        ]
+      },
+      "lomo-filete": {
+        "role": "neutral",
+        "displayName": "Filete (Lomo)",
+        "canonical": "oklch(44.9% 0.024 81.7)",
+        "cssVar": "--color-line (oscuro); filete punteado de entradas y borde de tarjetas",
+        "theme": "lomo",
+        "tonalRamp": [
+          "oklch(15% 0.024 81.7)",
+          "oklch(25% 0.024 81.7)",
+          "oklch(35% 0.024 81.7)",
+          "oklch(45% 0.024 81.7)",
+          "oklch(55% 0.024 81.7)",
+          "oklch(65% 0.024 81.7)",
+          "oklch(80% 0.024 81.7)",
+          "oklch(95% 0.024 81.7)"
+        ]
+      },
+      "lomo-filete-tenue": {
+        "role": "neutral",
+        "displayName": "Filete tenue (Lomo)",
+        "canonical": "oklch(32.8% 0.018 78.0)",
+        "cssVar": "--color-line-soft (oscuro)",
+        "theme": "lomo",
+        "tonalRamp": [
+          "oklch(15% 0.018 78.0)",
+          "oklch(25% 0.018 78.0)",
+          "oklch(35% 0.018 78.0)",
+          "oklch(45% 0.018 78.0)",
+          "oklch(55% 0.018 78.0)",
+          "oklch(65% 0.018 78.0)",
+          "oklch(80% 0.018 78.0)",
+          "oklch(95% 0.018 78.0)"
+        ]
+      },
+      "lomo-superficie": {
+        "role": "neutral",
+        "displayName": "Superficie (Lomo)",
+        "canonical": "oklch(23.3% 0.013 78.0)",
+        "cssVar": "--color-surface (oscuro); fondo de entradas en forma cards",
+        "theme": "lomo",
+        "tonalRamp": [
+          "oklch(15% 0.013 78.0)",
+          "oklch(25% 0.013 78.0)",
+          "oklch(35% 0.013 78.0)",
+          "oklch(45% 0.013 78.0)",
+          "oklch(55% 0.013 78.0)",
+          "oklch(65% 0.013 78.0)",
+          "oklch(80% 0.013 78.0)",
+          "oklch(95% 0.013 78.0)"
+        ]
+      },
+      "lomo-en-vivo": {
+        "role": "tertiary",
+        "displayName": "En vivo (Lomo)",
+        "canonical": "oklch(79.2% 0.121 30.6)",
+        "cssVar": "--color-live (oscuro): texto \"En vivo\" y cronómetro, 7:1",
+        "theme": "lomo",
+        "tonalRamp": [
+          "oklch(15% 0.121 30.6)",
+          "oklch(25% 0.121 30.6)",
+          "oklch(35% 0.121 30.6)",
+          "oklch(45% 0.121 30.6)",
+          "oklch(55% 0.121 30.6)",
+          "oklch(65% 0.121 30.6)",
+          "oklch(80% 0.121 30.6)",
+          "oklch(95% 0.121 30.6)"
+        ]
+      },
+      "lomo-cinta": {
+        "role": "tertiary",
+        "displayName": "Cinta (Lomo)",
+        "canonical": "oklch(59.3% 0.180 28.6)",
+        "cssVar": "--ribbon (oscuro): cinta marcapáginas y puntada en vivo; gráfico, ≥ 3:1",
+        "theme": "lomo",
+        "tonalRamp": [
+          "oklch(15% 0.180 28.6)",
+          "oklch(25% 0.180 28.6)",
+          "oklch(35% 0.180 28.6)",
+          "oklch(45% 0.180 28.6)",
+          "oklch(55% 0.180 28.6)",
+          "oklch(65% 0.180 28.6)",
+          "oklch(80% 0.180 28.6)",
+          "oklch(95% 0.180 28.6)"
+        ]
+      },
+      "lomo-papel-crudo": {
+        "role": "neutral",
+        "displayName": "Papel crudo (Lomo, claro)",
+        "canonical": "oklch(95.2% 0.015 90.2)",
+        "cssVar": "--color-bg (claro); --color-thread-twist y --color-selection-fg (claro)",
+        "theme": "lomo",
+        "tonalRamp": [
+          "oklch(15% 0.015 90.2)",
+          "oklch(25% 0.015 90.2)",
+          "oklch(35% 0.015 90.2)",
+          "oklch(45% 0.015 90.2)",
+          "oklch(55% 0.015 90.2)",
+          "oklch(65% 0.015 90.2)",
+          "oklch(80% 0.015 90.2)",
+          "oklch(95% 0.015 90.2)"
+        ]
+      },
+      "lomo-tinta": {
+        "role": "neutral",
+        "displayName": "Tinta (Lomo, claro)",
+        "canonical": "oklch(22.5% 0.011 73.3)",
+        "cssVar": "--color-fg, --color-focus y --color-selection-bg (claro); acento hueso en claro",
+        "theme": "lomo",
+        "tonalRamp": [
+          "oklch(15% 0.011 73.3)",
+          "oklch(25% 0.011 73.3)",
+          "oklch(35% 0.011 73.3)",
+          "oklch(45% 0.011 73.3)",
+          "oklch(55% 0.011 73.3)",
+          "oklch(65% 0.011 73.3)",
+          "oklch(80% 0.011 73.3)",
+          "oklch(95% 0.011 73.3)"
+        ]
+      },
+      "lomo-tinta-apagada": {
+        "role": "neutral",
+        "displayName": "Tinta apagada (Lomo, claro)",
+        "canonical": "oklch(38.4% 0.020 73.3)",
+        "cssVar": "--color-fg-muted (claro)",
+        "theme": "lomo",
+        "tonalRamp": [
+          "oklch(15% 0.020 73.3)",
+          "oklch(25% 0.020 73.3)",
+          "oklch(35% 0.020 73.3)",
+          "oklch(45% 0.020 73.3)",
+          "oklch(55% 0.020 73.3)",
+          "oklch(65% 0.020 73.3)",
+          "oklch(80% 0.020 73.3)",
+          "oklch(95% 0.020 73.3)"
+        ]
+      },
+      "lomo-filete-claro": {
+        "role": "neutral",
+        "displayName": "Filete (Lomo, claro)",
+        "canonical": "oklch(74.4% 0.025 82.1)",
+        "cssVar": "--color-line (claro)",
+        "theme": "lomo",
+        "tonalRamp": [
+          "oklch(15% 0.025 82.1)",
+          "oklch(25% 0.025 82.1)",
+          "oklch(35% 0.025 82.1)",
+          "oklch(45% 0.025 82.1)",
+          "oklch(55% 0.025 82.1)",
+          "oklch(65% 0.025 82.1)",
+          "oklch(80% 0.025 82.1)",
+          "oklch(95% 0.025 82.1)"
+        ]
+      },
+      "lomo-filete-tenue-claro": {
+        "role": "neutral",
+        "displayName": "Filete tenue (Lomo, claro)",
+        "canonical": "oklch(87.8% 0.022 85.9)",
+        "cssVar": "--color-line-soft (claro)",
+        "theme": "lomo",
+        "tonalRamp": [
+          "oklch(15% 0.022 85.9)",
+          "oklch(25% 0.022 85.9)",
+          "oklch(35% 0.022 85.9)",
+          "oklch(45% 0.022 85.9)",
+          "oklch(55% 0.022 85.9)",
+          "oklch(65% 0.022 85.9)",
+          "oklch(80% 0.022 85.9)",
+          "oklch(95% 0.022 85.9)"
+        ]
+      },
+      "lomo-superficie-claro": {
+        "role": "neutral",
+        "displayName": "Superficie (Lomo, claro)",
+        "canonical": "oklch(97.6% 0.011 89.7)",
+        "cssVar": "--color-surface y --color-live-ink (claro)",
+        "theme": "lomo",
+        "tonalRamp": [
+          "oklch(15% 0.011 89.7)",
+          "oklch(25% 0.011 89.7)",
+          "oklch(35% 0.011 89.7)",
+          "oklch(45% 0.011 89.7)",
+          "oklch(55% 0.011 89.7)",
+          "oklch(65% 0.011 89.7)",
+          "oklch(80% 0.011 89.7)",
+          "oklch(95% 0.011 89.7)"
+        ]
+      },
+      "lomo-cinta-claro": {
+        "role": "tertiary",
+        "displayName": "Cinta (Lomo, claro)",
+        "canonical": "oklch(41.8% 0.144 30.1)",
+        "cssVar": "--ribbon y --color-live (claro): cinta, puntada en vivo y texto \"En vivo\"",
+        "theme": "lomo",
+        "tonalRamp": [
+          "oklch(15% 0.144 30.1)",
+          "oklch(25% 0.144 30.1)",
+          "oklch(35% 0.144 30.1)",
+          "oklch(45% 0.144 30.1)",
+          "oklch(55% 0.144 30.1)",
+          "oklch(65% 0.144 30.1)",
+          "oklch(80% 0.144 30.1)",
+          "oklch(95% 0.144 30.1)"
+        ]
+      },
+      "lomo-tinta-azul": {
+        "role": "primary",
+        "displayName": "Tela tinta azul (Lomo)",
+        "canonical": "oklch(80.1% 0.072 254.5)",
+        "cssVar": "acento cielo en oscuro (por defecto)",
+        "theme": "lomo",
+        "tonalRamp": [
+          "oklch(15% 0.072 254.5)",
+          "oklch(25% 0.072 254.5)",
+          "oklch(35% 0.072 254.5)",
+          "oklch(45% 0.072 254.5)",
+          "oklch(55% 0.072 254.5)",
+          "oklch(65% 0.072 254.5)",
+          "oklch(80% 0.072 254.5)",
+          "oklch(95% 0.072 254.5)"
+        ]
+      },
+      "lomo-tinta-azul-claro": {
+        "role": "primary",
+        "displayName": "Tela tinta azul (Lomo, claro)",
+        "canonical": "oklch(36.2% 0.088 258.7)",
+        "cssVar": "acento cielo en claro (por defecto)",
+        "theme": "lomo",
+        "tonalRamp": [
+          "oklch(15% 0.088 258.7)",
+          "oklch(25% 0.088 258.7)",
+          "oklch(35% 0.088 258.7)",
+          "oklch(45% 0.088 258.7)",
+          "oklch(55% 0.088 258.7)",
+          "oklch(65% 0.088 258.7)",
+          "oklch(80% 0.088 258.7)",
+          "oklch(95% 0.088 258.7)"
+        ]
+      },
+      "lomo-verde-botella": {
+        "role": "secondary",
+        "displayName": "Tela verde botella (Lomo)",
+        "canonical": "oklch(79.8% 0.074 170.3)",
+        "cssVar": "acento turquesa en oscuro",
+        "theme": "lomo",
+        "tonalRamp": [
+          "oklch(15% 0.074 170.3)",
+          "oklch(25% 0.074 170.3)",
+          "oklch(35% 0.074 170.3)",
+          "oklch(45% 0.074 170.3)",
+          "oklch(55% 0.074 170.3)",
+          "oklch(65% 0.074 170.3)",
+          "oklch(80% 0.074 170.3)",
+          "oklch(95% 0.074 170.3)"
+        ]
+      },
+      "lomo-verde-botella-claro": {
+        "role": "secondary",
+        "displayName": "Tela verde botella (Lomo, claro)",
+        "canonical": "oklch(37.3% 0.056 170.1)",
+        "cssVar": "acento turquesa en claro",
+        "theme": "lomo",
+        "tonalRamp": [
+          "oklch(15% 0.056 170.1)",
+          "oklch(25% 0.056 170.1)",
+          "oklch(35% 0.056 170.1)",
+          "oklch(45% 0.056 170.1)",
+          "oklch(55% 0.056 170.1)",
+          "oklch(65% 0.056 170.1)",
+          "oklch(80% 0.056 170.1)",
+          "oklch(95% 0.056 170.1)"
+        ]
+      },
+      "lomo-violeta": {
+        "role": "secondary",
+        "displayName": "Tela violeta (Lomo)",
+        "canonical": "oklch(79.5% 0.077 298.2)",
+        "cssVar": "acento lavanda en oscuro",
+        "theme": "lomo",
+        "tonalRamp": [
+          "oklch(15% 0.077 298.2)",
+          "oklch(25% 0.077 298.2)",
+          "oklch(35% 0.077 298.2)",
+          "oklch(45% 0.077 298.2)",
+          "oklch(55% 0.077 298.2)",
+          "oklch(65% 0.077 298.2)",
+          "oklch(80% 0.077 298.2)",
+          "oklch(95% 0.077 298.2)"
+        ]
+      },
+      "lomo-violeta-claro": {
+        "role": "secondary",
+        "displayName": "Tela violeta (Lomo, claro)",
+        "canonical": "oklch(39.3% 0.105 294.0)",
+        "cssVar": "acento lavanda en claro",
+        "theme": "lomo",
+        "tonalRamp": [
+          "oklch(15% 0.105 294.0)",
+          "oklch(25% 0.105 294.0)",
+          "oklch(35% 0.105 294.0)",
+          "oklch(45% 0.105 294.0)",
+          "oklch(55% 0.105 294.0)",
+          "oklch(65% 0.105 294.0)",
+          "oklch(80% 0.105 294.0)",
+          "oklch(95% 0.105 294.0)"
+        ]
+      },
+      "lomo-ocre": {
+        "role": "secondary",
+        "displayName": "Tela ocre (Lomo)",
+        "canonical": "oklch(82.5% 0.060 82.9)",
+        "cssVar": "acento arena en oscuro",
+        "theme": "lomo",
+        "tonalRamp": [
+          "oklch(15% 0.060 82.9)",
+          "oklch(25% 0.060 82.9)",
+          "oklch(35% 0.060 82.9)",
+          "oklch(45% 0.060 82.9)",
+          "oklch(55% 0.060 82.9)",
+          "oklch(65% 0.060 82.9)",
+          "oklch(80% 0.060 82.9)",
+          "oklch(95% 0.060 82.9)"
+        ]
+      },
+      "lomo-ocre-claro": {
+        "role": "secondary",
+        "displayName": "Tela ocre (Lomo, claro)",
+        "canonical": "oklch(40.2% 0.058 76.7)",
+        "cssVar": "acento arena en claro",
+        "theme": "lomo",
+        "tonalRamp": [
+          "oklch(15% 0.058 76.7)",
+          "oklch(25% 0.058 76.7)",
+          "oklch(35% 0.058 76.7)",
+          "oklch(45% 0.058 76.7)",
+          "oklch(55% 0.058 76.7)",
+          "oklch(65% 0.058 76.7)",
+          "oklch(80% 0.058 76.7)",
+          "oklch(95% 0.058 76.7)"
+        ]
       }
     },
     "typographyMeta": {
@@ -930,6 +1321,10 @@
       "punto-nombre": {
         "displayName": "Nombre (Punto)",
         "purpose": "Persona, títulos de sección, links y destacados en Punto: Fraunces con SOFT 100; el link sube a 600. Admite también Nunito y Bricolage."
+      },
+      "lomo-capitulo": {
+        "displayName": "Capítulo (Lomo)",
+        "purpose": "Título de sección en Lomo cosido: versalitas armadas (mayúsculas a 0.8 del tamaño de sección, 600, tracking 0.09em) con el numeral romano a cuerpo completo en la tela. Fraunces por defecto; admite Bricolage."
       }
     },
     "shadows": [
@@ -962,6 +1357,16 @@
         "name": "subte-estacion-en-vivo",
         "value": "0 0 0 3px var(--color-bg)",
         "purpose": "Anillo de fondo que separa la estación en vivo de su tramo."
+      },
+      {
+        "name": "lomo-ex-libris",
+        "value": "0 0 0 3px var(--color-bg), 0 0 0 4px var(--color-fg); outline: 1px solid var(--color-fg); outline-offset: 7px",
+        "purpose": "Doble filete de tinta del avatar en Lomo cosido; spread puro y contorno decorativo, no elevación ni foco."
+      },
+      {
+        "name": "lomo-agujeros",
+        "value": "::before { left: -5px; 3px × 3px; border-radius: 50%; background: var(--color-fg-muted); box-shadow: 21px 0 0 var(--color-fg-muted) }",
+        "purpose": "Los dos agujeros de costura en los extremos de cada puntada; la sombra solo duplica el punto."
       }
     ],
     "motion": [
@@ -1009,6 +1414,11 @@
         "name": "subte-trazar",
         "value": "900ms var(--ease-out) both, scaleY 0 → 1 con transform-origin: top",
         "purpose": "Firma de Subte: los tramos de la primera línea se trazan de arriba abajo al cargar, una vez. Quietos con movimiento reducido; el destello en vivo es el pulso de la base (dur-pulse) en ámbar."
+      },
+      {
+        "name": "lomo-coser",
+        "value": "260ms var(--ease-out) backwards, scaleX 0 → 1; escalonado 0/140/280/420/560ms (la 5.ª y siguientes a 560ms)",
+        "purpose": "Firma de Lomo cosido: las puntadas del primer cuadernillo se cosen una por una al cargar, una vez. Quietas con movimiento reducido."
       }
     ],
     "breakpoints": [
@@ -1049,7 +1459,8 @@
       "implemented": [
         "tecnico",
         "punto",
-        "subte"
+        "subte",
+        "lomo"
       ],
       "rulesSource": "src/domain/theme.ts (familia, acentos, formas y tipografías por variante)",
       "variantCss": "src/ui/styles/themes/<variante>.css, acotado a [data-theme=\"<variante>\"] y en línea solo en las páginas que la eligen",
@@ -1196,6 +1607,71 @@
           "Cápsula en la estación de combinación (destacado con acento)",
           "Estaciones con aro de 4 px y centro claro en vez del jack con ojo"
         ]
+      },
+      "lomo": {
+        "accents": {
+          "cielo": {
+            "dark": "#9fc1ec",
+            "light": "#1f3d6b",
+            "cloth": "tinta azul",
+            "default": true
+          },
+          "turquesa": {
+            "dark": "#8ccdb6",
+            "light": "#1d4a3c",
+            "cloth": "verde botella"
+          },
+          "lavanda": {
+            "dark": "#c2b2e8",
+            "light": "#4a3878",
+            "cloth": "violeta"
+          },
+          "arena": {
+            "dark": "#d9c39a",
+            "light": "#5a4422",
+            "cloth": "ocre"
+          },
+          "hueso": {
+            "dark": "#efe8da",
+            "light": "#1f1b16",
+            "cloth": "la tinta misma"
+          }
+        },
+        "cloth": "El acento es la tela: puntadas, numeral romano y nombre del destacado con acento. Nunca el filete del capítulo (siempre --color-fg). Sin telas rojas: coral, ámbar y rosa no se admiten.",
+        "live": {
+          "dark": {
+            "ribbon": "#d4463a",
+            "text": "#ff9d8c"
+          },
+          "light": {
+            "ribbon": "#8a1f14",
+            "text": "#8a1f14"
+          },
+          "note": "--ribbon es gráfico (≥ 3:1): cinta marcapáginas de 10 × 38 px en cola de golondrina y puntada en vivo. --color-live es el texto \"En vivo\" y el cronómetro (7:1). La entrada en vivo no late."
+        },
+        "spine": "Filete continuo de 1 px en --color-fg-muted, centrado en el carril de 1.75rem, del primer capítulo al final.",
+        "stitch": "Puntada de 14 × 3 px en la tela, esquinas de 2 px, con dos agujeros de costura de 3 px en tinta apagada a 2 px de cada extremo; scaleX(1.3) en hover y foco.",
+        "chapter": "Contador por sección en romanos (upper-roman) a cuerpo completo en la tela + \" · \" + título en versalitas armadas; filete sólido de 1 px de tinta debajo. Numera capítulos, nunca entradas.",
+        "shapes": [
+          "rows",
+          "cards"
+        ],
+        "defaultShape": "rows",
+        "fonts": [
+          "fraunces",
+          "bricolage"
+        ],
+        "defaultFont": "fraunces",
+        "thread": false,
+        "jackCol": "1.75rem",
+        "radiusMd": "2px",
+        "exceptions": [
+          "Sin hilo: carril de 1.75rem ocupado por el lomo",
+          "Puntadas en vez de jacks; la entrada en vivo sin pulso (la señal es la cinta)",
+          "Capítulos numerados en romanos (nunca entradas), en versalitas y con filete de tinta",
+          "Filete punteado entre entradas en vez del sólido",
+          "Contorno decorativo de 1 px en el ex libris (el foco sigue sólido)"
+        ]
       }
     },
     "portCommitments": [
@@ -1340,6 +1816,38 @@
       "description": "Aro grueso de combinación: 4 px de fondo y 4 px de acento, spread puro.",
       "html": "<div class=\"ds-avatar-subte\" aria-hidden=\"true\">J</div>",
       "css": ".ds-avatar-subte{display:grid;place-items:center;width:88px;height:88px;margin:12px;border-radius:50%;background:#14254f;color:#f2efe6;box-shadow:0 0 0 4px #0d1b3d,0 0 0 8px #ffa39a;font-family:'Bricolage Grotesque',system-ui,sans-serif;font-size:2rem;font-weight:500}"
+    },
+    {
+      "name": "Capítulo con entradas (Lomo)",
+      "kind": "custom",
+      "refersTo": "lomo-entrada",
+      "description": "Cuadernillo de Lomo cosido: capítulo en versalitas con numeral romano y filete de tinta; entradas cosidas al lomo con su puntada y filete punteado.",
+      "html": "<section class=\"ds-lomo\"><h2 class=\"ds-lomo-cap\">Redes</h2><div class=\"ds-lomo-port\"><span class=\"ds-lomo-puntada\" aria-hidden=\"true\"></span><a class=\"ds-lomo-link\" href=\"#\"><span class=\"ds-lomo-name\">YouTube</span><span class=\"ds-lomo-meta\">youtube.com/@juedsay</span></a></div><div class=\"ds-lomo-port\"><span class=\"ds-lomo-puntada\" aria-hidden=\"true\"></span><a class=\"ds-lomo-link\" href=\"#\"><span class=\"ds-lomo-name\">GitHub</span><span class=\"ds-lomo-meta\">github.com/juedsay</span></a></div></section>",
+      "css": ".ds-lomo{position:relative;width:22rem;padding:1rem;background:#17140f;color:#efe8da} .ds-lomo::before{content:\"\";position:absolute;top:3.5rem;bottom:0;left:calc(1rem + 0.875rem - 0.5px);width:1px;background:#c8bfae} .ds-lomo-cap{margin:0 0 0.25rem 1.75rem;padding-bottom:0.5rem;border-bottom:1px solid #efe8da;font-family:Fraunces,Georgia,serif;font-size:1rem;font-weight:600;letter-spacing:0.09em;text-transform:uppercase} .ds-lomo-cap::before{content:\"I · \";color:#9fc1ec;font-size:1.25em;letter-spacing:0.02em} .ds-lomo-port{position:relative;display:grid;grid-template-columns:1.75rem minmax(0,1fr)} .ds-lomo-puntada{position:relative;justify-self:center;width:14px;height:3px;margin-top:calc((3.25rem - 3px) / 2);border-radius:2px;background:#9fc1ec;transition:transform 160ms cubic-bezier(0.16,1,0.3,1);animation:ds-coser 260ms cubic-bezier(0.16,1,0.3,1) backwards} .ds-lomo-port:nth-child(3) .ds-lomo-puntada{animation-delay:140ms} .ds-lomo-puntada::before{content:\"\";position:absolute;top:0;left:-5px;width:3px;height:3px;border-radius:50%;background:#c8bfae;box-shadow:21px 0 0 #c8bfae} .ds-lomo-port:is(:hover,:focus-within) .ds-lomo-puntada{transform:scaleX(1.3)} @keyframes ds-coser{from{transform:scaleX(0)}to{transform:scaleX(1)}} .ds-lomo-link{display:block;min-height:3.25rem;padding:0.75rem 0;border-bottom:1px dotted #5c5446;color:inherit;text-decoration:none} .ds-lomo-link:focus-visible{outline:2px solid #efe8da;outline-offset:4px;border-radius:2px} .ds-lomo-name{display:block;font-family:Fraunces,Georgia,serif;font-size:1.0625rem;font-weight:500;line-height:1.3} .ds-lomo-meta{display:block;color:#c8bfae;font-size:0.8125rem} @media (prefers-reduced-motion: reduce){.ds-lomo-puntada{animation:none}}"
+    },
+    {
+      "name": "Entrada en vivo con cinta (Lomo)",
+      "kind": "custom",
+      "refersTo": "lomo-cinta",
+      "description": "La cinta marcapáginas roja cuelga sobre la entrada en vivo; puntada en --ribbon y texto \"En vivo\" en --color-live.",
+      "html": "<div class=\"ds-lomo-live\"><span class=\"ds-lomo-live-puntada\" aria-hidden=\"true\"></span><a class=\"ds-lomo-live-link\" href=\"#\"><span class=\"ds-lomo-live-name\">Twitch</span><span class=\"ds-lomo-live-meta\"><b>En vivo</b> · <time>1:24:05</time></span></a></div>",
+      "css": ".ds-lomo-live{display:grid;grid-template-columns:1.75rem minmax(0,1fr);width:22rem;padding:0.5rem 1rem 0;background:#17140f;color:#efe8da} .ds-lomo-live-puntada{justify-self:center;width:14px;height:3px;margin-top:calc((3.25rem - 3px) / 2);border-radius:2px;background:#d4463a} .ds-lomo-live-link{position:relative;display:block;min-height:3.25rem;padding:0.75rem 0;border-bottom:1px dotted #5c5446;color:inherit;text-decoration:none} .ds-lomo-live-link::after{content:\"\";position:absolute;top:-4px;right:calc(18px + 1rem);width:10px;height:38px;background:#d4463a;clip-path:polygon(0 0,100% 0,100% 100%,50% 80%,0 100%)} .ds-lomo-live-link:focus-visible{outline:2px solid #efe8da;outline-offset:4px;border-radius:2px} .ds-lomo-live-name{display:block;font-family:Fraunces,Georgia,serif;font-size:1.0625rem;font-weight:500} .ds-lomo-live-meta{display:block;color:#c8bfae;font-size:0.8125rem} .ds-lomo-live-meta b,.ds-lomo-live-meta time{color:#ff9d8c;font-weight:600} .ds-lomo-live-meta time{font-family:ui-monospace,monospace;font-variant-numeric:tabular-nums}"
+    },
+    {
+      "name": "Ex libris (Lomo)",
+      "kind": "custom",
+      "refersTo": "avatar",
+      "description": "Avatar con doble filete de tinta: anillo de 3 px de fondo y 1 px de tinta, y contorno de 1 px a 7 px.",
+      "html": "<div class=\"ds-avatar-lomo\" aria-hidden=\"true\">J</div>",
+      "css": ".ds-avatar-lomo{display:grid;place-items:center;width:88px;height:88px;margin:12px;border-radius:50%;background:#211d17;color:#efe8da;box-shadow:0 0 0 3px #17140f,0 0 0 4px #efe8da;outline:1px solid #efe8da;outline-offset:7px;font-family:Fraunces,Georgia,serif;font-size:2rem;font-weight:500}"
+    },
+    {
+      "name": "Destacado arriba (Lomo)",
+      "kind": "card",
+      "refersTo": "lomo-entrada-tarjeta",
+      "description": "Recuadro de página: borde de 1 px de tinta con doble filete de 3 px arriba, sin fondo ni esquinas.",
+      "html": "<a class=\"ds-lomo-card\" href=\"#\"><span class=\"ds-lomo-card-name\">Mi newsletter</span><span class=\"ds-lomo-card-meta\">newsletter.example</span></a>",
+      "css": ".ds-lomo-card{display:block;width:20rem;padding:0.75rem 1rem;border:1px solid #efe8da;border-top:3px double #efe8da;border-radius:0;background:none;color:#efe8da;text-decoration:none} .ds-lomo-card:focus-visible{outline:2px solid #efe8da;outline-offset:4px} .ds-lomo-card-name{display:block;font-family:Fraunces,Georgia,serif;font-size:1.0625rem;font-weight:500} .ds-lomo-card-meta{display:block;color:#c8bfae;font-size:0.8125rem}"
     }
   ],
   "narrative": {
@@ -1428,6 +1936,21 @@
         "name": "La regla del ámbar",
         "body": "El ámbar es la señal en vivo de Subte y de nada más: por eso no es una línea ni un acento admitido. Ninguna estación, chapa o tramo lleva ámbar salvo la estación en vivo.",
         "section": "colors"
+      },
+      {
+        "name": "La regla de la cinta",
+        "body": "El rojo es la señal en vivo de Lomo cosido y de nada más: ninguna tela es roja ni rojiza (por eso coral, ámbar y rosa quedan afuera). La cinta (`--ribbon`) es gráfica y se mide a 3:1; el texto \"En vivo\" usa `--color-live`, que se mide a 7:1. No se intercambian.",
+        "section": "colors"
+      },
+      {
+        "name": "La regla del filete de tinta",
+        "body": "El filete de cada capítulo es siempre de tinta (`--color-fg`), con cualquier acento y en cualquier modo: el acento es la tela, no el filete.",
+        "section": "colors"
+      },
+      {
+        "name": "La regla de la redonda",
+        "body": "Fraunces se sirve solo en redonda (normal): ningún nombre en display lleva itálica, que el navegador falsearía. La itálica de Lomo cosido es solo de la bio, en la fuente del cuerpo.",
+        "section": "typography"
       }
     ],
     "dos": [
@@ -1449,7 +1972,13 @@
       "**Do** cortar la línea en la última estación y dejar sin tramo la sección de una sola.",
       "**Do** reservar el ámbar para la estación en vivo: relleno, aro, destello, etiqueta y cronómetro.",
       "**Do** marcar el destacado con acento como estación de combinación en cápsula, sin caja.",
-      "**Do** trazar solo la primera línea al cargar, y dejarla quieta con movimiento reducido."
+      "**Do** trazar solo la primera línea al cargar, y dejarla quieta con movimiento reducido.",
+      "**Do** coser cada entrada al lomo con su puntada de 14 × 3 px en la tela y sus dos agujeros de costura.",
+      "**Do** abrir cada cuadernillo con el numeral romano a cuerpo completo en la tela y el título en versalitas armadas (mayúsculas a 0.8, tracking 0.09em, 600).",
+      "**Do** trazar el filete del capítulo siempre en tinta, con cualquier acento.",
+      "**Do** reservar el rojo para el en vivo: la cinta y la puntada en `--ribbon`, el texto en `--color-live`.",
+      "**Do** marcar el destacado con acento solo con el nombre en la tela a 700, sin caja.",
+      "**Do** coser solo las puntadas del primer cuadernillo al cargar, y dejarlas quietas con movimiento reducido."
     ],
     "donts": [
       "**Don't** usar la lima para foco, hover, selección, botones o decoración.",
@@ -1469,7 +1998,13 @@
       "**Don't** usar el ámbar como línea, acento o decoración.",
       "**Don't** numerar los links: la chapa numera líneas.",
       "**Don't** usar gradientes ni brillos de neón: color pleno en líneas y estaciones.",
-      "**Don't** sacar las excepciones de Subte de `[data-theme=\"subte\"]`."
+      "**Don't** sacar las excepciones de Subte de `[data-theme=\"subte\"]`.",
+      "**Don't** admitir telas rojas o rojizas (coral, ámbar, rosa): el rojo es de la cinta.",
+      "**Don't** usar `--ribbon` para texto ni `--color-live` para la cinta.",
+      "**Don't** poner itálica en nombres de Fraunces: se sirve solo en redonda.",
+      "**Don't** pintar el filete del capítulo con el acento.",
+      "**Don't** usar tarjetas con sombra ni esquinas redondeadas: el libro es plano y recto.",
+      "**Don't** sacar las excepciones de Lomo cosido de `[data-theme=\"lomo\"]`."
     ]
   }
 }
