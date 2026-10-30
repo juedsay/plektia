@@ -19,7 +19,9 @@ const headingId = `bank-${id}`;
   (title && showTitle ? (
     <section class="bank" aria-labelledby={headingId}>
       {/* En el h2: `attr()` del `::before` lee los atributos del propio h2. */}
-      <h2 id={headingId} data-label={label ?? undefined}>{title}</h2>
+      <h2 id={headingId} data-label={label ?? undefined}>
+        {title}
+      </h2>
       <ul class="ports">
         {links.map((link) => (
           <Port link={link} />
