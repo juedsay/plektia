@@ -404,7 +404,7 @@ El componente central: jack en el carril, nombre y metadato a la derecha, flecha
 
 ### Último video (sub-fila plegable)
 Colgada del link de YouTube, sin caja.
-- **Plegada:** filete grafito punteado arriba; metadato ("Último video · hace 2 días") sobre el título en body-sm de una línea con elipsis; chevron a la derecha. Alto mínimo 44 px.
+- **Plegada:** filete grafito punteado arriba; el título en body-sm de una línea con elipsis y, al final, la fecha en metadato ("Cómo testeo RLS con pgTAP · hace 2 días"); chevron a la derecha. Qué es ("Último video") va solo en el nombre accesible: nunca un rótulo encima del título (decisión del 2026-10-30). Alto mínimo 44 px.
 - **Hover:** el título se subraya.
 - **Abierta:** el chevron gira 180°, el panel se despliega animando la fila de la grilla (320 ms) y muestra la miniatura 16:9 con esquinas de 6 px y el badge de duración abajo a la derecha. Cerrado, el panel es `inert`.
 

@@ -80,11 +80,15 @@ const live = link.live ?? null;
           aria-expanded="false"
           aria-controls={panelId}
         >
+          {/* El título primero y la fecha al final; qué es ("Último video") lo dice el
+              nombre accesible, sin un rótulo encima del título. */}
           <span class="latest-text">
-            <span class="port-meta">
-              {featuredLabel(featured)} · {timeAgo(featured.publishedAt, new Date())}
-            </span>
+            <span class="visually-hidden">{featuredLabel(featured)}: </span>
             <span class="latest-title">{featured.title}</span>
+            <span class="port-meta latest-when">
+              {" · "}
+              {timeAgo(featured.publishedAt, new Date())}
+            </span>
           </span>
           <svg
             class="chevron"
