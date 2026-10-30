@@ -6,7 +6,7 @@ import "@/ui/styles/site.css";
 // Política de privacidad (SPEC-public-page, "Privacidad"). Cuenta solo lo que
 // hoy es verdad: cada función nueva que toque datos personales (medición de
 // clics, miniaturas de YouTube, aviso por mail) la actualiza en el mismo PR.
-const UPDATED = "21 de octubre de 2026";
+const UPDATED = "30 de octubre de 2026";
 const canonical = new URL("/legal/privacy", Astro.url);
 // Índice de la política: en escritorio queda fijo al costado del texto.
 const SECTIONS = [
@@ -132,6 +132,25 @@ const SECTIONS = [
           Usamos cookies de sesión seguras para mantenerte dentro de tu cuenta. Se borran al salir o
           cuando vencen, y no sirven para seguirte en otros sitios.
         </li>
+        <li>
+          Si subís un avatar, guardamos la imagen recortada y re-codificada (sin datos de la cámara
+          ni de ubicación). Al cambiarla o sacarla, se borra.
+        </li>
+        <li>
+          Si pedís la vista previa de un artículo, nuestro servidor visita esa dirección una vez
+          (sin tus cookies ni tus datos) para leer su título, su descripción y su imagen. Si la
+          usás, guardamos la imagen re-codificada; al sacarla o borrar el link, se borra.
+        </li>
+        <li>
+          Si marcás que transmitís en un canal de YouTube o Twitch, consultamos a esos servicios el
+          estado público del canal (si está en vivo y su último video). No les mandamos datos tuyos
+          ni de quien visita tu página.
+        </li>
+        <li>
+          Si conectás una app de IA (por ejemplo Claude), guardamos el nombre que declara la app, el
+          permiso que le diste y un registro de los cambios que hace en tu página (qué herramienta
+          usó y sobre qué elemento). Podés ver y desconectar cada app en el panel.
+        </li>
       </ul>
       <p>Los datos de la cuenta se guardan mientras la cuenta exista.</p>
 
@@ -140,6 +159,10 @@ const SECTIONS = [
         <li>
           Supabase guarda la base de datos (cuentas, páginas y mensajes) en servidores de Estados
           Unidos.
+        </li>
+        <li>
+          Supabase guarda también las imágenes (avatares y vistas previas). Las servimos desde
+          nuestro propio dominio, así que quien visita tu página no se conecta con Supabase.
         </li>
         <li>Cloudflare aloja el sitio y lo entrega desde su red global.</li>
         <li>GitHub y Google intervienen solo si elegís entrar con ellos.</li>
