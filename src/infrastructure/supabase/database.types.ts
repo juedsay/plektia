@@ -437,6 +437,7 @@ export type Database = {
         Row: {
           created_at: string;
           id: string;
+          label: string | null;
           owner_id: string;
           page_id: string;
           position: number;
@@ -450,6 +451,7 @@ export type Database = {
         Insert: {
           created_at?: string;
           id?: string;
+          label?: string | null;
           owner_id?: string;
           page_id: string;
           position?: number;
@@ -462,6 +464,7 @@ export type Database = {
         Update: {
           created_at?: string;
           id?: string;
+          label?: string | null;
           owner_id?: string;
           page_id?: string;
           position?: number;
@@ -731,6 +734,7 @@ export type Database = {
         Returns: {
           created_at: string;
           id: string;
+          label: string | null;
           owner_id: string;
           page_id: string;
           position: number;
@@ -857,6 +861,7 @@ export type Database = {
         Returns: {
           created_at: string;
           id: string;
+          label: string | null;
           owner_id: string;
           page_id: string;
           position: number;

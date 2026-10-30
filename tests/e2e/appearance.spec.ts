@@ -3,7 +3,13 @@ import { randomBytes } from "node:crypto";
 import AxeBuilder from "@axe-core/playwright";
 import { type Browser, expect, type Page, test } from "@playwright/test";
 
-import { deleteLinksTitled, insertLink, signIn } from "./support/session";
+import {
+  deleteLinksTitled,
+  deleteSectionsTitled,
+  insertLink,
+  insertSection,
+  signIn,
+} from "./support/session";
 
 // Modo claro, oscuro y automático de la página (tarea 34, SPEC-appearance).
 // Cuenta del avatar (/avatar-demo): ninguna otra prueba depende de su modo.
@@ -412,6 +418,53 @@ test("el estilo Lado A / B se elige en el panel y se ve en la página, AAA en lo
       await close();
     }
   } finally {
+    await page.goto("/admin/page");
+    await page.getByRole("radio", { name: /^Patchera/ }).check();
+    await page.getByRole("button", { name: "Guardar" }).click();
+    await expect(page).toHaveURL(/\/admin\/page\?guardado$/);
+  }
+});
+
+// Rótulo de sección (tarea 38d): el dueño reemplaza "Lado A" por el suyo.
+test("el rótulo escrito en el panel reemplaza al del estilo en la página", async ({
+  page,
+  context,
+  browser,
+  baseURL,
+}) => {
+  const sectionTitle = "Prueba de rótulo";
+  const sectionId = await insertSection(AVATAR_ID, AVATAR_ID, sectionTitle);
+  await insertLink(AVATAR_ID, AVATAR_ID, {
+    title: "Link con rótulo",
+    url: "https://example.com/rotulo",
+    provider: "generic",
+    provider_handle: null,
+    section_id: sectionId,
+  });
+  await signIn(context, baseURL ?? "", "avatar@plektia.test");
+  await page.goto("/admin/page");
+  await page.getByRole("radio", { name: /^Lado A \/ B/ }).check();
+  await page.getByRole("button", { name: "Guardar" }).click();
+  await expect(page).toHaveURL(/\/admin\/page\?guardado$/);
+  try {
+    await page.goto("/admin");
+    await page.getByRole("button", { name: `Opciones de la sección ${sectionTitle}` }).click();
+    const label = page.getByRole("textbox", { name: "Rótulo" });
+    await expect(label).toHaveAttribute("placeholder", "Lado A");
+    await label.fill("Cara 1");
+    await label.press("Tab");
+    await expect(page.getByText(`Sección ${sectionTitle}: guardada`)).toBeAttached();
+
+    const { visitor, close } = await visit(browser, baseURL ?? "", "dark");
+    const heading = visitor.getByRole("heading", { name: sectionTitle });
+    await expect(heading).toHaveAttribute("data-label", "Cara 1");
+    expect(
+      await heading.evaluate((element) => getComputedStyle(element, "::before").content),
+    ).toContain("Cara 1");
+    await close();
+  } finally {
+    await deleteLinksTitled(AVATAR_ID, ["Link con rótulo"]);
+    await deleteSectionsTitled(AVATAR_ID, [sectionTitle]);
     await page.goto("/admin/page");
     await page.getByRole("radio", { name: /^Patchera/ }).check();
     await page.getByRole("button", { name: "Guardar" }).click();

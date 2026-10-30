@@ -100,6 +100,7 @@ export class InMemoryLinkRepository implements LinkReader, LinkWriter, SectionWr
     if (this.sections.length >= LIMITS.sections) return Promise.resolve(err("limit_reached"));
     const section: Section = {
       ...draft,
+      label: null,
       id: id ?? this.id(),
       position: this.sections.length,
       version: 1,

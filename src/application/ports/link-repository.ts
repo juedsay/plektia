@@ -34,6 +34,8 @@ export interface Section {
   readonly id: string;
   readonly title: string;
   readonly showTitle: boolean;
+  /** El rótulo que reemplaza al automático ("Lado A", "L1"…); `null` es el automático. */
+  readonly label: string | null;
   readonly visible: boolean;
   readonly position: number;
   readonly version: number;

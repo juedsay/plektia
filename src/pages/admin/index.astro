@@ -4,6 +4,7 @@
 import { actions } from "astro:actions";
 
 import { mediaCapabilities } from "@/domain/link-media";
+import { THEME_RULES } from "@/domain/theme";
 import { loadWorkspace } from "@/ui/admin/workspace";
 import AdminLayout from "@/ui/layouts/AdminLayout.astro";
 import EditorIsland from "@/ui/islands/Editor";
@@ -129,7 +130,12 @@ const notice =
           role="tabpanel"
           aria-labelledby="tab-editar"
         >
-          <EditorIsland client:load pageId={currentPage.id} initialContent={content} />
+          <EditorIsland
+            client:load
+            pageId={currentPage.id}
+            initialContent={content}
+            sectionMark={THEME_RULES[currentPage.theme].sectionMark}
+          />
         </div>
 
         <section

@@ -32,6 +32,7 @@ const page: PublicPage = {
       id: "s",
       title: "Redes",
       showTitle: true,
+      label: null,
       links: [
         link("https://www.twitch.tv/juedsay", "juedsay"),
         link("https://plektia.app/a", null),

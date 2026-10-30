@@ -152,6 +152,11 @@
   letter-spacing: 0.02em;
 }
 
+/* El rótulo que escribió el dueño, en lugar del numeral. */
+[data-theme="lomo"] .bank h2[data-label]::before {
+  content: attr(data-label) " · ";
+}
+
 /* ── Entradas de índice: filete punteado; la puntada en el lomo ────────── */
 [data-theme="lomo"] .port-body {
   border-bottom: 1px dotted var(--color-line);

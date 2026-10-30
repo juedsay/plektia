@@ -9,6 +9,8 @@ interface Props {
   /** Posición entre las secciones y cuántas hay (para "Subir" y "Bajar"). */
   readonly index: number;
   readonly sectionCount: number;
+  /** El rótulo automático del estilo ("Lado A"); `null` si el estilo no numera. */
+  readonly sectionMark: string | null;
   /** Guarda un cambio; devuelve el error (para mostrarlo junto al campo) o `null`. */
   readonly onSave: (section: Section, changes: SectionChanges) => Promise<Failure | null>;
   readonly onMove: (section: Section, index: number) => void;
@@ -25,6 +27,7 @@ export function SectionSettings({
   section,
   index,
   sectionCount,
+  sectionMark,
   onSave,
   onMove,
   onDelete,
@@ -33,6 +36,7 @@ export function SectionSettings({
   const idPrefix = useId();
   const titleInput = useRef<HTMLInputElement>(null);
   const [title, setTitle] = useState(section.title);
+  const [label, setLabel] = useState(section.label ?? "");
   const [failure, setFailure] = useState<Failure | null>(null);
 
   useEffect(() => {
@@ -44,6 +48,10 @@ export function SectionSettings({
     setTitle(section.title);
   }, [section.title]);
 
+  useEffect(() => {
+    setLabel(section.label ?? "");
+  }, [section.label]);
+
   const save = async (changes: SectionChanges) => {
     setFailure(await onSave(section, changes));
   };
@@ -53,7 +61,14 @@ export function SectionSettings({
     void save({ title });
   };
 
+  const saveLabel = () => {
+    const trimmed = label.trim();
+    if (trimmed === (section.label ?? "")) return;
+    void save({ label: trimmed === "" ? null : trimmed });
+  };
+
   const titleError = failure?.fields["title"];
+  const labelError = failure?.fields["label"];
 
   return (
     <div className="section-settings" id={`${idPrefix}-settings`}>
@@ -82,6 +97,33 @@ export function SectionSettings({
           </p>
         )}
       </div>
+
+      {sectionMark !== null && (
+        <div className="field">
+          <label htmlFor={`${idPrefix}-label`}>Rótulo</label>
+          <input
+            id={`${idPrefix}-label`}
+            maxLength={16}
+            placeholder={sectionMark}
+            value={label}
+            onChange={(event) => {
+              setLabel(event.target.value);
+            }}
+            onBlur={saveLabel}
+            aria-invalid={labelError ? true : undefined}
+            aria-describedby={`${idPrefix}-label-hint${labelError ? ` ${idPrefix}-label-error` : ""}`}
+          />
+          <p className="field-hint" id={`${idPrefix}-label-hint`}>
+            Va antes del nombre, en lugar del que pone el estilo (como “{sectionMark}”). Vacío,
+            vuelve el del estilo.
+          </p>
+          {labelError && (
+            <p className="field-error" id={`${idPrefix}-label-error`}>
+              {labelError}
+            </p>
+          )}
+        </div>
+      )}
 
       <label className="choice">
         <input

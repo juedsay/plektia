@@ -67,6 +67,9 @@ Manual y Sumario.
    de esa variante sin tocar lo guardado, y el panel lo avisa.
 9. **Marcas y números:** solo Sumario numera los links (los folios son su lenguaje) y solo Lado A/B
    escribe a mano (y solo en títulos). El resto de las reglas de DESIGN.md siguen valiendo.
+10. **Rótulo de sección:** las variantes que numeran secciones ("Lado A", "L1", "I") usan el rótulo
+    que escribe el dueño en el panel si lo hay (una línea segura de hasta 16 caracteres, `null` es
+    el automático). El campo solo aparece si la variante guardada numera (`sectionMark`).
 
 ## Datos
 

@@ -14,6 +14,7 @@ import { type EditorApi, UNREACHABLE } from "./editor/editor-api";
 interface Props {
   readonly pageId: string;
   readonly initialContent: OwnLinks;
+  readonly sectionMark: string | null;
 }
 
 /**
@@ -93,7 +94,7 @@ function actionsApi(pageId: string): EditorApi {
   };
 }
 
-export default function EditorIsland({ pageId, initialContent }: Props) {
+export default function EditorIsland({ pageId, initialContent, sectionMark }: Props) {
   const api = useMemo(() => actionsApi(pageId), [pageId]);
-  return <Editor api={api} initialContent={initialContent} />;
+  return <Editor api={api} initialContent={initialContent} sectionMark={sectionMark} />;
 }

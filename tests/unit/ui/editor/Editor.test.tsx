@@ -44,6 +44,7 @@ const REDES: Section = {
   id: "s-redes",
   title: "Redes",
   showTitle: true,
+  label: null,
   visible: true,
   position: 0,
   version: 1,
@@ -257,6 +258,7 @@ class FakeApi implements EditorApi {
       id: `s-${title.toLowerCase()}`,
       title: title.trim(),
       showTitle: true,
+      label: null,
       visible: true,
       position: this.content.sections.length,
       version: 1,
@@ -349,10 +351,16 @@ class FakeApi implements EditorApi {
   }
 }
 
-function setup(content: OwnLinks, { fakeTimers = false } = {}) {
+function setup(
+  content: OwnLinks,
+  {
+    fakeTimers = false,
+    sectionMark = null,
+  }: { fakeTimers?: boolean; sectionMark?: string | null } = {},
+) {
   if (fakeTimers) vi.useFakeTimers({ shouldAdvanceTime: true });
   const api = new FakeApi(content);
-  render(<Editor api={api} initialContent={content} />);
+  render(<Editor api={api} initialContent={content} sectionMark={sectionMark} />);
   const user = userEvent.setup(
     fakeTimers ? { advanceTimers: (milliseconds) => vi.advanceTimersByTime(milliseconds) } : {},
   );
@@ -1166,6 +1174,47 @@ describe("Editor · secciones", () => {
     await user.click(screen.getByRole("checkbox", { name: /Mostrar el nombre en la página/ }));
     await waitFor(() => {
       expect(api.content.sections[0]?.showTitle).toBe(false);
+    });
+  });
+
+  it("el rótulo solo aparece si el estilo numera las secciones", async () => {
+    const { user } = setup(CONTENT);
+    await user.click(screen.getByRole("button", { name: "Opciones de la sección Redes" }));
+    expect(screen.queryByRole("textbox", { name: "Rótulo" })).toBeNull();
+  });
+
+  it("el rótulo se guarda al salir, se deshace, y vacío vuelve al del estilo", async () => {
+    const { api, user } = setup(CONTENT, { sectionMark: "Lado A" });
+    await user.click(screen.getByRole("button", { name: "Opciones de la sección Redes" }));
+    const label = screen.getByRole("textbox", { name: "Rótulo" });
+    expect(label.getAttribute("placeholder")).toBe("Lado A");
+
+    await user.type(label, "  Cara 1 ");
+    await user.tab();
+    await waitFor(() => {
+      expect(api.content.sections[0]?.label).toBe("Cara 1");
+    });
+    // Salir otra vez sin cambios no manda nada (idempotente).
+    const updates = api.sectionUpdates;
+    await user.click(label);
+    await user.tab();
+    expect(api.sectionUpdates).toBe(updates);
+
+    await user.click(screen.getByRole("button", { name: "Deshacer" }));
+    await waitFor(() => {
+      expect(api.content.sections[0]?.label).toBeNull();
+    });
+
+    await user.clear(label);
+    await user.type(label, "Cara 2");
+    await user.tab();
+    await waitFor(() => {
+      expect(api.content.sections[0]?.label).toBe("Cara 2");
+    });
+    await user.clear(label);
+    await user.tab();
+    await waitFor(() => {
+      expect(api.content.sections[0]?.label).toBeNull();
     });
   });
 

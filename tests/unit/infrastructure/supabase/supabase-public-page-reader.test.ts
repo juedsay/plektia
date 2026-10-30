@@ -42,7 +42,13 @@ const row = {
   link_shape: "pills",
   name_font: "nunito",
   sections: [
-    { id: "3f0c7c4e-2a8f-4f63-9a3c-1f7f3d1e2b11", title: "Redes", showTitle: true, links: [link] },
+    {
+      id: "3f0c7c4e-2a8f-4f63-9a3c-1f7f3d1e2b11",
+      title: "Redes",
+      showTitle: true,
+      label: "Lado 1",
+      links: [link],
+    },
   ],
   unsectioned_links: [],
 };
@@ -63,6 +69,20 @@ describe("SupabasePublicPageReader", () => {
       sections: [{ ...row.sections[0], links: [{ ...link, featured: null, live: null }] }],
       unsectionedLinks: [],
     });
+  });
+
+  it("una sección sin rótulo (fila de antes de la columna) usa el automático", async () => {
+    const withoutLabel = {
+      id: "3f0c7c4e-2a8f-4f63-9a3c-1f7f3d1e2b11",
+      title: "Redes",
+      showTitle: true,
+      links: [],
+    };
+    const page = await readerAnswering({
+      data: { ...row, sections: [withoutLabel] },
+      error: null,
+    }).getByHandle(handle);
+    expect(page?.sections[0]?.label).toBeNull();
   });
 
   it("lee el directo en curso de un canal vigilado", async () => {

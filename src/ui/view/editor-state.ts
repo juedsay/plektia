@@ -84,13 +84,20 @@ export function changedFields(
   return changes;
 }
 
+/** El rótulo como se guarda: recortado, y vacío es el automático (`null`). */
+function labelOrAutomatic(label: string | null): string | null {
+  const trimmed = label?.trim() ?? "";
+  return trimmed === "" ? null : trimmed;
+}
+
 /** Si aplicar estos cambios deja la sección igual (por ejemplo, ocultar una ya oculta). */
 export function changesNothing(
   section: Section,
-  changes: { title?: string; showTitle?: boolean; visible?: boolean },
+  changes: { title?: string; showTitle?: boolean; visible?: boolean; label?: string | null },
 ): boolean {
   return (
     (changes.title === undefined || changes.title.trim() === section.title) &&
+    (changes.label === undefined || labelOrAutomatic(changes.label) === section.label) &&
     (changes.showTitle === undefined || changes.showTitle === section.showTitle) &&
     (changes.visible === undefined || changes.visible === section.visible)
   );

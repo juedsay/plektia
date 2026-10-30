@@ -34,4 +34,22 @@ describe("parseSectionPatch", () => {
   it("un cambio vacío es inválido", () => {
     expect(parseSectionPatch({}).ok).toBe(false);
   });
+
+  it("el rótulo se recorta, y vacío vuelve al automático (null)", () => {
+    expect(parseSectionPatch({ label: "  Cara 1 " })).toEqual({
+      ok: true,
+      value: { label: "Cara 1" },
+    });
+    expect(parseSectionPatch({ label: "   " })).toEqual({ ok: true, value: { label: null } });
+    expect(parseSectionPatch({ label: null })).toEqual({ ok: true, value: { label: null } });
+  });
+
+  it.each([
+    ["largo", "a".repeat(17)],
+    ["con salto de línea", "Lado\nA"],
+    ["con un carácter de dirección", "Lado‮A"],
+    ["que no es texto", 3],
+  ])("rechaza un rótulo %s", (_case, label) => {
+    expect(parseSectionPatch({ label }).ok).toBe(false);
+  });
 });
