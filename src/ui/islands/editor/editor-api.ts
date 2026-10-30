@@ -16,6 +16,14 @@ export interface NewLink {
   readonly sectionId: string | null;
   /** `null` (o sin él): automático, se deduce de la URL. */
   readonly kind?: LinkKind | null;
+  /** Opcional; la propone "Traer vista previa" en un artículo. */
+  readonly description?: string | null;
+}
+
+/** Lo que propone "Traer vista previa" (SPEC-link-form, 7c). */
+export interface PreviewSuggestion {
+  readonly title: string | null;
+  readonly description: string | null;
 }
 
 export interface LinkChanges {
@@ -63,6 +71,8 @@ export interface EditorApi {
   getMedia(linkId: string): Promise<FormResult<LinkMediaView>>;
   /** Guarda la configuración completa (repetirla deja lo mismo). */
   setMedia(linkId: string, settings: MediaChoice): Promise<FormResult<LinkMedia>>;
+  /** El título y la descripción de un artículo; no guarda nada. */
+  fetchPreview(url: string): Promise<FormResult<PreviewSuggestion>>;
 }
 
 export interface MediaChoice {

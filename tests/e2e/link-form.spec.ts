@@ -74,3 +74,22 @@ test("un artículo se detecta al agregarlo y la página lo dice", async ({
     await deleteLinksTitled(AVATAR_ID, [ARTICLE_TITLE]);
   }
 });
+
+// Vista previa (SPEC-link-form, 7c-1): el recorrido completo hasta el servidor,
+// que rechaza un destino que no es un sitio público (acá, un dominio `.test`).
+test("'Traer vista previa' no visita un sitio que no es público", async ({
+  page,
+  context,
+  baseURL,
+}) => {
+  await signIn(context, baseURL ?? "", "avatar@plektia.test");
+  await page.goto("/admin");
+  const add = page.locator("form.add-link");
+  await add.getByLabel("URL").fill("https://intranet.test/blog/notas-internas");
+  await add.getByLabel("Título").fill("Nota interna");
+  await add.getByRole("button", { name: "Traer vista previa" }).click();
+  await expect(add.getByRole("status")).toHaveText(
+    "Esa dirección no es un sitio público: no podemos traer su vista previa.",
+  );
+  await expect(add.getByLabel("Título")).toHaveValue("Nota interna");
+});

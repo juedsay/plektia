@@ -71,6 +71,7 @@ function actionsApi(pageId: string): EditorApi {
       (await actions.links.getMedia({ pageId, linkId })).data ?? UNREACHABLE,
     setMedia: async (linkId, settings) =>
       resultOf(await actions.links.setMedia({ pageId, linkId, ...settings })),
+    fetchPreview: async (url) => resultOf(await actions.links.fetchPreview({ url })),
   };
 }
 

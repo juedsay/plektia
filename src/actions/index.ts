@@ -2,6 +2,7 @@
 // con la sesión del usuario. Sin API paralela: panel, MCP y tests pasan por las
 // mismas funciones. Los formularios funcionan sin JavaScript; las de links las
 // llama la isla del editor (JSON).
+import { PREVIEW_MESSAGES } from "@/application/links/fetch-link-preview";
 import { ActionError, type ActionAPIContext, defineAction } from "astro:actions";
 import { z } from "zod";
 
@@ -29,6 +30,7 @@ import { ok } from "@/domain/result";
 import {
   actionsRateLimiter,
   adminRepositoriesFor,
+  linkPreview,
   liveCheckNow,
   pageCache,
 } from "@/composition/runtime";
@@ -131,6 +133,29 @@ export const server = {
         if (!moved.ok) return toFormResult<OwnLinks>(moved);
         await purge();
         return toFormResult(ok(await links.listOwn()));
+      },
+    }),
+    /**
+     * `{ url }`: el título y la descripción de un artículo, para proponerlos en
+     * el panel (SPEC-link-form, 7c). No guarda nada; solo el dueño, y con límite.
+     */
+    fetchPreview: defineAction({
+      accept: "json",
+      handler: async (input: unknown, context) => {
+        const { ownerId } = await repositoriesOf(context);
+        const preview = await linkPreview(new URL(context.request.url).hostname)(ownerId, input);
+        if (preview.ok) {
+          return {
+            ok: true as const,
+            value: { title: preview.value.title, description: preview.value.description },
+          };
+        }
+        return {
+          ok: false as const,
+          message: PREVIEW_MESSAGES[preview.error],
+          fields: {},
+          values: {},
+        };
       },
     }),
     /** `{ pageId, id, version, visible }`: mostrar u ocultar en la página pública. */

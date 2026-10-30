@@ -1,5 +1,8 @@
 // Lo único que lee la configuración del Worker. Páginas y middlewares piden
 // sus dependencias acá, ya armadas.
+import { fetchLinkPreview } from "@/application/links/fetch-link-preview";
+import { HttpLinkPreviewer } from "@/infrastructure/http/http-link-previewer";
+import { createOpenWebFetch } from "@/infrastructure/http/open-web-fetch";
 import type { AstroCookies } from "astro";
 import { cache, env } from "cloudflare:workers";
 
@@ -107,6 +110,22 @@ export const liveCheckNow = () =>
   checkNow({
     limiter: new CloudflareRateLimiter(env.LIVE_CHECK_RATE_LIMITER),
     refresh: liveRefresh(),
+  });
+
+/**
+ * "Traer vista previa" de un artículo (SPEC-link-form, 7c): 20 por minuto por
+ * cuenta, y nunca contra el propio sitio (`ownHost`) ni `workers.dev`.
+ */
+export const linkPreview = (ownHost: string) =>
+  fetchLinkPreview({
+    previewer: new HttpLinkPreviewer(
+      createOpenWebFetch({
+        blockedHosts: [ownHost],
+        blockedDomains: ["workers.dev"],
+        userAgent: "PlektiaPreview/1.0 (+https://app.plektia.workers.dev)",
+      }),
+    ),
+    limiter: new CloudflareRateLimiter(env.PREVIEW_RATE_LIMITER),
   });
 
 /** Miniaturas de YouTube servidas desde `/thumbs/{id}.jpg`. */
