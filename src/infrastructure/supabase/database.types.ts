@@ -755,6 +755,13 @@ export type Database = {
         Args: { p_confirm_title: string; p_id: string; p_page: string; p_version: number };
         Returns: undefined;
       };
+      mcp_last_edit: {
+        Args: { p_target: string };
+        Returns: {
+          client_name: string;
+          edited_at: string;
+        }[];
+      };
       mcp_move_links: {
         Args: { p_ids: string[]; p_page: string; p_section: string; p_versions: number[] };
         Returns: undefined;

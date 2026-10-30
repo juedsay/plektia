@@ -2,12 +2,14 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 
 import type {
   AlreadyDecided,
+  AppEdit,
   Connection,
   ConsentError,
   ConsentRequest,
   McpConnections,
 } from "@/application/ports/mcp-connections";
 import { err, ok, type Result } from "@/domain/result";
+import { toSafeLine } from "@/domain/text";
 import type { Database } from "@/infrastructure/supabase/database.types";
 
 type Client = SupabaseClient<Database>;
@@ -94,5 +96,14 @@ export class SupabaseMcpConnections implements McpConnections {
       console.warn("mcp: Supabase no revocó el grant OAuth", revoked.error.message);
     }
     return ok(undefined);
+  }
+
+  async lastEdit(targetId: string): Promise<AppEdit | null> {
+    const { data, error } = await this.client.rpc("mcp_last_edit", { p_target: targetId });
+    if (error) return null;
+    const [row] = data;
+    // El nombre lo declara la app: se muestra como una línea segura y corta.
+    const appName = row ? toSafeLine(row.client_name, 40) : null;
+    return row && appName ? { appName, editedAt: row.edited_at } : null;
   }
 }

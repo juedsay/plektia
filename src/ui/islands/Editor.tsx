@@ -86,6 +86,8 @@ function actionsApi(pageId: string): EditorApi {
       );
       return resultOf(await actions.links.setPreviewImage(form));
     },
+    lastAppEdit: async (linkId) =>
+      (await actions.links.lastAppEdit({ id: linkId }).catch(() => null))?.data?.value ?? null,
     removePreviewImage: async (target) =>
       resultOf(await actions.links.removePreviewImage({ pageId, ...target })),
   };

@@ -187,6 +187,13 @@ class FakeApi implements EditorApi {
     );
   }
 
+  /** Lo que devuelve "¿lo cambió una app?" en un conflicto. */
+  appEdit: { appName: string; editedAt: string } | null = null;
+
+  lastAppEdit() {
+    return Promise.resolve(this.appEdit);
+  }
+
   removePreviewImage(target: { id: string; version: number }) {
     return Promise.resolve(this.save(target, { previewImagePath: null }));
   }
@@ -688,6 +695,36 @@ describe("Editor · mostrar u ocultar", () => {
 
     expect(screen.getByRole("alert").textContent).toContain("revisá tu conexión");
     expect(screen.queryByText("Oculto")).toBeNull();
+  });
+});
+
+describe("Editor · editado desde una app", () => {
+  it("en un conflicto, dice qué app conectada cambió el link", async () => {
+    const { api, user } = setup({
+      sections: [REDES],
+      links: [link("twitch", { title: "Twitch" })],
+    });
+    api.appEdit = {
+      appName: "Claude",
+      editedAt: new Date(Date.now() - 2 * 60_000).toISOString(),
+    };
+    api.nextFailure = failure(errorMessage("conflict"));
+    await user.click(screen.getByRole("button", { name: "Ocultar Twitch" }));
+
+    expect(await screen.findByText(/Lo cambió «Claude» hace 2 min/)).toBeTruthy();
+    expect(screen.getByRole("button", { name: "Recargar" })).toBeTruthy();
+  });
+
+  it("si no fue una app, queda el aviso de siempre", async () => {
+    const { api, user } = setup({
+      sections: [REDES],
+      links: [link("twitch", { title: "Twitch" })],
+    });
+    api.nextFailure = failure(errorMessage("conflict"));
+    await user.click(screen.getByRole("button", { name: "Ocultar Twitch" }));
+
+    expect(await screen.findByRole("button", { name: "Recargar" })).toBeTruthy();
+    expect(screen.queryByText(/Lo cambió/)).toBeNull();
   });
 });
 

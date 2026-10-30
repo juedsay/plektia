@@ -62,6 +62,9 @@ const PageTarget = z.object({ pageId: z.uuid() });
  * Los links de una página de la sesión. El `pageId` llega del editor: si no es
  * una página propia, la RLS y el trigger de dueño rechazan cada escritura.
  */
+/** El id de un link o una sección (para consultas que no cambian nada). */
+const LinkIdSchema = z.object({ id: z.uuid() });
+
 async function linksOfPage(context: ActionAPIContext, input: unknown) {
   // Primero la sesión y el límite: sin sesión, nada más se mira.
   const repositories = await repositoriesOf(context);
@@ -224,6 +227,19 @@ export const server = {
         const updated = await removeLinkPreviewImage({ links, images: previewImages })(input);
         if (updated.ok) await purge();
         return toFormResult(updated);
+      },
+    }),
+    /**
+     * `{ id }`: si una app conectada por MCP cambió ese link en la última hora
+     * (para explicar un conflicto en el editor). `null` si no.
+     */
+    lastAppEdit: defineAction({
+      accept: "json",
+      handler: async (input: unknown, context) => {
+        const { connections } = await repositoriesOf(context);
+        const target = LinkIdSchema.safeParse(input);
+        if (!target.success) return { ok: true as const, value: null };
+        return { ok: true as const, value: await connections.lastEdit(target.data.id) };
       },
     }),
     /** `{ pageId, id, version, visible }`: mostrar u ocultar en la página pública. */

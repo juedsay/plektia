@@ -18,7 +18,7 @@ Que el dueño gestione su página desde su agente de IA (Claude u otro cliente M
 2. **Usar.** Desde el agente puedo ver mi página, crear, editar, ocultar, mover y borrar links y secciones, cambiar el contenido destacado de YouTube, activar o desactivar la vigilancia en vivo, pedir "Comprobar ahora" y consultar estadísticas.
 3. **Borrar con cuidado.** Las herramientas que borran se marcan como destructivas y exigen confirmar con el título exacto del elemento. Así un pedido ambiguo no borra lo que no era.
 4. **Ver y revocar conexiones (`/admin/conexiones`).** Veo cada app conectada con su nombre, host, permiso, fecha de alta y último uso. Puedo cambiarle el permiso o revocarla, y la revocación corta el acceso de inmediato.
-5. **Trazabilidad.** Cada cambio hecho por MCP queda en `private.audit_log` con la app y la herramienta usadas, y el panel muestra "Editado desde Claude" en el aviso de conflicto si corresponde.
+5. **Trazabilidad.** Cada cambio hecho por MCP queda en `private.audit_log` con la app y la herramienta usadas, y el panel muestra "Editado desde Claude" en el aviso de conflicto si corresponde: en un conflicto, el editor llama a `mcp_last_edit`, que solo responde al dueño desde el panel y mira la última hora. El nombre lo declara la app, así que se muestra como una línea segura.
 
 ## Autenticación (OAuth 2.1 con Supabase)
 

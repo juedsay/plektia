@@ -79,6 +79,10 @@ export interface EditorApi {
   fetchPreviewImage(url: string): Promise<FormResult<{ readonly dataUrl: string }>>;
   /** Guarda la imagen ya re-codificada (480 × 252) en el link. */
   setPreviewImage(target: { id: string; version: number }, image: Blob): Promise<FormResult<Link>>;
+  /** Si una app conectada por MCP cambió el link en la última hora (para el conflicto). */
+  lastAppEdit(
+    linkId: string,
+  ): Promise<{ readonly appName: string; readonly editedAt: string } | null>;
   /** Saca la imagen del link y borra el archivo. */
   removePreviewImage(target: { id: string; version: number }): Promise<FormResult<Link>>;
 }

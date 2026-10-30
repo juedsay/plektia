@@ -32,6 +32,13 @@ export interface Connection {
   readonly lastUsedAt: string | null;
 }
 
+/** La última edición de una app conectada sobre un elemento (la última hora). */
+export interface AppEdit {
+  /** Lo declaró la app: no está verificado. */
+  readonly appName: string;
+  readonly editedAt: string;
+}
+
 export interface McpConnections {
   /** Detalle del pedido, o a dónde volver si ya estaba autorizado. */
   consentRequest(
@@ -46,4 +53,6 @@ export interface McpConnections {
   setPermission(clientId: string, canWrite: boolean): Promise<Result<void, ConsentError>>;
   /** Corta el acceso ya (grant) e invalida sus tokens en Supabase. Repetirlo no falla. */
   revoke(clientId: string): Promise<Result<void, ConsentError>>;
+  /** Si una app cambió ese link o sección en la última hora: cuál y cuándo. */
+  lastEdit(targetId: string): Promise<AppEdit | null>;
 }

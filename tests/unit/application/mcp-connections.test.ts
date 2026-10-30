@@ -19,6 +19,7 @@ function fakeConnections() {
     consentRequest: () => Promise.resolve(err("not_found")),
     saveGrant: () => Promise.resolve(ok(undefined)),
     decide: () => Promise.resolve(err("not_found")),
+    lastEdit: () => Promise.resolve(null),
     list: () =>
       Promise.resolve([
         {
