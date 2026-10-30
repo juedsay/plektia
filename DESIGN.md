@@ -78,6 +78,30 @@ colors:
   lomo-violeta-claro: "#4a3878"
   lomo-ocre: "#d9c39a"
   lomo-ocre-claro: "#5a4422"
+  cassette-cuerpo: "#16171b"
+  cassette-tinta-clara: "#ecebe4"
+  cassette-tinta-clara-apagada: "#c4c3bb"
+  cassette-linea: "#4a4b55"
+  cassette-linea-tenue: "#2c2e36"
+  cassette-superficie: "#1f2026"
+  cassette-renglon: "#2f3442"
+  cassette-carrete: "#ffa49b"
+  cassette-papel: "#fbfbf7"
+  cassette-tinta: "#1d2c6b"
+  cassette-tinta-apagada: "#3e4a7d"
+  cassette-linea-claro: "#9aa6cf"
+  cassette-linea-tenue-claro: "#dfe5f4"
+  cassette-superficie-claro: "#ffffff"
+  cassette-renglon-claro: "#c9d4ee"
+  cassette-carrete-claro: "#8c1116"
+  cassette-cielo: "#9cc2ff"
+  cassette-cielo-claro: "#0b4f99"
+  cassette-dorado: "#f2c35b"
+  cassette-dorado-claro: "#6b4700"
+  cassette-verde: "#7fd1c4"
+  cassette-verde-claro: "#0d5249"
+  cassette-violeta: "#c3b3f5"
+  cassette-violeta-claro: "#4a3a8a"
 typography:
   display:
     fontFamily: "Bricolage Grotesque, system-ui, sans-serif"
@@ -128,6 +152,11 @@ typography:
     fontWeight: 600
     lineHeight: 1.2
     letterSpacing: "0.09em"
+  cassette-lado:
+    fontFamily: "Kalam, cursive"
+    fontSize: "1.375rem"
+    fontWeight: 700
+    letterSpacing: "0"
 rounded:
   sm: "4px"
   md: "6px"
@@ -136,6 +165,7 @@ rounded:
   punto-pastilla: "1.625rem"
   subte-capsula: "18px"
   lomo-esquina: "2px"
+  cassette-esquina: "4px"
 spacing:
   "1": "0.25rem"
   "2": "0.5rem"
@@ -276,6 +306,34 @@ components:
     backgroundColor: "{colors.lomo-cinta-claro}"
     width: "10px"
     height: "38px"
+  cassette-franja:
+    backgroundColor: "{colors.cassette-cielo}"
+    height: "8px"
+  cassette-lado:
+    textColor: "{colors.cassette-tinta-clara}"
+    typography: "{typography.cassette-lado}"
+    padding: "0 0 0.25rem"
+  cassette-tema:
+    textColor: "{colors.cassette-tinta-clara}"
+    padding: "0.75rem 0"
+    height: "3.25rem"
+  cassette-tema-tarjeta:
+    backgroundColor: "{colors.cassette-superficie}"
+    textColor: "{colors.cassette-tinta-clara}"
+    rounded: "{rounded.cassette-esquina}"
+    padding: "0 1rem"
+  cassette-destacado-arriba:
+    backgroundColor: "{colors.cassette-superficie}"
+    textColor: "{colors.cassette-tinta-clara}"
+    rounded: "{rounded.cassette-esquina}"
+  cassette-carretes:
+    backgroundColor: "{colors.cassette-carrete}"
+    width: "24px"
+    height: "11px"
+  cassette-carretes-claro:
+    backgroundColor: "{colors.cassette-carrete-claro}"
+    width: "24px"
+    height: "11px"
 ---
 
 # Design System: Plektia
@@ -452,7 +510,8 @@ Desde [SPEC-styles](SPEC-styles.md), los cuatro "temas" del contrato de tokens p
 |---|---|---|---|---|
 | Técnico | Patchera (`tecnico`) | construida | Hilo trenzado entre jacks | Jack lima que late |
 | Cercano | Punto (`punto`) | construida | Hileras de puntos de lana; links como retazos cosidos | El retazo teñido entero |
-| Cercano | Lado A / B (`cassette`), Corcho (`corcho`) | próximamente | | |
+| Cercano | Lado A / B (`cassette`) | construida | Carátula de cassette con franja de marca; secciones como lados escritos a mano ("Lado A", "Lado B", "Cinta N · Lado A/B"); links como temas sobre renglones; el título del primer lado se escribe al cargar | Los dos carretes rojos delante del tema |
+| Cercano | Corcho (`corcho`) | próximamente | | |
 | Enérgico | Subte (`subte`) | construida | Secciones como líneas de color con chapa "L<n>"; links como estaciones; la primera línea se traza al cargar | La estación rellena de ámbar que destella |
 | Enérgico | Pedalera (`pedalera`), Bitmap (`bitmap`) | próximamente | | |
 | Editorial | Lomo cosido (`lomo`) | construida | El lomo con sus puntadas en la tela; capítulos con numeral romano; links como entradas de índice; las puntadas del primer cuadernillo se cosen al cargar | La cinta marcapáginas roja colgando sobre la entrada |
@@ -564,6 +623,103 @@ Estas excepciones son propias de Punto y no se heredan a otras variantes ni a T�
 - **Don't** teñir de fondo ningún retazo que no esté en vivo.
 - **Don't** dar textura fotográfica a las lanas: color plano.
 - **Don't** sacar las excepciones de Punto de `[data-theme="punto"]`.
+
+### Lado A / B (familia Cercano)
+
+**La página es la carátula de un cassette compilado a mano.** Una franja de marca cruza la carátula arriba, cada sección es un lado escrito con birome y cada link es un tema de la lista sobre el papel rayado. Lo cercano sale de la mano que escribe la lista, no de stickers ni efectos retro. No hay hilo ni carril de jacks: los temas ocupan todo el ancho de la columna (`--jack-col: 0px`).
+
+#### Colors
+
+Papel de carátula y tinta de birome azul en claro, el cuerpo negro del cassette con tinta clara en oscuro; el acento es la franja de marca y el rojo es solo de los carretes. Los valores normativos están en el frontmatter (`cassette-*`).
+
+- **Cuerpo** (`cassette-cuerpo`) / **Papel** (`cassette-papel`): fondo de la página en oscuro y en claro. Cada uno es también la tinta de la selección del otro modo; el cuerpo es además la tinta sobre el en vivo en oscuro (en claro, `cassette-superficie-claro`).
+- **Tinta clara** (`cassette-tinta-clara`) / **Tinta** (`cassette-tinta`): texto principal, foco, fondo de la selección, el subrayado de cada lado, el aro del avatar, el borde de los destacados de arriba y el de la fila de íconos.
+- **Tinta clara apagada** (`cassette-tinta-clara-apagada`) / **Tinta apagada** (`cassette-tinta-apagada`): bio y metadatos.
+- **Superficie** (`cassette-superficie`, `cassette-superficie-claro`): el fondo de los temas en la forma `cards` y de los destacados de arriba.
+- **Línea** (`cassette-linea`, `cassette-linea-claro`): el borde de los temas en la forma `cards`. **Línea tenue** (`cassette-linea-tenue`, `cassette-linea-tenue-claro`): filetes secundarios.
+- **Renglón** (`cassette-renglon`, `cassette-renglon-claro`): el token `--rule`, decorativo. Es el renglón del papel bajo cada tema y reemplaza al filete de Técnico como separador.
+- **Carrete** (`cassette-carrete`, `cassette-carrete-claro`): `--color-live`. Pinta los dos carretes del en vivo, la etiqueta "En vivo" y el cronómetro, y cumple 7:1 como texto en los dos modos.
+
+**Acentos admitidos** (cinco de los ocho; por defecto, cielo). El acento es la franja de marca: los 8 px de arriba, la franja de la miniatura y el doble subrayado del destacado con acento. Nunca el subrayado del lado.
+
+| Acento | Franja | Oscuro | Claro |
+|---|---|---|---|
+| `cielo` (por defecto) | azul | `#9cc2ff` | `#0b4f99` |
+| `ambar` | dorado | `#f2c35b` | `#6b4700` |
+| `turquesa` | verde | `#7fd1c4` | `#0d5249` |
+| `lavanda` | violeta | `#c3b3f5` | `#4a3a8a` |
+| `hueso` | la tinta misma | `#ecebe4` | `#1d2c6b` |
+
+`coral`, `rosa` y `arena` no se admiten en Lado A / B.
+
+**La regla de los carretes.** El rojo es la señal en vivo de Lado A / B y de nada más: ninguna franja es roja ni rojiza (por eso coral y rosa quedan afuera). Ningún otro elemento lleva `--color-live`.
+
+**La regla de la birome.** El subrayado de cada lado es siempre de tinta (`--color-fg`), con cualquier acento y en cualquier modo: el acento es la franja, no la birome. Por eso en claro el cielo (`#0b4f99`) es un azul aparte de la tinta (`#1d2c6b`): la franja y lo escrito no se confunden.
+
+#### Typography
+
+**Display Font:** Nunito por defecto en los nombres. Admite también **Bricolage Grotesque** y **Space Mono** (alojadas localmente); Fraunces no se admite.
+**Hand Font:** Kalam 700 (`--font-hand`, alojada localmente desde `@fontsource/kalam`, solo latino woff2, respaldo `cursive`), declarada en `astro.config.mjs` y cargada solo en las páginas con esta variante, sin precarga. Es exclusiva de los títulos de lado.
+**Body Font:** la del sistema, igual que Técnico.
+
+- **Lado** (`cassette-lado`): el título de sección en Kalam 700 a 1.375rem, sin tracking, sin sangría y con un subrayado de tinta de 2 px a 0.25rem del texto.
+- El nombre de cada tema sube a 700 (en Técnico es 500): la lista escrita a mano pide el tema firme.
+
+**La regla de los dos lados.** Un cassette tiene dos lados: la 1.ª sección es "Lado A", la 2.ª "Lado B" y, desde la 3.ª, cada par es una cinta nueva: "Cinta 2 · Lado A", "Cinta 2 · Lado B", "Cinta 3 · Lado A", y así. El rótulo va en el mismo renglón que el título, separado por " · " ("Lado A · Redes"), con un contador CSS que sube cada dos secciones. Numera lados, nunca temas.
+
+#### Shapes
+
+- **Franja de marca:** un borde superior de 8 px en el acento sobre el `body`, a todo el ancho de la ventana.
+- **Renglón:** 1 px en `--rule` bajo cada tema, también bajo el destacado con acento.
+- **Avatar:** aro de tinta, de spread puro: 3 px de fondo y 2 px de tinta.
+- **Esquinas:** `--radius-md` baja a 4 px (`cassette-esquina`) en tarjetas y destacados.
+- **Carretes:** dos anillos de 24 × 11 px en total, uno a cada lado (centros a 5.5 px y 18.5 px), con el hueco central de 2 px y el aro hasta 5 px de radio, en `--color-live`.
+
+#### Components
+
+- **Lado (título de sección):** rótulo de lado y título en Kalam 700, con el subrayado de tinta de 2 px debajo.
+- **Tema (fila de link):** el jack se oculta y el texto ocupa toda la fila, sobre su renglón. Lado A / B admite `rows` (por defecto) y `cards`; nunca `pills`.
+- **Tema en tarjeta (forma `cards`):** el texto en una caja con borde de 1 px en línea, esquinas de 4 px, fondo de superficie, 1rem de padding lateral y 0.5rem entre tarjetas.
+- **En vivo:** los dos carretes rojos delante del nombre del tema, en la misma línea. Etiqueta y cronómetro en `--color-live`.
+- **Destacado con acento:** el tema marcado a mano con un doble subrayado de 2 px en el acento (`text-decoration: underline double`, 5 px por debajo del texto). Sin caja, sin fondo, sin padding; conserva su renglón.
+- **Destacado arriba (tarjeta):** borde de 2 px de tinta, esquinas de 4 px y fondo de superficie.
+- **Fila de íconos:** cada botón con borde de 2 px de tinta.
+- **Miniatura del panel:** la franja de marca de 4 px arriba, un trazo manuscrito en SVG (una máscara de 64 × 10, al 64% del ancho, en tinta: la letra manuscrita no se carga en el panel) y dos filas sobre renglones; los carretes (dos puntos de 7 px en `--color-live`) aparecen solo en la fila en vivo. Sin jacks ni tramo de hilo.
+
+#### Firma: el lado que se escribe
+
+Al cargar, el título del primer lado se escribe de izquierda a derecha: se revela con `clip-path` en 900 ms en 24 pasos discretos, una sola vez. Los demás lados están quietos desde el principio. Con `prefers-reduced-motion` el título aparece completo y quieto.
+
+#### Excepciones a Técnico, acotadas a `[data-theme="cassette"]`
+
+Estas excepciones son propias de Lado A / B y no se heredan a otras variantes ni a Técnico:
+
+- **Sin hilo ni carril de jacks.**
+- **Franja de marca** de 8 px en el acento sobre el borde superior del `body`.
+- **Secciones numeradas** como lados y cintas (nunca los temas), en una letra manuscrita con subrayado de tinta.
+- **Una segunda fuente propia** (Kalam), sin precarga y solo en esta variante: no cuenta para "a lo sumo una precargada".
+- **Renglones** en `--rule` como separadores, en vez del filete grafito.
+
+#### Do's and Don'ts
+
+##### Do:
+- **Do** cruzar la carátula con la franja de marca de 8 px en el acento, a todo el ancho.
+- **Do** escribir cada lado en Kalam 700 con el subrayado de 2 px en tinta, con cualquier acento.
+- **Do** numerar "Lado A" y "Lado B", y desde la 3.ª sección "Cinta N · Lado A/B".
+- **Do** separar los temas con renglones en `--rule`.
+- **Do** reservar el rojo para el en vivo: los dos carretes delante del tema, la etiqueta y el cronómetro.
+- **Do** marcar el destacado con acento con el doble subrayado de 2 px en el acento, sin caja.
+- **Do** escribir solo el título del primer lado al cargar, y dejarlo quieto con movimiento reducido.
+
+##### Don't:
+- **Don't** admitir franjas rojas o rojizas (coral, rosa): el rojo es de los carretes.
+- **Don't** subrayar el lado con el acento ni usar Kalam fuera de los títulos de lado.
+- **Don't** precargar Kalam ni declararla en otras variantes.
+- **Don't** volver a jacks o hilo dentro de Lado A / B, ni numerar los temas.
+- **Don't** sumar stickers, texturas de cinta gastada ni otros efectos retro: lo cercano es la mano que escribe.
+- **Don't** sacar las excepciones de Lado A / B de `[data-theme="cassette"]`.
+
+Pendiente: la etiqueta de sección editable por el dueño (el rótulo "Lado A", "Lado B", …) llega en un PR siguiente; hoy el rótulo lo pone el CSS por posición.
 
 ### Subte (familia Enérgico)
 

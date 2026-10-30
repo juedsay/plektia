@@ -90,6 +90,23 @@ export default defineConfig({
         ],
       },
     },
+    // Letra manuscrita de los títulos de Lado A / B (SPEC-styles): solo en esa
+    // variante, sin precarga (el resto de la página no la usa).
+    {
+      provider: fontProviders.local(),
+      name: "Kalam",
+      cssVariable: "--font-hand",
+      fallbacks: ["cursive"],
+      options: {
+        variants: [
+          {
+            weight: 700,
+            style: "normal",
+            src: ["./node_modules/@fontsource/kalam/files/kalam-latin-700-normal.woff2"],
+          },
+        ],
+      },
+    },
     {
       provider: fontProviders.local(),
       name: "Space Mono",

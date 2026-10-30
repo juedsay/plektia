@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-10-30T07:12:33.000Z",
+  "generatedAt": "2026-10-30T12:00:00.000Z",
   "title": "Design System: Plektia",
   "extensions": {
     "colorMeta": {
@@ -1287,6 +1287,414 @@
           "oklch(80% 0.058 76.7)",
           "oklch(95% 0.058 76.7)"
         ]
+      },
+      "cassette-cuerpo": {
+        "role": "neutral",
+        "displayName": "Cuerpo del cassette (Lado A / B)",
+        "canonical": "oklch(20.5% 0.008 274.5)",
+        "cssVar": "--color-bg (oscuro); --color-thread-twist, --color-live-ink y --color-selection-fg (oscuro)",
+        "theme": "cassette",
+        "tonalRamp": [
+          "oklch(15% 0.008 274.5)",
+          "oklch(25% 0.008 274.5)",
+          "oklch(35% 0.008 274.5)",
+          "oklch(45% 0.008 274.5)",
+          "oklch(55% 0.008 274.5)",
+          "oklch(65% 0.008 274.5)",
+          "oklch(80% 0.008 274.5)",
+          "oklch(95% 0.008 274.5)"
+        ]
+      },
+      "cassette-tinta-clara": {
+        "role": "neutral",
+        "displayName": "Tinta clara (Lado A / B)",
+        "canonical": "oklch(93.9% 0.009 100.0)",
+        "cssVar": "--color-fg, --color-focus y --color-selection-bg (oscuro); subrayado del lado, aro del avatar, bordes de destacados de arriba y fila de íconos; acento hueso en oscuro",
+        "theme": "cassette",
+        "tonalRamp": [
+          "oklch(15% 0.009 100.0)",
+          "oklch(25% 0.009 100.0)",
+          "oklch(35% 0.009 100.0)",
+          "oklch(45% 0.009 100.0)",
+          "oklch(55% 0.009 100.0)",
+          "oklch(65% 0.009 100.0)",
+          "oklch(80% 0.009 100.0)",
+          "oklch(95% 0.009 100.0)"
+        ]
+      },
+      "cassette-tinta-clara-apagada": {
+        "role": "neutral",
+        "displayName": "Tinta clara apagada (Lado A / B)",
+        "canonical": "oklch(81.6% 0.011 100.9)",
+        "cssVar": "--color-fg-muted (oscuro)",
+        "theme": "cassette",
+        "tonalRamp": [
+          "oklch(15% 0.011 100.9)",
+          "oklch(25% 0.011 100.9)",
+          "oklch(35% 0.011 100.9)",
+          "oklch(45% 0.011 100.9)",
+          "oklch(55% 0.011 100.9)",
+          "oklch(65% 0.011 100.9)",
+          "oklch(80% 0.011 100.9)",
+          "oklch(95% 0.011 100.9)"
+        ]
+      },
+      "cassette-linea": {
+        "role": "neutral",
+        "displayName": "Línea (Lado A / B)",
+        "canonical": "oklch(41.6% 0.017 281.1)",
+        "cssVar": "--color-line (oscuro); borde de los temas en forma cards",
+        "theme": "cassette",
+        "tonalRamp": [
+          "oklch(15% 0.017 281.1)",
+          "oklch(25% 0.017 281.1)",
+          "oklch(35% 0.017 281.1)",
+          "oklch(45% 0.017 281.1)",
+          "oklch(55% 0.017 281.1)",
+          "oklch(65% 0.017 281.1)",
+          "oklch(80% 0.017 281.1)",
+          "oklch(95% 0.017 281.1)"
+        ]
+      },
+      "cassette-linea-tenue": {
+        "role": "neutral",
+        "displayName": "Línea tenue (Lado A / B)",
+        "canonical": "oklch(30.2% 0.015 274.4)",
+        "cssVar": "--color-line-soft (oscuro)",
+        "theme": "cassette",
+        "tonalRamp": [
+          "oklch(15% 0.015 274.4)",
+          "oklch(25% 0.015 274.4)",
+          "oklch(35% 0.015 274.4)",
+          "oklch(45% 0.015 274.4)",
+          "oklch(55% 0.015 274.4)",
+          "oklch(65% 0.015 274.4)",
+          "oklch(80% 0.015 274.4)",
+          "oklch(95% 0.015 274.4)"
+        ]
+      },
+      "cassette-superficie": {
+        "role": "neutral",
+        "displayName": "Superficie (Lado A / B)",
+        "canonical": "oklch(24.5% 0.011 278.0)",
+        "cssVar": "--color-surface (oscuro); temas en forma cards y destacados de arriba",
+        "theme": "cassette",
+        "tonalRamp": [
+          "oklch(15% 0.011 278.0)",
+          "oklch(25% 0.011 278.0)",
+          "oklch(35% 0.011 278.0)",
+          "oklch(45% 0.011 278.0)",
+          "oklch(55% 0.011 278.0)",
+          "oklch(65% 0.011 278.0)",
+          "oklch(80% 0.011 278.0)",
+          "oklch(95% 0.011 278.0)"
+        ]
+      },
+      "cassette-renglon": {
+        "role": "neutral",
+        "displayName": "Renglón (Lado A / B)",
+        "canonical": "oklch(32.6% 0.026 269.6)",
+        "cssVar": "--rule (oscuro): el renglón bajo cada tema, decorativo",
+        "theme": "cassette",
+        "tonalRamp": [
+          "oklch(15% 0.026 269.6)",
+          "oklch(25% 0.026 269.6)",
+          "oklch(35% 0.026 269.6)",
+          "oklch(45% 0.026 269.6)",
+          "oklch(55% 0.026 269.6)",
+          "oklch(65% 0.026 269.6)",
+          "oklch(80% 0.026 269.6)",
+          "oklch(95% 0.026 269.6)"
+        ]
+      },
+      "cassette-carrete": {
+        "role": "tertiary",
+        "displayName": "Carrete (Lado A / B)",
+        "canonical": "oklch(80.7% 0.110 25.9)",
+        "cssVar": "--color-live (oscuro): los dos carretes del en vivo, etiqueta y cronómetro",
+        "theme": "cassette",
+        "tonalRamp": [
+          "oklch(15% 0.110 25.9)",
+          "oklch(25% 0.110 25.9)",
+          "oklch(35% 0.110 25.9)",
+          "oklch(45% 0.110 25.9)",
+          "oklch(55% 0.110 25.9)",
+          "oklch(65% 0.110 25.9)",
+          "oklch(80% 0.110 25.9)",
+          "oklch(95% 0.110 25.9)"
+        ]
+      },
+      "cassette-papel": {
+        "role": "neutral",
+        "displayName": "Papel de carátula (Lado A / B, claro)",
+        "canonical": "oklch(98.7% 0.005 106.5)",
+        "cssVar": "--color-bg (claro); --color-thread-twist y --color-selection-fg (claro)",
+        "theme": "cassette",
+        "tonalRamp": [
+          "oklch(15% 0.005 106.5)",
+          "oklch(25% 0.005 106.5)",
+          "oklch(35% 0.005 106.5)",
+          "oklch(45% 0.005 106.5)",
+          "oklch(55% 0.005 106.5)",
+          "oklch(65% 0.005 106.5)",
+          "oklch(80% 0.005 106.5)",
+          "oklch(95% 0.005 106.5)"
+        ]
+      },
+      "cassette-tinta": {
+        "role": "neutral",
+        "displayName": "Tinta de birome (Lado A / B, claro)",
+        "canonical": "oklch(32.1% 0.111 269.1)",
+        "cssVar": "--color-fg, --color-focus y --color-selection-bg (claro); subrayado del lado, aro del avatar, bordes de destacados de arriba y fila de íconos; acento hueso en claro",
+        "theme": "cassette",
+        "tonalRamp": [
+          "oklch(15% 0.111 269.1)",
+          "oklch(25% 0.111 269.1)",
+          "oklch(35% 0.111 269.1)",
+          "oklch(45% 0.111 269.1)",
+          "oklch(55% 0.111 269.1)",
+          "oklch(65% 0.111 269.1)",
+          "oklch(80% 0.111 269.1)",
+          "oklch(95% 0.111 269.1)"
+        ]
+      },
+      "cassette-tinta-apagada": {
+        "role": "neutral",
+        "displayName": "Tinta apagada (Lado A / B, claro)",
+        "canonical": "oklch(42.4% 0.086 272.3)",
+        "cssVar": "--color-fg-muted (claro)",
+        "theme": "cassette",
+        "tonalRamp": [
+          "oklch(15% 0.086 272.3)",
+          "oklch(25% 0.086 272.3)",
+          "oklch(35% 0.086 272.3)",
+          "oklch(45% 0.086 272.3)",
+          "oklch(55% 0.086 272.3)",
+          "oklch(65% 0.086 272.3)",
+          "oklch(80% 0.086 272.3)",
+          "oklch(95% 0.086 272.3)"
+        ]
+      },
+      "cassette-linea-claro": {
+        "role": "neutral",
+        "displayName": "Línea (Lado A / B, claro)",
+        "canonical": "oklch(73.0% 0.061 272.1)",
+        "cssVar": "--color-line (claro)",
+        "theme": "cassette",
+        "tonalRamp": [
+          "oklch(15% 0.061 272.1)",
+          "oklch(25% 0.061 272.1)",
+          "oklch(35% 0.061 272.1)",
+          "oklch(45% 0.061 272.1)",
+          "oklch(55% 0.061 272.1)",
+          "oklch(65% 0.061 272.1)",
+          "oklch(80% 0.061 272.1)",
+          "oklch(95% 0.061 272.1)"
+        ]
+      },
+      "cassette-linea-tenue-claro": {
+        "role": "neutral",
+        "displayName": "Línea tenue (Lado A / B, claro)",
+        "canonical": "oklch(92.2% 0.021 268.4)",
+        "cssVar": "--color-line-soft (claro)",
+        "theme": "cassette",
+        "tonalRamp": [
+          "oklch(15% 0.021 268.4)",
+          "oklch(25% 0.021 268.4)",
+          "oklch(35% 0.021 268.4)",
+          "oklch(45% 0.021 268.4)",
+          "oklch(55% 0.021 268.4)",
+          "oklch(65% 0.021 268.4)",
+          "oklch(80% 0.021 268.4)",
+          "oklch(95% 0.021 268.4)"
+        ]
+      },
+      "cassette-superficie-claro": {
+        "role": "neutral",
+        "displayName": "Superficie (Lado A / B, claro)",
+        "canonical": "oklch(100% 0 0)",
+        "cssVar": "--color-surface y --color-live-ink (claro)",
+        "theme": "cassette",
+        "tonalRamp": [
+          "oklch(15% 0 0)",
+          "oklch(25% 0 0)",
+          "oklch(35% 0 0)",
+          "oklch(45% 0 0)",
+          "oklch(55% 0 0)",
+          "oklch(65% 0 0)",
+          "oklch(80% 0 0)",
+          "oklch(95% 0 0)"
+        ]
+      },
+      "cassette-renglon-claro": {
+        "role": "neutral",
+        "displayName": "Renglón celeste (Lado A / B, claro)",
+        "canonical": "oklch(87.0% 0.038 267.3)",
+        "cssVar": "--rule (claro): el renglón bajo cada tema, decorativo",
+        "theme": "cassette",
+        "tonalRamp": [
+          "oklch(15% 0.038 267.3)",
+          "oklch(25% 0.038 267.3)",
+          "oklch(35% 0.038 267.3)",
+          "oklch(45% 0.038 267.3)",
+          "oklch(55% 0.038 267.3)",
+          "oklch(65% 0.038 267.3)",
+          "oklch(80% 0.038 267.3)",
+          "oklch(95% 0.038 267.3)"
+        ]
+      },
+      "cassette-carrete-claro": {
+        "role": "tertiary",
+        "displayName": "Carrete (Lado A / B, claro)",
+        "canonical": "oklch(41.1% 0.156 26.2)",
+        "cssVar": "--color-live (claro): los dos carretes del en vivo, etiqueta y cronómetro",
+        "theme": "cassette",
+        "tonalRamp": [
+          "oklch(15% 0.156 26.2)",
+          "oklch(25% 0.156 26.2)",
+          "oklch(35% 0.156 26.2)",
+          "oklch(45% 0.156 26.2)",
+          "oklch(55% 0.156 26.2)",
+          "oklch(65% 0.156 26.2)",
+          "oklch(80% 0.156 26.2)",
+          "oklch(95% 0.156 26.2)"
+        ]
+      },
+      "cassette-cielo": {
+        "role": "primary",
+        "displayName": "Franja azul (Lado A / B)",
+        "canonical": "oklch(80.9% 0.096 259.7)",
+        "cssVar": "acento cielo en oscuro (por defecto)",
+        "theme": "cassette",
+        "tonalRamp": [
+          "oklch(15% 0.096 259.7)",
+          "oklch(25% 0.096 259.7)",
+          "oklch(35% 0.096 259.7)",
+          "oklch(45% 0.096 259.7)",
+          "oklch(55% 0.096 259.7)",
+          "oklch(65% 0.096 259.7)",
+          "oklch(80% 0.096 259.7)",
+          "oklch(95% 0.096 259.7)"
+        ]
+      },
+      "cassette-cielo-claro": {
+        "role": "primary",
+        "displayName": "Franja azul (Lado A / B, claro)",
+        "canonical": "oklch(43.3% 0.136 255.3)",
+        "cssVar": "acento cielo en claro (por defecto); separado de la tinta #1d2c6b",
+        "theme": "cassette",
+        "tonalRamp": [
+          "oklch(15% 0.136 255.3)",
+          "oklch(25% 0.136 255.3)",
+          "oklch(35% 0.136 255.3)",
+          "oklch(45% 0.136 255.3)",
+          "oklch(55% 0.136 255.3)",
+          "oklch(65% 0.136 255.3)",
+          "oklch(80% 0.136 255.3)",
+          "oklch(95% 0.136 255.3)"
+        ]
+      },
+      "cassette-dorado": {
+        "role": "secondary",
+        "displayName": "Franja dorada (Lado A / B)",
+        "canonical": "oklch(83.9% 0.132 84.8)",
+        "cssVar": "acento ambar en oscuro",
+        "theme": "cassette",
+        "tonalRamp": [
+          "oklch(15% 0.132 84.8)",
+          "oklch(25% 0.132 84.8)",
+          "oklch(35% 0.132 84.8)",
+          "oklch(45% 0.132 84.8)",
+          "oklch(55% 0.132 84.8)",
+          "oklch(65% 0.132 84.8)",
+          "oklch(80% 0.132 84.8)",
+          "oklch(95% 0.132 84.8)"
+        ]
+      },
+      "cassette-dorado-claro": {
+        "role": "secondary",
+        "displayName": "Franja dorada (Lado A / B, claro)",
+        "canonical": "oklch(42.8% 0.090 75.9)",
+        "cssVar": "acento ambar en claro",
+        "theme": "cassette",
+        "tonalRamp": [
+          "oklch(15% 0.090 75.9)",
+          "oklch(25% 0.090 75.9)",
+          "oklch(35% 0.090 75.9)",
+          "oklch(45% 0.090 75.9)",
+          "oklch(55% 0.090 75.9)",
+          "oklch(65% 0.090 75.9)",
+          "oklch(80% 0.090 75.9)",
+          "oklch(95% 0.090 75.9)"
+        ]
+      },
+      "cassette-verde": {
+        "role": "secondary",
+        "displayName": "Franja verde (Lado A / B)",
+        "canonical": "oklch(80.4% 0.083 183.0)",
+        "cssVar": "acento turquesa en oscuro",
+        "theme": "cassette",
+        "tonalRamp": [
+          "oklch(15% 0.083 183.0)",
+          "oklch(25% 0.083 183.0)",
+          "oklch(35% 0.083 183.0)",
+          "oklch(45% 0.083 183.0)",
+          "oklch(55% 0.083 183.0)",
+          "oklch(65% 0.083 183.0)",
+          "oklch(80% 0.083 183.0)",
+          "oklch(95% 0.083 183.0)"
+        ]
+      },
+      "cassette-verde-claro": {
+        "role": "secondary",
+        "displayName": "Franja verde (Lado A / B, claro)",
+        "canonical": "oklch(39.6% 0.066 181.7)",
+        "cssVar": "acento turquesa en claro",
+        "theme": "cassette",
+        "tonalRamp": [
+          "oklch(15% 0.066 181.7)",
+          "oklch(25% 0.066 181.7)",
+          "oklch(35% 0.066 181.7)",
+          "oklch(45% 0.066 181.7)",
+          "oklch(55% 0.066 181.7)",
+          "oklch(65% 0.066 181.7)",
+          "oklch(80% 0.066 181.7)",
+          "oklch(95% 0.066 181.7)"
+        ]
+      },
+      "cassette-violeta": {
+        "role": "secondary",
+        "displayName": "Franja violeta (Lado A / B)",
+        "canonical": "oklch(80.3% 0.093 295.3)",
+        "cssVar": "acento lavanda en oscuro",
+        "theme": "cassette",
+        "tonalRamp": [
+          "oklch(15% 0.093 295.3)",
+          "oklch(25% 0.093 295.3)",
+          "oklch(35% 0.093 295.3)",
+          "oklch(45% 0.093 295.3)",
+          "oklch(55% 0.093 295.3)",
+          "oklch(65% 0.093 295.3)",
+          "oklch(80% 0.093 295.3)",
+          "oklch(95% 0.093 295.3)"
+        ]
+      },
+      "cassette-violeta-claro": {
+        "role": "secondary",
+        "displayName": "Franja violeta (Lado A / B, claro)",
+        "canonical": "oklch(41.0% 0.128 288.7)",
+        "cssVar": "acento lavanda en claro",
+        "theme": "cassette",
+        "tonalRamp": [
+          "oklch(15% 0.128 288.7)",
+          "oklch(25% 0.128 288.7)",
+          "oklch(35% 0.128 288.7)",
+          "oklch(45% 0.128 288.7)",
+          "oklch(55% 0.128 288.7)",
+          "oklch(65% 0.128 288.7)",
+          "oklch(80% 0.128 288.7)",
+          "oklch(95% 0.128 288.7)"
+        ]
       }
     },
     "typographyMeta": {
@@ -1325,6 +1733,10 @@
       "lomo-capitulo": {
         "displayName": "Capítulo (Lomo)",
         "purpose": "Título de sección en Lomo cosido: versalitas armadas (mayúsculas a 0.8 del tamaño de sección, 600, tracking 0.09em) con el numeral romano a cuerpo completo en la tela. Fraunces por defecto; admite Bricolage."
+      },
+      "cassette-lado": {
+        "displayName": "Lado (Lado A / B)",
+        "purpose": "Título de sección en Lado A / B: Kalam 700 a 1.375rem (--font-hand, sin precarga, solo en esta variante), con el rótulo \"Lado A · \", \"Lado B · \" o \"Cinta N · Lado A/B · \" delante y subrayado de tinta de 2 px. Los nombres van en Nunito por defecto; admite Bricolage y Space Mono."
       }
     },
     "shadows": [
@@ -1367,6 +1779,11 @@
         "name": "lomo-agujeros",
         "value": "::before { left: -5px; 3px × 3px; border-radius: 50%; background: var(--color-fg-muted); box-shadow: 21px 0 0 var(--color-fg-muted) }",
         "purpose": "Los dos agujeros de costura en los extremos de cada puntada; la sombra solo duplica el punto."
+      },
+      {
+        "name": "cassette-aro-avatar",
+        "value": "0 0 0 3px var(--color-bg), 0 0 0 5px var(--color-fg)",
+        "purpose": "Aro de tinta del avatar en Lado A / B; spread puro, no elevación ni foco."
       }
     ],
     "motion": [
@@ -1419,6 +1836,11 @@
         "name": "lomo-coser",
         "value": "260ms var(--ease-out) backwards, scaleX 0 → 1; escalonado 0/140/280/420/560ms (la 5.ª y siguientes a 560ms)",
         "purpose": "Firma de Lomo cosido: las puntadas del primer cuadernillo se cosen una por una al cargar, una vez. Quietas con movimiento reducido."
+      },
+      {
+        "name": "cassette-escribir",
+        "value": "900ms steps(24, end) backwards, clip-path inset revelado de izquierda a derecha",
+        "purpose": "Firma de Lado A / B: el título del primer lado se escribe de izquierda a derecha al cargar, una vez. Quieto con movimiento reducido."
       }
     ],
     "breakpoints": [
@@ -1459,6 +1881,7 @@
       "implemented": [
         "tecnico",
         "punto",
+        "cassette",
         "subte",
         "lomo"
       ],
@@ -1515,6 +1938,70 @@
           "Sin hilo ni carril de jacks",
           "Contorno punteado decorativo en avatar y costuras (el foco sigue sólido)",
           "Cronómetro en la fuente del cuerpo con tabular-nums"
+        ]
+      },
+      "cassette": {
+        "accents": {
+          "cielo": {
+            "dark": "#9cc2ff",
+            "light": "#0b4f99",
+            "stripe": "azul",
+            "default": true
+          },
+          "ambar": {
+            "dark": "#f2c35b",
+            "light": "#6b4700",
+            "stripe": "dorado"
+          },
+          "turquesa": {
+            "dark": "#7fd1c4",
+            "light": "#0d5249",
+            "stripe": "verde"
+          },
+          "lavanda": {
+            "dark": "#c3b3f5",
+            "light": "#4a3a8a",
+            "stripe": "violeta"
+          },
+          "hueso": {
+            "dark": "#ecebe4",
+            "light": "#1d2c6b",
+            "stripe": "la tinta misma"
+          }
+        },
+        "stripe": "El acento es la franja de marca: borde superior de 8 px del body a todo el ancho (4 px en la miniatura) y el doble subrayado del destacado con acento. Nunca el subrayado del lado (siempre --color-fg). Sin franjas rojas: coral, rosa y arena no se admiten.",
+        "live": {
+          "dark": "#ffa49b",
+          "light": "#8c1116",
+          "note": "--color-live pinta los dos carretes (24 × 11 px, delante del nombre del tema), la etiqueta \"En vivo\" y el cronómetro; 7:1 como texto. El rojo no se usa para nada más."
+        },
+        "rule": {
+          "dark": "#2f3442",
+          "light": "#c9d4ee",
+          "note": "--rule: renglón de 1 px bajo cada tema, decorativo, en vez del filete."
+        },
+        "side": "Título de sección en Kalam 700 (1.375rem) con subrayado de tinta de 2 px. Rótulo por contador CSS: 1.ª \"Lado A\", 2.ª \"Lado B\"; desde la 3.ª \"Cinta N · Lado A/B\" (la cinta sube cada dos secciones). Numera lados, nunca temas. La etiqueta editable por el dueño llega en un PR siguiente.",
+        "handFont": "Kalam 700 (--font-hand, @fontsource/kalam latin woff2, respaldo cursive), declarada en astro.config.mjs y cargada solo en esta variante (PublicLayout.astro), sin precarga.",
+        "shapes": [
+          "rows",
+          "cards"
+        ],
+        "defaultShape": "rows",
+        "fonts": [
+          "nunito",
+          "bricolage",
+          "space_mono"
+        ],
+        "defaultFont": "nunito",
+        "thread": false,
+        "jackCol": "0px",
+        "radiusMd": "4px",
+        "exceptions": [
+          "Sin hilo ni carril de jacks",
+          "Franja de marca de 8 px en el acento sobre el borde superior del body",
+          "Secciones numeradas como lados y cintas (nunca temas), manuscritas y con subrayado de tinta",
+          "Segunda fuente propia (Kalam) sin precarga, solo en esta variante",
+          "Renglones en --rule como separadores en vez del filete"
         ]
       },
       "subte": {
@@ -1818,6 +2305,14 @@
       "css": ".ds-avatar-subte{display:grid;place-items:center;width:88px;height:88px;margin:12px;border-radius:50%;background:#14254f;color:#f2efe6;box-shadow:0 0 0 4px #0d1b3d,0 0 0 8px #ffa39a;font-family:'Bricolage Grotesque',system-ui,sans-serif;font-size:2rem;font-weight:500}"
     },
     {
+      "name": "Lado con temas (Lado A / B)",
+      "kind": "custom",
+      "refersTo": "cassette-tema",
+      "description": "Un lado de Lado A / B: título manuscrito con rótulo y subrayado de tinta; temas sobre renglones, el en vivo con sus dos carretes rojos y el destacado con doble subrayado en el acento.",
+      "html": "<section class=\"ds-cassette\"><h2 class=\"ds-cassette-lado\">Redes</h2><a class=\"ds-cassette-tema\" href=\"#\"><span class=\"ds-cassette-name is-live\">Twitch</span><span class=\"ds-cassette-meta\"><b>En vivo</b> · <time>1:24:05</time></span></a><a class=\"ds-cassette-tema\" href=\"#\"><span class=\"ds-cassette-name is-highlighted\">YouTube</span><span class=\"ds-cassette-meta\">youtube.com/@juedsay</span></a></section>",
+      "css": ".ds-cassette{width:22rem;padding:1rem;border-top:8px solid #0b4f99;background:#fbfbf7;color:#1d2c6b} .ds-cassette-lado{margin:0;padding-bottom:0.25rem;border-bottom:2px solid #1d2c6b;font-family:Kalam,cursive;font-size:1.375rem;font-weight:700;letter-spacing:0;animation:ds-escribir 900ms steps(24,end) backwards} .ds-cassette-lado::before{content:\"Lado A · \"} @keyframes ds-escribir{from{clip-path:inset(0 100% 0 0)}to{clip-path:inset(0 0 0 0)}} .ds-cassette-tema{display:block;min-height:3.25rem;padding:0.75rem 0;border-bottom:1px solid #c9d4ee;color:inherit;text-decoration:none} .ds-cassette-tema:focus-visible{outline:2px solid #1d2c6b;outline-offset:4px;border-radius:4px} .ds-cassette-name{display:flex;align-items:center;gap:0.5rem;font-family:Nunito,system-ui,sans-serif;font-size:1.0625rem;font-weight:700;line-height:1.3} .ds-cassette-name.is-live::before{content:\"\";flex:none;width:24px;height:11px;background:radial-gradient(circle at 5.5px 5.5px,transparent 2px,#8c1116 2.5px 5px,transparent 5.5px),radial-gradient(circle at 18.5px 5.5px,transparent 2px,#8c1116 2.5px 5px,transparent 5.5px)} .ds-cassette-name.is-highlighted{text-decoration:underline double #0b4f99;text-decoration-thickness:2px;text-underline-offset:5px} .ds-cassette-meta{display:block;color:#3e4a7d;font-size:0.8125rem} .ds-cassette-meta b,.ds-cassette-meta time{color:#8c1116;font-weight:600} .ds-cassette-meta time{font-family:ui-monospace,monospace;font-variant-numeric:tabular-nums} @media (prefers-reduced-motion: reduce){.ds-cassette-lado{animation:none}}"
+    },
+    {
       "name": "Capítulo con entradas (Lomo)",
       "kind": "custom",
       "refersTo": "lomo-entrada",
@@ -1928,6 +2423,21 @@
         "section": "colors"
       },
       {
+        "name": "La regla de los carretes",
+        "body": "El rojo es la señal en vivo de Lado A / B y de nada más: ninguna franja es roja ni rojiza (por eso coral y rosa quedan afuera). Ningún otro elemento lleva `--color-live`.",
+        "section": "colors"
+      },
+      {
+        "name": "La regla de la birome",
+        "body": "El subrayado de cada lado es siempre de tinta (`--color-fg`), con cualquier acento y en cualquier modo: el acento es la franja, no la birome. En claro el cielo (`#0b4f99`) es un azul aparte de la tinta (`#1d2c6b`).",
+        "section": "colors"
+      },
+      {
+        "name": "La regla de los dos lados",
+        "body": "Un cassette tiene dos lados: la 1.ª sección es \"Lado A\", la 2.ª \"Lado B\" y, desde la 3.ª, cada par es una cinta nueva (\"Cinta 2 · Lado A\", \"Cinta 2 · Lado B\", …). Numera lados, nunca temas.",
+        "section": "typography"
+      },
+      {
         "name": "La regla de las líneas que no se repiten",
         "body": "Cada acento declara sus líneas 2, 3 y 4 (`--line-2-on-dark`, `--line-2-on-light`, …) y las cuatro de un ciclo son siempre colores distintos, en los dos modos. Las secciones toman la línea por posición: la 1.ª, 5.ª, … en el acento; la 2.ª, 6.ª, … en la línea 2; y así. `tests/unit/ui/theme-tokens.test.ts` (\"subte: cada línea tiene su color\") lo mide en cada acento admitido.",
         "section": "colors"
@@ -1968,6 +2478,13 @@
       "**Do** abrir cada sección con su hilera de V, alternando acento, mostaza y salvia.",
       "**Do** tejer solo la primera hilera al cargar, y dejarla quieta con movimiento reducido.",
       "**Do** usar Fraunces con `SOFT` 100 en los nombres cuando es la tipografía elegida.",
+      "**Do** cruzar la carátula con la franja de marca de 8 px en el acento, a todo el ancho.",
+      "**Do** escribir cada lado en Kalam 700 con el subrayado de 2 px en tinta, con cualquier acento.",
+      "**Do** numerar \"Lado A\" y \"Lado B\", y desde la 3.ª sección \"Cinta N · Lado A/B\".",
+      "**Do** separar los temas con renglones en `--rule`.",
+      "**Do** reservar el rojo para el en vivo: los dos carretes delante del tema, la etiqueta y el cronómetro.",
+      "**Do** marcar el destacado con acento con el doble subrayado de 2 px en el acento, sin caja.",
+      "**Do** escribir solo el título del primer lado al cargar, y dejarlo quieto con movimiento reducido.",
       "**Do** dar a cada sección su línea por posición: el acento como L1 y, después, las tres que declara el acento.",
       "**Do** cortar la línea en la última estación y dejar sin tramo la sección de una sola.",
       "**Do** reservar el ámbar para la estación en vivo: relleno, aro, destello, etiqueta y cronómetro.",
@@ -1994,6 +2511,12 @@
       "**Don't** teñir de fondo ningún retazo que no esté en vivo.",
       "**Don't** dar textura fotográfica a las lanas: color plano.",
       "**Don't** sacar las excepciones de Punto de `[data-theme=\"punto\"]`.",
+      "**Don't** admitir franjas rojas o rojizas (coral, rosa): el rojo es de los carretes.",
+      "**Don't** subrayar el lado con el acento ni usar Kalam fuera de los títulos de lado.",
+      "**Don't** precargar Kalam ni declararla en otras variantes.",
+      "**Don't** volver a jacks o hilo dentro de Lado A / B, ni numerar los temas.",
+      "**Don't** sumar stickers, texturas de cinta gastada ni otros efectos retro: lo cercano es la mano que escribe.",
+      "**Don't** sacar las excepciones de Lado A / B de `[data-theme=\"cassette\"]`.",
       "**Don't** repetir un color de línea dentro de un ciclo de cuatro secciones.",
       "**Don't** usar el ámbar como línea, acento o decoración.",
       "**Don't** numerar los links: la chapa numera líneas.",
