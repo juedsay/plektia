@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-10-30T06:09:56.852Z",
+  "generatedAt": "2026-10-30T06:45:34.784Z",
   "title": "Design System: Plektia",
   "extensions": {
     "colorMeta": {
@@ -488,6 +488,414 @@
           "oklch(80% 0.065 151.4)",
           "oklch(95% 0.065 151.4)"
         ]
+      },
+      "subte-medianoche": {
+        "role": "neutral",
+        "displayName": "Medianoche (Subte)",
+        "canonical": "oklch(23.2% 0.068 264.8)",
+        "cssVar": "--color-bg (oscuro); --color-fg, --color-focus y --color-selection-bg (claro); --color-live-ink y texto de la chapa (oscuro)",
+        "theme": "subte",
+        "tonalRamp": [
+          "oklch(15% 0.068 264.8)",
+          "oklch(25% 0.068 264.8)",
+          "oklch(35% 0.068 264.8)",
+          "oklch(45% 0.068 264.8)",
+          "oklch(55% 0.068 264.8)",
+          "oklch(65% 0.068 264.8)",
+          "oklch(80% 0.068 264.8)",
+          "oklch(95% 0.068 264.8)"
+        ]
+      },
+      "subte-marfil": {
+        "role": "neutral",
+        "displayName": "Marfil (Subte)",
+        "canonical": "oklch(95.2% 0.012 91.5)",
+        "cssVar": "--color-fg, --color-focus, --color-selection-bg y --station (oscuro)",
+        "theme": "subte",
+        "tonalRamp": [
+          "oklch(15% 0.012 91.5)",
+          "oklch(25% 0.012 91.5)",
+          "oklch(35% 0.012 91.5)",
+          "oklch(45% 0.012 91.5)",
+          "oklch(55% 0.012 91.5)",
+          "oklch(65% 0.012 91.5)",
+          "oklch(80% 0.012 91.5)",
+          "oklch(95% 0.012 91.5)"
+        ]
+      },
+      "subte-niebla": {
+        "role": "neutral",
+        "displayName": "Niebla (Subte)",
+        "canonical": "oklch(83.4% 0.023 272)",
+        "cssVar": "--color-fg-muted (oscuro)",
+        "theme": "subte",
+        "tonalRamp": [
+          "oklch(15% 0.023 272)",
+          "oklch(25% 0.023 272)",
+          "oklch(35% 0.023 272)",
+          "oklch(45% 0.023 272)",
+          "oklch(55% 0.023 272)",
+          "oklch(65% 0.023 272)",
+          "oklch(80% 0.023 272)",
+          "oklch(95% 0.023 272)"
+        ]
+      },
+      "subte-via": {
+        "role": "neutral",
+        "displayName": "Vía (Subte)",
+        "canonical": "oklch(42.8% 0.084 266.6)",
+        "cssVar": "--color-line (oscuro)",
+        "theme": "subte",
+        "tonalRamp": [
+          "oklch(15% 0.084 266.6)",
+          "oklch(25% 0.084 266.6)",
+          "oklch(35% 0.084 266.6)",
+          "oklch(45% 0.084 266.6)",
+          "oklch(55% 0.084 266.6)",
+          "oklch(65% 0.084 266.6)",
+          "oklch(80% 0.084 266.6)",
+          "oklch(95% 0.084 266.6)"
+        ]
+      },
+      "subte-via-tenue": {
+        "role": "neutral",
+        "displayName": "Vía tenue (Subte)",
+        "canonical": "oklch(33.4% 0.08 265.2)",
+        "cssVar": "--color-line-soft (oscuro)",
+        "theme": "subte",
+        "tonalRamp": [
+          "oklch(15% 0.08 265.2)",
+          "oklch(25% 0.08 265.2)",
+          "oklch(35% 0.08 265.2)",
+          "oklch(45% 0.08 265.2)",
+          "oklch(55% 0.08 265.2)",
+          "oklch(65% 0.08 265.2)",
+          "oklch(80% 0.08 265.2)",
+          "oklch(95% 0.08 265.2)"
+        ]
+      },
+      "subte-anden": {
+        "role": "neutral",
+        "displayName": "Andén (Subte)",
+        "canonical": "oklch(27.6% 0.08 265)",
+        "cssVar": "--color-surface (oscuro)",
+        "theme": "subte",
+        "tonalRamp": [
+          "oklch(15% 0.08 265)",
+          "oklch(25% 0.08 265)",
+          "oklch(35% 0.08 265)",
+          "oklch(45% 0.08 265)",
+          "oklch(55% 0.08 265)",
+          "oklch(65% 0.08 265)",
+          "oklch(80% 0.08 265)",
+          "oklch(95% 0.08 265)"
+        ]
+      },
+      "subte-ambar-en-vivo": {
+        "role": "primary",
+        "displayName": "Ámbar en vivo (Subte)",
+        "canonical": "oklch(88.2% 0.154 90.3)",
+        "cssVar": "--color-live y --station-live (oscuro)",
+        "theme": "subte",
+        "tonalRamp": [
+          "oklch(15% 0.154 90.3)",
+          "oklch(25% 0.154 90.3)",
+          "oklch(35% 0.154 90.3)",
+          "oklch(45% 0.154 90.3)",
+          "oklch(55% 0.154 90.3)",
+          "oklch(65% 0.154 90.3)",
+          "oklch(80% 0.154 90.3)",
+          "oklch(95% 0.154 90.3)"
+        ]
+      },
+      "subte-papel": {
+        "role": "neutral",
+        "displayName": "Papel (Subte)",
+        "canonical": "oklch(96.1% 0.008 91.5)",
+        "cssVar": "--color-bg, --color-thread-twist y --color-selection-fg (claro)",
+        "theme": "subte",
+        "tonalRamp": [
+          "oklch(15% 0.008 91.5)",
+          "oklch(25% 0.008 91.5)",
+          "oklch(35% 0.008 91.5)",
+          "oklch(45% 0.008 91.5)",
+          "oklch(55% 0.008 91.5)",
+          "oklch(65% 0.008 91.5)",
+          "oklch(80% 0.008 91.5)",
+          "oklch(95% 0.008 91.5)"
+        ]
+      },
+      "subte-pizarra": {
+        "role": "neutral",
+        "displayName": "Pizarra (Subte)",
+        "canonical": "oklch(39.4% 0.047 269.9)",
+        "cssVar": "--color-fg-muted (claro)",
+        "theme": "subte",
+        "tonalRamp": [
+          "oklch(15% 0.047 269.9)",
+          "oklch(25% 0.047 269.9)",
+          "oklch(35% 0.047 269.9)",
+          "oklch(45% 0.047 269.9)",
+          "oklch(55% 0.047 269.9)",
+          "oklch(65% 0.047 269.9)",
+          "oklch(80% 0.047 269.9)",
+          "oklch(95% 0.047 269.9)"
+        ]
+      },
+      "subte-via-claro": {
+        "role": "neutral",
+        "displayName": "Vía (Subte, claro)",
+        "canonical": "oklch(74.9% 0.023 274.6)",
+        "cssVar": "--color-line (claro)",
+        "theme": "subte",
+        "tonalRamp": [
+          "oklch(15% 0.023 274.6)",
+          "oklch(25% 0.023 274.6)",
+          "oklch(35% 0.023 274.6)",
+          "oklch(45% 0.023 274.6)",
+          "oklch(55% 0.023 274.6)",
+          "oklch(65% 0.023 274.6)",
+          "oklch(80% 0.023 274.6)",
+          "oklch(95% 0.023 274.6)"
+        ]
+      },
+      "subte-via-tenue-claro": {
+        "role": "neutral",
+        "displayName": "Vía tenue (Subte, claro)",
+        "canonical": "oklch(88.4% 0.008 286.2)",
+        "cssVar": "--color-line-soft (claro)",
+        "theme": "subte",
+        "tonalRamp": [
+          "oklch(15% 0.008 286.2)",
+          "oklch(25% 0.008 286.2)",
+          "oklch(35% 0.008 286.2)",
+          "oklch(45% 0.008 286.2)",
+          "oklch(55% 0.008 286.2)",
+          "oklch(65% 0.008 286.2)",
+          "oklch(80% 0.008 286.2)",
+          "oklch(95% 0.008 286.2)"
+        ]
+      },
+      "subte-blanco": {
+        "role": "neutral",
+        "displayName": "Blanco (Subte, claro)",
+        "canonical": "oklch(100% 0 0)",
+        "cssVar": "--color-surface, --station y --color-live-ink (claro)",
+        "theme": "subte",
+        "tonalRamp": [
+          "oklch(15% 0 0)",
+          "oklch(25% 0 0)",
+          "oklch(35% 0 0)",
+          "oklch(45% 0 0)",
+          "oklch(55% 0 0)",
+          "oklch(65% 0 0)",
+          "oklch(80% 0 0)",
+          "oklch(95% 0 0)"
+        ]
+      },
+      "subte-ambar-relleno-claro": {
+        "role": "primary",
+        "displayName": "Relleno ámbar (Subte, claro)",
+        "canonical": "oklch(84.6% 0.169 84.9)",
+        "cssVar": "--station-live (claro)",
+        "theme": "subte",
+        "tonalRamp": [
+          "oklch(15% 0.169 84.9)",
+          "oklch(25% 0.169 84.9)",
+          "oklch(35% 0.169 84.9)",
+          "oklch(45% 0.169 84.9)",
+          "oklch(55% 0.169 84.9)",
+          "oklch(65% 0.169 84.9)",
+          "oklch(80% 0.169 84.9)",
+          "oklch(95% 0.169 84.9)"
+        ]
+      },
+      "subte-ambar-tinta-claro": {
+        "role": "primary",
+        "displayName": "Tinta ámbar (Subte, claro)",
+        "canonical": "oklch(39.4% 0.095 57)",
+        "cssVar": "--color-live (claro): aro, destello, etiqueta y cronómetro",
+        "theme": "subte",
+        "tonalRamp": [
+          "oklch(15% 0.095 57)",
+          "oklch(25% 0.095 57)",
+          "oklch(35% 0.095 57)",
+          "oklch(45% 0.095 57)",
+          "oklch(55% 0.095 57)",
+          "oklch(65% 0.095 57)",
+          "oklch(80% 0.095 57)",
+          "oklch(95% 0.095 57)"
+        ]
+      },
+      "subte-coral": {
+        "role": "secondary",
+        "displayName": "Línea coral (Subte)",
+        "canonical": "oklch(80.5% 0.111 25.9)",
+        "cssVar": "acento coral en oscuro (por defecto); L4 de turquesa, L3 de lavanda, L2 de rosa",
+        "theme": "subte",
+        "tonalRamp": [
+          "oklch(15% 0.111 25.9)",
+          "oklch(25% 0.111 25.9)",
+          "oklch(35% 0.111 25.9)",
+          "oklch(45% 0.111 25.9)",
+          "oklch(55% 0.111 25.9)",
+          "oklch(65% 0.111 25.9)",
+          "oklch(80% 0.111 25.9)",
+          "oklch(95% 0.111 25.9)"
+        ]
+      },
+      "subte-coral-claro": {
+        "role": "secondary",
+        "displayName": "Línea coral (Subte, claro)",
+        "canonical": "oklch(43.1% 0.151 29)",
+        "cssVar": "acento coral en claro",
+        "theme": "subte",
+        "tonalRamp": [
+          "oklch(15% 0.151 29)",
+          "oklch(25% 0.151 29)",
+          "oklch(35% 0.151 29)",
+          "oklch(45% 0.151 29)",
+          "oklch(55% 0.151 29)",
+          "oklch(65% 0.151 29)",
+          "oklch(80% 0.151 29)",
+          "oklch(95% 0.151 29)"
+        ]
+      },
+      "subte-cielo": {
+        "role": "secondary",
+        "displayName": "Línea cielo (Subte)",
+        "canonical": "oklch(79.6% 0.111 244.6)",
+        "cssVar": "acento cielo en oscuro; L2 de coral, L4 de lavanda, L3 de rosa",
+        "theme": "subte",
+        "tonalRamp": [
+          "oklch(15% 0.111 244.6)",
+          "oklch(25% 0.111 244.6)",
+          "oklch(35% 0.111 244.6)",
+          "oklch(45% 0.111 244.6)",
+          "oklch(55% 0.111 244.6)",
+          "oklch(65% 0.111 244.6)",
+          "oklch(80% 0.111 244.6)",
+          "oklch(95% 0.111 244.6)"
+        ]
+      },
+      "subte-cielo-claro": {
+        "role": "secondary",
+        "displayName": "Línea cielo (Subte, claro)",
+        "canonical": "oklch(43.3% 0.136 255.3)",
+        "cssVar": "acento cielo en claro",
+        "theme": "subte",
+        "tonalRamp": [
+          "oklch(15% 0.136 255.3)",
+          "oklch(25% 0.136 255.3)",
+          "oklch(35% 0.136 255.3)",
+          "oklch(45% 0.136 255.3)",
+          "oklch(55% 0.136 255.3)",
+          "oklch(65% 0.136 255.3)",
+          "oklch(80% 0.136 255.3)",
+          "oklch(95% 0.136 255.3)"
+        ]
+      },
+      "subte-turquesa": {
+        "role": "secondary",
+        "displayName": "Línea turquesa (Subte)",
+        "canonical": "oklch(80.2% 0.112 180)",
+        "cssVar": "acento turquesa en oscuro; L3 de coral, L2 de cielo, L4 de rosa",
+        "theme": "subte",
+        "tonalRamp": [
+          "oklch(15% 0.112 180)",
+          "oklch(25% 0.112 180)",
+          "oklch(35% 0.112 180)",
+          "oklch(45% 0.112 180)",
+          "oklch(55% 0.112 180)",
+          "oklch(65% 0.112 180)",
+          "oklch(80% 0.112 180)",
+          "oklch(95% 0.112 180)"
+        ]
+      },
+      "subte-turquesa-claro": {
+        "role": "secondary",
+        "displayName": "Línea turquesa (Subte, claro)",
+        "canonical": "oklch(39.8% 0.069 182.1)",
+        "cssVar": "acento turquesa en claro",
+        "theme": "subte",
+        "tonalRamp": [
+          "oklch(15% 0.069 182.1)",
+          "oklch(25% 0.069 182.1)",
+          "oklch(35% 0.069 182.1)",
+          "oklch(45% 0.069 182.1)",
+          "oklch(55% 0.069 182.1)",
+          "oklch(65% 0.069 182.1)",
+          "oklch(80% 0.069 182.1)",
+          "oklch(95% 0.069 182.1)"
+        ]
+      },
+      "subte-lavanda": {
+        "role": "secondary",
+        "displayName": "Línea lavanda (Subte)",
+        "canonical": "oklch(78.5% 0.124 296.1)",
+        "cssVar": "acento lavanda en oscuro; L4 de coral, L3 de cielo, L2 de turquesa",
+        "theme": "subte",
+        "tonalRamp": [
+          "oklch(15% 0.124 296.1)",
+          "oklch(25% 0.124 296.1)",
+          "oklch(35% 0.124 296.1)",
+          "oklch(45% 0.124 296.1)",
+          "oklch(55% 0.124 296.1)",
+          "oklch(65% 0.124 296.1)",
+          "oklch(80% 0.124 296.1)",
+          "oklch(95% 0.124 296.1)"
+        ]
+      },
+      "subte-lavanda-claro": {
+        "role": "secondary",
+        "displayName": "Línea lavanda (Subte, claro)",
+        "canonical": "oklch(43% 0.166 288.8)",
+        "cssVar": "acento lavanda en claro",
+        "theme": "subte",
+        "tonalRamp": [
+          "oklch(15% 0.166 288.8)",
+          "oklch(25% 0.166 288.8)",
+          "oklch(35% 0.166 288.8)",
+          "oklch(45% 0.166 288.8)",
+          "oklch(55% 0.166 288.8)",
+          "oklch(65% 0.166 288.8)",
+          "oklch(80% 0.166 288.8)",
+          "oklch(95% 0.166 288.8)"
+        ]
+      },
+      "subte-rosa": {
+        "role": "secondary",
+        "displayName": "Línea rosa (Subte)",
+        "canonical": "oklch(80.7% 0.131 349.9)",
+        "cssVar": "acento rosa en oscuro; L4 de cielo, L3 de turquesa, L2 de lavanda",
+        "theme": "subte",
+        "tonalRamp": [
+          "oklch(15% 0.131 349.9)",
+          "oklch(25% 0.131 349.9)",
+          "oklch(35% 0.131 349.9)",
+          "oklch(45% 0.131 349.9)",
+          "oklch(55% 0.131 349.9)",
+          "oklch(65% 0.131 349.9)",
+          "oklch(80% 0.131 349.9)",
+          "oklch(95% 0.131 349.9)"
+        ]
+      },
+      "subte-rosa-claro": {
+        "role": "secondary",
+        "displayName": "Línea rosa (Subte, claro)",
+        "canonical": "oklch(44.7% 0.154 1.3)",
+        "cssVar": "acento rosa en claro",
+        "theme": "subte",
+        "tonalRamp": [
+          "oklch(15% 0.154 1.3)",
+          "oklch(25% 0.154 1.3)",
+          "oklch(35% 0.154 1.3)",
+          "oklch(45% 0.154 1.3)",
+          "oklch(55% 0.154 1.3)",
+          "oklch(65% 0.154 1.3)",
+          "oklch(80% 0.154 1.3)",
+          "oklch(95% 0.154 1.3)"
+        ]
       }
     },
     "typographyMeta": {
@@ -544,6 +952,16 @@
         "name": "punto-costura",
         "value": "::after { inset: 5px; border: 1.5px dashed var(--color-accent); border-radius: inherit }",
         "purpose": "Costura metida adentro de cada retazo; continua en hover y foco; doble (segunda a 10 px, radio 6 px) en el destacado. No es elevación."
+      },
+      {
+        "name": "subte-aro-avatar",
+        "value": "0 0 0 4px var(--color-bg), 0 0 0 8px var(--color-accent)",
+        "purpose": "Aro grueso de combinación del avatar en Subte; spread puro, no elevación."
+      },
+      {
+        "name": "subte-estacion-en-vivo",
+        "value": "0 0 0 3px var(--color-bg)",
+        "purpose": "Anillo de fondo que separa la estación en vivo de su tramo."
       }
     ],
     "motion": [
@@ -586,6 +1004,11 @@
         "name": "punto-tejer",
         "value": "1100ms steps(44, end), clip-path inset revelado de izquierda a derecha",
         "purpose": "Firma de Punto: la primera hilera se teje punto por punto al cargar, una vez. Quieta con movimiento reducido."
+      },
+      {
+        "name": "subte-trazar",
+        "value": "900ms var(--ease-out) both, scaleY 0 → 1 con transform-origin: top",
+        "purpose": "Firma de Subte: los tramos de la primera línea se trazan de arriba abajo al cargar, una vez. Quietos con movimiento reducido; el destello en vivo es el pulso de la base (dur-pulse) en ámbar."
       }
     ],
     "breakpoints": [
@@ -625,7 +1048,8 @@
       },
       "implemented": [
         "tecnico",
-        "punto"
+        "punto",
+        "subte"
       ],
       "rulesSource": "src/domain/theme.ts (familia, acentos, formas y tipografías por variante)",
       "variantCss": "src/ui/styles/themes/<variante>.css, acotado a [data-theme=\"<variante>\"] y en línea solo en las páginas que la eligen",
@@ -681,6 +1105,97 @@
           "Contorno punteado decorativo en avatar y costuras (el foco sigue sólido)",
           "Cronómetro en la fuente del cuerpo con tabular-nums"
         ]
+      },
+      "subte": {
+        "accents": {
+          "coral": {
+            "dark": "#ffa39a",
+            "light": "#911f17",
+            "lines": [
+              "cielo",
+              "turquesa",
+              "lavanda"
+            ],
+            "default": true
+          },
+          "cielo": {
+            "dark": "#7cc4ff",
+            "light": "#0b4f99",
+            "lines": [
+              "turquesa",
+              "lavanda",
+              "rosa"
+            ]
+          },
+          "turquesa": {
+            "dark": "#5fd6c1",
+            "light": "#07534a",
+            "lines": [
+              "lavanda",
+              "rosa",
+              "coral"
+            ]
+          },
+          "lavanda": {
+            "dark": "#c0a8ff",
+            "light": "#5136a3",
+            "lines": [
+              "rosa",
+              "coral",
+              "cielo"
+            ]
+          },
+          "rosa": {
+            "dark": "#ff9ccc",
+            "light": "#93204f",
+            "lines": [
+              "coral",
+              "cielo",
+              "turquesa"
+            ]
+          }
+        },
+        "lines": "Cada acento es L1 y declara --line-2/3/4-on-dark y -on-light; las secciones toman la línea por posición (nth-of-type 4n+1 … 4n+4). Las cuatro de un ciclo son distintas en los dos modos (tests/unit/ui/theme-tokens.test.ts).",
+        "live": {
+          "dark": {
+            "fill": "#ffd34d",
+            "ring": "#ffd34d",
+            "text": "#ffd34d"
+          },
+          "light": {
+            "fill": "#ffc21a",
+            "ring": "#6b3600",
+            "text": "#6b3600"
+          },
+          "note": "El ámbar es exclusivo del en vivo; por eso no es línea ni acento admitido."
+        },
+        "station": {
+          "dark": "#f2efe6",
+          "light": "#ffffff",
+          "size": "18px",
+          "ring": "4px del color de la línea"
+        },
+        "segment": "7px de ancho, del centro de una estación al de la siguiente; termina en la última; sin tramo si la sección tiene una sola estación; el primero con esquinas de arriba de 4px.",
+        "badge": "Chapa \"L<n>\" (contador por sección) del color de la línea, texto en --color-bg, fuente del cuerpo 0.875rem 700, mínimo 2.75rem, esquinas de 4px. Numera secciones, nunca links.",
+        "shapes": [
+          "rows",
+          "cards"
+        ],
+        "defaultShape": "rows",
+        "fonts": [
+          "bricolage",
+          "nunito",
+          "space_mono"
+        ],
+        "defaultFont": "bricolage",
+        "thread": false,
+        "jackCol": "2.75rem",
+        "exceptions": [
+          "Sin hilo: carril de 2.75rem ocupado por los tramos",
+          "Secciones numeradas con la chapa L<n> (nunca links); títulos sin sangría ni filete",
+          "Cápsula en la estación de combinación (destacado con acento)",
+          "Estaciones con aro de 4 px y centro claro en vez del jack con ojo"
+        ]
       }
     },
     "portCommitments": [
@@ -689,8 +1204,8 @@
     "reserveVariants": [
       {
         "name": "Fusión patchera + subte",
-        "status": "sin decidir",
-        "summary": "Línea troncal con nodos y secciones como tramos de línea de color; posible segundo estilo de página."
+        "status": "concretada",
+        "summary": "Línea troncal con nodos y secciones como tramos de línea de color; se concretó como el estilo Subte (familia Enérgico, data-theme=\"subte\")."
       }
     ],
     "adminStyleGrid": {
@@ -793,6 +1308,38 @@
       "description": "Doble aro: uno sólido de acento y otro cosido a 8 px.",
       "html": "<div class=\"ds-avatar-punto\" aria-hidden=\"true\">J</div>",
       "css": ".ds-avatar-punto{display:grid;place-items:center;width:88px;height:88px;margin:12px;border-radius:50%;background:#3a2e24;color:#f6ecdc;box-shadow:0 0 0 3px #1f1813,0 0 0 5px #ffb294;outline:1.5px dashed #ffb294;outline-offset:8px;font-family:Fraunces,Georgia,serif;font-variation-settings:\"SOFT\" 100;font-size:2rem;font-weight:500}"
+    },
+    {
+      "name": "Línea con estaciones (Subte)",
+      "kind": "custom",
+      "refersTo": "subte-estacion",
+      "description": "Sección de Subte: chapa L<n>, estaciones con aro de 4 px sobre un tramo de 7 px que termina en la última.",
+      "html": "<section class=\"ds-subte\"><h2 class=\"ds-subte-title\">Proyectos</h2><div class=\"ds-subte-port\"><span class=\"ds-subte-station\" aria-hidden=\"true\"></span><a class=\"ds-subte-link\" href=\"#\"><span class=\"ds-subte-name\">YouTube</span><span class=\"ds-subte-meta\">youtube.com/@juedsay</span></a></div><div class=\"ds-subte-port\"><span class=\"ds-subte-station\" aria-hidden=\"true\"></span><a class=\"ds-subte-link\" href=\"#\"><span class=\"ds-subte-name\">GitHub</span><span class=\"ds-subte-meta\">github.com/juedsay</span></a></div></section>",
+      "css": ".ds-subte{width:22rem;padding:1rem;background:#0d1b3d;color:#f2efe6} .ds-subte-title{display:flex;gap:0.5rem;align-items:center;margin:0 0 0.25rem;font-family:'Bricolage Grotesque',system-ui,sans-serif;font-size:1.25rem;font-weight:600} .ds-subte-title::before{content:\"L1\";min-width:2.75rem;padding:2px 0;border-radius:4px;background:#ffa39a;color:#0d1b3d;font-family:system-ui,sans-serif;font-size:0.875rem;font-weight:700;text-align:center} .ds-subte-port{position:relative;display:grid;grid-template-columns:2.75rem minmax(0,1fr)} .ds-subte-port:not(:last-child)::before{content:\"\";position:absolute;top:1.625rem;left:calc(1.375rem - 3.5px);width:7px;height:100%;background:#ffa39a;transform-origin:top;animation:ds-trazar 900ms cubic-bezier(0.16,1,0.3,1) both} .ds-subte-port:first-of-type::before{border-radius:4px 4px 0 0} @keyframes ds-trazar{from{transform:scaleY(0)}to{transform:scaleY(1)}} .ds-subte-station{position:relative;z-index:1;justify-self:center;box-sizing:border-box;width:18px;height:18px;margin-top:calc((3.25rem - 18px) / 2);border:4px solid #ffa39a;border-radius:50%;background:#f2efe6;transition:transform 160ms cubic-bezier(0.16,1,0.3,1)} .ds-subte-port:is(:hover,:focus-within) .ds-subte-station{transform:scale(1.15)} .ds-subte-link{display:block;min-height:3.25rem;padding:0.75rem 0;border-bottom:1px solid #22345f;color:inherit;text-decoration:none} .ds-subte-link:focus-visible{outline:2px solid #f2efe6;outline-offset:4px;border-radius:4px} .ds-subte-name{display:block;font-family:'Bricolage Grotesque',system-ui,sans-serif;font-size:1.0625rem;font-weight:600;line-height:1.3} .ds-subte-meta{display:block;color:#c3c8d8;font-size:0.8125rem} @media (prefers-reduced-motion: reduce){.ds-subte-port::before{animation:none}}"
+    },
+    {
+      "name": "Estación en vivo (Subte)",
+      "kind": "custom",
+      "refersTo": "subte-estacion-en-vivo",
+      "description": "Estación rellena de ámbar con aro y destello en la señal, separada del tramo por un anillo de fondo.",
+      "html": "<div class=\"ds-subte-live\"><span class=\"ds-subte-live-station\" aria-hidden=\"true\"></span><a class=\"ds-subte-live-link\" href=\"#\"><span class=\"ds-subte-live-name\">Twitch</span><span class=\"ds-subte-live-meta\"><b>En vivo</b> · <time>1:24:05</time></span></a></div>",
+      "css": ".ds-subte-live{display:grid;grid-template-columns:2.75rem minmax(0,1fr);width:22rem;padding:0 1rem;background:#0d1b3d;color:#f2efe6} .ds-subte-live-station{position:relative;justify-self:center;box-sizing:border-box;width:18px;height:18px;margin-top:calc((3.25rem - 18px) / 2);border:4px solid #ffd34d;border-radius:50%;background:#ffd34d;box-shadow:0 0 0 3px #0d1b3d} .ds-subte-live-station::after{content:\"\";position:absolute;inset:-6px;border:2px solid #ffd34d;border-radius:50%;animation:ds-destello 1800ms cubic-bezier(0.16,1,0.3,1) infinite} @keyframes ds-destello{from{opacity:0.9;transform:scale(0.6)}to{opacity:0;transform:scale(1.7)}} @media (prefers-reduced-motion: reduce){.ds-subte-live-station::after{animation:none;opacity:0.5}} .ds-subte-live-link{display:block;min-height:3.25rem;padding:0.75rem 0;border-bottom:1px solid #22345f;color:inherit;text-decoration:none} .ds-subte-live-link:focus-visible{outline:2px solid #f2efe6;outline-offset:4px;border-radius:4px} .ds-subte-live-name{display:block;font-family:'Bricolage Grotesque',system-ui,sans-serif;font-size:1.0625rem;font-weight:600} .ds-subte-live-meta{display:block;color:#c3c8d8;font-size:0.8125rem} .ds-subte-live-meta b,.ds-subte-live-meta time{color:#ffd34d;font-weight:600} .ds-subte-live-meta time{font-family:ui-monospace,monospace;font-variant-numeric:tabular-nums}"
+    },
+    {
+      "name": "Estación de combinación (Subte)",
+      "kind": "custom",
+      "refersTo": "subte-estacion-combinacion",
+      "description": "Destacado con acento: cápsula de 18 px de ancho y 1.9 veces el alto, con el nombre a 700 y sin caja.",
+      "html": "<div class=\"ds-subte-combo\"><span class=\"ds-subte-combo-station\" aria-hidden=\"true\"></span><a class=\"ds-subte-combo-link\" href=\"#\"><span class=\"ds-subte-combo-name\">Mi curso nuevo</span><span class=\"ds-subte-combo-meta\">cursos.example</span></a></div>",
+      "css": ".ds-subte-combo{display:grid;grid-template-columns:2.75rem minmax(0,1fr);width:22rem;padding:0 1rem;background:#0d1b3d;color:#f2efe6} .ds-subte-combo-station{justify-self:center;box-sizing:border-box;width:18px;height:calc(18px * 1.9);margin-top:calc((3.25rem - 18px * 1.9) / 2);border:4px solid #ffa39a;border-radius:18px;background:#f2efe6} .ds-subte-combo-link{display:block;min-height:3.25rem;padding:0.75rem 0;border-bottom:1px solid #22345f;color:inherit;text-decoration:none} .ds-subte-combo-link:focus-visible{outline:2px solid #f2efe6;outline-offset:4px;border-radius:4px} .ds-subte-combo-name{display:block;font-family:'Bricolage Grotesque',system-ui,sans-serif;font-size:1.0625rem;font-weight:700} .ds-subte-combo-meta{display:block;color:#c3c8d8;font-size:0.8125rem}"
+    },
+    {
+      "name": "Avatar (Subte)",
+      "kind": "custom",
+      "refersTo": "avatar",
+      "description": "Aro grueso de combinación: 4 px de fondo y 4 px de acento, spread puro.",
+      "html": "<div class=\"ds-avatar-subte\" aria-hidden=\"true\">J</div>",
+      "css": ".ds-avatar-subte{display:grid;place-items:center;width:88px;height:88px;margin:12px;border-radius:50%;background:#14254f;color:#f2efe6;box-shadow:0 0 0 4px #0d1b3d,0 0 0 8px #ffa39a;font-family:'Bricolage Grotesque',system-ui,sans-serif;font-size:2rem;font-weight:500}"
     }
   ],
   "narrative": {
@@ -871,6 +1418,16 @@
         "name": "La regla del teñido",
         "body": "En Punto la señal en vivo no es un color sino un estado de la tela: el retazo entero teñido, con el texto y la costura en la tinta. Ningún otro retazo lleva fondo teñido.",
         "section": "colors"
+      },
+      {
+        "name": "La regla de las líneas que no se repiten",
+        "body": "Cada acento declara sus líneas 2, 3 y 4 (`--line-2-on-dark`, `--line-2-on-light`, …) y las cuatro de un ciclo son siempre colores distintos, en los dos modos. Las secciones toman la línea por posición: la 1.ª, 5.ª, … en el acento; la 2.ª, 6.ª, … en la línea 2; y así. `tests/unit/ui/theme-tokens.test.ts` (\"subte: cada línea tiene su color\") lo mide en cada acento admitido.",
+        "section": "colors"
+      },
+      {
+        "name": "La regla del ámbar",
+        "body": "El ámbar es la señal en vivo de Subte y de nada más: por eso no es una línea ni un acento admitido. Ninguna estación, chapa o tramo lleva ámbar salvo la estación en vivo.",
+        "section": "colors"
       }
     ],
     "dos": [
@@ -887,7 +1444,12 @@
       "**Do** teñir el retazo entero para el en vivo, con texto y costura en la tinta en vivo.",
       "**Do** abrir cada sección con su hilera de V, alternando acento, mostaza y salvia.",
       "**Do** tejer solo la primera hilera al cargar, y dejarla quieta con movimiento reducido.",
-      "**Do** usar Fraunces con `SOFT` 100 en los nombres cuando es la tipografía elegida."
+      "**Do** usar Fraunces con `SOFT` 100 en los nombres cuando es la tipografía elegida.",
+      "**Do** dar a cada sección su línea por posición: el acento como L1 y, después, las tres que declara el acento.",
+      "**Do** cortar la línea en la última estación y dejar sin tramo la sección de una sola.",
+      "**Do** reservar el ámbar para la estación en vivo: relleno, aro, destello, etiqueta y cronómetro.",
+      "**Do** marcar el destacado con acento como estación de combinación en cápsula, sin caja.",
+      "**Do** trazar solo la primera línea al cargar, y dejarla quieta con movimiento reducido."
     ],
     "donts": [
       "**Don't** usar la lima para foco, hover, selección, botones o decoración.",
@@ -902,7 +1464,12 @@
       "**Don't** usar el trazo sólido de costura fuera del hover y el foco.",
       "**Don't** teñir de fondo ningún retazo que no esté en vivo.",
       "**Don't** dar textura fotográfica a las lanas: color plano.",
-      "**Don't** sacar las excepciones de Punto de `[data-theme=\"punto\"]`."
+      "**Don't** sacar las excepciones de Punto de `[data-theme=\"punto\"]`.",
+      "**Don't** repetir un color de línea dentro de un ciclo de cuatro secciones.",
+      "**Don't** usar el ámbar como línea, acento o decoración.",
+      "**Don't** numerar los links: la chapa numera líneas.",
+      "**Don't** usar gradientes ni brillos de neón: color pleno en líneas y estaciones.",
+      "**Don't** sacar las excepciones de Subte de `[data-theme=\"subte\"]`."
     ]
   }
 }

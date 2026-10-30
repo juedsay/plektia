@@ -30,3 +30,17 @@ FIRST VIEWPORT: Barra superior; avatar redondo con doble aro de acento, nombre e
 FORM: Punto, candidata 5 de mi lista (asignada por el dado), seed 6c013a65. Firma: la hilera de puntos se "teje" de izquierda a derecha una sola vez al cargar (quieta con movimiento reducido).
 
 FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, DESIGN.md, and every shipping raster carrying its provenance
+
+## Direction contract — Subte (familia Enérgico)
+
+THESIS: La página es un plano de subte de noche: cada sección es una línea de color con su número y cada link, una estación sobre esa línea. Rechaza el "neón gamer" con gradientes: la energía sale del color pleno de las líneas y de la estación que destella.
+
+OWN-WORLD: Azul esmalte de medianoche (#0d1b3d) en oscuro y papel de plano (#f4f2ec) en claro; líneas coral, cielo, turquesa, lavanda y rosa a 7 px con esquinas redondas; estaciones blancas con aro grueso del color de su línea; ámbar reservado al en vivo.
+
+STORY: El visitante ve a la persona, encuentra la estación que destella si está en vivo, recorre línea por línea y toca la estación que busca.
+
+FIRST VIEWPORT: Barra superior; avatar con aro grueso de combinación; nombre y bio; la primera línea con su chapa "L1", su barra vertical y las estaciones, la de en vivo arriba en ámbar con su destello.
+
+FORM: Subte, desafiante competitivo del seed 45e9120b elegido por el usuario (coincide con la variante en reserva de DESIGN.md). Firma: la primera línea se traza de arriba abajo al cargar y la estación en vivo destella; quietas con movimiento reducido.
+
+FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, DESIGN.md, and every shipping raster carrying its provenance

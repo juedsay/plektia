@@ -529,7 +529,7 @@
   - Variantes en `pages.theme` (enum ampliado) y reglas por variante en `src/domain/theme.ts`.
   - Grilla "Estilo" por familia en el panel, con miniaturas reales; hoja de estilos propia por variante.
   - Punto (Cercano): hileras de lana, retazos cosidos, en vivo índigo teñido, AAA en los dos modos.
-- [ ] **Tarea 38b: Subte** (Enérgico) · M · Deps: 38a
+- [x] **Tarea 38b: Subte** (Enérgico) · M · Deps: 38a
 - [ ] **Tarea 38c: Lomo cosido** (Editorial) · M · Deps: 38a
 - [ ] **Tarea 38d: Segunda tanda** · L · Deps: 38a
   - Lado A/B, Corcho, Pedalera, Bitmap, Manual y Sumario, una por PR.
