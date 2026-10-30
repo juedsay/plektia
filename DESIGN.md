@@ -31,6 +31,30 @@ colors:
   punto-terracota-claro: "#7a2c12"
   punto-mostaza-claro: "#5c3d00"
   punto-salvia-claro: "#264d31"
+  subte-medianoche: "#0d1b3d"
+  subte-marfil: "#f2efe6"
+  subte-niebla: "#c3c8d8"
+  subte-via: "#3a4d7d"
+  subte-via-tenue: "#22345f"
+  subte-anden: "#14254f"
+  subte-ambar-en-vivo: "#ffd34d"
+  subte-papel: "#f4f2ec"
+  subte-pizarra: "#3c4560"
+  subte-via-claro: "#a9adbd"
+  subte-via-tenue-claro: "#d8d8de"
+  subte-blanco: "#ffffff"
+  subte-ambar-relleno-claro: "#ffc21a"
+  subte-ambar-tinta-claro: "#6b3600"
+  subte-coral: "#ffa39a"
+  subte-coral-claro: "#911f17"
+  subte-cielo: "#7cc4ff"
+  subte-cielo-claro: "#0b4f99"
+  subte-turquesa: "#5fd6c1"
+  subte-turquesa-claro: "#07534a"
+  subte-lavanda: "#c0a8ff"
+  subte-lavanda-claro: "#5136a3"
+  subte-rosa: "#ff9ccc"
+  subte-rosa-claro: "#93204f"
 typography:
   display:
     fontFamily: "Bricolage Grotesque, system-ui, sans-serif"
@@ -81,6 +105,7 @@ rounded:
   full: "50%"
   punto-retazo: "12px"
   punto-pastilla: "1.625rem"
+  subte-capsula: "18px"
 spacing:
   "1": "0.25rem"
   "2": "0.5rem"
@@ -164,6 +189,33 @@ components:
     backgroundColor: "{colors.punto-tenido-en-vivo-claro}"
     textColor: "{colors.punto-tinta-en-vivo-claro}"
     rounded: "{rounded.punto-retazo}"
+  subte-estacion:
+    backgroundColor: "{colors.subte-marfil}"
+    textColor: "{colors.subte-coral}"
+    rounded: "{rounded.full}"
+    size: "18px"
+  subte-estacion-combinacion:
+    backgroundColor: "{colors.subte-marfil}"
+    textColor: "{colors.subte-coral}"
+    rounded: "{rounded.subte-capsula}"
+    width: "18px"
+    height: "34.2px"
+  subte-estacion-en-vivo:
+    backgroundColor: "{colors.subte-ambar-en-vivo}"
+    textColor: "{colors.subte-ambar-en-vivo}"
+    rounded: "{rounded.full}"
+    size: "18px"
+  subte-estacion-en-vivo-claro:
+    backgroundColor: "{colors.subte-ambar-relleno-claro}"
+    textColor: "{colors.subte-ambar-tinta-claro}"
+    rounded: "{rounded.full}"
+    size: "18px"
+  subte-chapa:
+    backgroundColor: "{colors.subte-coral}"
+    textColor: "{colors.subte-medianoche}"
+    rounded: "{rounded.sm}"
+    padding: "2px 0"
+    width: "2.75rem"
 ---
 
 # Design System: Plektia
@@ -186,7 +238,7 @@ El sistema es un **contrato de tokens tematizable**: la v1 trae el tema "técnic
 - Bricolage Grotesque para nombres y títulos; fuente del sistema para cuerpo y metadatos; monoespaciada tabular para tiempos.
 - WCAG 2.2 AAA en la página pública, en todos los temas.
 
-**Variante en reserva (sin decidir):** existe una dirección alternativa, "fusión patchera + subte" (una línea troncal con nodos y las secciones como tramos de línea de color). No forma parte del sistema; queda registrada solo como posible opción de layout futura, quizá como segundo estilo de página elegible.
+**Variante en reserva, ya concretada:** la dirección alternativa "fusión patchera + subte" (una línea troncal con nodos y las secciones como tramos de línea de color) se construyó como el estilo **Subte** (familia Enérgico), documentado en "Estilos: familias y variantes". No cambia el sistema de Técnico.
 
 ## Colors
 
@@ -341,7 +393,8 @@ Desde [SPEC-styles](SPEC-styles.md), los cuatro "temas" del contrato de tokens p
 | Técnico | Patchera (`tecnico`) | construida | Hilo trenzado entre jacks | Jack lima que late |
 | Cercano | Punto (`punto`) | construida | Hileras de puntos de lana; links como retazos cosidos | El retazo teñido entero |
 | Cercano | Lado A / B (`cassette`), Corcho (`corcho`) | próximamente | | |
-| Enérgico | Subte (`subte`), Pedalera (`pedalera`), Bitmap (`bitmap`) | próximamente | | |
+| Enérgico | Subte (`subte`) | construida | Secciones como líneas de color con chapa "L<n>"; links como estaciones; la primera línea se traza al cargar | La estación rellena de ámbar que destella |
+| Enérgico | Pedalera (`pedalera`), Bitmap (`bitmap`) | próximamente | | |
 | Editorial | Lomo cosido (`lomo`), Manual (`manual`), Sumario (`sumario`) | próximamente | | |
 
 Todo lo documentado arriba (Overview a Do's and Don'ts) es el sistema de Técnico y la base de todas las variantes. Cada variante escribe su CSS en `src/ui/styles/themes/<variante>.css`, acotado a `[data-theme="<variante>"]`, y se carga en línea solo en las páginas que la eligieron.
@@ -450,3 +503,91 @@ Estas excepciones son propias de Punto y no se heredan a otras variantes ni a T�
 - **Don't** teñir de fondo ningún retazo que no esté en vivo.
 - **Don't** dar textura fotográfica a las lanas: color plano.
 - **Don't** sacar las excepciones de Punto de `[data-theme="punto"]`.
+
+### Subte (familia Enérgico)
+
+**La página es un plano de subte de noche.** Cada sección es una línea de color con su chapa numerada y cada link, una estación sobre esa línea. La energía sale del color pleno de las líneas y de la estación que destella, no de gradientes ni de brillo "gamer". No hay hilo: el carril de jacks se angosta a 2.75rem (`--jack-col`, en todos los anchos) y lo ocupa la línea.
+
+#### Colors
+
+Azul esmalte de medianoche en oscuro, papel de plano en claro; las líneas son el único color pleno y el ámbar es solo del en vivo. Los valores normativos están en el frontmatter (`subte-*`).
+
+- **Medianoche** (`subte-medianoche`) / **Papel** (`subte-papel`): fondo de la página en oscuro y en claro. La medianoche es también el texto en claro, la tinta sobre el ámbar en oscuro y el texto de las chapas en oscuro (en claro, la chapa lleva el papel).
+- **Marfil** (`subte-marfil`) / **Medianoche**: texto principal, foco y fondo de la selección. En oscuro el marfil es además el centro de las estaciones (`--station`).
+- **Niebla** (`subte-niebla`) / **Pizarra** (`subte-pizarra`): bio y metadatos.
+- **Andén** (`subte-anden`) / **Blanco** (`subte-blanco`): superficie. En claro el blanco es también el centro de las estaciones.
+- **Vía** (`subte-via`, `subte-via-claro`): trazos y el borde de los andenes en la forma `cards`. **Vía tenue** (`subte-via-tenue`, `subte-via-tenue-claro`): el filete bajo cada estación.
+- **Ámbar en vivo**: en oscuro, `subte-ambar-en-vivo` es a la vez el relleno de la estación (`--station-live`) y el tono de la señal (`--color-live`): aro, destello, etiqueta y cronómetro. En claro se separa: la estación se rellena con `subte-ambar-relleno-claro` y el aro, el destello, la etiqueta y el cronómetro van en `subte-ambar-tinta-claro`, el tono que cumple AAA como texto.
+
+**Acentos admitidos** (cinco de los ocho; por defecto, coral). El acento es la línea 1 y define las tres líneas que le siguen; el ciclo es coral → cielo → turquesa → lavanda → rosa → coral.
+
+| Acento | L1 | L2 | L3 | L4 | Oscuro (L1) | Claro (L1) |
+|---|---|---|---|---|---|---|
+| `coral` (por defecto) | coral | cielo | turquesa | lavanda | `#ffa39a` | `#911f17` |
+| `cielo` | cielo | turquesa | lavanda | rosa | `#7cc4ff` | `#0b4f99` |
+| `turquesa` | turquesa | lavanda | rosa | coral | `#5fd6c1` | `#07534a` |
+| `lavanda` | lavanda | rosa | coral | cielo | `#c0a8ff` | `#5136a3` |
+| `rosa` | rosa | coral | cielo | turquesa | `#ff9ccc` | `#93204f` |
+
+`ambar`, `hueso` y `arena` no se admiten en Subte.
+
+**La regla de las líneas que no se repiten.** Cada acento declara sus líneas 2, 3 y 4 (`--line-2-on-dark`, `--line-2-on-light`, …) y las cuatro de un ciclo son siempre colores distintos, en los dos modos. Las secciones toman la línea por posición: la 1.ª, 5.ª, … en el acento; la 2.ª, 6.ª, … en la línea 2; y así. `tests/unit/ui/theme-tokens.test.ts` ("subte: cada línea tiene su color") lo mide en cada acento admitido.
+
+**La regla del ámbar.** El ámbar es la señal en vivo de Subte y de nada más: por eso no es una línea ni un acento admitido. Ninguna estación, chapa o tramo lleva ámbar salvo la estación en vivo.
+
+#### Typography
+
+**Display Font:** Bricolage Grotesque por defecto en los nombres. Admite también **Nunito** y **Space Mono** (alojadas localmente, precargadas solo si la página las elige); Fraunces no se admite.
+**Body Font:** la del sistema, igual que Técnico.
+
+- El nombre de cada estación sube a 600 (en Técnico es 500); el de la estación de combinación, a 700.
+- La chapa de línea va en la fuente del cuerpo, 0.875rem a 700.
+
+#### Shapes
+
+- **Tramo:** una barra vertical de 7 px del color de la línea, centrada en el carril, que va del centro de una estación al de la siguiente. La línea termina en la última estación; una sección de una sola estación no tiene tramo. El primer tramo de cada línea redondea sus esquinas de arriba (4 px); la punta de abajo queda tapada por la estación.
+- **Estación:** círculo de 18 px con aro de 4 px del color de su línea y centro claro (`--station`). Reemplaza al jack con ojo de Técnico.
+- **Estación de combinación:** la cápsula. El mismo ancho de 18 px y el aro de 4 px, con 1.9 veces el alto (radio `subte-capsula`), centrada sobre la fila.
+- **Chapa de línea:** rectángulo de esquinas de 4 px, del ancho del carril (2.75rem mínimo) y 2 px de padding vertical, relleno del color de la línea.
+- **Avatar:** aro grueso de combinación, de spread puro: 4 px de fondo y 4 px de acento.
+- **Bordes de 3 px en acento** en los botones de la fila de íconos y en las tarjetas destacadas (estas con esquinas de 4 px).
+
+#### Components
+
+- **Título de sección:** la chapa "L<n>" a la izquierda, con el número de la línea, y el título al lado. Sin sangría y sin filete debajo: la chapa ocupa el lugar del carril. Numera secciones, nunca links.
+- **Estación (fila de link):** la estación en el carril sobre su tramo y el texto a la derecha, con un filete de vía tenue debajo. Hover y foco conservan la escala de Técnico (1.15).
+- **Andén (forma `cards`):** el texto de cada estación en una caja con borde de vía y esquinas de 4 px. Subte admite `rows` (por defecto) y `cards`; nunca `pills`.
+- **En vivo:** la estación se rellena de ámbar, con aro y destello en el tono de la señal, separada de su tramo por un anillo de 3 px del fondo. El destello es el pulso de la base (1800 ms, en loop) en ámbar; con movimiento reducido queda quieto. Etiqueta y cronómetro van en la señal.
+- **Destacado con acento:** estación de combinación (la cápsula) del color de su línea, con el nombre a 700. El texto queda en la misma columna que las demás estaciones, sin caja ni fondo.
+- **Destacado arriba (tarjeta):** borde de 3 px en acento, esquinas de 4 px.
+- **Fila de íconos:** cada botón lleva borde de 3 px en acento, como una chapa de estación.
+- **Miniatura del panel:** chapa "L1" de 10 px a 700 (esquinas de 3 px) arriba y dos estaciones con aro de 3 px de acento y centro claro, unidas por un tramo de 4 × 14 px; la de arriba en vivo, rellena de ámbar con aro en la señal. Sin filetes.
+
+#### Firma: la línea que se traza
+
+Al cargar, los tramos de la primera línea de la página crecen de arriba abajo (`scaleY` de 0 a 1 desde su borde superior) en 900 ms con la curva `ease-out`, una sola vez. Las demás líneas están quietas desde el principio. Con `prefers-reduced-motion` la primera línea aparece completa y quieta, y la estación en vivo no destella.
+
+#### Excepciones a Técnico, acotadas a `[data-theme="subte"]`
+
+Estas excepciones son propias de Subte y no se heredan a otras variantes ni a Técnico:
+
+- **Sin hilo:** el carril se angosta a 2.75rem y lo ocupan los tramos de la línea.
+- **Secciones numeradas** con la chapa "L<n>" (nunca los links), y títulos sin sangría ni filete.
+- **La cápsula** de la estación de combinación (excepción a "no hay píldoras").
+- **Estaciones con aro de 4 px** y centro claro en vez del jack con ojo de 2.5 px.
+
+#### Do's and Don'ts
+
+##### Do:
+- **Do** dar a cada sección su línea por posición: el acento como L1 y, después, las tres que declara el acento.
+- **Do** cortar la línea en la última estación y dejar sin tramo la sección de una sola.
+- **Do** reservar el ámbar para la estación en vivo: relleno, aro, destello, etiqueta y cronómetro.
+- **Do** marcar el destacado con acento como estación de combinación en cápsula, sin caja.
+- **Do** trazar solo la primera línea al cargar, y dejarla quieta con movimiento reducido.
+
+##### Don't:
+- **Don't** repetir un color de línea dentro de un ciclo de cuatro secciones.
+- **Don't** usar el ámbar como línea, acento o decoración.
+- **Don't** numerar los links: la chapa numera líneas.
+- **Don't** usar gradientes ni brillos de neón: color pleno en líneas y estaciones.
+- **Don't** sacar las excepciones de Subte de `[data-theme="subte"]`.

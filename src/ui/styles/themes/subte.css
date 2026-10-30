@@ -1,0 +1,344 @@
+/*
+ * Subte (familia Enérgico, SPEC-styles): la página es un plano de subte de
+ * noche. Cada sección es una línea de color con su chapa y cada link, una
+ * estación sobre la línea. El ámbar es solo del en vivo (la estación que
+ * destella). Se carga solo en las páginas con este estilo. AAA medido en
+ * tests/unit/ui/theme-tokens.test.ts.
+ */
+[data-theme="subte"] {
+  color-scheme: dark;
+
+  --color-bg: #0d1b3d;
+  --color-fg: #f2efe6;
+  --color-fg-muted: #c3c8d8;
+  --color-line: #3a4d7d;
+  --color-line-soft: #22345f;
+  --color-surface: #14254f;
+  --color-live: #ffd34d;
+  --color-live-ink: #0d1b3d;
+  --color-accent: var(--accent-on-dark, #ffa39a);
+  --color-thread: var(--color-accent);
+  --color-thread-twist: #0d1b3d;
+  --color-focus: #f2efe6;
+  --color-selection-bg: #f2efe6;
+  --color-selection-fg: #0d1b3d;
+
+  /* Las líneas que siguen a la del acento, por sección. */
+  --line-2: var(--line-2-on-dark);
+  --line-3: var(--line-3-on-dark);
+  --line-4: var(--line-4-on-dark);
+  /* El centro de las estaciones y el relleno de la que está en vivo (gráficos). */
+  --station: #f2efe6;
+  --station-live: #ffd34d;
+
+  --jack-col: 2.75rem;
+  --jack-size: 18px;
+}
+
+[data-theme="subte"][data-mode="light"] {
+  color-scheme: light;
+
+  --color-bg: #f4f2ec;
+  --color-fg: #0d1b3d;
+  --color-fg-muted: #3c4560;
+  --color-line: #a9adbd;
+  --color-line-soft: #d8d8de;
+  --color-surface: #ffffff;
+  --color-live: #6b3600;
+  --color-live-ink: #ffffff;
+  --color-accent: var(--accent-on-light, #911f17);
+  --color-thread: var(--color-accent);
+  --color-thread-twist: #f4f2ec;
+  --color-focus: #0d1b3d;
+  --color-selection-bg: #0d1b3d;
+  --color-selection-fg: #f4f2ec;
+
+  --line-2: var(--line-2-on-light);
+  --line-3: var(--line-3-on-light);
+  --line-4: var(--line-4-on-light);
+  --station: #ffffff;
+  --station-live: #ffc21a;
+}
+
+@media (prefers-color-scheme: light) {
+  [data-theme="subte"][data-mode="auto"] {
+    color-scheme: light;
+
+    --color-bg: #f4f2ec;
+    --color-fg: #0d1b3d;
+    --color-fg-muted: #3c4560;
+    --color-line: #a9adbd;
+    --color-line-soft: #d8d8de;
+    --color-surface: #ffffff;
+    --color-live: #6b3600;
+    --color-live-ink: #ffffff;
+    --color-accent: var(--accent-on-light, #911f17);
+    --color-thread: var(--color-accent);
+    --color-thread-twist: #f4f2ec;
+    --color-focus: #0d1b3d;
+    --color-selection-bg: #0d1b3d;
+    --color-selection-fg: #f4f2ec;
+
+    --line-2: var(--line-2-on-light);
+    --line-3: var(--line-3-on-light);
+    --line-4: var(--line-4-on-light);
+    --station: #ffffff;
+    --station-live: #ffc21a;
+  }
+}
+
+/* Líneas: coral, cielo, turquesa, lavanda y rosa (el ámbar es del en vivo). */
+[data-theme="subte"][data-accent="coral"] {
+  --accent-on-dark: #ffa39a;
+  --accent-on-light: #911f17;
+  --line-2-on-dark: #7cc4ff;
+  --line-2-on-light: #0b4f99;
+  --line-3-on-dark: #5fd6c1;
+  --line-3-on-light: #07534a;
+  --line-4-on-dark: #c0a8ff;
+  --line-4-on-light: #5136a3;
+}
+
+[data-theme="subte"][data-accent="cielo"] {
+  --accent-on-dark: #7cc4ff;
+  --accent-on-light: #0b4f99;
+  --line-2-on-dark: #5fd6c1;
+  --line-2-on-light: #07534a;
+  --line-3-on-dark: #c0a8ff;
+  --line-3-on-light: #5136a3;
+  --line-4-on-dark: #ff9ccc;
+  --line-4-on-light: #93204f;
+}
+
+[data-theme="subte"][data-accent="turquesa"] {
+  --accent-on-dark: #5fd6c1;
+  --accent-on-light: #07534a;
+  --line-2-on-dark: #c0a8ff;
+  --line-2-on-light: #5136a3;
+  --line-3-on-dark: #ff9ccc;
+  --line-3-on-light: #93204f;
+  --line-4-on-dark: #ffa39a;
+  --line-4-on-light: #911f17;
+}
+
+[data-theme="subte"][data-accent="lavanda"] {
+  --accent-on-dark: #c0a8ff;
+  --accent-on-light: #5136a3;
+  --line-2-on-dark: #ff9ccc;
+  --line-2-on-light: #93204f;
+  --line-3-on-dark: #ffa39a;
+  --line-3-on-light: #911f17;
+  --line-4-on-dark: #7cc4ff;
+  --line-4-on-light: #0b4f99;
+}
+
+[data-theme="subte"][data-accent="rosa"] {
+  --accent-on-dark: #ff9ccc;
+  --accent-on-light: #93204f;
+  --line-2-on-dark: #ffa39a;
+  --line-2-on-light: #911f17;
+  --line-3-on-dark: #7cc4ff;
+  --line-3-on-light: #0b4f99;
+  --line-4-on-dark: #5fd6c1;
+  --line-4-on-light: #07534a;
+}
+
+/* ── Identidad: el avatar es una estación de combinación ────────────────── */
+[data-theme="subte"] .avatar {
+  box-shadow:
+    0 0 0 4px var(--color-bg),
+    0 0 0 8px var(--color-accent);
+}
+
+/* ── Cada sección es una línea: chapa con su número y barra vertical ───── */
+[data-theme="subte"] .patchbay {
+  counter-reset: subte-linea;
+}
+
+[data-theme="subte"] .bank {
+  --line: var(--color-accent);
+
+  counter-increment: subte-linea;
+}
+
+[data-theme="subte"] .bank:nth-of-type(4n + 2) {
+  --line: var(--line-2);
+}
+
+[data-theme="subte"] .bank:nth-of-type(4n + 3) {
+  --line: var(--line-3);
+}
+
+[data-theme="subte"] .bank:nth-of-type(4n + 4) {
+  --line: var(--line-4);
+}
+
+[data-theme="subte"] .bank h2 {
+  display: flex;
+  gap: var(--space-2);
+  align-items: center;
+  margin-left: 0;
+  border-bottom: 0;
+}
+
+[data-theme="subte"] .bank h2::before {
+  content: "L" counter(subte-linea);
+  flex: none;
+  min-width: var(--jack-col);
+  padding: 2px 0;
+  border-radius: var(--radius-sm);
+  background: var(--line);
+  color: var(--color-bg);
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  font-weight: 700;
+  text-align: center;
+}
+
+/* Cada tramo va del centro de una estación al de la siguiente: la línea
+   termina en la última, y una sección de una sola estación no tiene tramo. */
+[data-theme="subte"] .port {
+  position: relative;
+}
+
+[data-theme="subte"] .port:not(:last-child)::before {
+  content: "";
+  position: absolute;
+  top: calc(var(--row-min) / 2);
+  left: calc(var(--jack-col) / 2 - 3.5px);
+  width: 7px;
+  height: 100%;
+  background: var(--line);
+}
+
+[data-theme="subte"] .port:first-child::before {
+  border-radius: 4px 4px 0 0;
+}
+
+/* La firma: la primera línea se traza de arriba abajo al cargar. */
+[data-theme="subte"] .bank:first-of-type .port::before {
+  transform-origin: top;
+  animation: subte-trazar 900ms var(--ease-out) both;
+}
+
+@keyframes subte-trazar {
+  from {
+    transform: scaleY(0);
+  }
+  to {
+    transform: scaleY(1);
+  }
+}
+
+/* ── Estaciones: aro grueso del color de la línea, centro claro ─────────── */
+[data-theme="subte"] .jack {
+  border: 4px solid var(--line);
+  background: var(--station);
+}
+
+[data-theme="subte"] .jack::before {
+  display: none;
+}
+
+[data-theme="subte"] .port-body {
+  border-bottom-color: var(--color-line-soft);
+}
+
+[data-theme="subte"] .port-name {
+  font-weight: 600;
+}
+
+/* En vivo: la estación se enciende en ámbar y destella. */
+[data-theme="subte"] .port.is-live .jack {
+  border-color: var(--color-live);
+  background: var(--station-live);
+  box-shadow: 0 0 0 3px var(--color-bg);
+}
+
+[data-theme="subte"] .port.is-live .jack::after {
+  border-color: var(--color-live);
+}
+
+/* Destacado con acento: estación de combinación, una cápsula del color de su
+   línea; el texto queda en la misma columna que las demás. */
+[data-theme="subte"] .port.is-highlighted .port-body {
+  margin-bottom: 0;
+  padding: 0;
+  border: 0;
+  border-bottom: 1px solid var(--color-line-soft);
+  border-radius: 0;
+  background: none;
+}
+
+[data-theme="subte"] .port.is-highlighted .jack {
+  width: var(--jack-size);
+  height: calc(var(--jack-size) * 1.9);
+  margin-top: calc((var(--row-min) - var(--jack-size) * 1.9) / 2);
+  border-radius: var(--jack-size);
+  border-width: 4px;
+}
+
+[data-theme="subte"] .port.is-highlighted .port-name {
+  font-weight: 700;
+}
+
+/* Formas: en tarjetas, cada estación tiene su andén. */
+[data-theme="subte"] .patchbay[data-shape="cards"] .port-body {
+  border-color: var(--color-line);
+  border-radius: var(--radius-sm);
+}
+
+/* Fila de íconos: chapas de estación. */
+[data-theme="subte"] .icon-link {
+  border: 3px solid var(--color-accent);
+}
+
+[data-theme="subte"] .highlight-card {
+  border: 3px solid var(--color-accent);
+  border-radius: var(--radius-sm);
+}
+
+/* ── Miniatura del panel: una línea con dos estaciones, una en vivo ─────── */
+[data-theme="subte"].theme-sample .theme-sample-row {
+  border-bottom: 0;
+}
+
+[data-theme="subte"].theme-sample::before {
+  content: "L1";
+  grid-column: 1 / -1;
+  justify-self: start;
+  padding: 0 5px;
+  border-radius: 3px;
+  background: var(--color-accent);
+  color: var(--color-bg);
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 14px;
+}
+
+[data-theme="subte"].theme-sample .theme-sample-mark {
+  position: relative;
+  z-index: 1;
+  border: 3px solid var(--color-accent);
+  background: var(--station);
+}
+
+[data-theme="subte"].theme-sample .theme-sample-row.is-live .theme-sample-mark {
+  border-color: var(--color-live);
+  background: var(--station-live);
+}
+
+[data-theme="subte"].theme-sample .theme-sample-row + .theme-sample-row::before {
+  bottom: 6px;
+  left: 2.5px;
+  width: 4px;
+  height: 14px;
+  border-radius: 2px;
+  background: var(--color-accent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-theme="subte"] .bank:first-of-type .port::before {
+    animation: none;
+  }
+}

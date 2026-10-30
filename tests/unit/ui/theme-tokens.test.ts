@@ -131,3 +131,24 @@ describe.each(VARIANTS)("estilo %s", (theme) => {
     );
   });
 });
+
+describe("subte: cada línea tiene su color", () => {
+  const css = readFileSync(fileOf("subte"), "utf8");
+
+  it.each(THEME_RULES.subte.accents)(
+    "con %s, las cuatro líneas son distintas en los dos modos",
+    (accent) => {
+      const tones = hexes(block(css, `[data-theme="subte"][data-accent="${accent}"]`), "--");
+      for (const mode of ["dark", "light"]) {
+        const lines = [
+          tones[`--accent-on-${mode}`],
+          tones[`--line-2-on-${mode}`],
+          tones[`--line-3-on-${mode}`],
+          tones[`--line-4-on-${mode}`],
+        ];
+        expect(lines.every((line) => /^#[0-9a-f]{6}$/.test(line ?? ""))).toBe(true);
+        expect(new Set(lines).size).toBe(4);
+      }
+    },
+  );
+});
