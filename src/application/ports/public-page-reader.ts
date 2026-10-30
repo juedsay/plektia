@@ -1,3 +1,4 @@
+import type { Theme } from "@/domain/theme";
 import type { Handle } from "@/domain/handle";
 import type { LinkHighlight, LinkKind, LinkPlacement } from "@/domain/link";
 import type { Accent, ColorMode, LinkShape, NameFont } from "@/domain/page";
@@ -58,7 +59,7 @@ export interface PublicPage {
   readonly showHandle: boolean;
   readonly bio: string | null;
   readonly avatarPath: string | null;
-  readonly theme: "tecnico";
+  readonly theme: Theme;
   readonly colorMode: ColorMode;
   readonly accent: Accent;
   readonly linkShape: LinkShape;

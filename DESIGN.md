@@ -10,6 +10,27 @@ colors:
   superficie: "#1b1d20"
   lima-en-vivo: "#c6f432"
   tinta-en-vivo: "#121315"
+  punto-tostado: "#1f1813"
+  punto-crema: "#f6ecdc"
+  punto-crema-apagada: "#d8c8b2"
+  punto-costura: "#6b5644"
+  punto-costura-tenue: "#3d3027"
+  punto-retazo: "#3a2e24"
+  punto-tenido-en-vivo: "#b3cdff"
+  punto-terracota: "#ffb294"
+  punto-mostaza: "#e9b949"
+  punto-salvia: "#acd2b4"
+  punto-avena: "#efe3cc"
+  punto-tinta: "#2b2118"
+  punto-tinta-apagada: "#4f4135"
+  punto-costura-claro: "#b8a283"
+  punto-costura-tenue-claro: "#ddcdb0"
+  punto-retazo-claro: "#fffaf1"
+  punto-tenido-en-vivo-claro: "#1e3a78"
+  punto-tinta-en-vivo-claro: "#fbf3e4"
+  punto-terracota-claro: "#7a2c12"
+  punto-mostaza-claro: "#5c3d00"
+  punto-salvia-claro: "#264d31"
 typography:
   display:
     fontFamily: "Bricolage Grotesque, system-ui, sans-serif"
@@ -48,10 +69,18 @@ typography:
     fontSize: "0.8125rem"
     fontWeight: 400
     fontFeature: "tnum"
+  punto-nombre:
+    fontFamily: "Fraunces, Georgia, serif"
+    fontSize: "1.0625rem"
+    fontWeight: 600
+    lineHeight: 1.3
+    fontVariation: "'SOFT' 100"
 rounded:
   sm: "4px"
   md: "6px"
   full: "50%"
+  punto-retazo: "12px"
+  punto-pastilla: "1.625rem"
 spacing:
   "1": "0.25rem"
   "2": "0.5rem"
@@ -111,6 +140,30 @@ components:
     typography: "{typography.body-sm}"
     rounded: "{rounded.md}"
     padding: "0.5rem 1rem"
+  punto-retazo:
+    backgroundColor: "{colors.punto-retazo}"
+    textColor: "{colors.punto-crema}"
+    typography: "{typography.punto-nombre}"
+    rounded: "{rounded.punto-retazo}"
+    padding: "0 1rem"
+    height: "3.25rem"
+  punto-retazo-pastilla:
+    backgroundColor: "{colors.punto-retazo}"
+    textColor: "{colors.punto-crema}"
+    rounded: "{rounded.punto-pastilla}"
+    padding: "0 1.25rem"
+  punto-retazo-en-vivo:
+    backgroundColor: "{colors.punto-tenido-en-vivo}"
+    textColor: "{colors.punto-tostado}"
+    rounded: "{rounded.punto-retazo}"
+  punto-retazo-claro:
+    backgroundColor: "{colors.punto-retazo-claro}"
+    textColor: "{colors.punto-tinta}"
+    rounded: "{rounded.punto-retazo}"
+  punto-retazo-en-vivo-claro:
+    backgroundColor: "{colors.punto-tenido-en-vivo-claro}"
+    textColor: "{colors.punto-tinta-en-vivo-claro}"
+    rounded: "{rounded.punto-retazo}"
 ---
 
 # Design System: Plektia
@@ -278,3 +331,122 @@ SVG absoluto sobre la patchera, sin eventos de puntero, que nunca mueve el layou
 - **Don't** escribir colores literales en componentes; siempre tokens del tema.
 - **Don't** usar grafito o grafito tenue para texto: son colores de trazo.
 - **Don't** cargar fuentes desde un CDN externo en el producto portado.
+
+## Estilos: familias y variantes
+
+Desde [SPEC-styles](SPEC-styles.md), los cuatro "temas" del contrato de tokens pasaron a ser **familias** (Técnico, Cercano, Enérgico, Editorial) con **variantes** adentro: diez en total. `pages.theme` guarda la variante y es el valor de `data-theme`; la familia y lo que admite cada variante se deducen en `src/domain/theme.ts`. Cada variante tiene su propio motivo y su pieza firma; todas comparten la estructura, el contenido y las clases de los componentes, y redefinen sus marcadores (el jack pasa a ser punto, estación, LED, folio).
+
+| Familia | Variante (`data-theme`) | Estado | Pieza firma | Señal en vivo |
+|---|---|---|---|---|
+| Técnico | Patchera (`tecnico`) | construida | Hilo trenzado entre jacks | Jack lima que late |
+| Cercano | Punto (`punto`) | construida | Hileras de puntos de lana; links como retazos cosidos | El retazo teñido entero |
+| Cercano | Lado A / B (`cassette`), Corcho (`corcho`) | próximamente | | |
+| Enérgico | Subte (`subte`), Pedalera (`pedalera`), Bitmap (`bitmap`) | próximamente | | |
+| Editorial | Lomo cosido (`lomo`), Manual (`manual`), Sumario (`sumario`) | próximamente | | |
+
+Todo lo documentado arriba (Overview a Do's and Don'ts) es el sistema de Técnico y la base de todas las variantes. Cada variante escribe su CSS en `src/ui/styles/themes/<variante>.css`, acotado a `[data-theme="<variante>"]`, y se carga en línea solo en las páginas que la eligieron.
+
+### Reglas comunes
+
+**La regla de la misma página.** Ninguna variante cambia el orden, esconde contenido ni agrega texto propio: barra superior, avatar, nombre, `@handle`, bio, fila de íconos, destacados, secciones con sus links, último video plegable, en vivo y pie, siempre en ese orden. El avatar aparece siempre (foto o inicial) con la forma de la variante.
+
+**La regla de los dos sets.** Cada variante define sus tokens completos en oscuro y en claro, con Automático por `prefers-color-scheme`, y cumple AAA en los dos (7:1 texto, 4.5:1 texto grande, contra su fondo y su superficie). `tests/unit/ui/tokens.test.ts` lo mide en Técnico y `tests/unit/ui/theme-tokens.test.ts` en cada variante con hoja propia, incluidos todos sus acentos.
+
+**La regla de la señal propia.** Cada variante tiene una sola señal en vivo, exclusiva: no se reusa para foco ni para hover. La regla de la señal única de Técnico vale en cada variante con su propia señal.
+
+**La regla de lo que admite.** El estilo propone y el dueño ajusta: cada variante declara qué acentos admite (cada uno con su tono AAA propio en claro y en oscuro), qué formas de link y qué tipografías de nombre, con una por defecto en cada eje. Si lo guardado no está admitido, la página usa la de por defecto sin tocar lo guardado, y el panel lo avisa.
+
+**La regla del peso.** CSS en línea solo de la variante elegida; script solo si la pieza firma lo necesita; a lo sumo una fuente propia precargada, alojada localmente y sin CDN. El presupuesto de la página pública no cambia.
+
+Además valen para todas: foco visible, 44 px táctiles, `prefers-reduced-motion` con la pieza firma quieta, y ninguna numeración de links salvo en Sumario. Las excepciones a una regla de Técnico son propias de cada variante, se documentan en su subsección y quedan acotadas a su `[data-theme]`.
+
+### Grilla de estilos del panel
+
+En Panel → Página, "Estilo" es una grilla por familia: el nombre de la familia en display 500 con su público en body-sm hueso apagado debajo, y las variantes en celdas de 9.5rem mínimo. Cada celda es una opción con borde grafito tenue de 1 px y esquinas de 6 px; la elegida pasa a borde hueso con un anillo interior de 1 px. Adentro va una **miniatura real**: el fondo, el acento y la señal en vivo de la variante en el modo de la página, el avatar de 28 px con aro de acento de 2 px y dos filas (la de arriba en vivo). Cada variante redefine la miniatura con su motivo (en Técnico, jacks unidos por un tramo de hilo). Las variantes no construidas quedan a 55% de opacidad, sin seleccionar, con el texto "Próximamente". El panel en sí conserva la estética de Técnico.
+
+### Punto (familia Cercano)
+
+**La página está tejida.** Cada sección arranca con una hilera de puntos de lana y cada link es un retazo de tela cosido con puntada visible. Lanas teñidas en color plano, sin textura fotográfica: lo cálido sale del oficio, no de esquinas blandas. No hay hilo ni carril de jacks: los retazos ocupan todo el ancho de la columna (`--jack-col: 0px`).
+
+#### Colors
+
+Tostado y crema en oscuro, avena y tinta en claro; la lana del acento cose todo. Los valores normativos están en el frontmatter (`punto-*`).
+
+- **Tostado** (`punto-tostado`) / **Avena** (`punto-avena`): fondo de la página en oscuro y en claro. El tostado también es la tinta sobre el retazo teñido y el trenzado en oscuro.
+- **Crema** (`punto-crema`) / **Tinta** (`punto-tinta`): texto principal, foco y fondo de la selección.
+- **Crema apagada** (`punto-crema-apagada`) / **Tinta apagada** (`punto-tinta-apagada`): bio y metadatos.
+- **Retazo** (`punto-retazo`) / **Retazo claro** (`punto-retazo-claro`): la tela de cada link, destacado y botón de la fila de íconos. En claro el retazo es más claro que el fondo; en oscuro, más claro que el tostado.
+- **Costura** (`punto-costura`, `punto-costura-claro`): el borde de 1 px de cada retazo. **Costura tenue** (`punto-costura-tenue`, `punto-costura-tenue-claro`): filetes secundarios.
+- **Teñido en vivo** (`punto-tenido-en-vivo`, `punto-tenido-en-vivo-claro`): el fondo del retazo en vivo, con **tinta en vivo** (`punto-tostado` en oscuro, `punto-tinta-en-vivo-claro` en claro) para el texto y la costura encima.
+
+**Acentos admitidos** (seis de los ocho; por defecto, coral). El acento tiñe la costura, la hilera, el doble aro del avatar y la doble costura del destacado.
+
+| Acento | Lana | Oscuro | Claro |
+|---|---|---|---|
+| `coral` (por defecto) | terracota | `#ffb294` | `#7a2c12` |
+| `ambar` | mostaza | `#e9b949` | `#5c3d00` |
+| `turquesa` | salvia | `#acd2b4` | `#264d31` |
+| `lavanda` | lavanda | `#d0c0f0` | `#4a386e` |
+| `rosa` | rosa | `#f9b9c8` | `#742a41` |
+| `arena` | arena | `#dcc39d` | `#523c22` |
+
+`hueso` y `cielo` no se admiten en Punto.
+
+**Lanas alternadas.** Las hileras alternan tres lanas por sección, en ciclo: la 1.ª, 4.ª, … en el acento elegido; la 2.ª, 5.ª, … en mostaza (`punto-mostaza` / `punto-mostaza-claro`); la 3.ª, 6.ª, … en salvia (`punto-salvia` / `punto-salvia-claro`). Son decorativas y piden al menos 3:1 contra el fondo.
+
+**La regla del teñido.** En Punto la señal en vivo no es un color sino un estado de la tela: el retazo entero teñido, con el texto y la costura en la tinta. Ningún otro retazo lleva fondo teñido. El teñido es índigo (`#b3cdff` en oscuro, `#1e3a78` en claro): un tono que ninguno de los seis acentos de Punto usa, así la señal se distingue por color y no solo por el relleno.
+
+#### Typography
+
+**Display Font:** Fraunces variable (subset latino, eje `SOFT`, alojada localmente), por defecto en los nombres. Admite también **Nunito** y **Bricolage Grotesque**; Space Mono no se admite.
+**Body Font:** la del sistema, igual que Técnico.
+
+- Persona, títulos de sección, nombre de cada link y nombre de cada destacado llevan `font-variation-settings: "SOFT" 100`: la Fraunces de terminaciones blandas, que lee artesanal sin perder la serif.
+- El nombre del link sube a 600 (en Técnico es 500): el retazo con fondo pide un nombre más firme.
+- El cronómetro en vivo usa la fuente del cuerpo con `tabular-nums`, no la monoespaciada: las cifras siguen quietas, sin cortar la voz cálida del retazo.
+
+#### Shapes
+
+- **Retazo:** borde de 1 px en costura, fondo retazo, esquinas de 12 px (`--radius-md` sube a 12 px en Punto) y 0.5rem de separación entre retazos. Adentro, la **costura**: un trazo punteado de 1.5 px en el acento, metido 5 px adentro del borde y con el mismo radio (4 px adentro en los botones de íconos).
+- **Pastillas:** con la forma `pills`, el radio pasa a media fila (1.625rem) y el padding lateral a 1.25rem. Punto admite solo `cards` (por defecto) y `pills`: nunca filas sueltas.
+- **Avatar:** doble aro, uno sólido y otro cosido. El sólido es un anillo de spread puro (3 px de fondo y 2 px de acento); el cosido, un contorno punteado de 1.5 px en el acento a 8 px de distancia.
+- **Hilera:** una fila de V de lana de 10 px de alto (trazo de 2 px, extremos redondeados), repetida con paso ajustado para no cortar ninguna V a la mitad, encima de cada título de sección. Reemplaza al filete grafito.
+
+#### Components
+
+- **Retazo (fila de link):** el jack se oculta y el texto ocupa toda la fila. Hover y foco cierran la puntada: la costura pasa de punteada a continua. Es el único uso del trazo sólido de costura.
+- **En vivo:** el retazo se tiñe entero (fondo y borde en el teñido en vivo); metadato, etiqueta "En vivo", cronómetro, ícono, flecha, costura y el filete del último video pasan a la tinta en vivo.
+- **Destacado:** doble costura, dos trazos punteados de acento (a 5 px y a 10 px del borde, el interior con radio de 6 px). No es el trazo sólido del hover. El texto se corre para no pisarla (1rem arriba y abajo, 1.25rem a los lados).
+- **Fila de íconos y tarjetas destacadas:** también son retazos, con borde, fondo y costura.
+- **Miniatura del panel:** una hilera de V de 6 px arriba, un retazo cosido (esquinas de 6 px, costura de 1 px a 2 px adentro) y uno teñido en vivo; sin jack ni tramo de hilo.
+
+#### Firma: la hilera que se teje
+
+Al cargar, la primera hilera de la página se teje de izquierda a derecha punto por punto: se revela en 1100 ms en 44 pasos discretos, una sola vez. Las demás hileras están quietas desde el principio. Con `prefers-reduced-motion` la primera hilera también aparece completa y quieta.
+
+#### Excepciones a Técnico, acotadas a `[data-theme="punto"]`
+
+Estas excepciones son propias de Punto y no se heredan a otras variantes ni a Técnico:
+
+- **Retazos con fondo y caja** en vez de filas sin caja separadas por filete (excepción a la regla del filete y al "Don't" de tarjetas con fondo).
+- **Esquinas de 12 px y pastillas** en vez de esquinas apenas suavizadas (excepción a "no hay píldoras ni esquinas grandes").
+- **Sin hilo ni carril de jacks.**
+- **Contorno punteado decorativo** en el avatar y en las costuras, que no es foco: el foco sigue siendo el contorno sólido de 2 px en `--color-focus`.
+- **Cronómetro en la fuente del cuerpo** con cifras tabulares, en vez de la monoespaciada.
+
+#### Do's and Don'ts
+
+##### Do:
+- **Do** coser cada link como retazo: borde de 1 px, fondo retazo y costura punteada de 1.5 px metida 5 px adentro.
+- **Do** cerrar la puntada (punteada a continua) para hover y foco, y reservar la doble costura para el destacado.
+- **Do** teñir el retazo entero para el en vivo, con texto y costura en la tinta en vivo.
+- **Do** abrir cada sección con su hilera de V, alternando acento, mostaza y salvia.
+- **Do** tejer solo la primera hilera al cargar, y dejarla quieta con movimiento reducido.
+- **Do** usar Fraunces con `SOFT` 100 en los nombres cuando es la tipografía elegida.
+
+##### Don't:
+- **Don't** volver a filas sueltas, jacks o hilo dentro de Punto.
+- **Don't** usar el trazo sólido de costura fuera del hover y el foco.
+- **Don't** teñir de fondo ningún retazo que no esté en vivo.
+- **Don't** dar textura fotográfica a las lanas: color plano.
+- **Don't** sacar las excepciones de Punto de `[data-theme="punto"]`.

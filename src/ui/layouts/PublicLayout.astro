@@ -10,13 +10,16 @@ import Seo from "@/ui/components/Seo.astro";
 import ShareDialog from "@/ui/components/ShareDialog.astro";
 import Topbar from "@/ui/components/Topbar.astro";
 import type { Accent, ColorMode, NameFont } from "@/domain/page";
+import type { Theme } from "@/domain/theme";
+import { THEME_STYLESHEETS } from "@/ui/styles/themes";
 
 interface Props {
   title: string;
   description: string;
   /** URL canónica absoluta; se omite en páginas que no deben indexarse (404). */
   canonical?: URL | undefined;
-  theme?: "tecnico";
+  /** La variante de estilo (SPEC-styles); su hoja se enlaza solo si la usa. */
+  theme?: Theme;
   /** Claro, oscuro o el del dispositivo de quien visita (SPEC-appearance). */
   mode?: ColorMode;
   /** Acento curado de la página (SPEC-appearance, 36a). */
@@ -86,6 +89,7 @@ const shareUrl = (canonical ?? publicUrl ?? new URL(Astro.url.pathname, Astro.ur
       type={type}
       structuredData={structuredData}
     />
+    {THEME_STYLESHEETS[theme] && <link rel="stylesheet" href={THEME_STYLESHEETS[theme]} />}
     <slot name="head" />
   </head>
   <body data-theme={theme} data-mode={mode} data-accent={accent} data-name-font={nameFont}>

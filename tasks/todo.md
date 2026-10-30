@@ -520,3 +520,21 @@
 ### ✅ Checkpoint F10 · ENTREGA 7
 - [ ] Agregás tus redes con el usuario, y los artículos se distinguen en tu página.
 - [ ] Revisión con vos.
+
+---
+
+## F11 · Estilos → ENTREGA 8 ([SPEC-styles](../SPEC-styles.md))
+
+- [x] **Tarea 38a: Punto y la base de estilos** · M · Deps: 36e
+  - Variantes en `pages.theme` (enum ampliado) y reglas por variante en `src/domain/theme.ts`.
+  - Grilla "Estilo" por familia en el panel, con miniaturas reales; hoja de estilos propia por variante.
+  - Punto (Cercano): hileras de lana, retazos cosidos, en vivo índigo teñido, AAA en los dos modos.
+- [ ] **Tarea 38b: Subte** (Enérgico) · M · Deps: 38a
+- [ ] **Tarea 38c: Lomo cosido** (Editorial) · M · Deps: 38a
+- [ ] **Tarea 38d: Segunda tanda** · L · Deps: 38a
+  - Lado A/B, Corcho, Pedalera, Bitmap, Manual y Sumario, una por PR.
+
+### ✅ Checkpoint F11 · ENTREGA 8
+- [ ] Elegís un estilo que te represente y tu página sigue rápida, clara y AAA.
+- [ ] Revisión con vos.
+

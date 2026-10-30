@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-10-09T23:52:57.471Z",
+  "generatedAt": "2026-10-30T06:09:56.852Z",
   "title": "Design System: Plektia",
   "extensions": {
     "colorMeta": {
@@ -131,6 +131,363 @@
           "oklch(80% 0.004 264.5)",
           "oklch(95% 0.004 264.5)"
         ]
+      },
+      "punto-tostado": {
+        "role": "neutral",
+        "displayName": "Tostado (Punto)",
+        "canonical": "oklch(21.6% 0.015 57.4)",
+        "cssVar": "--color-bg (oscuro); también --color-live-ink y --color-thread-twist",
+        "theme": "punto",
+        "tonalRamp": [
+          "oklch(15% 0.015 57.4)",
+          "oklch(25% 0.015 57.4)",
+          "oklch(35% 0.015 57.4)",
+          "oklch(45% 0.015 57.4)",
+          "oklch(55% 0.015 57.4)",
+          "oklch(65% 0.015 57.4)",
+          "oklch(80% 0.015 57.4)",
+          "oklch(95% 0.015 57.4)"
+        ]
+      },
+      "punto-crema": {
+        "role": "neutral",
+        "displayName": "Crema (Punto)",
+        "canonical": "oklch(94.7% 0.024 79.7)",
+        "cssVar": "--color-fg (oscuro); también --color-focus y --color-selection-bg",
+        "theme": "punto",
+        "tonalRamp": [
+          "oklch(15% 0.024 79.7)",
+          "oklch(25% 0.024 79.7)",
+          "oklch(35% 0.024 79.7)",
+          "oklch(45% 0.024 79.7)",
+          "oklch(55% 0.024 79.7)",
+          "oklch(65% 0.024 79.7)",
+          "oklch(80% 0.024 79.7)",
+          "oklch(95% 0.024 79.7)"
+        ]
+      },
+      "punto-crema-apagada": {
+        "role": "neutral",
+        "displayName": "Crema apagada (Punto)",
+        "canonical": "oklch(84.0% 0.035 75.9)",
+        "cssVar": "--color-fg-muted (oscuro)",
+        "theme": "punto",
+        "tonalRamp": [
+          "oklch(15% 0.035 75.9)",
+          "oklch(25% 0.035 75.9)",
+          "oklch(35% 0.035 75.9)",
+          "oklch(45% 0.035 75.9)",
+          "oklch(55% 0.035 75.9)",
+          "oklch(65% 0.035 75.9)",
+          "oklch(80% 0.035 75.9)",
+          "oklch(95% 0.035 75.9)"
+        ]
+      },
+      "punto-costura": {
+        "role": "neutral",
+        "displayName": "Costura (Punto)",
+        "canonical": "oklch(46.9% 0.039 62.2)",
+        "cssVar": "--color-line (oscuro)",
+        "theme": "punto",
+        "tonalRamp": [
+          "oklch(15% 0.039 62.2)",
+          "oklch(25% 0.039 62.2)",
+          "oklch(35% 0.039 62.2)",
+          "oklch(45% 0.039 62.2)",
+          "oklch(55% 0.039 62.2)",
+          "oklch(65% 0.039 62.2)",
+          "oklch(80% 0.039 62.2)",
+          "oklch(95% 0.039 62.2)"
+        ]
+      },
+      "punto-costura-tenue": {
+        "role": "neutral",
+        "displayName": "Costura tenue (Punto)",
+        "canonical": "oklch(32.1% 0.024 56.4)",
+        "cssVar": "--color-line-soft (oscuro)",
+        "theme": "punto",
+        "tonalRamp": [
+          "oklch(15% 0.024 56.4)",
+          "oklch(25% 0.024 56.4)",
+          "oklch(35% 0.024 56.4)",
+          "oklch(45% 0.024 56.4)",
+          "oklch(55% 0.024 56.4)",
+          "oklch(65% 0.024 56.4)",
+          "oklch(80% 0.024 56.4)",
+          "oklch(95% 0.024 56.4)"
+        ]
+      },
+      "punto-retazo": {
+        "role": "neutral",
+        "displayName": "Retazo (Punto)",
+        "canonical": "oklch(31.1% 0.025 61.5)",
+        "cssVar": "--color-surface (oscuro)",
+        "theme": "punto",
+        "tonalRamp": [
+          "oklch(15% 0.025 61.5)",
+          "oklch(25% 0.025 61.5)",
+          "oklch(35% 0.025 61.5)",
+          "oklch(45% 0.025 61.5)",
+          "oklch(55% 0.025 61.5)",
+          "oklch(65% 0.025 61.5)",
+          "oklch(80% 0.025 61.5)",
+          "oklch(95% 0.025 61.5)"
+        ]
+      },
+      "punto-tenido-en-vivo": {
+        "role": "primary",
+        "displayName": "Teñido en vivo (Punto)",
+        "canonical": "oklch(84.3% 0.089 39.5)",
+        "cssVar": "--color-live (oscuro)",
+        "theme": "punto",
+        "tonalRamp": [
+          "oklch(15% 0.089 39.5)",
+          "oklch(25% 0.089 39.5)",
+          "oklch(35% 0.089 39.5)",
+          "oklch(45% 0.089 39.5)",
+          "oklch(55% 0.089 39.5)",
+          "oklch(65% 0.089 39.5)",
+          "oklch(80% 0.089 39.5)",
+          "oklch(95% 0.089 39.5)"
+        ]
+      },
+      "punto-terracota": {
+        "role": "secondary",
+        "displayName": "Terracota (Punto, acento coral)",
+        "canonical": "oklch(83.0% 0.099 42.1)",
+        "cssVar": "--accent-on-dark con data-accent=\"coral\" (por defecto)",
+        "theme": "punto",
+        "tonalRamp": [
+          "oklch(15% 0.099 42.1)",
+          "oklch(25% 0.099 42.1)",
+          "oklch(35% 0.099 42.1)",
+          "oklch(45% 0.099 42.1)",
+          "oklch(55% 0.099 42.1)",
+          "oklch(65% 0.099 42.1)",
+          "oklch(80% 0.099 42.1)",
+          "oklch(95% 0.099 42.1)"
+        ]
+      },
+      "punto-mostaza": {
+        "role": "tertiary",
+        "displayName": "Mostaza (Punto, lana 2)",
+        "canonical": "oklch(80.9% 0.138 85.2)",
+        "cssVar": "--wool-2 (oscuro); también acento ambar",
+        "theme": "punto",
+        "tonalRamp": [
+          "oklch(15% 0.138 85.2)",
+          "oklch(25% 0.138 85.2)",
+          "oklch(35% 0.138 85.2)",
+          "oklch(45% 0.138 85.2)",
+          "oklch(55% 0.138 85.2)",
+          "oklch(65% 0.138 85.2)",
+          "oklch(80% 0.138 85.2)",
+          "oklch(95% 0.138 85.2)"
+        ]
+      },
+      "punto-salvia": {
+        "role": "tertiary",
+        "displayName": "Salvia (Punto, lana 3)",
+        "canonical": "oklch(82.8% 0.058 151.3)",
+        "cssVar": "--wool-3 (oscuro); también acento turquesa",
+        "theme": "punto",
+        "tonalRamp": [
+          "oklch(15% 0.058 151.3)",
+          "oklch(25% 0.058 151.3)",
+          "oklch(35% 0.058 151.3)",
+          "oklch(45% 0.058 151.3)",
+          "oklch(55% 0.058 151.3)",
+          "oklch(65% 0.058 151.3)",
+          "oklch(80% 0.058 151.3)",
+          "oklch(95% 0.058 151.3)"
+        ]
+      },
+      "punto-avena": {
+        "role": "neutral",
+        "displayName": "Avena (Punto)",
+        "canonical": "oklch(91.9% 0.033 83.7)",
+        "cssVar": "--color-bg (claro); también --color-thread-twist y --color-selection-fg",
+        "theme": "punto",
+        "tonalRamp": [
+          "oklch(15% 0.033 83.7)",
+          "oklch(25% 0.033 83.7)",
+          "oklch(35% 0.033 83.7)",
+          "oklch(45% 0.033 83.7)",
+          "oklch(55% 0.033 83.7)",
+          "oklch(65% 0.033 83.7)",
+          "oklch(80% 0.033 83.7)",
+          "oklch(95% 0.033 83.7)"
+        ]
+      },
+      "punto-tinta": {
+        "role": "neutral",
+        "displayName": "Tinta (Punto)",
+        "canonical": "oklch(25.7% 0.022 63.6)",
+        "cssVar": "--color-fg (claro); también --color-focus y --color-selection-bg",
+        "theme": "punto",
+        "tonalRamp": [
+          "oklch(15% 0.022 63.6)",
+          "oklch(25% 0.022 63.6)",
+          "oklch(35% 0.022 63.6)",
+          "oklch(45% 0.022 63.6)",
+          "oklch(55% 0.022 63.6)",
+          "oklch(65% 0.022 63.6)",
+          "oklch(80% 0.022 63.6)",
+          "oklch(95% 0.022 63.6)"
+        ]
+      },
+      "punto-tinta-apagada": {
+        "role": "neutral",
+        "displayName": "Tinta apagada (Punto)",
+        "canonical": "oklch(38.6% 0.028 62.5)",
+        "cssVar": "--color-fg-muted (claro)",
+        "theme": "punto",
+        "tonalRamp": [
+          "oklch(15% 0.028 62.5)",
+          "oklch(25% 0.028 62.5)",
+          "oklch(35% 0.028 62.5)",
+          "oklch(45% 0.028 62.5)",
+          "oklch(55% 0.028 62.5)",
+          "oklch(65% 0.028 62.5)",
+          "oklch(80% 0.028 62.5)",
+          "oklch(95% 0.028 62.5)"
+        ]
+      },
+      "punto-costura-claro": {
+        "role": "neutral",
+        "displayName": "Costura clara (Punto)",
+        "canonical": "oklch(72.3% 0.050 76.2)",
+        "cssVar": "--color-line (claro)",
+        "theme": "punto",
+        "tonalRamp": [
+          "oklch(15% 0.050 76.2)",
+          "oklch(25% 0.050 76.2)",
+          "oklch(35% 0.050 76.2)",
+          "oklch(45% 0.050 76.2)",
+          "oklch(55% 0.050 76.2)",
+          "oklch(65% 0.050 76.2)",
+          "oklch(80% 0.050 76.2)",
+          "oklch(95% 0.050 76.2)"
+        ]
+      },
+      "punto-costura-tenue-claro": {
+        "role": "neutral",
+        "displayName": "Costura tenue clara (Punto)",
+        "canonical": "oklch(85.4% 0.043 82.5)",
+        "cssVar": "--color-line-soft (claro)",
+        "theme": "punto",
+        "tonalRamp": [
+          "oklch(15% 0.043 82.5)",
+          "oklch(25% 0.043 82.5)",
+          "oklch(35% 0.043 82.5)",
+          "oklch(45% 0.043 82.5)",
+          "oklch(55% 0.043 82.5)",
+          "oklch(65% 0.043 82.5)",
+          "oklch(80% 0.043 82.5)",
+          "oklch(95% 0.043 82.5)"
+        ]
+      },
+      "punto-retazo-claro": {
+        "role": "neutral",
+        "displayName": "Retazo claro (Punto)",
+        "canonical": "oklch(98.6% 0.013 82.4)",
+        "cssVar": "--color-surface (claro)",
+        "theme": "punto",
+        "tonalRamp": [
+          "oklch(15% 0.013 82.4)",
+          "oklch(25% 0.013 82.4)",
+          "oklch(35% 0.013 82.4)",
+          "oklch(45% 0.013 82.4)",
+          "oklch(55% 0.013 82.4)",
+          "oklch(65% 0.013 82.4)",
+          "oklch(80% 0.013 82.4)",
+          "oklch(95% 0.013 82.4)"
+        ]
+      },
+      "punto-tenido-en-vivo-claro": {
+        "role": "primary",
+        "displayName": "Teñido en vivo claro (Punto)",
+        "canonical": "oklch(39.1% 0.122 34.3)",
+        "cssVar": "--color-live (claro)",
+        "theme": "punto",
+        "tonalRamp": [
+          "oklch(15% 0.122 34.3)",
+          "oklch(25% 0.122 34.3)",
+          "oklch(35% 0.122 34.3)",
+          "oklch(45% 0.122 34.3)",
+          "oklch(55% 0.122 34.3)",
+          "oklch(65% 0.122 34.3)",
+          "oklch(80% 0.122 34.3)",
+          "oklch(95% 0.122 34.3)"
+        ]
+      },
+      "punto-tinta-en-vivo-claro": {
+        "role": "neutral",
+        "displayName": "Tinta en vivo clara (Punto)",
+        "canonical": "oklch(96.6% 0.022 83.3)",
+        "cssVar": "--color-live-ink (claro)",
+        "theme": "punto",
+        "tonalRamp": [
+          "oklch(15% 0.022 83.3)",
+          "oklch(25% 0.022 83.3)",
+          "oklch(35% 0.022 83.3)",
+          "oklch(45% 0.022 83.3)",
+          "oklch(55% 0.022 83.3)",
+          "oklch(65% 0.022 83.3)",
+          "oklch(80% 0.022 83.3)",
+          "oklch(95% 0.022 83.3)"
+        ]
+      },
+      "punto-terracota-claro": {
+        "role": "secondary",
+        "displayName": "Terracota clara (Punto, acento coral)",
+        "canonical": "oklch(40.3% 0.115 37.9)",
+        "cssVar": "--accent-on-light con data-accent=\"coral\" (por defecto)",
+        "theme": "punto",
+        "tonalRamp": [
+          "oklch(15% 0.115 37.9)",
+          "oklch(25% 0.115 37.9)",
+          "oklch(35% 0.115 37.9)",
+          "oklch(45% 0.115 37.9)",
+          "oklch(55% 0.115 37.9)",
+          "oklch(65% 0.115 37.9)",
+          "oklch(80% 0.115 37.9)",
+          "oklch(95% 0.115 37.9)"
+        ]
+      },
+      "punto-mostaza-claro": {
+        "role": "tertiary",
+        "displayName": "Mostaza clara (Punto, lana 2)",
+        "canonical": "oklch(38.6% 0.081 76.6)",
+        "cssVar": "--wool-2 (claro); también acento ambar",
+        "theme": "punto",
+        "tonalRamp": [
+          "oklch(15% 0.081 76.6)",
+          "oklch(25% 0.081 76.6)",
+          "oklch(35% 0.081 76.6)",
+          "oklch(45% 0.081 76.6)",
+          "oklch(55% 0.081 76.6)",
+          "oklch(65% 0.081 76.6)",
+          "oklch(80% 0.081 76.6)",
+          "oklch(95% 0.081 76.6)"
+        ]
+      },
+      "punto-salvia-claro": {
+        "role": "tertiary",
+        "displayName": "Salvia clara (Punto, lana 3)",
+        "canonical": "oklch(38.3% 0.065 151.4)",
+        "cssVar": "--wool-3 (claro); también acento turquesa",
+        "theme": "punto",
+        "tonalRamp": [
+          "oklch(15% 0.065 151.4)",
+          "oklch(25% 0.065 151.4)",
+          "oklch(35% 0.065 151.4)",
+          "oklch(45% 0.065 151.4)",
+          "oklch(55% 0.065 151.4)",
+          "oklch(65% 0.065 151.4)",
+          "oklch(80% 0.065 151.4)",
+          "oklch(95% 0.065 151.4)"
+        ]
       }
     },
     "typographyMeta": {
@@ -161,6 +518,10 @@
       "data": {
         "displayName": "Data",
         "purpose": "Cronómetro en vivo y duración de video, cifras tabulares."
+      },
+      "punto-nombre": {
+        "displayName": "Nombre (Punto)",
+        "purpose": "Persona, títulos de sección, links y destacados en Punto: Fraunces con SOFT 100; el link sube a 600. Admite también Nunito y Bricolage."
       }
     },
     "shadows": [
@@ -173,6 +534,16 @@
         "name": "ojo-jack",
         "value": "inset 0 0 0 1.5px var(--color-line)",
         "purpose": "Borde interior del ojo del jack en reposo."
+      },
+      {
+        "name": "punto-aro-avatar",
+        "value": "0 0 0 3px var(--color-bg), 0 0 0 5px var(--color-accent); outline: 1.5px dashed var(--color-accent); outline-offset: 8px",
+        "purpose": "Doble aro del avatar en Punto: uno sólido de spread puro y otro cosido."
+      },
+      {
+        "name": "punto-costura",
+        "value": "::after { inset: 5px; border: 1.5px dashed var(--color-accent); border-radius: inherit }",
+        "purpose": "Costura metida adentro de cada retazo; continua en hover y foco; doble (segunda a 10 px, radio 6 px) en el destacado. No es elevación."
       }
     ],
     "motion": [
@@ -210,6 +581,11 @@
         "name": "reduced-motion",
         "value": "prefers-reduced-motion: reduce",
         "purpose": "Transiciones a 0 ms, pulso quieto a 0.5 de opacidad, hilo completo y tensado instantáneo."
+      },
+      {
+        "name": "punto-tejer",
+        "value": "1100ms steps(44, end), clip-path inset revelado de izquierda a derecha",
+        "purpose": "Firma de Punto: la primera hilera se teje punto por punto al cargar, una vez. Quieta con movimiento reducido."
       }
     ],
     "breakpoints": [
@@ -229,17 +605,83 @@
     },
     "theming": {
       "attribute": "data-theme",
-      "themes": [
+      "families": [
         "tecnico",
         "cercano",
         "energico",
         "editorial"
       ],
+      "variants": {
+        "tecnico": "tecnico",
+        "punto": "cercano",
+        "cassette": "cercano",
+        "corcho": "cercano",
+        "subte": "energico",
+        "pedalera": "energico",
+        "bitmap": "energico",
+        "lomo": "editorial",
+        "manual": "editorial",
+        "sumario": "editorial"
+      },
       "implemented": [
-        "tecnico"
+        "tecnico",
+        "punto"
       ],
-      "contract": "Cada tema redefine el set completo de variables de tokens.css; WCAG 2.2 AAA (7:1 texto) en la página pública. Lima reservada al en vivo; foco y selección en hueso.",
-      "portTarget": "src/ui/styles/"
+      "rulesSource": "src/domain/theme.ts (familia, acentos, formas y tipografías por variante)",
+      "variantCss": "src/ui/styles/themes/<variante>.css, acotado a [data-theme=\"<variante>\"] y en línea solo en las páginas que la eligen",
+      "contract": "Cada variante redefine el set completo de variables en oscuro y en claro, con AAA (7:1 texto) contra su fondo y su superficie en los dos modos. Una sola señal en vivo por variante, exclusiva. Misma estructura y contenido en todas. Las excepciones a Técnico son de la variante y quedan en su [data-theme].",
+      "portTarget": "src/ui/styles/",
+      "punto": {
+        "accents": {
+          "coral": {
+            "dark": "#ffb294",
+            "light": "#7a2c12",
+            "default": true
+          },
+          "ambar": {
+            "dark": "#e9b949",
+            "light": "#5c3d00"
+          },
+          "turquesa": {
+            "dark": "#acd2b4",
+            "light": "#264d31"
+          },
+          "lavanda": {
+            "dark": "#d0c0f0",
+            "light": "#4a386e"
+          },
+          "rosa": {
+            "dark": "#f9b9c8",
+            "light": "#742a41"
+          },
+          "arena": {
+            "dark": "#dcc39d",
+            "light": "#523c22"
+          }
+        },
+        "wools": "Hileras en ciclo de tres por sección: acento, mostaza (--wool-2), salvia (--wool-3); decorativas, al menos 3:1 contra el fondo.",
+        "shapes": [
+          "cards",
+          "pills"
+        ],
+        "defaultShape": "cards",
+        "fonts": [
+          "fraunces",
+          "nunito",
+          "bricolage"
+        ],
+        "defaultFont": "fraunces",
+        "thread": false,
+        "jackCol": "0px",
+        "radiusMd": "12px",
+        "exceptions": [
+          "Retazos con fondo y borde en vez de filas sin caja",
+          "Esquinas de 12 px y pastillas",
+          "Sin hilo ni carril de jacks",
+          "Contorno punteado decorativo en avatar y costuras (el foco sigue sólido)",
+          "Cronómetro en la fuente del cuerpo con tabular-nums"
+        ]
+      }
     },
     "portCommitments": [
       "Alojar Bricolage Grotesque con @fontsource-variable/bricolage-grotesque (OFL-1.1), solo subset latino woff2, y quitar los preconnect a Google Fonts."
@@ -250,7 +692,10 @@
         "status": "sin decidir",
         "summary": "Línea troncal con nodos y secciones como tramos de línea de color; posible segundo estilo de página."
       }
-    ]
+    ],
+    "adminStyleGrid": {
+      "summary": "Panel → Página → Estilo: grilla por familia (celdas de 9.5rem mínimo, borde grafito tenue, 6 px); la elegida con borde hueso y anillo interior de 1 px; miniatura real con los tokens de la variante en el modo de la página; las no construidas a 55% de opacidad con \"Próximamente\"."
+    }
   },
   "components": [
     {
@@ -316,6 +761,38 @@
       "description": "Duración sobre la miniatura, cifras tabulares.",
       "html": "<span class=\"ds-duration\">12:34</span>",
       "css": ".ds-duration{padding:0 0.25rem;border-radius:var(--radius-sm,4px);background:var(--color-bg,#121315);color:var(--color-fg,#f2f2ee);font-family:var(--font-data,ui-monospace,monospace);font-size:0.8125rem;font-variant-numeric:tabular-nums}"
+    },
+    {
+      "name": "Retazo (Punto)",
+      "kind": "card",
+      "refersTo": "punto-retazo",
+      "description": "Link de Punto: tela con borde de 1 px y costura punteada metida 5 px; la puntada se cierra en hover y foco.",
+      "html": "<a class=\"ds-retazo\" href=\"#\"><span class=\"ds-retazo-name\">Mi tienda</span><span class=\"ds-retazo-meta\">tienda.example</span></a>",
+      "css": ".ds-retazo{position:relative;display:block;width:22rem;min-height:3.25rem;padding:0.75rem 1rem;border:1px solid #6b5644;border-radius:12px;background:#3a2e24;color:#f6ecdc;text-decoration:none} .ds-retazo::after{content:\"\";position:absolute;inset:5px;border:1.5px dashed #ffb294;border-radius:inherit;pointer-events:none} .ds-retazo:is(:hover,:focus-visible)::after{border-style:solid} .ds-retazo:focus-visible{outline:2px solid #f6ecdc;outline-offset:4px} .ds-retazo-name{display:block;font-family:Fraunces,Georgia,serif;font-variation-settings:\"SOFT\" 100;font-size:1.0625rem;font-weight:600;line-height:1.3} .ds-retazo-meta{display:block;color:#d8c8b2;font-size:0.8125rem}"
+    },
+    {
+      "name": "Retazo en vivo (Punto)",
+      "kind": "card",
+      "refersTo": "punto-retazo-en-vivo",
+      "description": "El retazo teñido entero; texto y costura en la tinta.",
+      "html": "<a class=\"ds-retazo-live\" href=\"#\"><span class=\"ds-retazo-name\">Twitch</span><span class=\"ds-retazo-meta\"><b>En vivo</b> · <time>1:24:05</time></span></a>",
+      "css": ".ds-retazo-live{position:relative;display:block;width:22rem;min-height:3.25rem;padding:0.75rem 1rem;border:1px solid #b3cdff;border-radius:12px;background:#b3cdff;color:#1f1813;text-decoration:none} .ds-retazo-live::after{content:\"\";position:absolute;inset:5px;border:1.5px dashed #1f1813;border-radius:inherit;pointer-events:none} .ds-retazo-live:is(:hover,:focus-visible)::after{border-style:solid} .ds-retazo-live:focus-visible{outline:2px solid #f6ecdc;outline-offset:4px} .ds-retazo-live .ds-retazo-name{display:block;font-family:Fraunces,Georgia,serif;font-variation-settings:\"SOFT\" 100;font-size:1.0625rem;font-weight:600} .ds-retazo-live .ds-retazo-meta{display:block;font-size:0.8125rem} .ds-retazo-live time{font-variant-numeric:tabular-nums}"
+    },
+    {
+      "name": "Hilera de puntos (Punto)",
+      "kind": "custom",
+      "refersTo": "punto-retazo",
+      "description": "Fila de V de lana sobre cada título de sección; la primera se teje al cargar.",
+      "html": "<h2 class=\"ds-hilera\">Proyectos</h2>",
+      "css": ".ds-hilera{position:relative;width:22rem;margin:0;padding:1rem 0 0;color:#f6ecdc;font-family:Fraunces,Georgia,serif;font-variation-settings:\"SOFT\" 100;font-size:1.25rem;font-weight:600} .ds-hilera::before{content:\"\";position:absolute;inset:0 0 auto;height:10px;background:#ffb294;-webkit-mask:url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10'%3E%3Cpath d='M1.5 1.5 5 8.5 8.5 1.5' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E\") round no-repeat left / 10px 10px;mask:url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10'%3E%3Cpath d='M1.5 1.5 5 8.5 8.5 1.5' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E\") round no-repeat left / 10px 10px;animation:ds-tejer 1100ms steps(44,end) both} @keyframes ds-tejer{from{clip-path:inset(0 100% 0 0)}to{clip-path:inset(0 0 0 0)}} @media (prefers-reduced-motion: reduce){.ds-hilera::before{animation:none}}"
+    },
+    {
+      "name": "Avatar (Punto)",
+      "kind": "custom",
+      "refersTo": "avatar",
+      "description": "Doble aro: uno sólido de acento y otro cosido a 8 px.",
+      "html": "<div class=\"ds-avatar-punto\" aria-hidden=\"true\">J</div>",
+      "css": ".ds-avatar-punto{display:grid;place-items:center;width:88px;height:88px;margin:12px;border-radius:50%;background:#3a2e24;color:#f6ecdc;box-shadow:0 0 0 3px #1f1813,0 0 0 5px #ffb294;outline:1.5px dashed #ffb294;outline-offset:8px;font-family:Fraunces,Georgia,serif;font-variation-settings:\"SOFT\" 100;font-size:2rem;font-weight:500}"
     }
   ],
   "narrative": {
@@ -364,6 +841,36 @@
         "name": "La regla del anillo",
         "body": "Si `box-shadow` aparece, es un anillo concéntrico de spread puro (`0 0 0 Npx`), nunca una sombra con desplazamiento o desenfoque.",
         "section": "elevation"
+      },
+      {
+        "name": "La regla de la misma página",
+        "body": "Ninguna variante cambia el orden, esconde contenido ni agrega texto propio: barra superior, avatar, nombre, `@handle`, bio, fila de íconos, destacados, secciones con sus links, último video plegable, en vivo y pie, siempre en ese orden. El avatar aparece siempre (foto o inicial) con la forma de la variante.",
+        "section": "styles"
+      },
+      {
+        "name": "La regla de los dos sets",
+        "body": "Cada variante define sus tokens completos en oscuro y en claro, con Automático por `prefers-color-scheme`, y cumple AAA en los dos (7:1 texto, 4.5:1 texto grande, contra su fondo y su superficie). `tests/unit/ui/tokens.test.ts` lo mide en Técnico y `tests/unit/ui/theme-tokens.test.ts` en cada variante con hoja propia, incluidos todos sus acentos.",
+        "section": "styles"
+      },
+      {
+        "name": "La regla de la señal propia",
+        "body": "Cada variante tiene una sola señal en vivo, exclusiva: no se reusa para foco ni para hover. La regla de la señal única de Técnico vale en cada variante con su propia señal.",
+        "section": "styles"
+      },
+      {
+        "name": "La regla de lo que admite",
+        "body": "El estilo propone y el dueño ajusta: cada variante declara qué acentos admite (cada uno con su tono AAA propio en claro y en oscuro), qué formas de link y qué tipografías de nombre, con una por defecto en cada eje. Si lo guardado no está admitido, la página usa la de por defecto sin tocar lo guardado, y el panel lo avisa.",
+        "section": "styles"
+      },
+      {
+        "name": "La regla del peso",
+        "body": "CSS en línea solo de la variante elegida; script solo si la pieza firma lo necesita; a lo sumo una fuente propia precargada, alojada localmente y sin CDN. El presupuesto de la página pública no cambia.",
+        "section": "styles"
+      },
+      {
+        "name": "La regla del teñido",
+        "body": "En Punto la señal en vivo no es un color sino un estado de la tela: el retazo entero teñido, con el texto y la costura en la tinta. Ningún otro retazo lleva fondo teñido.",
+        "section": "colors"
       }
     ],
     "dos": [
@@ -374,7 +881,13 @@
       "**Do** respetar `prefers-reduced-motion`: sin transiciones, sin pulso animado, hilo completo y quieto.",
       "**Do** definir cada tema nuevo redefiniendo el set completo de tokens y verificar 7:1 de texto contra su fondo y su superficie.",
       "**Do** dar a cada blanco táctil al menos 44 × 44 px.",
-      "**Do** usar la monoespaciada con cifras tabulares para todo número que cambia en pantalla."
+      "**Do** usar la monoespaciada con cifras tabulares para todo número que cambia en pantalla.",
+      "**Do** coser cada link como retazo: borde de 1 px, fondo retazo y costura punteada de 1.5 px metida 5 px adentro.",
+      "**Do** cerrar la puntada (punteada a continua) para hover y foco, y reservar la doble costura para el destacado.",
+      "**Do** teñir el retazo entero para el en vivo, con texto y costura en la tinta en vivo.",
+      "**Do** abrir cada sección con su hilera de V, alternando acento, mostaza y salvia.",
+      "**Do** tejer solo la primera hilera al cargar, y dejarla quieta con movimiento reducido.",
+      "**Do** usar Fraunces con `SOFT` 100 en los nombres cuando es la tipografía elegida."
     ],
     "donts": [
       "**Don't** usar la lima para foco, hover, selección, botones o decoración.",
@@ -384,7 +897,12 @@
       "**Don't** numerar los links ni atenuar los que no están en vivo.",
       "**Don't** escribir colores literales en componentes; siempre tokens del tema.",
       "**Don't** usar grafito o grafito tenue para texto: son colores de trazo.",
-      "**Don't** cargar fuentes desde un CDN externo en el producto portado."
+      "**Don't** cargar fuentes desde un CDN externo en el producto portado.",
+      "**Don't** volver a filas sueltas, jacks o hilo dentro de Punto.",
+      "**Don't** usar el trazo sólido de costura fuera del hover y el foco.",
+      "**Don't** teñir de fondo ningún retazo que no esté en vivo.",
+      "**Don't** dar textura fotográfica a las lanas: color plano.",
+      "**Don't** sacar las excepciones de Punto de `[data-theme=\"punto\"]`."
     ]
   }
 }

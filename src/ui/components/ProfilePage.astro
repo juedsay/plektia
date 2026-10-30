@@ -7,6 +7,7 @@ import ProfileHeader from "@/ui/components/ProfileHeader.astro";
 import PublicLayout from "@/ui/layouts/PublicLayout.astro";
 import { iconLinksOf, listedLinks, topLinksOf } from "@/ui/view/public-link";
 import { profileJsonLd } from "@/ui/view/seo";
+import { effectiveAppearance, THEME_RULES } from "@/domain/theme";
 
 interface Props {
   page: PublicPage;
@@ -18,6 +19,9 @@ const { page, brand = false, preview = false } = Astro.props;
 // La raíz (`/`) también muestra un perfil, pero su URL canónica es siempre `/{handle}`.
 const canonical = new URL(`/${page.handle}`, Astro.url);
 const description = page.bio ?? `Todos los links de ${page.displayName} en un solo lugar.`;
+// Lo que la variante admite (SPEC-styles): si algo guardado no aplica, se usa lo suyo.
+const appearance = effectiveAppearance(page.theme, page);
+const rules = THEME_RULES[page.theme];
 ---
 
 <PublicLayout
@@ -26,8 +30,8 @@ const description = page.bio ?? `Todos los links de ${page.displayName} en un so
   canonical={preview ? undefined : canonical}
   theme={page.theme}
   mode={page.colorMode}
-  accent={page.accent}
-  nameFont={page.nameFont}
+  accent={appearance.accent}
+  nameFont={appearance.nameFont}
   type="profile"
   structuredData={preview ? undefined : profileJsonLd(page, canonical)}
   preview={preview}
@@ -39,8 +43,8 @@ const description = page.bio ?? `Todos los links de ${page.displayName} en un so
   <div data-stats-handle={preview ? undefined : page.handle}>
     <IconRow links={iconLinksOf(page)} />
     <HighlightCards links={topLinksOf(page)} />
-    <div class="patchbay" data-patchbay data-shape={page.linkShape}>
-      <svg class="thread" aria-hidden="true"></svg>
+    <div class="patchbay" data-patchbay data-shape={appearance.linkShape}>
+      {rules.thread && <svg class="thread" aria-hidden="true"></svg>}
       {page.sections.map((section) => (
         <Bank
           id={section.id}

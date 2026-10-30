@@ -4,15 +4,9 @@
 import { actions } from "astro:actions";
 import { Font } from "astro:assets";
 
-import {
-  ACCENTS,
-  AVAILABLE_THEMES,
-  BIO_MAX_LENGTH,
-  COLOR_MODES,
-  LINK_SHAPES,
-  NAME_FONTS,
-  UPCOMING_THEMES,
-} from "@/domain/page";
+import { BIO_MAX_LENGTH, COLOR_MODES } from "@/domain/page";
+import { THEME_FAMILIES, THEME_RULES, type Theme, THEMES } from "@/domain/theme";
+import { THEME_STYLESHEETS } from "@/ui/styles/themes";
 import { loadWorkspace } from "@/ui/admin/workspace";
 import Alert from "@/ui/components/Alert.astro";
 import AdminLayout from "@/ui/layouts/AdminLayout.astro";
@@ -34,6 +28,7 @@ const values = {
   bio: failure ? (failure.values["bio"] ?? "") : (currentPage?.bio ?? ""),
   showHandle: failure ? failure.values["showHandle"] === "on" : (currentPage?.showHandle ?? true),
   colorMode: failure?.values["colorMode"] ?? currentPage?.colorMode ?? "auto",
+  theme: failure?.values["theme"] ?? currentPage?.theme ?? "tecnico",
   accent: failure?.values["accent"] ?? currentPage?.accent ?? "hueso",
   linkShape: failure?.values["linkShape"] ?? currentPage?.linkShape ?? "rows",
   nameFont: failure?.values["nameFont"] ?? currentPage?.nameFont ?? "bricolage",
@@ -95,11 +90,38 @@ const ACCENT_NAMES: Record<string, string> = {
   arena: "Arena",
 };
 
-const THEME_NAMES: Record<string, string> = {
-  tecnico: "Técnico",
-  cercano: "Cercano",
-  energico: "Enérgico",
-  editorial: "Editorial",
+const FAMILY_NAMES: Record<string, { name: string; hint: string }> = {
+  tecnico: { name: "Técnico", hint: "La patchera de Plektia." },
+  cercano: { name: "Cercano", hint: "Para creadores personales, artistas y comunidades." },
+  energico: { name: "Enérgico", hint: "Para streamers y gamers." },
+  editorial: { name: "Editorial", hint: "Para quienes escriben." },
+};
+
+const THEME_NAMES: Record<Theme, { name: string; hint: string }> = {
+  tecnico: { name: "Patchera", hint: "Jacks unidos por un hilo." },
+  punto: { name: "Punto", hint: "Hileras de lana y retazos cosidos." },
+  cassette: { name: "Lado A / B", hint: "Carátula de cassette escrita a mano." },
+  corcho: { name: "Corcho", hint: "Notas clavadas y un hilo rojo." },
+  subte: { name: "Subte", hint: "Secciones como líneas, links como estaciones." },
+  pedalera: { name: "Pedalera", hint: "Pedales con LED y cable de patch." },
+  bitmap: { name: "Bitmap", hint: "Títulos pixelados a escala póster." },
+  lomo: { name: "Lomo cosido", hint: "Un libro con cuadernillos cosidos." },
+  manual: { name: "Manual", hint: "Separadores y pestañas de color." },
+  sumario: { name: "Sumario", hint: "El índice de una revista." },
+};
+
+// Lo que admite el estilo guardado (SPEC-styles): solo eso se ofrece, y si algo
+// guardado no aplica, se avisa qué usa la página.
+const savedTheme: Theme = currentPage?.theme ?? "tecnico";
+const themeRules = THEME_RULES[savedTheme];
+const ACCENTS = themeRules.accents;
+const LINK_SHAPES = themeRules.shapes;
+const NAME_FONTS = themeRules.fonts;
+const notApplied = (kind: "accent" | "linkShape" | "nameFont") => {
+  if (!currentPage) return null;
+  const allowed: readonly string[] =
+    kind === "accent" ? ACCENTS : kind === "linkShape" ? LINK_SHAPES : NAME_FONTS;
+  return allowed.includes(currentPage[kind]) ? null : THEME_NAMES[savedTheme].name;
 };
 ---
 
@@ -114,6 +136,10 @@ const THEME_NAMES: Record<string, string> = {
 >
   {/* Las tipografías a elegir, para que cada opción se muestre con su letra (solo en esta pantalla). */}
   <Fragment slot="head">
+    {/* Las miniaturas de cada estilo usan sus tokens reales. */}
+    {Object.values(THEME_STYLESHEETS).map((href) => (
+      <link rel="stylesheet" href={href} />
+    ))}
     <Font cssVariable="--font-fraunces" />
     <Font cssVariable="--font-nunito" />
     <Font cssVariable="--font-space-mono" />
@@ -281,22 +307,57 @@ const THEME_NAMES: Record<string, string> = {
           )}
         </div>
 
-        <fieldset class="field choice-group">
-          <legend>Tema</legend>
-          {/* Con un solo tema disponible, es el elegido. */}
-          {AVAILABLE_THEMES.map((theme) => (
-            <label class="choice">
-              <input type="radio" name="theme" value={theme} checked />
-              <span class="choice-name">{THEME_NAMES[theme]}</span>
-              <span class="choice-hint">Con el hilo y los jacks, en claro y en oscuro.</span>
-            </label>
-          ))}
-          {UPCOMING_THEMES.map((theme) => (
-            <label class="choice is-disabled">
-              <input type="radio" name="theme" value={theme} disabled />
-              <span class="choice-name">{THEME_NAMES[theme]}</span>
-              <span class="choice-hint">Próximamente</span>
-            </label>
+        <fieldset class="field choice-group" aria-describedby="theme-hint">
+          <legend>Estilo</legend>
+          <p class="field-hint" id="theme-hint">
+            Cada estilo trae sus colores, su tipografía y su forma. Al guardarlo, los ajustes de
+            abajo muestran lo que admite.
+          </p>
+          {THEME_FAMILIES.map((family) => (
+            <div class="theme-family">
+              <p class="theme-family-name">
+                {FAMILY_NAMES[family]?.name}
+                <span>{FAMILY_NAMES[family]?.hint}</span>
+              </p>
+              <div class="theme-options">
+                {THEMES.filter((theme) => THEME_RULES[theme].family === family).map((theme) => (
+                  <label
+                    class:list={["theme-option", { "is-disabled": !THEME_RULES[theme].available }]}
+                  >
+                    <input
+                      type="radio"
+                      name="theme"
+                      value={theme}
+                      checked={values.theme === theme}
+                      disabled={!THEME_RULES[theme].available}
+                    />
+                    <span
+                      class="theme-sample"
+                      data-theme={theme}
+                      data-mode={values.colorMode}
+                      data-accent={THEME_RULES[theme].defaultAccent}
+                      aria-hidden="true"
+                    >
+                      <span class="theme-sample-avatar">
+                        {initialOf(values.displayName || "P")}
+                      </span>
+                      <span class="theme-sample-rows">
+                        <span class="theme-sample-row is-live">
+                          <span class="theme-sample-mark" />
+                        </span>
+                        <span class="theme-sample-row">
+                          <span class="theme-sample-mark" />
+                        </span>
+                      </span>
+                    </span>
+                    <span class="choice-name">{THEME_NAMES[theme].name}</span>
+                    <span class="choice-hint">
+                      {THEME_RULES[theme].available ? THEME_NAMES[theme].hint : "Próximamente"}
+                    </span>
+                  </label>
+                ))}
+              </div>
+            </div>
           ))}
           {fields.theme && <p class="field-error">{fields.theme}</p>}
         </fieldset>
@@ -320,6 +381,12 @@ const THEME_NAMES: Record<string, string> = {
 
         <fieldset class="field choice-group" aria-describedby="accent-hint">
           <legend>Acento</legend>
+          {notApplied("accent") && (
+            <p class="field-hint">
+              Lo que elegiste no se usa en {notApplied("accent")}: la página muestra el de ese
+              estilo.
+            </p>
+          )}
           <p class="field-hint" id="accent-hint">
             El color del hilo, los jacks y los títulos de sección. Cada uno tiene su tono para claro
             y para oscuro.
@@ -343,6 +410,12 @@ const THEME_NAMES: Record<string, string> = {
 
         <fieldset class="field choice-group">
           <legend>Forma de los links</legend>
+          {notApplied("linkShape") && (
+            <p class="field-hint">
+              Lo que elegiste no se usa en {notApplied("linkShape")}: la página muestra el de ese
+              estilo.
+            </p>
+          )}
           {LINK_SHAPES.map((shape) => (
             <label class="choice">
               <input
@@ -360,6 +433,12 @@ const THEME_NAMES: Record<string, string> = {
 
         <fieldset class="field choice-group" aria-describedby="name-font-hint">
           <legend>Tipografía de los nombres</legend>
+          {notApplied("nameFont") && (
+            <p class="field-hint">
+              Lo que elegiste no se usa en {notApplied("nameFont")}: la página muestra el de ese
+              estilo.
+            </p>
+          )}
           <p class="field-hint" id="name-font-hint">
             Para tu nombre, los títulos de sección y los nombres de los links. Cada opción se
             muestra con su letra.
