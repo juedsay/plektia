@@ -140,12 +140,12 @@ describe("createOpenWebFetch", () => {
       ...OPTIONS,
       userAgent: "x",
       timeoutMs: 10,
-      fetcher: ((_input: unknown, init?: RequestInit) =>
+      fetcher: (_input: unknown, init?: RequestInit) =>
         new Promise((_resolve, reject) => {
           init?.signal?.addEventListener("abort", () => {
             reject(new DOMException("tarde", "TimeoutError"));
           });
-        })),
+        }),
     });
     expect(await slow(new URL("https://a.com/"), HTML)).toEqual({ ok: false, error: "timeout" });
   });
