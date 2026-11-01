@@ -131,7 +131,19 @@ export const THEME_RULES: Readonly<Record<Theme, ThemeRules>> = {
     defaultFont: "bricolage",
     sectionMark: "L1",
   },
-  pedalera: upcoming("energico"),
+  // Pedalera: pisadores verdes por defecto; el rojo es del LED encendido (en vivo).
+  pedalera: {
+    family: "energico",
+    available: true,
+    thread: false,
+    accents: ["turquesa", "ambar", "cielo", "lavanda", "hueso"],
+    defaultAccent: "turquesa",
+    shapes: ["cards", "rows"],
+    defaultShape: "cards",
+    fonts: ["bricolage", "nunito", "space_mono"],
+    defaultFont: "bricolage",
+    sectionMark: null,
+  },
   bitmap: upcoming("energico"),
   // Libro cosido: tinta azul por defecto; el rojo queda para la cinta (en vivo).
   lomo: {

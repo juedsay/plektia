@@ -16,7 +16,15 @@ describe("estilos", () => {
   });
 
   it("las variantes construidas están disponibles; las demás, todavía no", () => {
-    expect(AVAILABLE_THEMES).toEqual(["tecnico", "punto", "cassette", "corcho", "subte", "lomo"]);
+    expect(AVAILABLE_THEMES).toEqual([
+      "tecnico",
+      "punto",
+      "cassette",
+      "corcho",
+      "subte",
+      "pedalera",
+      "lomo",
+    ]);
   });
 
   it("se puede elegir un estilo disponible, pero no uno que todavía no está", () => {
@@ -24,7 +32,7 @@ describe("estilos", () => {
       ok: true,
       value: { theme: "punto" },
     });
-    const upcoming = parsePageSettings({ ...settings, theme: "pedalera" });
+    const upcoming = parsePageSettings({ ...settings, theme: "bitmap" });
     expect(upcoming.ok).toBe(false);
     if (!upcoming.ok) expect(Object.keys(upcoming.error.fields)).toEqual(["theme"]);
   });

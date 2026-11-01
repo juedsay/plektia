@@ -2239,6 +2239,482 @@
           "oklch(80% 0.093 1.1)",
           "oklch(95% 0.093 1.1)"
         ]
+      },
+      "pedalera-tablero": {
+        "role": "neutral",
+        "displayName": "Tablero (Pedalera)",
+        "canonical": "oklch(18.7% 0.006 271.1)",
+        "cssVar": "--color-bg (oscuro); zócalo del LED, luz del pisador, tinta de la etiqueta",
+        "theme": "pedalera",
+        "tonalRamp": [
+          "oklch(15% 0.006 271.1)",
+          "oklch(25% 0.006 271.1)",
+          "oklch(35% 0.006 271.1)",
+          "oklch(45% 0.006 271.1)",
+          "oklch(55% 0.006 271.1)",
+          "oklch(65% 0.006 271.1)",
+          "oklch(80% 0.006 271.1)",
+          "oklch(95% 0.006 271.1)"
+        ]
+      },
+      "pedalera-tinta-clara": {
+        "role": "neutral",
+        "displayName": "Tinta clara (Pedalera)",
+        "canonical": "oklch(95.4% 0.005 258.3)",
+        "cssVar": "--color-fg, --color-focus, --color-selection-bg (oscuro); cinta de la etiqueta y marca de la perilla",
+        "theme": "pedalera",
+        "tonalRamp": [
+          "oklch(15% 0.005 258.3)",
+          "oklch(25% 0.005 258.3)",
+          "oklch(35% 0.005 258.3)",
+          "oklch(45% 0.005 258.3)",
+          "oklch(55% 0.005 258.3)",
+          "oklch(65% 0.005 258.3)",
+          "oklch(80% 0.005 258.3)",
+          "oklch(95% 0.005 258.3)"
+        ]
+      },
+      "pedalera-tinta-clara-apagada": {
+        "role": "neutral",
+        "displayName": "Tinta clara apagada (Pedalera)",
+        "canonical": "oklch(82.9% 0.011 261.8)",
+        "cssVar": "--color-fg-muted (oscuro); moleteado de la perilla y borde del gabinete al pasar",
+        "theme": "pedalera",
+        "tonalRamp": [
+          "oklch(15% 0.011 261.8)",
+          "oklch(25% 0.011 261.8)",
+          "oklch(35% 0.011 261.8)",
+          "oklch(45% 0.011 261.8)",
+          "oklch(55% 0.011 261.8)",
+          "oklch(65% 0.011 261.8)",
+          "oklch(80% 0.011 261.8)",
+          "oklch(95% 0.011 261.8)"
+        ]
+      },
+      "pedalera-borde": {
+        "role": "neutral",
+        "displayName": "Borde (Pedalera)",
+        "canonical": "oklch(37.1% 0.013 267.2)",
+        "cssVar": "--color-line (oscuro); borde del gabinete y capuchón pisado",
+        "theme": "pedalera",
+        "tonalRamp": [
+          "oklch(15% 0.013 267.2)",
+          "oklch(25% 0.013 267.2)",
+          "oklch(35% 0.013 267.2)",
+          "oklch(45% 0.013 267.2)",
+          "oklch(55% 0.013 267.2)",
+          "oklch(65% 0.013 267.2)",
+          "oklch(80% 0.013 267.2)",
+          "oklch(95% 0.013 267.2)"
+        ]
+      },
+      "pedalera-borde-tenue": {
+        "role": "neutral",
+        "displayName": "Borde tenue (Pedalera)",
+        "canonical": "oklch(30.1% 0.009 268.4)",
+        "cssVar": "--color-line-soft (oscuro); capuchón del pisador en reposo",
+        "theme": "pedalera",
+        "tonalRamp": [
+          "oklch(15% 0.009 268.4)",
+          "oklch(25% 0.009 268.4)",
+          "oklch(35% 0.009 268.4)",
+          "oklch(45% 0.009 268.4)",
+          "oklch(55% 0.009 268.4)",
+          "oklch(65% 0.009 268.4)",
+          "oklch(80% 0.009 268.4)",
+          "oklch(95% 0.009 268.4)"
+        ]
+      },
+      "pedalera-gabinete": {
+        "role": "neutral",
+        "displayName": "Gabinete (Pedalera)",
+        "canonical": "oklch(26.9% 0.010 268.3)",
+        "cssVar": "--color-surface (oscuro); cuerpo de pedales, destacados y perillas",
+        "theme": "pedalera",
+        "tonalRamp": [
+          "oklch(15% 0.010 268.3)",
+          "oklch(25% 0.010 268.3)",
+          "oklch(35% 0.010 268.3)",
+          "oklch(45% 0.010 268.3)",
+          "oklch(55% 0.010 268.3)",
+          "oklch(65% 0.010 268.3)",
+          "oklch(80% 0.010 268.3)",
+          "oklch(95% 0.010 268.3)"
+        ]
+      },
+      "pedalera-en-vivo": {
+        "role": "primary",
+        "displayName": "En vivo (Pedalera)",
+        "canonical": "oklch(78.7% 0.124 28.6)",
+        "cssVar": "--color-live (oscuro); etiqueta \"En vivo\" y cronómetro, texto AAA",
+        "theme": "pedalera",
+        "tonalRamp": [
+          "oklch(15% 0.124 28.6)",
+          "oklch(25% 0.124 28.6)",
+          "oklch(35% 0.124 28.6)",
+          "oklch(45% 0.124 28.6)",
+          "oklch(55% 0.124 28.6)",
+          "oklch(65% 0.124 28.6)",
+          "oklch(80% 0.124 28.6)",
+          "oklch(95% 0.124 28.6)"
+        ]
+      },
+      "pedalera-cable": {
+        "role": "neutral",
+        "displayName": "Cable (Pedalera)",
+        "canonical": "oklch(54.8% 0.015 266.6)",
+        "cssVar": "--cable (oscuro); cable de patch y enchufes, decorativo",
+        "theme": "pedalera",
+        "tonalRamp": [
+          "oklch(15% 0.015 266.6)",
+          "oklch(25% 0.015 266.6)",
+          "oklch(35% 0.015 266.6)",
+          "oklch(45% 0.015 266.6)",
+          "oklch(55% 0.015 266.6)",
+          "oklch(65% 0.015 266.6)",
+          "oklch(80% 0.015 266.6)",
+          "oklch(95% 0.015 266.6)"
+        ]
+      },
+      "pedalera-led-apagado": {
+        "role": "tertiary",
+        "displayName": "LED apagado (Pedalera)",
+        "canonical": "oklch(41.9% 0.063 27.0)",
+        "cssVar": "--led-off (oscuro)",
+        "theme": "pedalera",
+        "tonalRamp": [
+          "oklch(15% 0.063 27.0)",
+          "oklch(25% 0.063 27.0)",
+          "oklch(35% 0.063 27.0)",
+          "oklch(45% 0.063 27.0)",
+          "oklch(55% 0.063 27.0)",
+          "oklch(65% 0.063 27.0)",
+          "oklch(80% 0.063 27.0)",
+          "oklch(95% 0.063 27.0)"
+        ]
+      },
+      "pedalera-led-encendido": {
+        "role": "primary",
+        "displayName": "LED encendido (Pedalera)",
+        "canonical": "oklch(66.2% 0.225 29.6)",
+        "cssVar": "--led-on (oscuro); gráfico, nunca texto",
+        "theme": "pedalera",
+        "tonalRamp": [
+          "oklch(15% 0.225 29.6)",
+          "oklch(25% 0.225 29.6)",
+          "oklch(35% 0.225 29.6)",
+          "oklch(45% 0.225 29.6)",
+          "oklch(55% 0.225 29.6)",
+          "oklch(65% 0.225 29.6)",
+          "oklch(80% 0.225 29.6)",
+          "oklch(95% 0.225 29.6)"
+        ]
+      },
+      "pedalera-tablero-claro": {
+        "role": "neutral",
+        "displayName": "Tablero claro (Pedalera)",
+        "canonical": "oklch(92.5% 0.007 88.6)",
+        "cssVar": "--color-bg (claro)",
+        "theme": "pedalera",
+        "tonalRamp": [
+          "oklch(15% 0.007 88.6)",
+          "oklch(25% 0.007 88.6)",
+          "oklch(35% 0.007 88.6)",
+          "oklch(45% 0.007 88.6)",
+          "oklch(55% 0.007 88.6)",
+          "oklch(65% 0.007 88.6)",
+          "oklch(80% 0.007 88.6)",
+          "oklch(95% 0.007 88.6)"
+        ]
+      },
+      "pedalera-tinta": {
+        "role": "neutral",
+        "displayName": "Tinta (Pedalera)",
+        "canonical": "oklch(20.9% 0.006 271.1)",
+        "cssVar": "--color-fg, --color-focus, --color-selection-bg (claro)",
+        "theme": "pedalera",
+        "tonalRamp": [
+          "oklch(15% 0.006 271.1)",
+          "oklch(25% 0.006 271.1)",
+          "oklch(35% 0.006 271.1)",
+          "oklch(45% 0.006 271.1)",
+          "oklch(55% 0.006 271.1)",
+          "oklch(65% 0.006 271.1)",
+          "oklch(80% 0.006 271.1)",
+          "oklch(95% 0.006 271.1)"
+        ]
+      },
+      "pedalera-tinta-apagada": {
+        "role": "neutral",
+        "displayName": "Tinta apagada (Pedalera)",
+        "canonical": "oklch(34.1% 0.009 268.4)",
+        "cssVar": "--color-fg-muted (claro)",
+        "theme": "pedalera",
+        "tonalRamp": [
+          "oklch(15% 0.009 268.4)",
+          "oklch(25% 0.009 268.4)",
+          "oklch(35% 0.009 268.4)",
+          "oklch(45% 0.009 268.4)",
+          "oklch(55% 0.009 268.4)",
+          "oklch(65% 0.009 268.4)",
+          "oklch(80% 0.009 268.4)",
+          "oklch(95% 0.009 268.4)"
+        ]
+      },
+      "pedalera-borde-claro": {
+        "role": "neutral",
+        "displayName": "Borde claro (Pedalera)",
+        "canonical": "oklch(77.6% 0.012 89.7)",
+        "cssVar": "--color-line (claro)",
+        "theme": "pedalera",
+        "tonalRamp": [
+          "oklch(15% 0.012 89.7)",
+          "oklch(25% 0.012 89.7)",
+          "oklch(35% 0.012 89.7)",
+          "oklch(45% 0.012 89.7)",
+          "oklch(55% 0.012 89.7)",
+          "oklch(65% 0.012 89.7)",
+          "oklch(80% 0.012 89.7)",
+          "oklch(95% 0.012 89.7)"
+        ]
+      },
+      "pedalera-borde-tenue-claro": {
+        "role": "neutral",
+        "displayName": "Borde tenue claro (Pedalera)",
+        "canonical": "oklch(86.7% 0.010 87.5)",
+        "cssVar": "--color-line-soft (claro)",
+        "theme": "pedalera",
+        "tonalRamp": [
+          "oklch(15% 0.010 87.5)",
+          "oklch(25% 0.010 87.5)",
+          "oklch(35% 0.010 87.5)",
+          "oklch(45% 0.010 87.5)",
+          "oklch(55% 0.010 87.5)",
+          "oklch(65% 0.010 87.5)",
+          "oklch(80% 0.010 87.5)",
+          "oklch(95% 0.010 87.5)"
+        ]
+      },
+      "pedalera-gabinete-claro": {
+        "role": "neutral",
+        "displayName": "Gabinete claro (Pedalera)",
+        "canonical": "oklch(98.5% 0.004 91.4)",
+        "cssVar": "--color-surface, --color-live-ink, --color-selection-fg (claro)",
+        "theme": "pedalera",
+        "tonalRamp": [
+          "oklch(15% 0.004 91.4)",
+          "oklch(25% 0.004 91.4)",
+          "oklch(35% 0.004 91.4)",
+          "oklch(45% 0.004 91.4)",
+          "oklch(55% 0.004 91.4)",
+          "oklch(65% 0.004 91.4)",
+          "oklch(80% 0.004 91.4)",
+          "oklch(95% 0.004 91.4)"
+        ]
+      },
+      "pedalera-en-vivo-claro": {
+        "role": "primary",
+        "displayName": "En vivo claro (Pedalera)",
+        "canonical": "oklch(37.3% 0.141 30.0)",
+        "cssVar": "--color-live (claro); texto AAA",
+        "theme": "pedalera",
+        "tonalRamp": [
+          "oklch(15% 0.141 30.0)",
+          "oklch(25% 0.141 30.0)",
+          "oklch(35% 0.141 30.0)",
+          "oklch(45% 0.141 30.0)",
+          "oklch(55% 0.141 30.0)",
+          "oklch(65% 0.141 30.0)",
+          "oklch(80% 0.141 30.0)",
+          "oklch(95% 0.141 30.0)"
+        ]
+      },
+      "pedalera-cable-claro": {
+        "role": "neutral",
+        "displayName": "Cable claro (Pedalera)",
+        "canonical": "oklch(29.3% 0.008 264.4)",
+        "cssVar": "--cable (claro)",
+        "theme": "pedalera",
+        "tonalRamp": [
+          "oklch(15% 0.008 264.4)",
+          "oklch(25% 0.008 264.4)",
+          "oklch(35% 0.008 264.4)",
+          "oklch(45% 0.008 264.4)",
+          "oklch(55% 0.008 264.4)",
+          "oklch(65% 0.008 264.4)",
+          "oklch(80% 0.008 264.4)",
+          "oklch(95% 0.008 264.4)"
+        ]
+      },
+      "pedalera-led-apagado-claro": {
+        "role": "tertiary",
+        "displayName": "LED apagado claro (Pedalera)",
+        "canonical": "oklch(83.1% 0.019 43.2)",
+        "cssVar": "--led-off (claro)",
+        "theme": "pedalera",
+        "tonalRamp": [
+          "oklch(15% 0.019 43.2)",
+          "oklch(25% 0.019 43.2)",
+          "oklch(35% 0.019 43.2)",
+          "oklch(45% 0.019 43.2)",
+          "oklch(55% 0.019 43.2)",
+          "oklch(65% 0.019 43.2)",
+          "oklch(80% 0.019 43.2)",
+          "oklch(95% 0.019 43.2)"
+        ]
+      },
+      "pedalera-led-encendido-claro": {
+        "role": "primary",
+        "displayName": "LED encendido claro (Pedalera)",
+        "canonical": "oklch(65.4% 0.233 29.7)",
+        "cssVar": "--led-on (claro); gráfico, nunca texto",
+        "theme": "pedalera",
+        "tonalRamp": [
+          "oklch(15% 0.233 29.7)",
+          "oklch(25% 0.233 29.7)",
+          "oklch(35% 0.233 29.7)",
+          "oklch(45% 0.233 29.7)",
+          "oklch(55% 0.233 29.7)",
+          "oklch(65% 0.233 29.7)",
+          "oklch(80% 0.233 29.7)",
+          "oklch(95% 0.233 29.7)"
+        ]
+      },
+      "pedalera-verde": {
+        "role": "secondary",
+        "displayName": "Pisador verde (Pedalera)",
+        "canonical": "oklch(81.6% 0.089 179.2)",
+        "cssVar": "acento turquesa en oscuro (por defecto)",
+        "theme": "pedalera",
+        "tonalRamp": [
+          "oklch(15% 0.089 179.2)",
+          "oklch(25% 0.089 179.2)",
+          "oklch(35% 0.089 179.2)",
+          "oklch(45% 0.089 179.2)",
+          "oklch(55% 0.089 179.2)",
+          "oklch(65% 0.089 179.2)",
+          "oklch(80% 0.089 179.2)",
+          "oklch(95% 0.089 179.2)"
+        ]
+      },
+      "pedalera-verde-claro": {
+        "role": "secondary",
+        "displayName": "Pisador verde claro (Pedalera)",
+        "canonical": "oklch(36.9% 0.063 179.1)",
+        "cssVar": "acento turquesa en claro (por defecto)",
+        "theme": "pedalera",
+        "tonalRamp": [
+          "oklch(15% 0.063 179.1)",
+          "oklch(25% 0.063 179.1)",
+          "oklch(35% 0.063 179.1)",
+          "oklch(45% 0.063 179.1)",
+          "oklch(55% 0.063 179.1)",
+          "oklch(65% 0.063 179.1)",
+          "oklch(80% 0.063 179.1)",
+          "oklch(95% 0.063 179.1)"
+        ]
+      },
+      "pedalera-ambar": {
+        "role": "secondary",
+        "displayName": "Pisador ámbar (Pedalera)",
+        "canonical": "oklch(83.9% 0.132 84.8)",
+        "cssVar": "acento ámbar en oscuro",
+        "theme": "pedalera",
+        "tonalRamp": [
+          "oklch(15% 0.132 84.8)",
+          "oklch(25% 0.132 84.8)",
+          "oklch(35% 0.132 84.8)",
+          "oklch(45% 0.132 84.8)",
+          "oklch(55% 0.132 84.8)",
+          "oklch(65% 0.132 84.8)",
+          "oklch(80% 0.132 84.8)",
+          "oklch(95% 0.132 84.8)"
+        ]
+      },
+      "pedalera-ambar-claro": {
+        "role": "secondary",
+        "displayName": "Pisador ámbar claro (Pedalera)",
+        "canonical": "oklch(38.1% 0.080 77.1)",
+        "cssVar": "acento ámbar en claro",
+        "theme": "pedalera",
+        "tonalRamp": [
+          "oklch(15% 0.080 77.1)",
+          "oklch(25% 0.080 77.1)",
+          "oklch(35% 0.080 77.1)",
+          "oklch(45% 0.080 77.1)",
+          "oklch(55% 0.080 77.1)",
+          "oklch(65% 0.080 77.1)",
+          "oklch(80% 0.080 77.1)",
+          "oklch(95% 0.080 77.1)"
+        ]
+      },
+      "pedalera-azul": {
+        "role": "secondary",
+        "displayName": "Pisador azul (Pedalera)",
+        "canonical": "oklch(80.9% 0.096 259.7)",
+        "cssVar": "acento cielo en oscuro",
+        "theme": "pedalera",
+        "tonalRamp": [
+          "oklch(15% 0.096 259.7)",
+          "oklch(25% 0.096 259.7)",
+          "oklch(35% 0.096 259.7)",
+          "oklch(45% 0.096 259.7)",
+          "oklch(55% 0.096 259.7)",
+          "oklch(65% 0.096 259.7)",
+          "oklch(80% 0.096 259.7)",
+          "oklch(95% 0.096 259.7)"
+        ]
+      },
+      "pedalera-azul-claro": {
+        "role": "secondary",
+        "displayName": "Pisador azul claro (Pedalera)",
+        "canonical": "oklch(38.3% 0.129 259.6)",
+        "cssVar": "acento cielo en claro",
+        "theme": "pedalera",
+        "tonalRamp": [
+          "oklch(15% 0.129 259.6)",
+          "oklch(25% 0.129 259.6)",
+          "oklch(35% 0.129 259.6)",
+          "oklch(45% 0.129 259.6)",
+          "oklch(55% 0.129 259.6)",
+          "oklch(65% 0.129 259.6)",
+          "oklch(80% 0.129 259.6)",
+          "oklch(95% 0.129 259.6)"
+        ]
+      },
+      "pedalera-violeta": {
+        "role": "secondary",
+        "displayName": "Pisador violeta (Pedalera)",
+        "canonical": "oklch(81.8% 0.086 297.2)",
+        "cssVar": "acento lavanda en oscuro",
+        "theme": "pedalera",
+        "tonalRamp": [
+          "oklch(15% 0.086 297.2)",
+          "oklch(25% 0.086 297.2)",
+          "oklch(35% 0.086 297.2)",
+          "oklch(45% 0.086 297.2)",
+          "oklch(55% 0.086 297.2)",
+          "oklch(65% 0.086 297.2)",
+          "oklch(80% 0.086 297.2)",
+          "oklch(95% 0.086 297.2)"
+        ]
+      },
+      "pedalera-violeta-claro": {
+        "role": "secondary",
+        "displayName": "Pisador violeta claro (Pedalera)",
+        "canonical": "oklch(36.0% 0.122 288.5)",
+        "cssVar": "acento lavanda en claro",
+        "theme": "pedalera",
+        "tonalRamp": [
+          "oklch(15% 0.122 288.5)",
+          "oklch(25% 0.122 288.5)",
+          "oklch(35% 0.122 288.5)",
+          "oklch(45% 0.122 288.5)",
+          "oklch(55% 0.122 288.5)",
+          "oklch(65% 0.122 288.5)",
+          "oklch(80% 0.122 288.5)",
+          "oklch(95% 0.122 288.5)"
+        ]
       }
     },
     "typographyMeta": {
@@ -2285,6 +2761,14 @@
       "corcho-nombre": {
         "displayName": "Nombre de nota (Corcho)",
         "purpose": "Nombre de cada nota en Corcho: Nunito 700 por defecto (en Técnico es 500); admite Bricolage y Fraunces. El título de sección conserva 1.25rem a 600, derecho sobre su cinta; Corcho no numera secciones."
+      },
+      "pedalera-nombre": {
+        "displayName": "Nombre de pedal (Pedalera)",
+        "purpose": "Nombre de cada pedal en Pedalera: 700 (en Técnico es 500). Bricolage por defecto; admite Nunito y Space Mono."
+      },
+      "pedalera-etiqueta": {
+        "displayName": "Etiqueta de rotuladora (Pedalera)",
+        "purpose": "Título de sección en Pedalera: la fuente de los nombres a 0.875rem y 700, mayúsculas con tracking 0.1em, en tinta invertida sobre una cinta fit-content de esquinas de 3 px. Sin filete; no numera ni muestra el rótulo de sección del dueño."
       }
     },
     "shadows": [
@@ -2362,6 +2846,36 @@
         "name": "corcho-polaroid",
         "value": "0 0 0 6px var(--polaroid), 0 16px 0 6px var(--polaroid), 0 18px 14px 4px rgb(0 0 0 / 30%)",
         "purpose": "Marco de polaroid del avatar (spread, con la orilla de abajo más ancha) y su sombra; la pieza entera torcida -2°."
+      },
+      {
+        "name": "pedalera-gabinete",
+        "value": "inset 0 1px 0 rgb(255 255 255 / 7%), 0 2px 4px rgb(0 0 0 / 45%)",
+        "purpose": "--pedal-shadow en oscuro: bisel de 1 px arriba y apoyo del gabinete en el tablero. Pedales, destacados de arriba y fila de íconos."
+      },
+      {
+        "name": "pedalera-gabinete-claro",
+        "value": "inset 0 1px 0 #ffffff, 0 2px 4px rgb(40 30 20 / 16%)",
+        "purpose": "--pedal-shadow en claro."
+      },
+      {
+        "name": "pedalera-perilla",
+        "value": "0 0 0 3px var(--color-bg), 0 0 0 7px var(--color-surface), 0 0 0 8px var(--color-line)",
+        "purpose": "Anillos de spread puro del avatar como perilla. El moleteado (repeating-conic-gradient de 2° cada 6° en --color-fg-muted, franja de 5 px en un disco de 116 px) y la marca (cuña de 5° en --color-fg a 35°) van en .identity::before, porque la foto recorta lo que cuelga del avatar."
+      },
+      {
+        "name": "pedalera-led",
+        "value": "0 0 0 2px var(--color-bg), inset 0 1px 1px rgb(0 0 0 / 35%)",
+        "purpose": "Zócalo del color del tablero y hundido del LED apagado; visible en los dos modos."
+      },
+      {
+        "name": "pedalera-led-en-vivo",
+        "value": "0 0 0 2px var(--color-bg), 0 0 0 4px color-mix(in srgb, var(--led-on) 25%, transparent), 0 0 10px 2px color-mix(in srgb, var(--led-on) 55%, transparent)",
+        "purpose": "LED encendido: el mismo zócalo, un aro al 25% y el halo al 55% de --led-on. Quieto, sin pulso. También en el LED del destacado de arriba."
+      },
+      {
+        "name": "pedalera-pisador",
+        "value": "border: 2px solid var(--color-accent); box-shadow: inset 0 0 0 3px var(--color-bg)",
+        "purpose": "Aro de acento, luz del color del tablero y capuchón (--color-line-soft; --color-line pisado; el acento en el destacado con acento)."
       }
     ],
     "motion": [
@@ -2424,6 +2938,16 @@
         "name": "corcho-clavar",
         "value": "320ms var(--ease-out) backwards, translateY(-6px) scale(1.7) → none; escalonado 0/120/240/360/480ms (la 5.ª y siguientes a 480ms)",
         "purpose": "Firma de Corcho: las chinches del primer grupo se clavan una por una al cargar, una vez. Quietas con movimiento reducido; la nota en vivo no late."
+      },
+      {
+        "name": "pedalera-enchufar",
+        "value": "360ms var(--ease-out) backwards, clip-path inset(0 0 100% 0) → inset(0); escalonado 0/160/320/480ms (el 4.º y siguientes a 480ms)",
+        "purpose": "Firma de Pedalera: los cables del primer grupo se enchufan uno por uno al cargar, revelados de arriba abajo, una vez. Quietos con movimiento reducido; el LED encendido no late."
+      },
+      {
+        "name": "pedalera-pisar",
+        "value": "translateY(1px) scale(0.94), capuchón a --color-line; transición dur-fast ease-out de la base",
+        "purpose": "Al pasar o enfocar un pedal o un destacado de arriba se pisa el pisador; el pedal no sube."
       }
     ],
     "breakpoints": [
@@ -2467,6 +2991,7 @@
         "cassette",
         "corcho",
         "subte",
+        "pedalera",
         "lomo"
       ],
       "rulesSource": "src/domain/theme.ts (familia, acentos, formas y tipografías por variante)",
@@ -2677,6 +3202,85 @@
           "Secciones numeradas con la chapa L<n> (nunca links); títulos sin sangría ni filete",
           "Cápsula en la estación de combinación (destacado con acento)",
           "Estaciones con aro de 4 px y centro claro en vez del jack con ojo"
+        ]
+      },
+      "pedalera": {
+        "accents": {
+          "turquesa": {
+            "dark": "#7fd6c4",
+            "light": "#0b4a40",
+            "pedal": "verde",
+            "default": true
+          },
+          "ambar": {
+            "dark": "#f2c35b",
+            "light": "#5a3c00",
+            "pedal": "ámbar"
+          },
+          "cielo": {
+            "dark": "#9cc2ff",
+            "light": "#123f86",
+            "pedal": "azul"
+          },
+          "lavanda": {
+            "dark": "#c9b8f5",
+            "light": "#3d2d78",
+            "pedal": "violeta"
+          },
+          "hueso": {
+            "dark": "#eef0f3",
+            "light": "#17181b",
+            "pedal": "la tinta misma"
+          }
+        },
+        "accent": "El acento es el aro de cada pisador, el capuchón del pisador del destacado con acento, el aro de 2 px de su gabinete (que se conserva al pasar o enfocar) y el borde del destacado de arriba al pasar. Nunca el cable, el LED ni la etiqueta. Coral y rosa no se admiten por rojizos; arena tampoco.",
+        "live": {
+          "dark": {
+            "led": "#ff4433",
+            "colorLive": "#ff9a8c",
+            "ink": "#121316"
+          },
+          "light": {
+            "led": "#ff3b2a",
+            "colorLive": "#7a1007",
+            "ink": "#fbfaf7"
+          },
+          "note": "El rojo es solo del LED encendido (--led-on, gráfico), en los pedales y en el LED propio de cada destacado de arriba; quieto, sin pulso. La etiqueta \"En vivo\" y el cronómetro van en --color-live (texto AAA). No se intercambian."
+        },
+        "ledOff": {
+          "dark": "#6b3f3a",
+          "light": "#d3c4be",
+          "note": "Todo pedal y todo destacado de arriba tiene su LED de 8 px; el apagado se ve en los dos modos, con zócalo de 2 px del color del tablero y sombra interior de 1 px."
+        },
+        "cable": {
+          "dark": "#6d717a",
+          "light": "#2a2c30",
+          "note": "--cable: trazo de 3 px que sale por el enchufe de abajo en el costado izquierdo de un pedal, da la vuelta por el carril (curva de 12 px) y entra por el enchufe de arriba del siguiente. Enchufes de 6 × 10 px a 7 px de cada extremo, montados sobre el borde. El primero no tiene entrada, el último no tiene salida, uno solo no tiene enchufes. No pasa por los destacados de arriba."
+        },
+        "knob": "Avatar como perilla: anillos de 3 px de tablero, 4 px de gabinete y 1 px de borde; moleteado radial y marca indicadora dibujados en .identity::before (disco de 116 px), no en el avatar, porque la foto recorta lo que cuelga del avatar.",
+        "label": "Título de sección como etiqueta de rotuladora: tinta invertida (fondo --color-fg, letras --color-bg), 0.875rem 700, mayúsculas, tracking 0.1em, fit-content, 3 px × 0.5rem, esquinas de 3 px, corrida --jack-col. Sin filete.",
+        "shapes": [
+          "cards",
+          "rows"
+        ],
+        "defaultShape": "cards",
+        "fonts": [
+          "bricolage",
+          "nunito",
+          "space_mono"
+        ],
+        "defaultFont": "bricolage",
+        "sectionMark": null,
+        "thread": false,
+        "jackCol": "18px",
+        "radiusMd": "10px",
+        "exceptions": [
+          "Sin hilo trenzado: carril de 18 px ocupado por cables de patch y enchufes",
+          "Pedales con gabinete y sombra (--pedal-shadow) en vez de filas con filete; también destacados de arriba y fila de íconos",
+          "Esquinas de 10 y 12 px en los gabinetes",
+          "LED en vez del jack con ojo; el pedal en vivo sin pulso (la señal es el LED encendido)",
+          "Títulos como etiquetas de rotuladora en tinta invertida y mayúsculas, sin filete",
+          "Gradientes cónicos solo en el moleteado y la marca de la perilla"
         ]
       },
       "lomo": {
@@ -2965,6 +3569,30 @@
       "css": ".ds-avatar-subte{display:grid;place-items:center;width:88px;height:88px;margin:12px;border-radius:50%;background:#14254f;color:#f2efe6;box-shadow:0 0 0 4px #0d1b3d,0 0 0 8px #ffa39a;font-family:'Bricolage Grotesque',system-ui,sans-serif;font-size:2rem;font-weight:500}"
     },
     {
+      "name": "Cadena de pedales (Pedalera)",
+      "kind": "custom",
+      "refersTo": "pedalera-pedal",
+      "description": "Dos pedales con LED apagado y pisador, unidos por un cable de patch que sale abajo del primero y entra arriba del segundo.",
+      "html": "<section class=\"ds-ped\"><h2 class=\"ds-ped-label\">Redes</h2><ul class=\"ds-ped-list\"><li class=\"ds-ped-port\"><a class=\"ds-ped-body\" href=\"#\"><span class=\"ds-ped-led\" aria-hidden=\"true\"></span><span><span class=\"ds-ped-name\">YouTube</span><span class=\"ds-ped-meta\">@juedsay</span></span><span class=\"ds-ped-go\" aria-hidden=\"true\">↗</span></a></li><li class=\"ds-ped-port\"><a class=\"ds-ped-body\" href=\"#\"><span class=\"ds-ped-led\" aria-hidden=\"true\"></span><span><span class=\"ds-ped-name\">Instagram</span><span class=\"ds-ped-meta\">@juedsay</span></span><span class=\"ds-ped-go\" aria-hidden=\"true\">↗</span></a></li></ul></section>",
+      "css": ".ds-ped{width:22rem;padding:1rem;background:#121316;color:#eef0f3;font-family:system-ui,sans-serif} .ds-ped-label{width:fit-content;margin:0 0 0.75rem 18px;padding:3px 0.5rem;border-radius:3px;background:#eef0f3;color:#121316;font-family:'Bricolage Grotesque',system-ui,sans-serif;font-size:0.875rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase} .ds-ped-list{margin:0;padding:0;list-style:none} .ds-ped-port{position:relative;padding-left:18px} .ds-ped-port::before{content:\"\";position:absolute;z-index:1;top:7px;bottom:25px;left:14px;width:6px;border-radius:2px;background:linear-gradient(#6d717a 0 0) top/100% 10px no-repeat,linear-gradient(#6d717a 0 0) bottom/100% 10px no-repeat} .ds-ped-port:first-child::before{background-size:0 0,100% 10px} .ds-ped-port:last-child::before{background-size:100% 10px,0 0} .ds-ped-port:not(:last-child)::after{content:\"\";position:absolute;top:calc(100% - 30px);left:2px;width:16px;height:42px;box-sizing:border-box;border:3px solid #6d717a;border-right:0;border-radius:12px 0 0 12px;animation:ds-enchufar 360ms cubic-bezier(0.16,1,0.3,1) backwards} @keyframes ds-enchufar{from{clip-path:inset(0 0 100% 0)}to{clip-path:inset(0)}} .ds-ped-body{position:relative;display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:0.75rem;min-height:3.25rem;margin-bottom:18px;padding:0.5rem 0.75rem 0.5rem 34px;border:1px solid #3d4047;border-radius:10px;background:#24262b;box-shadow:inset 0 1px 0 rgb(255 255 255 / 7%),0 2px 4px rgb(0 0 0 / 45%);color:inherit;text-decoration:none} .ds-ped-body:is(:hover,:focus-visible){border-color:#c3c7ce} .ds-ped-body:focus-visible{outline:2px solid #eef0f3;outline-offset:4px} .ds-ped-led{position:absolute;top:calc(1.625rem - 4px);left:14px;width:8px;height:8px;border-radius:50%;background:#6b3f3a;box-shadow:0 0 0 2px #121316,inset 0 1px 1px rgb(0 0 0 / 35%)} .ds-ped-name{display:block;font-family:'Bricolage Grotesque',system-ui,sans-serif;font-size:1.0625rem;font-weight:700} .ds-ped-meta{display:block;color:#c3c7ce;font-size:0.8125rem} .ds-ped-go{display:grid;place-items:center;width:18px;height:18px;padding:7px;border:2px solid #7fd6c4;border-radius:50%;background:#2c2e33;box-shadow:inset 0 0 0 3px #121316;transition:transform 160ms cubic-bezier(0.16,1,0.3,1)} .ds-ped-body:is(:hover,:focus-visible) .ds-ped-go{background:#3d4047;transform:translateY(1px) scale(0.94)} @media (prefers-reduced-motion: reduce){.ds-ped-port::after{animation:none}}"
+    },
+    {
+      "name": "Pedal en vivo (Pedalera)",
+      "kind": "custom",
+      "refersTo": "pedalera-led-en-vivo",
+      "description": "El LED rojo encendido, quieto, con zócalo, aro y halo; etiqueta y cronómetro en --color-live.",
+      "html": "<div class=\"ds-ped-live\"><a class=\"ds-ped-live-body\" href=\"#\"><span class=\"ds-ped-live-led\" aria-hidden=\"true\"></span><span><span class=\"ds-ped-live-name\">Twitch</span><span class=\"ds-ped-live-meta\"><b>En vivo</b> · <time>1:24:05</time></span></span><span class=\"ds-ped-live-go\" aria-hidden=\"true\">↗</span></a></div>",
+      "css": ".ds-ped-live{width:22rem;padding:1rem 1rem 1rem calc(1rem + 18px);background:#121316;color:#eef0f3;font-family:system-ui,sans-serif} .ds-ped-live-body{position:relative;display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:0.75rem;min-height:3.25rem;padding:0.5rem 0.75rem 0.5rem 34px;border:1px solid #3d4047;border-radius:10px;background:#24262b;box-shadow:inset 0 1px 0 rgb(255 255 255 / 7%),0 2px 4px rgb(0 0 0 / 45%);color:inherit;text-decoration:none} .ds-ped-live-body:focus-visible{outline:2px solid #eef0f3;outline-offset:4px} .ds-ped-live-led{position:absolute;top:calc(1.625rem - 4px);left:14px;width:8px;height:8px;border-radius:50%;background:#ff4433;box-shadow:0 0 0 2px #121316,0 0 0 4px rgb(255 68 51 / 25%),0 0 10px 2px rgb(255 68 51 / 55%)} .ds-ped-live-name{display:block;font-family:'Bricolage Grotesque',system-ui,sans-serif;font-size:1.0625rem;font-weight:700} .ds-ped-live-meta{display:block;color:#c3c7ce;font-size:0.8125rem} .ds-ped-live-meta b,.ds-ped-live-meta time{color:#ff9a8c;font-weight:600} .ds-ped-live-meta time{font-family:ui-monospace,monospace;font-variant-numeric:tabular-nums} .ds-ped-live-go{display:grid;place-items:center;width:18px;height:18px;padding:7px;border:2px solid #7fd6c4;border-radius:50%;background:#2c2e33;box-shadow:inset 0 0 0 3px #121316}"
+    },
+    {
+      "name": "Destacado con acento (Pedalera)",
+      "kind": "custom",
+      "refersTo": "pedalera-pisador-destacado",
+      "description": "Gabinete con aro de 2 px en el acento, que se conserva al pasar o enfocar, y el capuchón del pisador lleno de acento.",
+      "html": "<div class=\"ds-ped-hl\"><a class=\"ds-ped-hl-body\" href=\"#\"><span class=\"ds-ped-hl-led\" aria-hidden=\"true\"></span><span><span class=\"ds-ped-hl-name\">Plektia</span><span class=\"ds-ped-hl-meta\">Esta página: links, en vivo y MCP</span></span><span class=\"ds-ped-hl-go\" aria-hidden=\"true\">↗</span></a></div>",
+      "css": ".ds-ped-hl{width:22rem;padding:1rem 1rem 1rem calc(1rem + 18px);background:#121316;color:#eef0f3;font-family:system-ui,sans-serif} .ds-ped-hl-body{position:relative;display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:0.75rem;min-height:3.25rem;padding:0.5rem 0.75rem 0.5rem 34px;border:2px solid #7fd6c4;border-radius:10px;background:#24262b;box-shadow:inset 0 1px 0 rgb(255 255 255 / 7%),0 2px 4px rgb(0 0 0 / 45%);color:inherit;text-decoration:none} .ds-ped-hl-body:focus-visible{outline:2px solid #eef0f3;outline-offset:4px} .ds-ped-hl-led{position:absolute;top:calc(1.625rem - 4px);left:14px;width:8px;height:8px;border-radius:50%;background:#6b3f3a;box-shadow:0 0 0 2px #121316,inset 0 1px 1px rgb(0 0 0 / 35%)} .ds-ped-hl-name{display:block;font-family:'Bricolage Grotesque',system-ui,sans-serif;font-size:1.0625rem;font-weight:700} .ds-ped-hl-meta{display:block;color:#c3c7ce;font-size:0.8125rem} .ds-ped-hl-go{display:grid;place-items:center;width:18px;height:18px;padding:7px;border:2px solid #7fd6c4;border-radius:50%;background:#7fd6c4;box-shadow:inset 0 0 0 3px #121316;color:#121316;transition:transform 160ms cubic-bezier(0.16,1,0.3,1)} .ds-ped-hl-body:is(:hover,:focus-visible) .ds-ped-hl-go{transform:translateY(1px) scale(0.94)}"
+    },
+    {
       "name": "Lado con temas (Lado A / B)",
       "kind": "custom",
       "refersTo": "cassette-tema",
@@ -3140,6 +3768,21 @@
         "section": "colors"
       },
       {
+        "name": "La regla del isotipo",
+        "body": "El punto del isotipo de Plektia (en la barra superior, y el mismo componente en el pie) se pinta con `--color-live` en todas las variantes y ninguna lo redefine: toma el tono de texto en vivo de cada una. Es la única pieza fuera del en vivo que usa ese tono, y por eso no cuenta como un uso extra de la señal propia.",
+        "section": "colors"
+      },
+      {
+        "name": "La regla del LED rojo",
+        "body": "El rojo es la señal en vivo de Pedalera y de nada más: solo el LED encendido es rojo, en los pedales y también en los destacados de arriba, que tienen su propio LED. Ningún pisador, cable, borde ni etiqueta es rojo o rojizo (por eso coral y rosa quedan afuera), y el LED encendido está quieto: el pulso de la base se apaga. El LED (`--led-on`) es gráfico; la etiqueta \"En vivo\" y el cronómetro van en `--color-live`. No se intercambian.",
+        "section": "colors"
+      },
+      {
+        "name": "La regla del LED apagado",
+        "body": "Todo pedal tiene su LED, prendido o no, y todo destacado de arriba también. El apagado (`--led-off`) se ve en los dos modos: lleva un zócalo de 2 px del color del tablero y una sombra interior de 1 px que lo hunde en el gabinete. El encendido conserva el zócalo y suma un aro de 2 px de `--led-on` al 25% y un halo de 10 px al 55%.",
+        "section": "colors"
+      },
+      {
         "name": "La regla de la cinta",
         "body": "El rojo es la señal en vivo de Lomo cosido y de nada más: ninguna tela es roja ni rojiza (por eso coral, ámbar y rosa quedan afuera). La cinta (`--ribbon`) es gráfica y se mide a 3:1; el texto \"En vivo\" usa `--color-live`, que se mide a 7:1. No se intercambian.",
         "section": "colors"
@@ -3202,6 +3845,14 @@
       "**Do** reservar el ámbar para la estación en vivo: relleno, aro, destello, etiqueta y cronómetro.",
       "**Do** marcar el destacado con acento como estación de combinación en cápsula, sin caja.",
       "**Do** trazar solo la primera línea al cargar, y dejarla quieta con movimiento reducido.",
+      "**Do** dar a cada pedal su LED, apagado y visible en los dos modos, con el zócalo del color del tablero.",
+      "**Do** reservar el rojo para el LED encendido, también en los destacados de arriba, y el texto en vivo para `--color-live`.",
+      "**Do** enchufar el cable abajo en el costado de un pedal y arriba en el siguiente: sin entrada en el primero, sin salida en el último y sin enchufes en un pedal solo.",
+      "**Do** armar el pisador con aro de acento, luz y capuchón, y pisarlo al pasar (1 px abajo, 0.94).",
+      "**Do** dibujar el moleteado y la marca de la perilla en `.identity::before`, fuera del avatar.",
+      "**Do** rotular cada sección como etiqueta de rotuladora en tinta invertida.",
+      "**Do** mantener el aro de acento del destacado también al pasar o enfocar.",
+      "**Do** enchufar solo los cables del primer grupo al cargar, y dejarlos quietos con movimiento reducido.",
       "**Do** coser cada entrada al lomo con su puntada de 14 × 3 px en la tela y sus dos agujeros de costura.",
       "**Do** abrir cada cuadernillo con el numeral romano a cuerpo completo en la tela y el título en versalitas armadas (mayúsculas a 0.8, tracking 0.09em, 600).",
       "**Do** trazar el filete del capítulo siempre en tinta, con cualquier acento.",
@@ -3241,6 +3892,14 @@
       "**Don't** numerar los links: la chapa numera líneas.",
       "**Don't** usar gradientes ni brillos de neón: color pleno en líneas y estaciones.",
       "**Don't** sacar las excepciones de Subte de `[data-theme=\"subte\"]`.",
+      "**Don't** usar rojo o rojizo fuera del LED encendido: ni pisadores, ni cables, ni etiquetas; ni admitir coral o rosa como acento.",
+      "**Don't** usar `--led-on` para texto ni `--color-live` para el LED.",
+      "**Don't** hacer latir el LED encendido ni subir el pedal al pasar: el pedal se pisa.",
+      "**Don't** pasar el cable por los destacados de arriba ni seguirlo después del último pedal del grupo.",
+      "**Don't** colgar el moleteado del avatar: la foto lo recorta.",
+      "**Don't** usar brillos de neón ni gradientes \"gamer\": color plano en gabinetes, cables y aros.",
+      "**Don't** volver a jacks o al hilo trenzado dentro de Pedalera, ni numerar secciones o pedales.",
+      "**Don't** sacar las excepciones de Pedalera de `[data-theme=\"pedalera\"]`.",
       "**Don't** admitir telas rojas o rojizas (coral, ámbar, rosa): el rojo es de la cinta.",
       "**Don't** usar `--ribbon` para texto ni `--color-live` para la cinta.",
       "**Don't** poner itálica en nombres de Fraunces: se sirve solo en redonda.",

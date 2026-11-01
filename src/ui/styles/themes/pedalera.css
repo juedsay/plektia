@@ -1,0 +1,451 @@
+/*
+ * Pedalera (familia Enérgico, SPEC-styles): una pedalera en el piso del
+ * escenario. Cada link es un pedal con su LED y su pisador, y un cable de patch
+ * sale del costado de un pedal y entra en el siguiente. El rojo es solo del LED
+ * encendido (en vivo). Se carga solo en las páginas con este estilo. AAA medido
+ * en tests/unit/ui/theme-tokens.test.ts.
+ */
+[data-theme="pedalera"] {
+  color-scheme: dark;
+
+  --color-bg: #121316;
+  --color-fg: #eef0f3;
+  --color-fg-muted: #c3c7ce;
+  --color-line: #3d4047;
+  --color-line-soft: #2c2e33;
+  --color-surface: #24262b;
+  --color-live: #ff9a8c;
+  --color-live-ink: #121316;
+  --color-accent: var(--accent-on-dark, #7fd6c4);
+  --color-thread: var(--color-accent);
+  --color-thread-twist: #121316;
+  --color-focus: #eef0f3;
+  --color-selection-bg: #eef0f3;
+  --color-selection-fg: #121316;
+
+  /* Decorativos: el cable, los LED y la sombra del gabinete. */
+  --cable: #6d717a;
+  --led-off: #6b3f3a;
+  --led-on: #ff4433;
+  --pedal-shadow: inset 0 1px 0 rgb(255 255 255 / 7%), 0 2px 4px rgb(0 0 0 / 45%);
+
+  /* El carril de los cables, a la izquierda de los pedales. */
+  --jack-col: 18px;
+  --radius-md: 10px;
+}
+
+[data-theme="pedalera"][data-mode="light"] {
+  color-scheme: light;
+
+  --color-bg: #e8e6e1;
+  --color-fg: #17181b;
+  --color-fg-muted: #36383d;
+  --color-line: #b9b6ae;
+  --color-line-soft: #d6d3cc;
+  --color-surface: #fbfaf7;
+  --color-live: #7a1007;
+  --color-live-ink: #fbfaf7;
+  --color-accent: var(--accent-on-light, #0b4a40);
+  --color-thread: var(--color-accent);
+  --color-thread-twist: #e8e6e1;
+  --color-focus: #17181b;
+  --color-selection-bg: #17181b;
+  --color-selection-fg: #fbfaf7;
+
+  --cable: #2a2c30;
+  --led-off: #d3c4be;
+  --led-on: #ff3b2a;
+  --pedal-shadow: inset 0 1px 0 #ffffff, 0 2px 4px rgb(40 30 20 / 16%);
+}
+
+@media (prefers-color-scheme: light) {
+  [data-theme="pedalera"][data-mode="auto"] {
+    color-scheme: light;
+
+    --color-bg: #e8e6e1;
+    --color-fg: #17181b;
+    --color-fg-muted: #36383d;
+    --color-line: #b9b6ae;
+    --color-line-soft: #d6d3cc;
+    --color-surface: #fbfaf7;
+    --color-live: #7a1007;
+    --color-live-ink: #fbfaf7;
+    --color-accent: var(--accent-on-light, #0b4a40);
+    --color-thread: var(--color-accent);
+    --color-thread-twist: #e8e6e1;
+    --color-focus: #17181b;
+    --color-selection-bg: #17181b;
+    --color-selection-fg: #fbfaf7;
+
+    --cable: #2a2c30;
+    --led-off: #d3c4be;
+    --led-on: #ff3b2a;
+    --pedal-shadow: inset 0 1px 0 #ffffff, 0 2px 4px rgb(40 30 20 / 16%);
+  }
+}
+
+/* Pisadores: verde, ámbar, azul, violeta o la tinta (el rojo es del LED encendido). */
+[data-theme="pedalera"][data-accent="turquesa"] {
+  --accent-on-dark: #7fd6c4;
+  --accent-on-light: #0b4a40;
+}
+
+[data-theme="pedalera"][data-accent="ambar"] {
+  --accent-on-dark: #f2c35b;
+  --accent-on-light: #5a3c00;
+}
+
+[data-theme="pedalera"][data-accent="cielo"] {
+  --accent-on-dark: #9cc2ff;
+  --accent-on-light: #123f86;
+}
+
+[data-theme="pedalera"][data-accent="lavanda"] {
+  --accent-on-dark: #c9b8f5;
+  --accent-on-light: #3d2d78;
+}
+
+[data-theme="pedalera"][data-accent="hueso"] {
+  --accent-on-dark: #eef0f3;
+  --accent-on-light: #17181b;
+}
+
+/* ── Identidad: el avatar es una perilla, con el borde moleteado ──────── */
+[data-theme="pedalera"] .avatar {
+  box-shadow:
+    0 0 0 3px var(--color-bg),
+    0 0 0 7px var(--color-surface),
+    0 0 0 8px var(--color-line);
+}
+
+/* El moleteado y la marca de la perilla: en .identity, porque la foto recorta lo que cuelga del avatar. */
+[data-theme="pedalera"] .identity {
+  position: relative;
+}
+
+[data-theme="pedalera"] .identity::before {
+  content: "";
+  position: absolute;
+  top: calc(var(--space-4) - 14px);
+  left: 50%;
+  width: 116px;
+  height: 116px;
+  border-radius: 50%;
+  background:
+    conic-gradient(from 35deg, var(--color-fg) 0 5deg, transparent 5deg),
+    repeating-conic-gradient(var(--color-fg-muted) 0 2deg, transparent 2deg 6deg);
+  translate: -50% 0;
+  mask: radial-gradient(closest-side, transparent calc(100% - 5px), #000 calc(100% - 5px));
+  pointer-events: none;
+}
+
+/* ── Títulos de sección: etiquetas de rotuladora, en tinta invertida ──── */
+[data-theme="pedalera"] .bank h2 {
+  width: fit-content;
+  margin: 0 0 var(--space-3) var(--jack-col);
+  padding: 3px var(--space-2);
+  border-bottom: 0;
+  border-radius: 3px;
+  background: var(--color-fg);
+  color: var(--color-bg);
+  font-size: var(--text-sm);
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+/* ── Pedales: el gabinete, el LED y el pisador ──────────────────────────── */
+[data-theme="pedalera"] .port {
+  position: relative;
+}
+
+/* El LED es absoluto: el gabinete va siempre a la columna de la derecha del carril. */
+[data-theme="pedalera"] .port-body,
+[data-theme="pedalera"] .patchbay[data-shape] .port-body {
+  grid-column: 2;
+  margin-bottom: 18px;
+  padding: 0 var(--space-3) 0 34px;
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  box-shadow: var(--pedal-shadow);
+}
+
+/* Fila corrida: los pedales más juntos, el cable más corto. */
+[data-theme="pedalera"] .patchbay[data-shape="rows"] .port-body {
+  margin-bottom: 10px;
+  border-radius: 4px;
+}
+
+[data-theme="pedalera"] .port-name {
+  font-weight: 700;
+}
+
+/* El LED, apagado, dentro del gabinete a la izquierda. */
+[data-theme="pedalera"] .jack {
+  position: absolute;
+  top: calc(var(--row-min) / 2 - 4px);
+  left: calc(var(--jack-col) + 14px);
+  width: 8px;
+  height: 8px;
+  margin: 0;
+  border: 0;
+  background: var(--led-off);
+  box-shadow:
+    0 0 0 2px var(--color-bg),
+    inset 0 1px 1px rgb(0 0 0 / 35%);
+}
+
+[data-theme="pedalera"] .jack::before {
+  display: none;
+}
+
+[data-theme="pedalera"] .port:is(:hover, :focus-within) .jack {
+  transform: none;
+}
+
+/* El pisador: un botón redondo con el aro del acento; al pasar, se pisa. */
+[data-theme="pedalera"] .go {
+  box-sizing: content-box;
+  padding: 7px;
+  border: 2px solid var(--color-accent);
+  border-radius: 50%;
+  background: var(--color-line-soft);
+  box-shadow: inset 0 0 0 3px var(--color-bg);
+  color: var(--color-fg);
+}
+
+[data-theme="pedalera"] .port-link:is(:hover, :focus-visible) .go,
+[data-theme="pedalera"] .highlight-card:is(:hover, :focus-visible) .go {
+  background: var(--color-line);
+  transform: translateY(1px) scale(0.94);
+}
+
+/* Los enchufes del cable, en el costado de cada pedal: entrada arriba, salida abajo. */
+[data-theme="pedalera"] .port::before {
+  content: "";
+  position: absolute;
+  z-index: 1;
+  top: 7px;
+  bottom: calc(18px + 7px);
+  left: calc(var(--jack-col) - 4px);
+  width: 6px;
+  border-radius: 2px;
+  background:
+    linear-gradient(var(--cable) 0 0) top / 100% 10px no-repeat,
+    linear-gradient(var(--cable) 0 0) bottom / 100% 10px no-repeat;
+}
+
+[data-theme="pedalera"] .patchbay[data-shape="rows"] .port::before {
+  bottom: calc(10px + 7px);
+}
+
+[data-theme="pedalera"] .port:first-child::before {
+  background-size:
+    0 0,
+    100% 10px;
+}
+
+[data-theme="pedalera"] .port:last-child::before {
+  background-size:
+    100% 10px,
+    0 0;
+}
+
+[data-theme="pedalera"] .port:only-child::before {
+  display: none;
+}
+
+/* El cable: sale de abajo de un pedal, da la vuelta por el carril y entra en el siguiente. */
+[data-theme="pedalera"] .port:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  top: calc(100% - 18px - 12px);
+  left: 2px;
+  width: calc(var(--jack-col) - 2px);
+  height: calc(18px + 24px);
+  border: 3px solid var(--cable);
+  border-right: 0;
+  border-radius: 12px 0 0 12px;
+}
+
+[data-theme="pedalera"] .patchbay[data-shape="rows"] .port:not(:last-child)::after {
+  top: calc(100% - 10px - 12px);
+  height: calc(10px + 24px);
+}
+
+/* La firma: los cables del primer grupo se enchufan uno por uno. */
+[data-theme="pedalera"] .bank:first-of-type .port:not(:last-child)::after {
+  animation: pedalera-enchufar 360ms var(--ease-out) backwards;
+}
+
+[data-theme="pedalera"] .bank:first-of-type .port:nth-child(2)::after {
+  animation-delay: 160ms;
+}
+
+[data-theme="pedalera"] .bank:first-of-type .port:nth-child(3)::after {
+  animation-delay: 320ms;
+}
+
+[data-theme="pedalera"] .bank:first-of-type .port:nth-child(n + 4)::after {
+  animation-delay: 480ms;
+}
+
+@keyframes pedalera-enchufar {
+  from {
+    clip-path: inset(0 0 100% 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+/* ── En vivo: el LED rojo encendido (quieto, sin pulso) ─────────────────── */
+[data-theme="pedalera"] .port.is-live .jack,
+[data-theme="pedalera"] .highlight-card.is-live::before {
+  background: var(--led-on);
+  box-shadow:
+    0 0 0 2px var(--color-bg),
+    0 0 0 4px color-mix(in srgb, var(--led-on) 25%, transparent),
+    0 0 10px 2px color-mix(in srgb, var(--led-on) 55%, transparent);
+}
+
+[data-theme="pedalera"] .port.is-live .jack::after {
+  display: none;
+}
+
+/* ── Destacado con acento: el gabinete con el aro del acento y el pisador lleno ── */
+[data-theme="pedalera"] .port.is-highlighted .port-body {
+  padding: 0 var(--space-3) 0 34px;
+  border: 2px solid var(--color-accent);
+}
+
+[data-theme="pedalera"] .port.is-highlighted .go {
+  background: var(--color-accent);
+  color: var(--color-bg);
+}
+
+/* Al pasar o enfocar, el gabinete se marca; el destacado conserva su aro. */
+[data-theme="pedalera"] .patchbay[data-shape] .port:is(:hover, :focus-within) .port-body {
+  border-color: var(--color-fg-muted);
+}
+
+[data-theme="pedalera"]
+  .patchbay[data-shape]
+  .port.is-highlighted:is(:hover, :focus-within)
+  .port-body {
+  border-color: var(--color-accent);
+}
+
+/* Destacados arriba: pedales grandes. */
+[data-theme="pedalera"] .highlight-card {
+  position: relative;
+  padding-left: 40px;
+  border: 1px solid var(--color-line);
+  border-radius: 12px;
+  background: var(--color-surface);
+  box-shadow: var(--pedal-shadow);
+}
+
+/* El pedal no sube al pasar: se pisa (solo se mueve el pisador). */
+[data-theme="pedalera"] .highlight-card:is(:hover, :focus-visible) {
+  border-color: var(--color-accent);
+  transform: none;
+}
+
+/* Su LED, apagado; encendido si está en vivo (arriba, con el de las filas). */
+[data-theme="pedalera"] .highlight-card::before {
+  content: "";
+  position: absolute;
+  top: calc(var(--space-4) + 8px);
+  left: 18px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--led-off);
+  box-shadow:
+    0 0 0 2px var(--color-bg),
+    inset 0 1px 1px rgb(0 0 0 / 35%);
+}
+
+/* Fila de íconos: perillas chicas. */
+[data-theme="pedalera"] .icon-link {
+  background: var(--color-surface);
+  box-shadow: var(--pedal-shadow);
+}
+
+/* ── Miniatura del panel: dos pedales, sus LED y el cable ──────────────── */
+[data-theme="pedalera"].theme-sample .theme-sample-avatar {
+  box-shadow:
+    0 0 0 2px var(--color-surface),
+    0 0 0 3px var(--color-line);
+  outline: 2px dashed var(--color-fg-muted);
+  outline-offset: 2px;
+}
+
+[data-theme="pedalera"].theme-sample .theme-sample-rows {
+  gap: 7px;
+  padding-left: 7px;
+}
+
+[data-theme="pedalera"].theme-sample .theme-sample-row {
+  height: 14px;
+  padding-left: 4px;
+  border: 1px solid var(--color-line);
+  border-radius: 3px;
+  background: var(--color-surface);
+}
+
+[data-theme="pedalera"].theme-sample .theme-sample-mark {
+  width: 5px;
+  height: 5px;
+  border: 0;
+  background: var(--led-off);
+  box-shadow: 0 0 0 1px var(--color-bg);
+}
+
+/* La etiqueta de rotuladora, arriba de los pedales. */
+[data-theme="pedalera"].theme-sample .theme-sample-rows::before {
+  content: "";
+  width: 18px;
+  height: 6px;
+  border-radius: 1px;
+  background: var(--color-fg);
+}
+
+/* El pisador, con el aro del acento. */
+[data-theme="pedalera"].theme-sample .theme-sample-row::after {
+  content: "";
+  width: 6px;
+  height: 6px;
+  margin: 0 3px 0 auto;
+  border: 1.5px solid var(--color-accent);
+  border-radius: 50%;
+}
+
+[data-theme="pedalera"].theme-sample .theme-sample-row.is-live .theme-sample-mark {
+  background: var(--led-on);
+  box-shadow: 0 0 5px 1px color-mix(in srgb, var(--led-on) 55%, transparent);
+}
+
+[data-theme="pedalera"].theme-sample .theme-sample-row + .theme-sample-row::before {
+  bottom: 3px;
+  left: -8px;
+  width: 7px;
+  height: 18px;
+  border: 2px solid var(--cable);
+  border-right: 0;
+  border-radius: 5px 0 0 5px;
+  background: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-theme="pedalera"] .bank:first-of-type .port:not(:last-child)::after {
+    animation: none;
+  }
+}
+
+/* La etiqueta es de rotuladora: sin el filete de Técnico. */
+[data-theme="pedalera"][data-accent][data-mode] .bank h2 {
+  border-bottom: 0;
+}

@@ -536,7 +536,8 @@
   - [x] Rótulo de sección editable por el dueño (`sections.label`, hasta 16 caracteres; reemplaza
         "Lado A", "L1", "I"; vacío vuelve al automático). Solo desde el panel; por MCP, más adelante.
   - [x] Corcho (notas clavadas, hilo rojo entre chinches, nota amarilla en vivo).
-  - [ ] Pedalera, Bitmap, Manual y Sumario, una por PR.
+  - [x] Pedalera (pedales con LED y pisador, cables de patch, LED rojo en vivo).
+  - [ ] Bitmap, Manual y Sumario, una por PR.
 
 ### ✅ Checkpoint F11 · ENTREGA 8
 - [ ] Elegís un estilo que te represente y tu página sigue rápida, clara y AAA.
