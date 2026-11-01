@@ -102,6 +102,38 @@ colors:
   cassette-verde-claro: "#0d5249"
   cassette-violeta: "#c3b3f5"
   cassette-violeta-claro: "#4a3a8a"
+  corcho-tablero: "#241a12"
+  corcho-tinta-clara: "#f4ead6"
+  corcho-tinta-clara-apagada: "#d9c9ad"
+  corcho-borde: "#5c4a36"
+  corcho-borde-tenue: "#3f3226"
+  corcho-papel: "#33291f"
+  corcho-en-vivo: "#ffd84d"
+  corcho-hilo: "#e0473b"
+  corcho-cinta: "#4a3d2a"
+  corcho-polaroid: "#efe6d2"
+  corcho-nota-en-vivo: "#f5d24b"
+  corcho-chinche-en-vivo: "#ff7a6b"
+  corcho-tablero-claro: "#e6cba3"
+  corcho-tinta: "#24180e"
+  corcho-tinta-apagada: "#3a2a1b"
+  corcho-borde-claro: "#b99a72"
+  corcho-borde-tenue-claro: "#d9bd96"
+  corcho-papel-claro: "#fffaee"
+  corcho-en-vivo-claro: "#3e2a00"
+  corcho-hilo-claro: "#a11f17"
+  corcho-cinta-claro: "#f2e8c9"
+  corcho-foto-claro: "#e3d3b4"
+  corcho-nota-en-vivo-claro: "#ffe066"
+  corcho-chinche-en-vivo-claro: "#d8291d"
+  corcho-cielo: "#a9c8ff"
+  corcho-cielo-claro: "#0d2a5c"
+  corcho-turquesa: "#86d6c8"
+  corcho-turquesa-claro: "#08362f"
+  corcho-lavanda: "#cdbdf7"
+  corcho-lavanda-claro: "#33245f"
+  corcho-rosa: "#f7b6c8"
+  corcho-rosa-claro: "#53162d"
 typography:
   display:
     fontFamily: "Bricolage Grotesque, system-ui, sans-serif"
@@ -157,6 +189,11 @@ typography:
     fontSize: "1.375rem"
     fontWeight: 700
     letterSpacing: "0"
+  corcho-nombre:
+    fontFamily: "Nunito, system-ui, sans-serif"
+    fontSize: "1.0625rem"
+    fontWeight: 700
+    lineHeight: 1.3
 rounded:
   sm: "4px"
   md: "6px"
@@ -166,6 +203,7 @@ rounded:
   subte-capsula: "18px"
   lomo-esquina: "2px"
   cassette-esquina: "4px"
+  corcho-esquina: "3px"
 spacing:
   "1": "0.25rem"
   "2": "0.5rem"
@@ -334,6 +372,55 @@ components:
     backgroundColor: "{colors.cassette-carrete-claro}"
     width: "24px"
     height: "11px"
+  corcho-nota:
+    backgroundColor: "{colors.corcho-papel}"
+    textColor: "{colors.corcho-tinta-clara}"
+    typography: "{typography.corcho-nombre}"
+    rounded: "{rounded.corcho-esquina}"
+    padding: "0 1rem 0 2.75rem"
+  corcho-nota-claro:
+    backgroundColor: "{colors.corcho-papel-claro}"
+    textColor: "{colors.corcho-tinta}"
+    typography: "{typography.corcho-nombre}"
+    rounded: "{rounded.corcho-esquina}"
+    padding: "0 1rem 0 2.75rem"
+  corcho-nota-en-vivo:
+    backgroundColor: "{colors.corcho-nota-en-vivo}"
+    textColor: "{colors.corcho-tablero}"
+    rounded: "{rounded.corcho-esquina}"
+  corcho-nota-en-vivo-claro:
+    backgroundColor: "{colors.corcho-nota-en-vivo-claro}"
+    textColor: "{colors.corcho-tinta}"
+    rounded: "{rounded.corcho-esquina}"
+  corcho-chinche:
+    backgroundColor: "{colors.corcho-cielo}"
+    rounded: "{rounded.full}"
+    width: "14px"
+    height: "14px"
+  corcho-chinche-en-vivo:
+    backgroundColor: "{colors.corcho-chinche-en-vivo}"
+    rounded: "{rounded.full}"
+    width: "14px"
+    height: "14px"
+  corcho-chinche-en-vivo-claro:
+    backgroundColor: "{colors.corcho-chinche-en-vivo-claro}"
+    rounded: "{rounded.full}"
+    width: "14px"
+    height: "14px"
+  corcho-hilo:
+    backgroundColor: "{colors.corcho-hilo}"
+    width: "2px"
+  corcho-hilo-claro:
+    backgroundColor: "{colors.corcho-hilo-claro}"
+    width: "2px"
+  corcho-cinta:
+    backgroundColor: "{colors.corcho-cinta}"
+    textColor: "{colors.corcho-tinta-clara}"
+    padding: "0.25rem 0.75rem"
+  corcho-cinta-claro:
+    backgroundColor: "{colors.corcho-cinta-claro}"
+    textColor: "{colors.corcho-tinta}"
+    padding: "0.25rem 0.75rem"
 ---
 
 # Design System: Plektia
@@ -511,7 +598,7 @@ Desde [SPEC-styles](SPEC-styles.md), los cuatro "temas" del contrato de tokens p
 | Técnico | Patchera (`tecnico`) | construida | Hilo trenzado entre jacks | Jack lima que late |
 | Cercano | Punto (`punto`) | construida | Hileras de puntos de lana; links como retazos cosidos | El retazo teñido entero |
 | Cercano | Lado A / B (`cassette`) | construida | Carátula de cassette con franja de marca; secciones como lados escritos a mano ("Lado A", "Lado B", "Cinta N · Lado A/B"); links como temas sobre renglones; el título del primer lado se escribe al cargar | Los dos carretes rojos delante del tema |
-| Cercano | Corcho (`corcho`) | próximamente | | |
+| Cercano | Corcho (`corcho`) | construida | Tablero de corcho: links como notas de papel clavadas con chinches del acento; un hilo rojo baja desde la cinta del título y sigue de chinche en chinche; las chinches del primer grupo se clavan al cargar | La nota amarilla con la chinche roja |
 | Enérgico | Subte (`subte`) | construida | Secciones como líneas de color con chapa "L<n>"; links como estaciones; la primera línea se traza al cargar | La estación rellena de ámbar que destella |
 | Enérgico | Pedalera (`pedalera`), Bitmap (`bitmap`) | próximamente | | |
 | Editorial | Lomo cosido (`lomo`) | construida | El lomo con sus puntadas en la tela; capítulos con numeral romano; links como entradas de índice; las puntadas del primer cuadernillo se cosen al cargar | La cinta marcapáginas roja colgando sobre la entrada |
@@ -719,7 +806,113 @@ Estas excepciones son propias de Lado A / B y no se heredan a otras variantes ni
 - **Don't** sumar stickers, texturas de cinta gastada ni otros efectos retro: lo cercano es la mano que escribe.
 - **Don't** sacar las excepciones de Lado A / B de `[data-theme="cassette"]`.
 
-Pendiente: la etiqueta de sección editable por el dueño (el rótulo "Lado A", "Lado B", …) llega en un PR siguiente; hoy el rótulo lo pone el CSS por posición.
+**Rótulo del dueño.** Si el dueño escribe un rótulo de sección (`sections.label`, que llega como `data-label` en el `h2`), reemplaza a "Lado A/B" o "Cinta N · Lado A/B" en esa sección, con el mismo " · " antes del título; vacío, vuelve al automático.
+
+### Corcho (familia Cercano)
+
+**La página es un tablero de corcho.** Cada link es una nota de papel clavada con una chinche y un hilo rojo tenso une las chinches de cada sección, como el tablero de alguien que arma su mapa de cosas. Lo cercano sale del papel clavado a mano y del hilo, no de la decoración: nada de moodboard de fotos ni de washi tape por todos lados. No hay hilo trenzado ni carril de jacks: las notas ocupan todo el ancho de la columna (`--jack-col: 0px`) y la chinche se clava adentro del papel.
+
+#### Colors
+
+Corcho claro con notas crema y tinta marrón casi negra en claro; corcho oscuro con notas en penumbra y tinta clara en oscuro. El acento es la cabeza de la chinche, el rojo es del hilo y el amarillo es solo del en vivo. Los valores normativos están en el frontmatter (`corcho-*`).
+
+- **Tablero** (`corcho-tablero`) / **Tablero claro** (`corcho-tablero-claro`): fondo de la página en oscuro y en claro. En oscuro el tablero es también la tinta de la selección y la tinta sobre la nota en vivo.
+- **Tinta clara** (`corcho-tinta-clara`) / **Tinta** (`corcho-tinta`): texto principal, foco y fondo de la selección. En claro la tinta es además la tinta sobre la nota en vivo y el foco dentro de ella.
+- **Tinta clara apagada** (`corcho-tinta-clara-apagada`) / **Tinta apagada** (`corcho-tinta-apagada`): bio y metadatos.
+- **Papel** (`corcho-papel`) / **Papel claro** (`corcho-papel-claro`): `--color-surface`, el papel de cada nota, de los destacados de arriba y de las chapitas de la fila de íconos. En oscuro es también el fondo de la foto; en claro, el marco de la polaroid y la tinta de la selección.
+- **Borde** (`corcho-borde`, `corcho-borde-claro`): `--color-line`, el filete punteado del último video dentro de la nota. **Borde tenue** (`corcho-borde-tenue`, `corcho-borde-tenue-claro`): filetes secundarios. Las notas no llevan borde.
+- **Hilo** (`corcho-hilo`, `corcho-hilo-claro`): el token `--string`, decorativo. Une las chinches; nunca es la señal en vivo.
+- **Cinta** (`corcho-cinta`, `corcho-cinta-claro`): `--tape`, la tira de papel detrás de cada título de sección.
+- **Polaroid** (`corcho-polaroid` en oscuro; `corcho-papel-claro` en claro) y **foto** (`corcho-papel` en oscuro; `corcho-foto-claro` en claro): el marco y el fondo del avatar.
+- **Nota en vivo** (`corcho-nota-en-vivo`, `corcho-nota-en-vivo-claro`): `--note-live`, el papel amarillo de la nota en vivo, con la tinta del modo encima (`--note-live-ink`: `corcho-tablero` en oscuro, `corcho-tinta` en claro).
+- **Chinche en vivo** (`corcho-chinche-en-vivo`, `corcho-chinche-en-vivo-claro`): `--pin-live`, la chinche roja de la nota en vivo. Es un rojo aparte del hilo: más claro en oscuro (`#ff7a6b` contra `#e0473b`) y más encendido en claro (`#d8291d` contra `#a11f17`).
+- **En vivo** (`corcho-en-vivo`, `corcho-en-vivo-claro`): `--color-live`. Dentro de la nota amarilla la etiqueta y el cronómetro van en la tinta de la nota, así que en Corcho este tono solo lo usan las piezas de la base que no se redefinen, como el punto del isotipo.
+
+**Acentos admitidos** (cinco de los ocho; por defecto, cielo). El acento es la cabeza de cada chinche: la de cada nota, la segunda del destacado con acento, la de los destacados de arriba y la de la miniatura. Nunca el hilo, la cinta ni el papel.
+
+| Acento | Chinche | Oscuro | Claro |
+|---|---|---|---|
+| `cielo` (por defecto) | azul | `#a9c8ff` | `#0d2a5c` |
+| `turquesa` | verde | `#86d6c8` | `#08362f` |
+| `lavanda` | violeta | `#cdbdf7` | `#33245f` |
+| `rosa` | rosa | `#f7b6c8` | `#53162d` |
+| `hueso` | la tinta misma | `#f4ead6` | `#24180e` |
+
+`coral`, `ambar` y `arena` no se admiten en Corcho.
+
+**La regla del amarillo.** El amarillo es la señal en vivo de Corcho y de nada más: la nota en vivo es amarilla y lleva la chinche roja, en los links y también en los destacados de arriba. Ninguna otra nota, chinche o cinta es amarilla (por eso ámbar no es un acento admitido), y la nota en vivo no late: el pulso de la base se apaga.
+
+**La regla del hilo rojo.** El hilo es rojo y no es la señal en vivo: une chinches, no anuncia nada. Ninguna chinche de acento es roja ni rojiza (por eso coral queda afuera), y la chinche en vivo lleva su propio rojo, distinto del hilo, para que no se lea como un nudo del hilo.
+
+#### Typography
+
+**Display Font:** Nunito por defecto en los nombres. Admite también **Bricolage Grotesque** y **Fraunces** (alojadas localmente, precargadas solo si la página las elige); Space Mono no se admite.
+**Body Font:** la del sistema, igual que Técnico.
+
+- **Nombre de nota** (`corcho-nombre`): el nombre de cada nota sube a 700 (en Técnico es 500): la nota clavada pide el nombre firme.
+- El título de sección conserva el tamaño y el peso de Técnico (1.25rem, 600), derecho sobre su cinta.
+- Corcho no numera secciones (`sectionMark: null`) ni dibuja el rótulo de sección del dueño: el título es solo el título.
+
+**La regla del papel torcido.** El papel se tuerce; el texto, nunca. Toda inclinación vive en un pseudo-elemento detrás del texto (`::before` en las notas y en los destacados de arriba, `::after` en la cinta de los títulos), con `z-index: -1` dentro de su propio contexto de apilamiento. Nombre, metadato, ícono, flecha y foco quedan derechos. La única pieza que se tuerce entera es la polaroid del avatar, que es una foto.
+
+#### Shapes
+
+- **Nota:** el papel, en `--color-surface`, con esquinas de 3 px (`--radius-md`, `corcho-esquina`), sin borde y con la sombra de nota (`--note-shadow`: 0 1px 2px y 0 6px 14px -6px). Se tuerce en alternancia: -0.9°, 0.7° en las pares y -0.3° cada tercera. Adentro, 2.75rem a la izquierda para la chinche y 1rem a la derecha; 0.75rem entre notas.
+- **Notas en fila (forma `rows`):** el mismo papel, derecho (sin rotación) y con 0.25rem entre notas.
+- **Chinche:** cabeza de 14 px en el acento, con un brillo de 2 px arriba a la izquierda (gradiente radial con `--pin-gleam`), un borde interior de 1 px (`--pin-rim`) y una sombra de 0 2px 3px. Clavada a 12 px de arriba y 14 px de la izquierda del papel; reemplaza al jack.
+- **Hilo:** 2 px de ancho, esquinas de 1 px y una sombra de 1 px, centrado en las chinches (a 20 px del borde de la nota). Sale de la cinta del título, baja hasta el centro de la primera chinche y sigue de chinche en chinche por encima del papel; termina en la última. Una sección de una sola nota tiene solo el tramo desde la cinta.
+- **Cinta:** tira de papel en `--tape` detrás del título, del ancho del texto (`fit-content`) con 0.25rem × 0.75rem de padding, orillas rasgadas por `clip-path`, una sombra de 0 1px 2px y torcida -1.2° (0.9° en las secciones pares).
+- **Polaroid (avatar):** la foto con esquinas de 2 px y un marco de 6 px de spread en `--polaroid`, con la orilla de abajo más ancha (una segunda sombra de spread desplazada 16 px) y una sombra difusa; la pieza entera torcida -2°.
+- **Chapitas (fila de íconos):** los círculos de la base en papel, sin borde y con la sombra de nota.
+
+#### Components
+
+- **Título de sección:** el título derecho sobre su cinta, sin filete (ni el grafito de Técnico ni el del acento) y corrido 0.25rem a la derecha.
+- **Nota (fila de link):** papel, chinche y texto. Corcho admite `cards` (por defecto) y `rows`; nunca `pills`. Hover y foco despegan el papel del corcho (`--note-shadow-lift`) y la chinche sube 1 px y crece a 1.12.
+- **En vivo:** la nota amarilla (`--note-live`) con la chinche roja (`--pin-live`), sin pulso. Nombre, metadato, etiqueta "En vivo", cronómetro, ícono, flecha y el filete del último video van en la tinta de la nota.
+- **Foco sobre la nota en vivo:** el contorno de 2 px pasa a la tinta de la nota (`--note-live-ink`) y se mete 3 px adentro del papel (`outline-offset: -3px`): afuera caería sobre el corcho. Vale para el link en vivo y para el destacado de arriba en vivo; las demás notas conservan el foco de Técnico.
+- **Destacado con acento:** la nota clavada con dos chinches: la de siempre y una segunda, en el acento, sobre la orilla de arriba a la derecha (5 px por encima del papel, a 12 px del borde), que no pisa la flecha. Sin borde ni fondo teñido de acento.
+- **Destacado arriba (tarjeta):** nota grande, con el papel torcido -0.5° (0.6° las pares) y su sombra, clavada con una chinche centrada sobre la orilla de arriba, que no pisa el texto. Queda fuera del hilo. En vivo, la misma nota amarilla con la chinche roja.
+- **Fila de íconos:** chapitas de papel clavadas en el corcho.
+- **Miniatura del panel:** la polaroid (esquinas de 1 px, marco de 2 px y 5 px abajo, torcida -3°) y dos notas de 14 px de alto con su sombra y chinches de 7 px en el acento, unidas por un tramo de hilo de 20 px; la de arriba en vivo, amarilla con la chinche roja.
+
+**La regla de las chinches.** Cada nota lleva su chinche, arriba a la izquierda. El destacado con acento suma una segunda chinche en la orilla de arriba a la derecha, y cada destacado de arriba se clava con una chinche centrada en su orilla. Ninguna nota lleva cinta: la cinta es solo de los títulos.
+
+#### Firma: las chinches que se clavan
+
+Al cargar, las chinches del primer grupo se clavan una por una: cada una baja desde 6 px más arriba y 1.7 veces su tamaño hasta su lugar en 320 ms con la curva `ease-out`, escalonadas cada 120 ms (la quinta y las siguientes, juntas a los 480 ms), una sola vez. Los demás grupos están clavados y quietos desde el principio. Con `prefers-reduced-motion` las chinches aparecen clavadas y quietas.
+
+#### Excepciones a Técnico, acotadas a `[data-theme="corcho"]`
+
+Estas excepciones son propias de Corcho y no se heredan a otras variantes ni a Técnico:
+
+- **Sin hilo trenzado ni carril de jacks:** el hilo de Corcho es rojo, recto y va de chinche en chinche.
+- **Notas con papel y sombra difusa** en vez de filas sin caja separadas por filete (excepción a la regla del filete, al "Don't" de tarjetas con fondo y a "`box-shadow` solo como anillo de spread puro"): la sombra de nota y la de nota despegada, y las sombras de la cinta, la chinche, el hilo y la polaroid.
+- **Papel torcido:** rotaciones de hasta 1.2° en pseudo-elementos detrás del texto, y la polaroid entera a -2°.
+- **Chinches en vez de jacks**, y la nota en vivo sin pulso: la señal es el papel amarillo.
+- **Títulos sobre cinta**, sin filete debajo.
+- **Foco por dentro** (`outline-offset: -3px`, en la tinta de la nota) solo sobre la nota amarilla.
+
+#### Do's and Don'ts
+
+##### Do:
+- **Do** clavar cada nota con su chinche de 14 px en el acento, arriba a la izquierda.
+- **Do** torcer solo el papel, en un pseudo-elemento detrás del texto; el texto, los íconos, la flecha y el foco quedan derechos.
+- **Do** bajar el hilo rojo desde la cinta del título hasta la primera chinche, seguirlo de chinche en chinche y cortarlo en la última.
+- **Do** reservar el amarillo para el en vivo: la nota amarilla con la chinche roja, también en los destacados de arriba.
+- **Do** llevar el foco de la nota amarilla a la tinta y por dentro del papel.
+- **Do** clavar el destacado con acento con una segunda chinche en la orilla de arriba a la derecha, y cada destacado de arriba con una chinche centrada en su orilla.
+- **Do** clavar solo las chinches del primer grupo al cargar, y dejarlas quietas con movimiento reducido.
+
+##### Don't:
+- **Don't** torcer texto: ni el título, ni el nombre, ni la flecha.
+- **Don't** poner cinta en las notas: la cinta es solo de los títulos.
+- **Don't** usar el amarillo fuera del en vivo ni admitir ámbar como acento.
+- **Don't** usar chinches de acento rojas o rojizas (coral), ni el rojo del hilo para la chinche en vivo.
+- **Don't** hacer latir la nota en vivo: la señal es el papel amarillo con la chinche roja.
+- **Don't** pasar el hilo por los destacados de arriba ni seguirlo después de la última chinche.
+- **Don't** volver a jacks o al hilo trenzado dentro de Corcho, ni numerar secciones o notas.
+- **Don't** sacar las excepciones de Corcho de `[data-theme="corcho"]`.
 
 ### Subte (familia Enérgico)
 
@@ -771,7 +964,7 @@ Azul esmalte de medianoche en oscuro, papel de plano en claro; las líneas son e
 
 #### Components
 
-- **Título de sección:** la chapa "L<n>" a la izquierda, con el número de la línea, y el título al lado. Sin sangría y sin filete debajo: la chapa ocupa el lugar del carril. Numera secciones, nunca links.
+- **Título de sección:** la chapa "L<n>" a la izquierda, con el número de la línea, y el título al lado. Sin sangría y sin filete debajo: la chapa ocupa el lugar del carril. Numera secciones, nunca links. Si el dueño escribe un rótulo de sección (`sections.label`, `data-label` en el `h2`), la chapa lleva ese texto en vez de "L<n>" (y crece si es largo); vacío, vuelve al automático.
 - **Estación (fila de link):** la estación en el carril sobre su tramo y el texto a la derecha, con un filete de vía tenue debajo. Hover y foco conservan la escala de Técnico (1.15).
 - **Andén (forma `cards`):** el texto de cada estación en una caja con borde de vía y esquinas de 4 px. Subte admite `rows` (por defecto) y `cards`; nunca `pills`.
 - **En vivo:** la estación se rellena de ámbar, con aro y destello en el tono de la señal, separada de su tramo por un anillo de 3 px del fondo. El destello es el pulso de la base (1800 ms, en loop) en ámbar; con movimiento reducido queda quieto. Etiqueta y cronómetro van en la señal.
@@ -862,7 +1055,7 @@ Papel crudo y tinta en claro, tinta clara sobre negro de imprenta en oscuro; el 
 
 #### Components
 
-- **Capítulo (título de sección):** numeral romano y título en versalitas, con 0.5rem de aire y un filete sólido de 1 px de tinta debajo. Numera capítulos, nunca entradas.
+- **Capítulo (título de sección):** numeral romano y título en versalitas, con 0.5rem de aire y un filete sólido de 1 px de tinta debajo. Numera capítulos, nunca entradas. Si el dueño escribe un rótulo de sección (`sections.label`, `data-label` en el `h2`), reemplaza al numeral romano, con el mismo " · " antes del título; vacío, vuelve al automático.
 - **Entrada de índice (fila de link):** la puntada en el lomo y el texto a la derecha, con un filete punteado de 1 px en `--color-line` debajo.
 - **Entrada en tarjeta (forma `cards`):** el texto en una caja de borde sólido de 1 px en filete, sin esquinas redondeadas y con fondo de superficie. Lomo cosido admite `rows` (por defecto) y `cards`; nunca `pills`.
 - **En vivo:** la cinta marcapáginas cuelga sobre la entrada y la puntada se tiñe de cinta; la entrada no late (el pulso de la base se apaga). Etiqueta "En vivo" y cronómetro en `--color-live`.

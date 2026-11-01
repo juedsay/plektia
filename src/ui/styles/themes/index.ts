@@ -1,6 +1,7 @@
 import type { Theme } from "@/domain/theme";
 
 import cassette from "./cassette.css?url";
+import corcho from "./corcho.css?url";
 import lomo from "./lomo.css?url";
 import punto from "./punto.css?url";
 import subte from "./subte.css?url";
@@ -11,6 +12,7 @@ import subte from "./subte.css?url";
 export const THEME_STYLESHEETS: Readonly<Partial<Record<Theme, string>>> = {
   punto,
   cassette,
+  corcho,
   subte,
   lomo,
 };

@@ -105,7 +105,19 @@ export const THEME_RULES: Readonly<Record<Theme, ThemeRules>> = {
     defaultFont: "nunito",
     sectionMark: "Lado A",
   },
-  corcho: upcoming("cercano"),
+  // Tablero de corcho: chinches azules por defecto; el rojo es del hilo y el amarillo, del en vivo.
+  corcho: {
+    family: "cercano",
+    available: true,
+    thread: false,
+    accents: ["cielo", "turquesa", "lavanda", "rosa", "hueso"],
+    defaultAccent: "cielo",
+    shapes: ["cards", "rows"],
+    defaultShape: "cards",
+    fonts: ["nunito", "bricolage", "fraunces"],
+    defaultFont: "nunito",
+    sectionMark: null,
+  },
   // Plano de subte: coral como línea por defecto; el ámbar queda para el en vivo.
   subte: {
     family: "energico",
