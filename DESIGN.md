@@ -134,6 +134,34 @@ colors:
   corcho-lavanda-claro: "#33245f"
   corcho-rosa: "#f7b6c8"
   corcho-rosa-claro: "#53162d"
+  pedalera-tablero: "#121316"
+  pedalera-tinta-clara: "#eef0f3"
+  pedalera-tinta-clara-apagada: "#c3c7ce"
+  pedalera-borde: "#3d4047"
+  pedalera-borde-tenue: "#2c2e33"
+  pedalera-gabinete: "#24262b"
+  pedalera-en-vivo: "#ff9a8c"
+  pedalera-cable: "#6d717a"
+  pedalera-led-apagado: "#6b3f3a"
+  pedalera-led-encendido: "#ff4433"
+  pedalera-tablero-claro: "#e8e6e1"
+  pedalera-tinta: "#17181b"
+  pedalera-tinta-apagada: "#36383d"
+  pedalera-borde-claro: "#b9b6ae"
+  pedalera-borde-tenue-claro: "#d6d3cc"
+  pedalera-gabinete-claro: "#fbfaf7"
+  pedalera-en-vivo-claro: "#7a1007"
+  pedalera-cable-claro: "#2a2c30"
+  pedalera-led-apagado-claro: "#d3c4be"
+  pedalera-led-encendido-claro: "#ff3b2a"
+  pedalera-verde: "#7fd6c4"
+  pedalera-verde-claro: "#0b4a40"
+  pedalera-ambar: "#f2c35b"
+  pedalera-ambar-claro: "#5a3c00"
+  pedalera-azul: "#9cc2ff"
+  pedalera-azul-claro: "#123f86"
+  pedalera-violeta: "#c9b8f5"
+  pedalera-violeta-claro: "#3d2d78"
 typography:
   display:
     fontFamily: "Bricolage Grotesque, system-ui, sans-serif"
@@ -194,6 +222,17 @@ typography:
     fontSize: "1.0625rem"
     fontWeight: 700
     lineHeight: 1.3
+  pedalera-nombre:
+    fontFamily: "Bricolage Grotesque, system-ui, sans-serif"
+    fontSize: "1.0625rem"
+    fontWeight: 700
+    lineHeight: 1.3
+  pedalera-etiqueta:
+    fontFamily: "Bricolage Grotesque, system-ui, sans-serif"
+    fontSize: "0.875rem"
+    fontWeight: 700
+    lineHeight: 1.2
+    letterSpacing: "0.1em"
 rounded:
   sm: "4px"
   md: "6px"
@@ -204,6 +243,10 @@ rounded:
   lomo-esquina: "2px"
   cassette-esquina: "4px"
   corcho-esquina: "3px"
+  pedalera-gabinete: "10px"
+  pedalera-gabinete-fila: "4px"
+  pedalera-destacado: "12px"
+  pedalera-etiqueta: "3px"
 spacing:
   "1": "0.25rem"
   "2": "0.5rem"
@@ -421,6 +464,75 @@ components:
     backgroundColor: "{colors.corcho-cinta-claro}"
     textColor: "{colors.corcho-tinta}"
     padding: "0.25rem 0.75rem"
+  pedalera-pedal:
+    backgroundColor: "{colors.pedalera-gabinete}"
+    textColor: "{colors.pedalera-tinta-clara}"
+    typography: "{typography.pedalera-nombre}"
+    rounded: "{rounded.pedalera-gabinete}"
+    padding: "0 0.75rem 0 34px"
+  pedalera-pedal-claro:
+    backgroundColor: "{colors.pedalera-gabinete-claro}"
+    textColor: "{colors.pedalera-tinta}"
+    typography: "{typography.pedalera-nombre}"
+    rounded: "{rounded.pedalera-gabinete}"
+    padding: "0 0.75rem 0 34px"
+  pedalera-pedal-fila:
+    backgroundColor: "{colors.pedalera-gabinete}"
+    textColor: "{colors.pedalera-tinta-clara}"
+    rounded: "{rounded.pedalera-gabinete-fila}"
+  pedalera-led:
+    backgroundColor: "{colors.pedalera-led-apagado}"
+    rounded: "{rounded.full}"
+    size: "8px"
+  pedalera-led-claro:
+    backgroundColor: "{colors.pedalera-led-apagado-claro}"
+    rounded: "{rounded.full}"
+    size: "8px"
+  pedalera-led-en-vivo:
+    backgroundColor: "{colors.pedalera-led-encendido}"
+    textColor: "{colors.pedalera-en-vivo}"
+    rounded: "{rounded.full}"
+    size: "8px"
+  pedalera-led-en-vivo-claro:
+    backgroundColor: "{colors.pedalera-led-encendido-claro}"
+    textColor: "{colors.pedalera-en-vivo-claro}"
+    rounded: "{rounded.full}"
+    size: "8px"
+  pedalera-pisador:
+    backgroundColor: "{colors.pedalera-borde-tenue}"
+    textColor: "{colors.pedalera-tinta-clara}"
+    rounded: "{rounded.full}"
+    padding: "7px"
+    size: "36px"
+  pedalera-pisador-destacado:
+    backgroundColor: "{colors.pedalera-verde}"
+    textColor: "{colors.pedalera-tablero}"
+    rounded: "{rounded.full}"
+    padding: "7px"
+    size: "36px"
+  pedalera-etiqueta:
+    backgroundColor: "{colors.pedalera-tinta-clara}"
+    textColor: "{colors.pedalera-tablero}"
+    typography: "{typography.pedalera-etiqueta}"
+    rounded: "{rounded.pedalera-etiqueta}"
+    padding: "3px 0.5rem"
+  pedalera-etiqueta-claro:
+    backgroundColor: "{colors.pedalera-tinta}"
+    textColor: "{colors.pedalera-tablero-claro}"
+    typography: "{typography.pedalera-etiqueta}"
+    rounded: "{rounded.pedalera-etiqueta}"
+    padding: "3px 0.5rem"
+  pedalera-cable:
+    backgroundColor: "{colors.pedalera-cable}"
+    width: "3px"
+  pedalera-cable-claro:
+    backgroundColor: "{colors.pedalera-cable-claro}"
+    width: "3px"
+  pedalera-destacado-arriba:
+    backgroundColor: "{colors.pedalera-gabinete}"
+    textColor: "{colors.pedalera-tinta-clara}"
+    rounded: "{rounded.pedalera-destacado}"
+    padding: "1rem 1.25rem 1rem 40px"
 ---
 
 # Design System: Plektia
@@ -600,7 +712,8 @@ Desde [SPEC-styles](SPEC-styles.md), los cuatro "temas" del contrato de tokens p
 | Cercano | Lado A / B (`cassette`) | construida | Carátula de cassette con franja de marca; secciones como lados escritos a mano ("Lado A", "Lado B", "Cinta N · Lado A/B"); links como temas sobre renglones; el título del primer lado se escribe al cargar | Los dos carretes rojos delante del tema |
 | Cercano | Corcho (`corcho`) | construida | Tablero de corcho: links como notas de papel clavadas con chinches del acento; un hilo rojo baja desde la cinta del título y sigue de chinche en chinche; las chinches del primer grupo se clavan al cargar | La nota amarilla con la chinche roja |
 | Enérgico | Subte (`subte`) | construida | Secciones como líneas de color con chapa "L<n>"; links como estaciones; la primera línea se traza al cargar | La estación rellena de ámbar que destella |
-| Enérgico | Pedalera (`pedalera`), Bitmap (`bitmap`) | próximamente | | |
+| Enérgico | Pedalera (`pedalera`) | construida | Pedales encadenados por cables de patch que salen del costado de uno y entran en el siguiente, cada uno con su LED y su pisador; secciones como etiquetas de rotuladora; el avatar como perilla moleteada; los cables del primer grupo se enchufan al cargar | El LED rojo encendido, quieto |
+| Enérgico | Bitmap (`bitmap`) | próximamente | | |
 | Editorial | Lomo cosido (`lomo`) | construida | El lomo con sus puntadas en la tela; capítulos con numeral romano; links como entradas de índice; las puntadas del primer cuadernillo se cosen al cargar | La cinta marcapáginas roja colgando sobre la entrada |
 | Editorial | Manual (`manual`), Sumario (`sumario`) | próximamente | | |
 
@@ -617,6 +730,8 @@ Todo lo documentado arriba (Overview a Do's and Don'ts) es el sistema de Técnic
 **La regla de lo que admite.** El estilo propone y el dueño ajusta: cada variante declara qué acentos admite (cada uno con su tono AAA propio en claro y en oscuro), qué formas de link y qué tipografías de nombre, con una por defecto en cada eje. Si lo guardado no está admitido, la página usa la de por defecto sin tocar lo guardado, y el panel lo avisa.
 
 **La regla del peso.** CSS en línea solo de la variante elegida; script solo si la pieza firma lo necesita; a lo sumo una fuente propia precargada, alojada localmente y sin CDN. El presupuesto de la página pública no cambia.
+
+**La regla del isotipo.** El punto del isotipo de Plektia (en la barra superior, y el mismo componente en el pie) se pinta con `--color-live` en todas las variantes y ninguna lo redefine: toma el tono de texto en vivo de cada una (lima en Técnico, ámbar en Subte, rojo claro o granate en Pedalera). Es la única pieza fuera del en vivo que usa ese tono, y por eso no cuenta como un uso extra de la señal propia.
 
 Además valen para todas: foco visible, 44 px táctiles, `prefers-reduced-motion` con la pieza firma quieta, y ninguna numeración de links salvo en Sumario. Las excepciones a una regla de Técnico son propias de cada variante, se documentan en su subsección y quedan acotadas a su `[data-theme]`.
 
@@ -1001,6 +1116,110 @@ Estas excepciones son propias de Subte y no se heredan a otras variantes ni a T�
 - **Don't** numerar los links: la chapa numera líneas.
 - **Don't** usar gradientes ni brillos de neón: color pleno en líneas y estaciones.
 - **Don't** sacar las excepciones de Subte de `[data-theme="subte"]`.
+
+### Pedalera (familia Enérgico)
+
+**La página es una pedalera armada en el piso del escenario.** Cada link es un pedal con su LED y su pisador, y un cable de patch sale del costado de un pedal y entra en el siguiente. La energía sale del hardware (el gabinete, el pisador, el LED que se prende), no de brillos "gamer RGB" ni de gradientes de neón. No hay hilo trenzado: el carril de jacks se angosta a 18 px (`--jack-col`, en todos los anchos) y lo ocupan los cables.
+
+#### Colors
+
+Tablero negro de velcro con gabinetes de aluminio pintado oscuro en oscuro; tablero gris claro con gabinetes crema en claro. El acento es el aro del pisador y del destacado, los cables son grises y el rojo es solo del LED encendido. Los valores normativos están en el frontmatter (`pedalera-*`).
+
+- **Tablero** (`pedalera-tablero`) / **Tablero claro** (`pedalera-tablero-claro`): fondo de la página en oscuro y en claro. Es también el zócalo de cada LED, la luz entre el aro y el capuchón del pisador, el anillo interior de la perilla y la tinta de la etiqueta de rotuladora. En oscuro es además la tinta de la selección y la tinta sobre el en vivo (`--color-live-ink`).
+- **Tinta clara** (`pedalera-tinta-clara`) / **Tinta** (`pedalera-tinta`): texto principal, foco, fondo de la selección, la flecha del pisador, la cinta de la etiqueta de rotuladora y la marca indicadora de la perilla.
+- **Tinta clara apagada** (`pedalera-tinta-clara-apagada`) / **Tinta apagada** (`pedalera-tinta-apagada`): bio, metadatos, el moleteado de la perilla y el borde del gabinete al pasar o enfocar.
+- **Gabinete** (`pedalera-gabinete`, `pedalera-gabinete-claro`): `--color-surface`, el cuerpo de cada pedal, de los destacados de arriba y de los botones de la fila de íconos, y el aro ancho de la perilla. En claro es también la tinta de la selección y la tinta sobre el en vivo.
+- **Borde** (`pedalera-borde`, `pedalera-borde-claro`): `--color-line`, el borde de 1 px de cada gabinete, el filo exterior de la perilla y el capuchón del pisador pisado. **Borde tenue** (`pedalera-borde-tenue`, `pedalera-borde-tenue-claro`): el capuchón del pisador en reposo.
+- **Cable** (`pedalera-cable`, `pedalera-cable-claro`): `--cable`, decorativo. El cable de patch y sus enchufes; nunca es señal.
+- **LED apagado** (`pedalera-led-apagado`, `pedalera-led-apagado-claro`): `--led-off`, un rojo tostado muy oscuro en oscuro y un rosado gris en claro. Se ve en los dos modos sin leerse como prendido.
+- **LED encendido** (`pedalera-led-encendido`, `pedalera-led-encendido-claro`): `--led-on`, gráfico. Rellena el LED en vivo y tiñe su aro y su halo; no se usa para texto.
+- **En vivo** (`pedalera-en-vivo`, `pedalera-en-vivo-claro`): `--color-live`, el tono de la etiqueta "En vivo" y del cronómetro, medido a 7:1. El rojo del LED no llega a texto AAA, por eso el texto va en un rojo aparte: claro en oscuro, granate en claro.
+
+**Acentos admitidos** (cinco de los ocho; por defecto, turquesa). El acento es el aro de cada pisador, el capuchón del pisador del destacado con acento, el aro de su gabinete y el borde del destacado de arriba al pasar. Nunca el cable, el LED ni la etiqueta.
+
+| Acento | Pisador | Oscuro | Claro |
+|---|---|---|---|
+| `turquesa` (por defecto) | verde | `#7fd6c4` | `#0b4a40` |
+| `ambar` | ámbar | `#f2c35b` | `#5a3c00` |
+| `cielo` | azul | `#9cc2ff` | `#123f86` |
+| `lavanda` | violeta | `#c9b8f5` | `#3d2d78` |
+| `hueso` | la tinta misma | `#eef0f3` | `#17181b` |
+
+`coral`, `rosa` y `arena` no se admiten en Pedalera.
+
+**La regla del LED rojo.** El rojo es la señal en vivo de Pedalera y de nada más: solo el LED encendido es rojo, en los pedales y también en los destacados de arriba, que tienen su propio LED. Ningún pisador, cable, borde ni etiqueta es rojo o rojizo (por eso coral y rosa quedan afuera), y el LED encendido está quieto: el pulso de la base se apaga. El LED (`--led-on`) es gráfico; la etiqueta "En vivo" y el cronómetro van en `--color-live`. No se intercambian.
+
+**La regla del LED apagado.** Todo pedal tiene su LED, prendido o no, y todo destacado de arriba también. El apagado (`--led-off`) se ve en los dos modos: lleva un zócalo de 2 px del color del tablero (`0 0 0 2px var(--color-bg)`) y una sombra interior de 1 px que lo hunde en el gabinete. El encendido conserva el zócalo y suma un aro de 2 px de `--led-on` al 25% y un halo de 10 px al 55%.
+
+#### Typography
+
+**Display Font:** Bricolage Grotesque por defecto en los nombres. Admite también **Nunito** y **Space Mono** (alojadas localmente, precargadas solo si la página las elige); Fraunces no se admite.
+**Body Font:** la del sistema, igual que Técnico.
+
+- **Nombre de pedal** (`pedalera-nombre`): el nombre de cada pedal sube a 700 (en Técnico es 500), en todos los pedales.
+- **Etiqueta de rotuladora** (`pedalera-etiqueta`): el título de sección en la fuente de los nombres, 0.875rem a 700, en mayúsculas y con tracking de 0.1em.
+- Pedalera no numera secciones (`sectionMark: null`) ni dibuja el rótulo de sección del dueño: la etiqueta es solo el título.
+
+#### Shapes
+
+- **Gabinete (pedal):** caja en `--color-surface` con borde de 1 px en `--color-line` y esquinas de 10 px (`--radius-md`, `pedalera-gabinete`), con la sombra de gabinete (`--pedal-shadow`: un bisel interior de 1 px arriba y 0 2px 4px abajo). Va siempre a la derecha del carril, con 34 px adentro a la izquierda para el LED y 0.75rem a la derecha; 18 px entre pedales.
+- **Pedales en fila (forma `rows`):** el mismo gabinete con esquinas de 4 px (`pedalera-gabinete-fila`) y 10 px entre pedales; el cable se acorta en la misma medida.
+- **LED:** círculo de 8 px, absoluto, a 14 px del borde izquierdo del gabinete y centrado en la primera línea del pedal (`--row-min`). Reemplaza al jack con ojo de Técnico y no crece al pasar.
+- **Pisador:** el botón de la flecha, redondo, de 36 px en total: el aro de 2 px en el acento, una luz de 3 px del color del tablero por dentro (`inset 0 0 0 3px var(--color-bg)`) y el capuchón en borde tenue con la flecha en tinta, 18 px de ícono y 7 px de aire.
+- **Enchufes:** en el costado izquierdo de cada pedal, montados sobre el borde, dos tacos de 6 × 10 px en el color del cable con esquinas de 2 px: la entrada, a 7 px de arriba, y la salida, a 7 px de abajo. El primer pedal de un grupo no tiene entrada, el último no tiene salida y un pedal solo no tiene enchufes.
+- **Cable de patch:** un trazo de 3 px en el color del cable que sale por el enchufe de abajo de un pedal, da la vuelta por el carril (curva de 12 px, abierto a la derecha) y entra por el enchufe de arriba del siguiente. Termina en el último pedal del grupo; no pasa por los destacados de arriba.
+- **Perilla (avatar):** el círculo de 88 px con tres anillos de spread puro (3 px de tablero, 4 px de gabinete y 1 px de borde) y, alrededor, un disco de 116 px con el moleteado radial en el borde (una franja de 5 px con dientes de 2° cada 6° en tinta apagada) y la marca indicadora (una cuña de 5° en tinta, a 35° de la vertical, arriba a la derecha). Moleteado y marca se dibujan en `.identity::before`, no en el avatar: la foto recorta lo que cuelga del avatar.
+- **Etiqueta de rotuladora:** cinta en tinta, del ancho del texto (`fit-content`), con 3 px × 0.5rem de padding y esquinas de 3 px, alineada con los pedales (corrida `--jack-col`).
+- **Destacado arriba (pedal grande):** el gabinete con esquinas de 12 px (`pedalera-destacado`), 40 px adentro a la izquierda para su LED y la sombra de gabinete.
+- **Perillas chicas (fila de íconos):** los círculos de la base en gabinete, con su borde de 1 px y la sombra de gabinete.
+
+#### Components
+
+- **Título de sección:** la etiqueta de rotuladora en tinta invertida (cinta en `--color-fg`, letras en `--color-bg`), sin filete (ni el de Técnico ni el del acento).
+- **Pedal (fila de link):** gabinete, LED, nombre a 700 y pisador a la derecha. Pedalera admite `cards` (por defecto) y `rows`; nunca `pills`. Al pasar o enfocar, el borde del gabinete pasa a tinta apagada y el pisador se pisa.
+- **Pisar:** al pasar o enfocar un pedal o un destacado de arriba, el pisador baja 1 px y se achica a 0.94, y el capuchón pasa a `--color-line`. El pedal no sube ni se mueve: solo se pisa el pisador.
+- **En vivo:** el LED encendido en `--led-on`, con su aro y su halo, quieto (sin pulso). Etiqueta "En vivo" y cronómetro en `--color-live`.
+- **Destacado con acento:** el gabinete con un aro de 2 px en el acento y el capuchón del pisador lleno de acento, con la flecha en `--color-bg`. Conserva el aro también al pasar o enfocar.
+- **Destacado arriba (pedal grande):** gabinete con su propio LED (8 px, a 18 px de la izquierda y a la altura del nombre), apagado, o encendido si está en vivo. Al pasar o enfocar, el borde pasa al acento y el pisador se pisa; el pedal no sube.
+- **Fila de íconos:** perillas chicas de gabinete.
+- **Miniatura del panel:** la perilla de 28 px (anillos de 2 px de gabinete y 1 px de borde, y un contorno punteado de 2 px en tinta apagada a 2 px como moleteado), una etiqueta de rotuladora de 18 × 6 px en tinta y dos pedales de 14 px de alto con borde y esquinas de 3 px, LED de 5 px y pisador de 6 px con aro de 1.5 px en el acento, unidos por un cable de 7 × 18 px; el de arriba en vivo, con el LED encendido.
+
+#### Firma: los cables que se enchufan
+
+Al cargar, los cables del primer grupo se enchufan uno por uno: cada uno se revela de arriba abajo (`clip-path: inset` de 100% a 0 desde abajo) en 360 ms con la curva `ease-out`, escalonados cada 160 ms (el cuarto y los siguientes, juntos a los 480 ms), una sola vez. Los enchufes ya están en su lugar y los demás grupos están enchufados y quietos desde el principio. Sin script: el cable es CSS. Con `prefers-reduced-motion` los cables aparecen enchufados y quietos.
+
+#### Excepciones a Técnico, acotadas a `[data-theme="pedalera"]`
+
+Estas excepciones son propias de Pedalera y no se heredan a otras variantes ni a Técnico:
+
+- **Sin hilo trenzado:** el carril se angosta a 18 px y lo ocupan los cables de patch con sus enchufes.
+- **Pedales con gabinete y sombra** en vez de filas sin caja separadas por filete (excepción a la regla del filete, al "Don't" de tarjetas con fondo y a "`box-shadow` solo como anillo de spread puro"): la sombra de gabinete en pedales, destacados de arriba y fila de íconos, y el halo del LED encendido.
+- **Esquinas de 10 y 12 px** en los gabinetes (excepción a "no hay esquinas grandes").
+- **LED en vez del jack con ojo**, y el pedal en vivo sin pulso: la señal es el LED encendido.
+- **Títulos como etiquetas de rotuladora** en tinta invertida y en mayúsculas, sin filete.
+- **Gradientes cónicos** solo en el moleteado y la marca de la perilla: son dientes y marca dibujados, no un degradé.
+
+#### Do's and Don'ts
+
+##### Do:
+- **Do** dar a cada pedal su LED, apagado y visible en los dos modos, con el zócalo del color del tablero.
+- **Do** reservar el rojo para el LED encendido, también en los destacados de arriba, y el texto en vivo para `--color-live`.
+- **Do** enchufar el cable abajo en el costado de un pedal y arriba en el siguiente: sin entrada en el primero, sin salida en el último y sin enchufes en un pedal solo.
+- **Do** armar el pisador con aro de acento, luz y capuchón, y pisarlo al pasar (1 px abajo, 0.94).
+- **Do** dibujar el moleteado y la marca de la perilla en `.identity::before`, fuera del avatar.
+- **Do** rotular cada sección como etiqueta de rotuladora en tinta invertida.
+- **Do** mantener el aro de acento del destacado también al pasar o enfocar.
+- **Do** enchufar solo los cables del primer grupo al cargar, y dejarlos quietos con movimiento reducido.
+
+##### Don't:
+- **Don't** usar rojo o rojizo fuera del LED encendido: ni pisadores, ni cables, ni etiquetas; ni admitir coral o rosa como acento.
+- **Don't** usar `--led-on` para texto ni `--color-live` para el LED.
+- **Don't** hacer latir el LED encendido ni subir el pedal al pasar: el pedal se pisa.
+- **Don't** pasar el cable por los destacados de arriba ni seguirlo después del último pedal del grupo.
+- **Don't** colgar el moleteado del avatar: la foto lo recorta.
+- **Don't** usar brillos de neón ni gradientes "gamer": color plano en gabinetes, cables y aros.
+- **Don't** volver a jacks o al hilo trenzado dentro de Pedalera, ni numerar secciones o pedales.
+- **Don't** sacar las excepciones de Pedalera de `[data-theme="pedalera"]`.
 
 ### Lomo cosido (familia Editorial)
 

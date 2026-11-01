@@ -86,3 +86,17 @@ FIRST VIEWPORT: Barra superior; avatar en marco de polaroid apenas inclinado; no
 FORM: Corcho, propuesta aprobada por el usuario en la tanda de nueve mockups. Firma: las chinches del primer grupo se clavan una por una al cargar (bajan de escala); quietas con movimiento reducido. El papel se inclina, el texto no: la inclinación vive en un pseudo-elemento detrás del texto.
 
 FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, DESIGN.md, and every shipping raster carrying its provenance
+
+## Direction contract — Pedalera (familia Enérgico)
+
+THESIS: La página es una pedalera armada en el piso del escenario: cada link es un pedal con su LED y su pisador, y un cable de patch sale del costado de un pedal y entra en el siguiente. Rechaza el "gamer RGB" de brillos y gradientes: la energía sale del hardware —el gabinete, el pisador, el LED que se prende— no de neones.
+
+OWN-WORLD: Tablero negro de velcro (#121316) con gabinetes de aluminio pintado oscuro (#24262b) y tinta clara (#eef0f3); de día, tablero gris claro (#e8e6e1) con gabinetes crema (#fbfaf7) y tinta casi negra. Cables de patch grises (#6d717a / #2a2c30) en un carril angosto a la izquierda. El acento es el aro del pisador y del destacado (verde por defecto, ámbar, azul, violeta o la tinta). Títulos de sección como etiquetas de rotuladora (Dymo): tinta invertida, en mayúsculas. Bricolage por defecto. Rojo reservado al LED encendido del en vivo.
+
+STORY: El visitante ve la perilla (avatar) y el nombre, encuentra el pedal con el LED rojo prendido si está en vivo, recorre la cadena de pedales siguiendo los cables y pisa el que busca.
+
+FIRST VIEWPORT: Barra superior; avatar como perilla con el borde moleteado; nombre y bio; la etiqueta "REDES"; los pedales encadenados por cables en el carril izquierdo, cada uno con su LED apagado y el pisador redondo a la derecha; el pedal en vivo con el LED rojo encendido.
+
+FORM: Pedalera, propuesta aprobada por el usuario en la tanda de nueve mockups. Firma: los cables del primer grupo se enchufan uno por uno al cargar (se revelan de arriba hacia abajo); quietos con movimiento reducido. Sin script: el cable es CSS.
+
+FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, DESIGN.md, and every shipping raster carrying its provenance
