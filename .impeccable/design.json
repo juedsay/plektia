@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-10-30T12:00:00.000Z",
+  "generatedAt": "2026-11-01T12:00:00.000Z",
   "title": "Design System: Plektia",
   "extensions": {
     "colorMeta": {
@@ -1695,6 +1695,550 @@
           "oklch(80% 0.128 288.7)",
           "oklch(95% 0.128 288.7)"
         ]
+      },
+      "corcho-tablero": {
+        "role": "neutral",
+        "displayName": "Tablero (Corcho)",
+        "canonical": "oklch(22.8% 0.022 60.1)",
+        "cssVar": "--color-bg (oscuro); --color-thread-twist, --color-selection-fg y --note-live-ink (oscuro)",
+        "theme": "corcho",
+        "tonalRamp": [
+          "oklch(15% 0.022 60.1)",
+          "oklch(25% 0.022 60.1)",
+          "oklch(35% 0.022 60.1)",
+          "oklch(45% 0.022 60.1)",
+          "oklch(55% 0.022 60.1)",
+          "oklch(65% 0.022 60.1)",
+          "oklch(80% 0.022 60.1)",
+          "oklch(95% 0.022 60.1)"
+        ]
+      },
+      "corcho-tinta-clara": {
+        "role": "neutral",
+        "displayName": "Tinta clara (Corcho)",
+        "canonical": "oklch(94.0% 0.029 84.6)",
+        "cssVar": "--color-fg, --color-focus y --color-selection-bg (oscuro); acento hueso en oscuro",
+        "theme": "corcho",
+        "tonalRamp": [
+          "oklch(15% 0.029 84.6)",
+          "oklch(25% 0.029 84.6)",
+          "oklch(35% 0.029 84.6)",
+          "oklch(45% 0.029 84.6)",
+          "oklch(55% 0.029 84.6)",
+          "oklch(65% 0.029 84.6)",
+          "oklch(80% 0.029 84.6)",
+          "oklch(95% 0.029 84.6)"
+        ]
+      },
+      "corcho-tinta-clara-apagada": {
+        "role": "neutral",
+        "displayName": "Tinta clara apagada (Corcho)",
+        "canonical": "oklch(84.2% 0.042 81.7)",
+        "cssVar": "--color-fg-muted (oscuro)",
+        "theme": "corcho",
+        "tonalRamp": [
+          "oklch(15% 0.042 81.7)",
+          "oklch(25% 0.042 81.7)",
+          "oklch(35% 0.042 81.7)",
+          "oklch(45% 0.042 81.7)",
+          "oklch(55% 0.042 81.7)",
+          "oklch(65% 0.042 81.7)",
+          "oklch(80% 0.042 81.7)",
+          "oklch(95% 0.042 81.7)"
+        ]
+      },
+      "corcho-borde": {
+        "role": "neutral",
+        "displayName": "Borde (Corcho)",
+        "canonical": "oklch(42.2% 0.040 69.4)",
+        "cssVar": "--color-line (oscuro): filete punteado del último video",
+        "theme": "corcho",
+        "tonalRamp": [
+          "oklch(15% 0.040 69.4)",
+          "oklch(25% 0.040 69.4)",
+          "oklch(35% 0.040 69.4)",
+          "oklch(45% 0.040 69.4)",
+          "oklch(55% 0.040 69.4)",
+          "oklch(65% 0.040 69.4)",
+          "oklch(80% 0.040 69.4)",
+          "oklch(95% 0.040 69.4)"
+        ]
+      },
+      "corcho-borde-tenue": {
+        "role": "neutral",
+        "displayName": "Borde tenue (Corcho)",
+        "canonical": "oklch(32.8% 0.028 64.3)",
+        "cssVar": "--color-line-soft (oscuro)",
+        "theme": "corcho",
+        "tonalRamp": [
+          "oklch(15% 0.028 64.3)",
+          "oklch(25% 0.028 64.3)",
+          "oklch(35% 0.028 64.3)",
+          "oklch(45% 0.028 64.3)",
+          "oklch(55% 0.028 64.3)",
+          "oklch(65% 0.028 64.3)",
+          "oklch(80% 0.028 64.3)",
+          "oklch(95% 0.028 64.3)"
+        ]
+      },
+      "corcho-papel": {
+        "role": "neutral",
+        "displayName": "Papel (Corcho)",
+        "canonical": "oklch(28.9% 0.023 66.7)",
+        "cssVar": "--color-surface y --photo (oscuro): notas, destacados de arriba, chapitas",
+        "theme": "corcho",
+        "tonalRamp": [
+          "oklch(15% 0.023 66.7)",
+          "oklch(25% 0.023 66.7)",
+          "oklch(35% 0.023 66.7)",
+          "oklch(45% 0.023 66.7)",
+          "oklch(55% 0.023 66.7)",
+          "oklch(65% 0.023 66.7)",
+          "oklch(80% 0.023 66.7)",
+          "oklch(95% 0.023 66.7)"
+        ]
+      },
+      "corcho-en-vivo": {
+        "role": "tertiary",
+        "displayName": "En vivo (Corcho)",
+        "canonical": "oklch(89.2% 0.157 93.0)",
+        "cssVar": "--color-live (oscuro); dentro de la nota amarilla el texto va en --note-live-ink",
+        "theme": "corcho",
+        "tonalRamp": [
+          "oklch(15% 0.157 93.0)",
+          "oklch(25% 0.157 93.0)",
+          "oklch(35% 0.157 93.0)",
+          "oklch(45% 0.157 93.0)",
+          "oklch(55% 0.157 93.0)",
+          "oklch(65% 0.157 93.0)",
+          "oklch(80% 0.157 93.0)",
+          "oklch(95% 0.157 93.0)"
+        ]
+      },
+      "corcho-hilo": {
+        "role": "secondary",
+        "displayName": "Hilo (Corcho)",
+        "canonical": "oklch(61.4% 0.192 28.5)",
+        "cssVar": "--string (oscuro): el hilo de chinche en chinche, decorativo; no es la señal en vivo",
+        "theme": "corcho",
+        "tonalRamp": [
+          "oklch(15% 0.192 28.5)",
+          "oklch(25% 0.192 28.5)",
+          "oklch(35% 0.192 28.5)",
+          "oklch(45% 0.192 28.5)",
+          "oklch(55% 0.192 28.5)",
+          "oklch(65% 0.192 28.5)",
+          "oklch(80% 0.192 28.5)",
+          "oklch(95% 0.192 28.5)"
+        ]
+      },
+      "corcho-cinta": {
+        "role": "neutral",
+        "displayName": "Cinta (Corcho)",
+        "canonical": "oklch(36.8% 0.035 76.7)",
+        "cssVar": "--tape (oscuro): la tira detrás de cada título de sección",
+        "theme": "corcho",
+        "tonalRamp": [
+          "oklch(15% 0.035 76.7)",
+          "oklch(25% 0.035 76.7)",
+          "oklch(35% 0.035 76.7)",
+          "oklch(45% 0.035 76.7)",
+          "oklch(55% 0.035 76.7)",
+          "oklch(65% 0.035 76.7)",
+          "oklch(80% 0.035 76.7)",
+          "oklch(95% 0.035 76.7)"
+        ]
+      },
+      "corcho-polaroid": {
+        "role": "neutral",
+        "displayName": "Polaroid (Corcho)",
+        "canonical": "oklch(92.7% 0.028 86.6)",
+        "cssVar": "--polaroid (oscuro): marco del avatar",
+        "theme": "corcho",
+        "tonalRamp": [
+          "oklch(15% 0.028 86.6)",
+          "oklch(25% 0.028 86.6)",
+          "oklch(35% 0.028 86.6)",
+          "oklch(45% 0.028 86.6)",
+          "oklch(55% 0.028 86.6)",
+          "oklch(65% 0.028 86.6)",
+          "oklch(80% 0.028 86.6)",
+          "oklch(95% 0.028 86.6)"
+        ]
+      },
+      "corcho-nota-en-vivo": {
+        "role": "tertiary",
+        "displayName": "Nota en vivo (Corcho)",
+        "canonical": "oklch(87.0% 0.153 94.2)",
+        "cssVar": "--note-live (oscuro): papel amarillo de la nota en vivo",
+        "theme": "corcho",
+        "tonalRamp": [
+          "oklch(15% 0.153 94.2)",
+          "oklch(25% 0.153 94.2)",
+          "oklch(35% 0.153 94.2)",
+          "oklch(45% 0.153 94.2)",
+          "oklch(55% 0.153 94.2)",
+          "oklch(65% 0.153 94.2)",
+          "oklch(80% 0.153 94.2)",
+          "oklch(95% 0.153 94.2)"
+        ]
+      },
+      "corcho-chinche-en-vivo": {
+        "role": "tertiary",
+        "displayName": "Chinche en vivo (Corcho)",
+        "canonical": "oklch(73.2% 0.165 28.3)",
+        "cssVar": "--pin-live (oscuro): chinche roja de la nota en vivo, distinta del hilo",
+        "theme": "corcho",
+        "tonalRamp": [
+          "oklch(15% 0.165 28.3)",
+          "oklch(25% 0.165 28.3)",
+          "oklch(35% 0.165 28.3)",
+          "oklch(45% 0.165 28.3)",
+          "oklch(55% 0.165 28.3)",
+          "oklch(65% 0.165 28.3)",
+          "oklch(80% 0.165 28.3)",
+          "oklch(95% 0.165 28.3)"
+        ]
+      },
+      "corcho-tablero-claro": {
+        "role": "neutral",
+        "displayName": "Tablero (Corcho, claro)",
+        "canonical": "oklch(85.5% 0.061 77.5)",
+        "cssVar": "--color-bg y --color-thread-twist (claro)",
+        "theme": "corcho",
+        "tonalRamp": [
+          "oklch(15% 0.061 77.5)",
+          "oklch(25% 0.061 77.5)",
+          "oklch(35% 0.061 77.5)",
+          "oklch(45% 0.061 77.5)",
+          "oklch(55% 0.061 77.5)",
+          "oklch(65% 0.061 77.5)",
+          "oklch(80% 0.061 77.5)",
+          "oklch(95% 0.061 77.5)"
+        ]
+      },
+      "corcho-tinta": {
+        "role": "neutral",
+        "displayName": "Tinta (Corcho, claro)",
+        "canonical": "oklch(22.1% 0.026 60.6)",
+        "cssVar": "--color-fg, --color-focus, --color-selection-bg y --note-live-ink (claro); acento hueso en claro",
+        "theme": "corcho",
+        "tonalRamp": [
+          "oklch(15% 0.026 60.6)",
+          "oklch(25% 0.026 60.6)",
+          "oklch(35% 0.026 60.6)",
+          "oklch(45% 0.026 60.6)",
+          "oklch(55% 0.026 60.6)",
+          "oklch(65% 0.026 60.6)",
+          "oklch(80% 0.026 60.6)",
+          "oklch(95% 0.026 60.6)"
+        ]
+      },
+      "corcho-tinta-apagada": {
+        "role": "neutral",
+        "displayName": "Tinta apagada (Corcho, claro)",
+        "canonical": "oklch(29.9% 0.035 64.0)",
+        "cssVar": "--color-fg-muted (claro)",
+        "theme": "corcho",
+        "tonalRamp": [
+          "oklch(15% 0.035 64.0)",
+          "oklch(25% 0.035 64.0)",
+          "oklch(35% 0.035 64.0)",
+          "oklch(45% 0.035 64.0)",
+          "oklch(55% 0.035 64.0)",
+          "oklch(65% 0.035 64.0)",
+          "oklch(80% 0.035 64.0)",
+          "oklch(95% 0.035 64.0)"
+        ]
+      },
+      "corcho-borde-claro": {
+        "role": "neutral",
+        "displayName": "Borde (Corcho, claro)",
+        "canonical": "oklch(70.5% 0.066 73.5)",
+        "cssVar": "--color-line (claro)",
+        "theme": "corcho",
+        "tonalRamp": [
+          "oklch(15% 0.066 73.5)",
+          "oklch(25% 0.066 73.5)",
+          "oklch(35% 0.066 73.5)",
+          "oklch(45% 0.066 73.5)",
+          "oklch(55% 0.066 73.5)",
+          "oklch(65% 0.066 73.5)",
+          "oklch(80% 0.066 73.5)",
+          "oklch(95% 0.066 73.5)"
+        ]
+      },
+      "corcho-borde-tenue-claro": {
+        "role": "neutral",
+        "displayName": "Borde tenue (Corcho, claro)",
+        "canonical": "oklch(81.3% 0.061 75.9)",
+        "cssVar": "--color-line-soft (claro)",
+        "theme": "corcho",
+        "tonalRamp": [
+          "oklch(15% 0.061 75.9)",
+          "oklch(25% 0.061 75.9)",
+          "oklch(35% 0.061 75.9)",
+          "oklch(45% 0.061 75.9)",
+          "oklch(55% 0.061 75.9)",
+          "oklch(65% 0.061 75.9)",
+          "oklch(80% 0.061 75.9)",
+          "oklch(95% 0.061 75.9)"
+        ]
+      },
+      "corcho-papel-claro": {
+        "role": "neutral",
+        "displayName": "Papel (Corcho, claro)",
+        "canonical": "oklch(98.6% 0.017 88.0)",
+        "cssVar": "--color-surface, --polaroid, --color-live-ink y --color-selection-fg (claro)",
+        "theme": "corcho",
+        "tonalRamp": [
+          "oklch(15% 0.017 88.0)",
+          "oklch(25% 0.017 88.0)",
+          "oklch(35% 0.017 88.0)",
+          "oklch(45% 0.017 88.0)",
+          "oklch(55% 0.017 88.0)",
+          "oklch(65% 0.017 88.0)",
+          "oklch(80% 0.017 88.0)",
+          "oklch(95% 0.017 88.0)"
+        ]
+      },
+      "corcho-en-vivo-claro": {
+        "role": "tertiary",
+        "displayName": "En vivo (Corcho, claro)",
+        "canonical": "oklch(30.1% 0.062 80.6)",
+        "cssVar": "--color-live (claro)",
+        "theme": "corcho",
+        "tonalRamp": [
+          "oklch(15% 0.062 80.6)",
+          "oklch(25% 0.062 80.6)",
+          "oklch(35% 0.062 80.6)",
+          "oklch(45% 0.062 80.6)",
+          "oklch(55% 0.062 80.6)",
+          "oklch(65% 0.062 80.6)",
+          "oklch(80% 0.062 80.6)",
+          "oklch(95% 0.062 80.6)"
+        ]
+      },
+      "corcho-hilo-claro": {
+        "role": "secondary",
+        "displayName": "Hilo (Corcho, claro)",
+        "canonical": "oklch(46.2% 0.167 29.0)",
+        "cssVar": "--string (claro)",
+        "theme": "corcho",
+        "tonalRamp": [
+          "oklch(15% 0.167 29.0)",
+          "oklch(25% 0.167 29.0)",
+          "oklch(35% 0.167 29.0)",
+          "oklch(45% 0.167 29.0)",
+          "oklch(55% 0.167 29.0)",
+          "oklch(65% 0.167 29.0)",
+          "oklch(80% 0.167 29.0)",
+          "oklch(95% 0.167 29.0)"
+        ]
+      },
+      "corcho-cinta-claro": {
+        "role": "neutral",
+        "displayName": "Cinta (Corcho, claro)",
+        "canonical": "oklch(93.1% 0.042 92.2)",
+        "cssVar": "--tape (claro)",
+        "theme": "corcho",
+        "tonalRamp": [
+          "oklch(15% 0.042 92.2)",
+          "oklch(25% 0.042 92.2)",
+          "oklch(35% 0.042 92.2)",
+          "oklch(45% 0.042 92.2)",
+          "oklch(55% 0.042 92.2)",
+          "oklch(65% 0.042 92.2)",
+          "oklch(80% 0.042 92.2)",
+          "oklch(95% 0.042 92.2)"
+        ]
+      },
+      "corcho-foto-claro": {
+        "role": "neutral",
+        "displayName": "Foto (Corcho, claro)",
+        "canonical": "oklch(87.2% 0.045 83.9)",
+        "cssVar": "--photo (claro): fondo del avatar",
+        "theme": "corcho",
+        "tonalRamp": [
+          "oklch(15% 0.045 83.9)",
+          "oklch(25% 0.045 83.9)",
+          "oklch(35% 0.045 83.9)",
+          "oklch(45% 0.045 83.9)",
+          "oklch(55% 0.045 83.9)",
+          "oklch(65% 0.045 83.9)",
+          "oklch(80% 0.045 83.9)",
+          "oklch(95% 0.045 83.9)"
+        ]
+      },
+      "corcho-nota-en-vivo-claro": {
+        "role": "tertiary",
+        "displayName": "Nota en vivo (Corcho, claro)",
+        "canonical": "oklch(91.0% 0.144 95.1)",
+        "cssVar": "--note-live (claro)",
+        "theme": "corcho",
+        "tonalRamp": [
+          "oklch(15% 0.144 95.1)",
+          "oklch(25% 0.144 95.1)",
+          "oklch(35% 0.144 95.1)",
+          "oklch(45% 0.144 95.1)",
+          "oklch(55% 0.144 95.1)",
+          "oklch(65% 0.144 95.1)",
+          "oklch(80% 0.144 95.1)",
+          "oklch(95% 0.144 95.1)"
+        ]
+      },
+      "corcho-chinche-en-vivo-claro": {
+        "role": "tertiary",
+        "displayName": "Chinche en vivo (Corcho, claro)",
+        "canonical": "oklch(57.1% 0.211 29.4)",
+        "cssVar": "--pin-live (claro)",
+        "theme": "corcho",
+        "tonalRamp": [
+          "oklch(15% 0.211 29.4)",
+          "oklch(25% 0.211 29.4)",
+          "oklch(35% 0.211 29.4)",
+          "oklch(45% 0.211 29.4)",
+          "oklch(55% 0.211 29.4)",
+          "oklch(65% 0.211 29.4)",
+          "oklch(80% 0.211 29.4)",
+          "oklch(95% 0.211 29.4)"
+        ]
+      },
+      "corcho-cielo": {
+        "role": "primary",
+        "displayName": "Chinche azul (Corcho)",
+        "canonical": "oklch(83.0% 0.085 261.7)",
+        "cssVar": "acento cielo en oscuro (por defecto)",
+        "theme": "corcho",
+        "tonalRamp": [
+          "oklch(15% 0.085 261.7)",
+          "oklch(25% 0.085 261.7)",
+          "oklch(35% 0.085 261.7)",
+          "oklch(45% 0.085 261.7)",
+          "oklch(55% 0.085 261.7)",
+          "oklch(65% 0.085 261.7)",
+          "oklch(80% 0.085 261.7)",
+          "oklch(95% 0.085 261.7)"
+        ]
+      },
+      "corcho-cielo-claro": {
+        "role": "primary",
+        "displayName": "Chinche azul (Corcho, claro)",
+        "canonical": "oklch(29.6% 0.096 260.5)",
+        "cssVar": "acento cielo en claro (por defecto)",
+        "theme": "corcho",
+        "tonalRamp": [
+          "oklch(15% 0.096 260.5)",
+          "oklch(25% 0.096 260.5)",
+          "oklch(35% 0.096 260.5)",
+          "oklch(45% 0.096 260.5)",
+          "oklch(55% 0.096 260.5)",
+          "oklch(65% 0.096 260.5)",
+          "oklch(80% 0.096 260.5)",
+          "oklch(95% 0.096 260.5)"
+        ]
+      },
+      "corcho-turquesa": {
+        "role": "primary",
+        "displayName": "Chinche verde (Corcho)",
+        "canonical": "oklch(82.1% 0.081 181.9)",
+        "cssVar": "acento turquesa en oscuro",
+        "theme": "corcho",
+        "tonalRamp": [
+          "oklch(15% 0.081 181.9)",
+          "oklch(25% 0.081 181.9)",
+          "oklch(35% 0.081 181.9)",
+          "oklch(45% 0.081 181.9)",
+          "oklch(55% 0.081 181.9)",
+          "oklch(65% 0.081 181.9)",
+          "oklch(80% 0.081 181.9)",
+          "oklch(95% 0.081 181.9)"
+        ]
+      },
+      "corcho-turquesa-claro": {
+        "role": "primary",
+        "displayName": "Chinche verde (Corcho, claro)",
+        "canonical": "oklch(30.1% 0.049 180.2)",
+        "cssVar": "acento turquesa en claro",
+        "theme": "corcho",
+        "tonalRamp": [
+          "oklch(15% 0.049 180.2)",
+          "oklch(25% 0.049 180.2)",
+          "oklch(35% 0.049 180.2)",
+          "oklch(45% 0.049 180.2)",
+          "oklch(55% 0.049 180.2)",
+          "oklch(65% 0.049 180.2)",
+          "oklch(80% 0.049 180.2)",
+          "oklch(95% 0.049 180.2)"
+        ]
+      },
+      "corcho-lavanda": {
+        "role": "primary",
+        "displayName": "Chinche violeta (Corcho)",
+        "canonical": "oklch(83.1% 0.082 297.2)",
+        "cssVar": "acento lavanda en oscuro",
+        "theme": "corcho",
+        "tonalRamp": [
+          "oklch(15% 0.082 297.2)",
+          "oklch(25% 0.082 297.2)",
+          "oklch(35% 0.082 297.2)",
+          "oklch(45% 0.082 297.2)",
+          "oklch(55% 0.082 297.2)",
+          "oklch(65% 0.082 297.2)",
+          "oklch(80% 0.082 297.2)",
+          "oklch(95% 0.082 297.2)"
+        ]
+      },
+      "corcho-lavanda-claro": {
+        "role": "primary",
+        "displayName": "Chinche violeta (Corcho, claro)",
+        "canonical": "oklch(31.3% 0.101 291.2)",
+        "cssVar": "acento lavanda en claro",
+        "theme": "corcho",
+        "tonalRamp": [
+          "oklch(15% 0.101 291.2)",
+          "oklch(25% 0.101 291.2)",
+          "oklch(35% 0.101 291.2)",
+          "oklch(45% 0.101 291.2)",
+          "oklch(55% 0.101 291.2)",
+          "oklch(65% 0.101 291.2)",
+          "oklch(80% 0.101 291.2)",
+          "oklch(95% 0.101 291.2)"
+        ]
+      },
+      "corcho-rosa": {
+        "role": "primary",
+        "displayName": "Chinche rosa (Corcho)",
+        "canonical": "oklch(84.1% 0.078 0.7)",
+        "cssVar": "acento rosa en oscuro",
+        "theme": "corcho",
+        "tonalRamp": [
+          "oklch(15% 0.078 0.7)",
+          "oklch(25% 0.078 0.7)",
+          "oklch(35% 0.078 0.7)",
+          "oklch(45% 0.078 0.7)",
+          "oklch(55% 0.078 0.7)",
+          "oklch(65% 0.078 0.7)",
+          "oklch(80% 0.078 0.7)",
+          "oklch(95% 0.078 0.7)"
+        ]
+      },
+      "corcho-rosa-claro": {
+        "role": "primary",
+        "displayName": "Chinche rosa (Corcho, claro)",
+        "canonical": "oklch(30.8% 0.093 1.1)",
+        "cssVar": "acento rosa en claro",
+        "theme": "corcho",
+        "tonalRamp": [
+          "oklch(15% 0.093 1.1)",
+          "oklch(25% 0.093 1.1)",
+          "oklch(35% 0.093 1.1)",
+          "oklch(45% 0.093 1.1)",
+          "oklch(55% 0.093 1.1)",
+          "oklch(65% 0.093 1.1)",
+          "oklch(80% 0.093 1.1)",
+          "oklch(95% 0.093 1.1)"
+        ]
       }
     },
     "typographyMeta": {
@@ -1737,6 +2281,10 @@
       "cassette-lado": {
         "displayName": "Lado (Lado A / B)",
         "purpose": "Título de sección en Lado A / B: Kalam 700 a 1.375rem (--font-hand, sin precarga, solo en esta variante), con el rótulo \"Lado A · \", \"Lado B · \" o \"Cinta N · Lado A/B · \" delante y subrayado de tinta de 2 px. Los nombres van en Nunito por defecto; admite Bricolage y Space Mono."
+      },
+      "corcho-nombre": {
+        "displayName": "Nombre de nota (Corcho)",
+        "purpose": "Nombre de cada nota en Corcho: Nunito 700 por defecto (en Técnico es 500); admite Bricolage y Fraunces. El título de sección conserva 1.25rem a 600, derecho sobre su cinta; Corcho no numera secciones."
       }
     },
     "shadows": [
@@ -1784,6 +2332,36 @@
         "name": "cassette-aro-avatar",
         "value": "0 0 0 3px var(--color-bg), 0 0 0 5px var(--color-fg)",
         "purpose": "Aro de tinta del avatar en Lado A / B; spread puro, no elevación ni foco."
+      },
+      {
+        "name": "corcho-nota",
+        "value": "0 1px 2px rgb(0 0 0 / 45%), 0 6px 14px -6px rgb(0 0 0 / 60%) (oscuro); 0 1px 2px rgb(60 35 10 / 25%), 0 6px 14px -6px rgb(60 35 10 / 45%) (claro)",
+        "purpose": "--note-shadow: el papel de cada nota, destacado de arriba y chapita; vive en el pseudo-elemento torcido. Excepción de Corcho a \"solo spread puro\"."
+      },
+      {
+        "name": "corcho-nota-despegada",
+        "value": "0 2px 3px rgb(0 0 0 / 45%), 0 10px 20px -6px rgb(0 0 0 / 65%) (oscuro); 0 2px 3px rgb(60 35 10 / 25%), 0 10px 20px -6px rgb(60 35 10 / 50%) (claro)",
+        "purpose": "--note-shadow-lift: hover y foco despegan la nota del corcho."
+      },
+      {
+        "name": "corcho-chinche",
+        "value": "background: radial-gradient(circle at 35% 32%, var(--pin-gleam) 0 2px, var(--pin) 2.5px); box-shadow: inset 0 0 0 1px var(--pin-rim), 0 2px 3px rgb(0 0 0 / 40%)",
+        "purpose": "Cabeza de la chinche de 14 px: brillo, borde interior y sombra corta."
+      },
+      {
+        "name": "corcho-hilo",
+        "value": "1px 1px 1px rgb(0 0 0 / 25%)",
+        "purpose": "Sombra del hilo rojo de 2 px."
+      },
+      {
+        "name": "corcho-cinta",
+        "value": "0 1px 2px rgb(0 0 0 / 18%)",
+        "purpose": "Sombra de la cinta del título."
+      },
+      {
+        "name": "corcho-polaroid",
+        "value": "0 0 0 6px var(--polaroid), 0 16px 0 6px var(--polaroid), 0 18px 14px 4px rgb(0 0 0 / 30%)",
+        "purpose": "Marco de polaroid del avatar (spread, con la orilla de abajo más ancha) y su sombra; la pieza entera torcida -2°."
       }
     ],
     "motion": [
@@ -1841,6 +2419,11 @@
         "name": "cassette-escribir",
         "value": "900ms steps(24, end) backwards, clip-path inset revelado de izquierda a derecha",
         "purpose": "Firma de Lado A / B: el título del primer lado se escribe de izquierda a derecha al cargar, una vez. Quieto con movimiento reducido."
+      },
+      {
+        "name": "corcho-clavar",
+        "value": "320ms var(--ease-out) backwards, translateY(-6px) scale(1.7) → none; escalonado 0/120/240/360/480ms (la 5.ª y siguientes a 480ms)",
+        "purpose": "Firma de Corcho: las chinches del primer grupo se clavan una por una al cargar, una vez. Quietas con movimiento reducido; la nota en vivo no late."
       }
     ],
     "breakpoints": [
@@ -1882,6 +2465,7 @@
         "tecnico",
         "punto",
         "cassette",
+        "corcho",
         "subte",
         "lomo"
       ],
@@ -1980,7 +2564,7 @@
           "light": "#c9d4ee",
           "note": "--rule: renglón de 1 px bajo cada tema, decorativo, en vez del filete."
         },
-        "side": "Título de sección en Kalam 700 (1.375rem) con subrayado de tinta de 2 px. Rótulo por contador CSS: 1.ª \"Lado A\", 2.ª \"Lado B\"; desde la 3.ª \"Cinta N · Lado A/B\" (la cinta sube cada dos secciones). Numera lados, nunca temas. La etiqueta editable por el dueño llega en un PR siguiente.",
+        "side": "Título de sección en Kalam 700 (1.375rem) con subrayado de tinta de 2 px. Rótulo por contador CSS: 1.ª \"Lado A\", 2.ª \"Lado B\"; desde la 3.ª \"Cinta N · Lado A/B\" (la cinta sube cada dos secciones). Numera lados, nunca temas. Si el dueño escribe un rótulo de sección (sections.label, data-label en el h2), reemplaza a \"Lado A/B\" o \"Cinta N · Lado A/B\" en esa sección, con \" · \" antes del título; vacío, vuelve al automático.",
         "handFont": "Kalam 700 (--font-hand, @fontsource/kalam latin woff2, respaldo cursive), declarada en astro.config.mjs y cargada solo en esta variante (PublicLayout.astro), sin precarga.",
         "shapes": [
           "rows",
@@ -2074,7 +2658,7 @@
           "ring": "4px del color de la línea"
         },
         "segment": "7px de ancho, del centro de una estación al de la siguiente; termina en la última; sin tramo si la sección tiene una sola estación; el primero con esquinas de arriba de 4px.",
-        "badge": "Chapa \"L<n>\" (contador por sección) del color de la línea, texto en --color-bg, fuente del cuerpo 0.875rem 700, mínimo 2.75rem, esquinas de 4px. Numera secciones, nunca links.",
+        "badge": "Chapa \"L<n>\" (contador por sección) del color de la línea, texto en --color-bg, fuente del cuerpo 0.875rem 700, mínimo 2.75rem, esquinas de 4px. Numera secciones, nunca links. Si el dueño escribe un rótulo de sección (sections.label, data-label en el h2), la chapa lleva ese texto en vez de \"L<n>\" (y crece si es largo); vacío, vuelve al automático.",
         "shapes": [
           "rows",
           "cards"
@@ -2138,7 +2722,7 @@
         },
         "spine": "Filete continuo de 1 px en --color-fg-muted, centrado en el carril de 1.75rem, del primer capítulo al final.",
         "stitch": "Puntada de 14 × 3 px en la tela, esquinas de 2 px, con dos agujeros de costura de 3 px en tinta apagada a 2 px de cada extremo; scaleX(1.3) en hover y foco.",
-        "chapter": "Contador por sección en romanos (upper-roman) a cuerpo completo en la tela + \" · \" + título en versalitas armadas; filete sólido de 1 px de tinta debajo. Numera capítulos, nunca entradas.",
+        "chapter": "Contador por sección en romanos (upper-roman) a cuerpo completo en la tela + \" · \" + título en versalitas armadas; filete sólido de 1 px de tinta debajo. Numera capítulos, nunca entradas. Si el dueño escribe un rótulo de sección (sections.label, data-label en el h2), reemplaza al numeral romano, con \" · \" antes del título; vacío, vuelve al automático.",
         "shapes": [
           "rows",
           "cards"
@@ -2158,6 +2742,82 @@
           "Capítulos numerados en romanos (nunca entradas), en versalitas y con filete de tinta",
           "Filete punteado entre entradas en vez del sólido",
           "Contorno decorativo de 1 px en el ex libris (el foco sigue sólido)"
+        ]
+      },
+      "corcho": {
+        "accents": {
+          "cielo": {
+            "dark": "#a9c8ff",
+            "light": "#0d2a5c",
+            "pin": "azul",
+            "default": true
+          },
+          "turquesa": {
+            "dark": "#86d6c8",
+            "light": "#08362f",
+            "pin": "verde"
+          },
+          "lavanda": {
+            "dark": "#cdbdf7",
+            "light": "#33245f",
+            "pin": "violeta"
+          },
+          "rosa": {
+            "dark": "#f7b6c8",
+            "light": "#53162d",
+            "pin": "rosa"
+          },
+          "hueso": {
+            "dark": "#f4ead6",
+            "light": "#24180e",
+            "pin": "la tinta misma"
+          }
+        },
+        "pin": "El acento es la cabeza de cada chinche (14 px, brillo y borde interior): la de cada nota, la segunda del destacado con acento, la de los destacados de arriba y la de la miniatura. Nunca el hilo, la cinta ni el papel. Coral, ámbar y arena no se admiten: el rojo es del hilo y el amarillo, del en vivo.",
+        "live": {
+          "dark": {
+            "note": "#f5d24b",
+            "pin": "#ff7a6b",
+            "ink": "#241a12",
+            "colorLive": "#ffd84d"
+          },
+          "light": {
+            "note": "#ffe066",
+            "pin": "#d8291d",
+            "ink": "#24180e",
+            "colorLive": "#3e2a00"
+          },
+          "note": "La nota en vivo es amarilla (--note-live) con la chinche roja (--pin-live), en los links y en los destacados de arriba; sin pulso. Texto, etiqueta, cronómetro, ícono, flecha y filete del último video en --note-live-ink. El foco sobre la nota amarilla va en la tinta y por dentro del papel (outline-offset: -3px). El amarillo no se usa para nada más."
+        },
+        "string": {
+          "dark": "#e0473b",
+          "light": "#a11f17",
+          "note": "--string: hilo rojo de 2 px, decorativo y distinto de la chinche en vivo. Baja desde la cinta del título hasta el centro de la primera chinche y sigue de chinche en chinche (a 20 px del borde de la nota); termina en la última. No pasa por los destacados de arriba."
+        },
+        "tape": "--tape: tira de papel detrás del título (fit-content, 0.25rem × 0.75rem), orillas rasgadas por clip-path, torcida -1.2° (0.9° en las pares), sin filete. Es la única cinta: las notas no llevan.",
+        "tilt": "El papel se tuerce, el texto nunca: la inclinación vive en un pseudo-elemento detrás del texto (notas -0.9° / 0.7° / -0.3° cada tercera; destacados de arriba -0.5° / 0.6°; cinta -1.2° / 0.9°). En rows el papel va derecho. La polaroid del avatar se tuerce entera (-2°).",
+        "shapes": [
+          "cards",
+          "rows"
+        ],
+        "defaultShape": "cards",
+        "fonts": [
+          "nunito",
+          "bricolage",
+          "fraunces"
+        ],
+        "defaultFont": "nunito",
+        "sectionMark": null,
+        "thread": false,
+        "jackCol": "0px",
+        "radiusMd": "3px",
+        "exceptions": [
+          "Sin hilo trenzado ni carril de jacks: hilo rojo recto de chinche en chinche",
+          "Notas con papel y sombra difusa (--note-shadow, --note-shadow-lift) en vez de filas con filete",
+          "Papel torcido en pseudo-elementos detrás del texto; la polaroid entera a -2°",
+          "Chinches en vez de jacks; la nota en vivo sin pulso (la señal es el papel amarillo)",
+          "Títulos sobre cinta, sin filete",
+          "Foco por dentro (-3px, en la tinta de la nota) solo sobre la nota amarilla"
         ]
       }
     },
@@ -2343,6 +3003,38 @@
       "description": "Recuadro de página: borde de 1 px de tinta con doble filete de 3 px arriba, sin fondo ni esquinas.",
       "html": "<a class=\"ds-lomo-card\" href=\"#\"><span class=\"ds-lomo-card-name\">Mi newsletter</span><span class=\"ds-lomo-card-meta\">newsletter.example</span></a>",
       "css": ".ds-lomo-card{display:block;width:20rem;padding:0.75rem 1rem;border:1px solid #efe8da;border-top:3px double #efe8da;border-radius:0;background:none;color:#efe8da;text-decoration:none} .ds-lomo-card:focus-visible{outline:2px solid #efe8da;outline-offset:4px} .ds-lomo-card-name{display:block;font-family:Fraunces,Georgia,serif;font-size:1.0625rem;font-weight:500} .ds-lomo-card-meta{display:block;color:#c8bfae;font-size:0.8125rem}"
+    },
+    {
+      "name": "Notas con hilo (Corcho)",
+      "kind": "custom",
+      "refersTo": "corcho-nota",
+      "description": "Una sección de Corcho: el título sobre su cinta, las notas torcidas en alternancia con su chinche en el acento y el hilo rojo que baja de la cinta y va de chinche en chinche. La segunda nota es el destacado con acento, con su segunda chinche arriba a la derecha.",
+      "html": "<section class=\"ds-corcho\"><h2 class=\"ds-corcho-cinta\">Redes</h2><div class=\"ds-corcho-nota is-first\"><span class=\"ds-corcho-chinche\" aria-hidden=\"true\"></span><a class=\"ds-corcho-link\" href=\"#\"><span class=\"ds-corcho-name\">YouTube</span><span class=\"ds-corcho-meta\">@juedsay</span></a></div><div class=\"ds-corcho-nota is-highlighted\"><span class=\"ds-corcho-chinche\" aria-hidden=\"true\"></span><span class=\"ds-corcho-chinche is-second\" aria-hidden=\"true\"></span><a class=\"ds-corcho-link\" href=\"#\"><span class=\"ds-corcho-name\">Instagram</span><span class=\"ds-corcho-meta\">@juedsay</span></a></div></section>",
+      "css": ".ds-corcho{display:grid;width:22rem;padding:1rem;background:#e6cba3;color:#24180e;font-family:system-ui,sans-serif} .ds-corcho-cinta{position:relative;z-index:0;justify-self:start;width:fit-content;margin:0 0 0.75rem 0.25rem;padding:0.25rem 0.75rem;font-family:Nunito,system-ui,sans-serif;font-size:1.25rem;font-weight:600;line-height:1.2} .ds-corcho-cinta::after{content:\"\";position:absolute;z-index:-1;inset:0;background:#f2e8c9;box-shadow:0 1px 2px rgb(0 0 0 / 18%);clip-path:polygon(0 6%,2% 0,98% 4%,100% 0,99% 50%,100% 94%,97% 100%,1% 96%,0 100%,1% 48%);transform:rotate(-1.2deg)} .ds-corcho-nota{position:relative;isolation:isolate;margin-bottom:0.75rem;padding:0 1rem 0 2.75rem} .ds-corcho-nota::before{content:\"\";position:absolute;z-index:-1;inset:0;border-radius:3px;background:#fffaee;box-shadow:0 1px 2px rgb(60 35 10 / 25%),0 6px 14px -6px rgb(60 35 10 / 45%);transform:rotate(-0.9deg)} .ds-corcho-nota.is-highlighted::before{transform:rotate(0.7deg)} .ds-corcho-nota.is-first::after{content:\"\";position:absolute;z-index:1;top:19px;left:20px;width:2px;height:calc(100% + 0.75rem);border-radius:1px;background:#a11f17;box-shadow:1px 1px 1px rgb(0 0 0 / 25%)} .ds-corcho-nota.is-first .ds-corcho-link::before{content:\"\";position:absolute;z-index:1;bottom:calc(100% - 19px);left:20px;width:2px;height:calc(0.75rem + 19px);border-radius:1px;background:#a11f17} .ds-corcho-chinche{position:absolute;z-index:2;top:12px;left:14px;width:14px;height:14px;border-radius:50%;background:radial-gradient(circle at 35% 32%,rgb(255 255 255 / 55%) 0 2px,#0d2a5c 2.5px);box-shadow:inset 0 0 0 1px rgb(0 0 0 / 25%),0 2px 3px rgb(0 0 0 / 40%);animation:ds-clavar 320ms cubic-bezier(0.16,1,0.3,1) backwards} .ds-corcho-nota.is-highlighted .ds-corcho-chinche{animation-delay:120ms} .ds-corcho-chinche.is-second{top:-5px;right:12px;left:auto;animation:none} .ds-corcho-link{display:block;min-height:3.25rem;padding:0.75rem 0;color:inherit;text-decoration:none} .ds-corcho-link:focus-visible{outline:2px solid #24180e;outline-offset:4px;border-radius:4px} .ds-corcho-name{display:block;font-family:Nunito,system-ui,sans-serif;font-size:1.0625rem;font-weight:700;line-height:1.3} .ds-corcho-meta{display:block;color:#3a2a1b;font-size:0.8125rem} @keyframes ds-clavar{from{transform:translateY(-6px) scale(1.7)}to{transform:none}} @media (prefers-reduced-motion: reduce){.ds-corcho-chinche{animation:none}}"
+    },
+    {
+      "name": "Nota en vivo (Corcho)",
+      "kind": "custom",
+      "refersTo": "corcho-nota-en-vivo",
+      "description": "La nota amarilla con la chinche roja, sin pulso; el texto en la tinta de la nota y el foco en tinta, por dentro del papel.",
+      "html": "<div class=\"ds-corcho-live\"><span class=\"ds-corcho-live-chinche\" aria-hidden=\"true\"></span><a class=\"ds-corcho-live-link\" href=\"#\"><span class=\"ds-corcho-live-name\">Twitch</span><span class=\"ds-corcho-live-meta\"><b>En vivo</b> · <time>1:24:05</time> · Programando Plektia</span></a></div>",
+      "css": ".ds-corcho-live{position:relative;isolation:isolate;width:20rem;margin:1rem;padding:0 1rem 0 2.75rem;color:#241a12} .ds-corcho-live::before{content:\"\";position:absolute;z-index:-1;inset:0;border-radius:3px;background:#f5d24b;box-shadow:0 1px 2px rgb(0 0 0 / 45%),0 6px 14px -6px rgb(0 0 0 / 60%);transform:rotate(-0.9deg)} .ds-corcho-live-chinche{position:absolute;z-index:2;top:12px;left:14px;width:14px;height:14px;border-radius:50%;background:radial-gradient(circle at 35% 32%,rgb(255 255 255 / 35%) 0 2px,#ff7a6b 2.5px);box-shadow:inset 0 0 0 1px rgb(0 0 0 / 45%),0 2px 3px rgb(0 0 0 / 40%)} .ds-corcho-live-link{display:block;min-height:3.25rem;padding:0.75rem 0;color:inherit;text-decoration:none} .ds-corcho-live-link:focus-visible{outline:2px solid #241a12;outline-offset:-3px;border-radius:3px} .ds-corcho-live-name{display:block;font-family:Nunito,system-ui,sans-serif;font-size:1.0625rem;font-weight:700;line-height:1.3} .ds-corcho-live-meta{display:block;font-size:0.8125rem} .ds-corcho-live-meta b{font-weight:600} .ds-corcho-live-meta time{font-family:ui-monospace,monospace;font-variant-numeric:tabular-nums}"
+    },
+    {
+      "name": "Polaroid (Corcho)",
+      "kind": "custom",
+      "refersTo": "avatar",
+      "description": "El avatar en marco de polaroid: 6 px de marco, la orilla de abajo más ancha y la pieza entera torcida -2°.",
+      "html": "<div class=\"ds-avatar-corcho\" aria-hidden=\"true\">J</div>",
+      "css": ".ds-avatar-corcho{display:grid;place-items:center;width:88px;height:88px;margin:12px 12px 34px;border-radius:2px;background:#33291f;color:#f4ead6;box-shadow:0 0 0 6px #efe6d2,0 16px 0 6px #efe6d2,0 18px 14px 4px rgb(0 0 0 / 30%);transform:rotate(-2deg);font-family:Nunito,system-ui,sans-serif;font-size:2rem;font-weight:700}"
+    },
+    {
+      "name": "Destacado arriba (Corcho)",
+      "kind": "card",
+      "refersTo": "corcho-nota",
+      "description": "Nota grande con el papel torcido -0.5° y una chinche centrada sobre la orilla de arriba; fuera del hilo.",
+      "html": "<a class=\"ds-corcho-card\" href=\"#\"><span class=\"ds-corcho-card-name\">GitHub</span><span class=\"ds-corcho-card-meta\">@juedsay</span></a>",
+      "css": ".ds-corcho-card{position:relative;isolation:isolate;display:block;width:20rem;margin:1rem;padding:0.75rem 1rem;border-radius:3px;color:#24180e;text-decoration:none} .ds-corcho-card::before{content:\"\";position:absolute;z-index:-1;inset:0;border-radius:3px;background:#fffaee;box-shadow:0 1px 2px rgb(60 35 10 / 25%),0 6px 14px -6px rgb(60 35 10 / 45%);transform:rotate(-0.5deg)} .ds-corcho-card::after{content:\"\";position:absolute;z-index:2;top:-5px;left:calc(50% - 7px);width:14px;height:14px;border-radius:50%;background:radial-gradient(circle at 35% 32%,rgb(255 255 255 / 55%) 0 2px,#0d2a5c 2.5px);box-shadow:inset 0 0 0 1px rgb(0 0 0 / 25%),0 2px 3px rgb(0 0 0 / 40%)} .ds-corcho-card:focus-visible{outline:2px solid #24180e;outline-offset:4px} .ds-corcho-card-name{display:block;font-family:Nunito,system-ui,sans-serif;font-size:1.0625rem;font-weight:700} .ds-corcho-card-meta{display:block;color:#3a2a1b;font-size:0.8125rem}"
     }
   ],
   "narrative": {
@@ -2461,6 +3153,26 @@
         "name": "La regla de la redonda",
         "body": "Fraunces se sirve solo en redonda (normal): ningún nombre en display lleva itálica, que el navegador falsearía. La itálica de Lomo cosido es solo de la bio, en la fuente del cuerpo.",
         "section": "typography"
+      },
+      {
+        "name": "La regla del amarillo",
+        "body": "El amarillo es la señal en vivo de Corcho y de nada más: la nota en vivo es amarilla y lleva la chinche roja, en los links y también en los destacados de arriba. Ninguna otra nota, chinche o cinta es amarilla (por eso ámbar no es un acento admitido), y la nota en vivo no late.",
+        "section": "colors"
+      },
+      {
+        "name": "La regla del hilo rojo",
+        "body": "El hilo es rojo y no es la señal en vivo: une chinches, no anuncia nada. Ninguna chinche de acento es roja ni rojiza (por eso coral queda afuera), y la chinche en vivo lleva su propio rojo, distinto del hilo.",
+        "section": "colors"
+      },
+      {
+        "name": "La regla del papel torcido",
+        "body": "En Corcho el papel se tuerce y el texto nunca: toda inclinación vive en un pseudo-elemento detrás del texto (notas, destacados de arriba, cinta del título). Nombre, metadato, ícono, flecha y foco quedan derechos; solo la polaroid del avatar se tuerce entera.",
+        "section": "typography"
+      },
+      {
+        "name": "La regla de las chinches",
+        "body": "En Corcho cada nota lleva su chinche arriba a la izquierda; el destacado con acento suma una segunda en la orilla de arriba a la derecha y cada destacado de arriba se clava con una chinche centrada en su orilla. El hilo baja desde la cinta del título hasta la primera chinche y sigue de chinche en chinche. Ninguna nota lleva cinta: la cinta es solo de los títulos.",
+        "section": "components"
       }
     ],
     "dos": [
@@ -2495,7 +3207,14 @@
       "**Do** trazar el filete del capítulo siempre en tinta, con cualquier acento.",
       "**Do** reservar el rojo para el en vivo: la cinta y la puntada en `--ribbon`, el texto en `--color-live`.",
       "**Do** marcar el destacado con acento solo con el nombre en la tela a 700, sin caja.",
-      "**Do** coser solo las puntadas del primer cuadernillo al cargar, y dejarlas quietas con movimiento reducido."
+      "**Do** coser solo las puntadas del primer cuadernillo al cargar, y dejarlas quietas con movimiento reducido.",
+      "**Do** clavar cada nota con su chinche de 14 px en el acento, arriba a la izquierda.",
+      "**Do** torcer solo el papel, en un pseudo-elemento detrás del texto; el texto, los íconos, la flecha y el foco quedan derechos.",
+      "**Do** bajar el hilo rojo desde la cinta del título hasta la primera chinche, seguirlo de chinche en chinche y cortarlo en la última.",
+      "**Do** reservar el amarillo para el en vivo: la nota amarilla con la chinche roja, también en los destacados de arriba.",
+      "**Do** llevar el foco de la nota amarilla a la tinta y por dentro del papel.",
+      "**Do** clavar el destacado con acento con una segunda chinche en la orilla de arriba a la derecha, y cada destacado de arriba con una chinche centrada en su orilla.",
+      "**Do** clavar solo las chinches del primer grupo al cargar, y dejarlas quietas con movimiento reducido."
     ],
     "donts": [
       "**Don't** usar la lima para foco, hover, selección, botones o decoración.",
@@ -2527,7 +3246,15 @@
       "**Don't** poner itálica en nombres de Fraunces: se sirve solo en redonda.",
       "**Don't** pintar el filete del capítulo con el acento.",
       "**Don't** usar tarjetas con sombra ni esquinas redondeadas: el libro es plano y recto.",
-      "**Don't** sacar las excepciones de Lomo cosido de `[data-theme=\"lomo\"]`."
+      "**Don't** sacar las excepciones de Lomo cosido de `[data-theme=\"lomo\"]`.",
+      "**Don't** torcer texto: ni el título, ni el nombre, ni la flecha.",
+      "**Don't** poner cinta en las notas: la cinta es solo de los títulos.",
+      "**Don't** usar el amarillo fuera del en vivo ni admitir ámbar como acento.",
+      "**Don't** usar chinches de acento rojas o rojizas (coral), ni el rojo del hilo para la chinche en vivo.",
+      "**Don't** hacer latir la nota en vivo: la señal es el papel amarillo con la chinche roja.",
+      "**Don't** pasar el hilo por los destacados de arriba ni seguirlo después de la última chinche.",
+      "**Don't** volver a jacks o al hilo trenzado dentro de Corcho, ni numerar secciones o notas.",
+      "**Don't** sacar las excepciones de Corcho de `[data-theme=\"corcho\"]`."
     ]
   }
 }

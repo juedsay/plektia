@@ -72,3 +72,17 @@ FIRST VIEWPORT: Franja de marca arriba; avatar con aro de tinta; nombre y bio; "
 FORM: Lado A / B, desafiante competitivo del seed 6c013a65 elegido por el usuario. Firma: el título del primer lado se escribe de izquierda a derecha al cargar; quieto con movimiento reducido.
 
 FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, DESIGN.md, and every shipping raster carrying its provenance
+
+## Direction contract — Corcho (familia Cercano)
+
+THESIS: La página es un tablero de corcho: cada link es una nota de papel clavada con una chinche, y un hilo rojo tenso une las chinches de cada sección, como el tablero de alguien que arma su mapa de cosas. Rechaza el "moodboard" de fotos y washi tape por todos lados: lo cercano sale del papel clavado a mano y del hilo, no de la decoración.
+
+OWN-WORLD: Corcho claro (#e6cba3) con notas de papel crema (#fffaee) y tinta marrón casi negra (#24180e); de noche, corcho oscuro (#241a12) con notas de papel en penumbra (#33291f) y tinta clara. Chinches en el color del acento (azul, verde, violeta, rosa o la tinta); el hilo es rojo (#a11f17 / #e0473b) y no es la señal en vivo. Títulos de sección sobre una tira de cinta de papel. Nunito por defecto. Amarillo reservado al en vivo: la nota amarilla con la chinche roja.
+
+STORY: El visitante ve la polaroid (avatar) y el nombre, encuentra la nota amarilla si está en vivo, sigue el hilo por cada sección y toca la nota que busca.
+
+FIRST VIEWPORT: Barra superior; avatar en marco de polaroid apenas inclinado; nombre y bio sobre el corcho; "Redes" en su tira de cinta; las notas clavadas, levemente torcidas en alternancia, con sus chinches unidas por el hilo rojo; la nota en vivo, amarilla con chinche roja.
+
+FORM: Corcho, propuesta aprobada por el usuario en la tanda de nueve mockups. Firma: las chinches del primer grupo se clavan una por una al cargar (bajan de escala); quietas con movimiento reducido. El papel se inclina, el texto no: la inclinación vive en un pseudo-elemento detrás del texto.
+
+FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, DESIGN.md, and every shipping raster carrying its provenance

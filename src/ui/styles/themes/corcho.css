@@ -1,0 +1,468 @@
+/*
+ * Corcho (familia Cercano, SPEC-styles): un tablero de corcho. Cada link es una
+ * nota de papel clavada con una chinche y un hilo rojo une las chinches de cada
+ * sección. El amarillo es solo de la nota en vivo. Se carga solo en las páginas
+ * con este estilo. AAA medido en tests/unit/ui/theme-tokens.test.ts.
+ */
+[data-theme="corcho"] {
+  color-scheme: dark;
+
+  --color-bg: #241a12;
+  --color-fg: #f4ead6;
+  --color-fg-muted: #d9c9ad;
+  --color-line: #5c4a36;
+  --color-line-soft: #3f3226;
+  --color-surface: #33291f;
+  --color-live: #ffd84d;
+  --color-live-ink: #241a12;
+  --color-accent: var(--accent-on-dark, #a9c8ff);
+  --color-thread: var(--color-accent);
+  --color-thread-twist: #241a12;
+  --color-focus: #f4ead6;
+  --color-selection-bg: #f4ead6;
+  --color-selection-fg: #241a12;
+
+  /* Decorativos: el hilo, la cinta de los títulos, el marco de la polaroid y la nota en vivo. */
+  --string: #e0473b;
+  --tape: #4a3d2a;
+  --polaroid: #efe6d2;
+  --photo: #33291f;
+  --note-live: #f5d24b;
+  --note-live-ink: #241a12;
+  --pin-live: #ff7a6b;
+  --pin-gleam: rgb(255 255 255 / 35%);
+  --pin-rim: rgb(0 0 0 / 45%);
+  --note-shadow: 0 1px 2px rgb(0 0 0 / 45%), 0 6px 14px -6px rgb(0 0 0 / 60%);
+  --note-shadow-lift: 0 2px 3px rgb(0 0 0 / 45%), 0 10px 20px -6px rgb(0 0 0 / 65%);
+
+  --jack-col: 0px;
+  --radius-md: 3px;
+}
+
+[data-theme="corcho"][data-mode="light"] {
+  color-scheme: light;
+
+  --color-bg: #e6cba3;
+  --color-fg: #24180e;
+  --color-fg-muted: #3a2a1b;
+  --color-line: #b99a72;
+  --color-line-soft: #d9bd96;
+  --color-surface: #fffaee;
+  --color-live: #3e2a00;
+  --color-live-ink: #fffaee;
+  --color-accent: var(--accent-on-light, #0d2a5c);
+  --color-thread: var(--color-accent);
+  --color-thread-twist: #e6cba3;
+  --color-focus: #24180e;
+  --color-selection-bg: #24180e;
+  --color-selection-fg: #fffaee;
+
+  --string: #a11f17;
+  --tape: #f2e8c9;
+  --polaroid: #fffaee;
+  --photo: #e3d3b4;
+  --note-live: #ffe066;
+  --note-live-ink: #24180e;
+  --pin-live: #d8291d;
+  --pin-gleam: rgb(255 255 255 / 55%);
+  --pin-rim: rgb(0 0 0 / 25%);
+  --note-shadow: 0 1px 2px rgb(60 35 10 / 25%), 0 6px 14px -6px rgb(60 35 10 / 45%);
+  --note-shadow-lift: 0 2px 3px rgb(60 35 10 / 25%), 0 10px 20px -6px rgb(60 35 10 / 50%);
+}
+
+@media (prefers-color-scheme: light) {
+  [data-theme="corcho"][data-mode="auto"] {
+    color-scheme: light;
+
+    --color-bg: #e6cba3;
+    --color-fg: #24180e;
+    --color-fg-muted: #3a2a1b;
+    --color-line: #b99a72;
+    --color-line-soft: #d9bd96;
+    --color-surface: #fffaee;
+    --color-live: #3e2a00;
+    --color-live-ink: #fffaee;
+    --color-accent: var(--accent-on-light, #0d2a5c);
+    --color-thread: var(--color-accent);
+    --color-thread-twist: #e6cba3;
+    --color-focus: #24180e;
+    --color-selection-bg: #24180e;
+    --color-selection-fg: #fffaee;
+
+    --string: #a11f17;
+    --tape: #f2e8c9;
+    --polaroid: #fffaee;
+    --photo: #e3d3b4;
+    --note-live: #ffe066;
+    --note-live-ink: #24180e;
+    --pin-live: #d8291d;
+    --pin-gleam: rgb(255 255 255 / 55%);
+    --pin-rim: rgb(0 0 0 / 25%);
+    --note-shadow: 0 1px 2px rgb(60 35 10 / 25%), 0 6px 14px -6px rgb(60 35 10 / 45%);
+    --note-shadow-lift: 0 2px 3px rgb(60 35 10 / 25%), 0 10px 20px -6px rgb(60 35 10 / 50%);
+  }
+}
+
+/* Chinches: azul, verde, violeta, rosa o la tinta (el rojo es del hilo; el amarillo, del en vivo). */
+[data-theme="corcho"][data-accent="cielo"] {
+  --accent-on-dark: #a9c8ff;
+  --accent-on-light: #0d2a5c;
+}
+
+[data-theme="corcho"][data-accent="turquesa"] {
+  --accent-on-dark: #86d6c8;
+  --accent-on-light: #08362f;
+}
+
+[data-theme="corcho"][data-accent="lavanda"] {
+  --accent-on-dark: #cdbdf7;
+  --accent-on-light: #33245f;
+}
+
+[data-theme="corcho"][data-accent="rosa"] {
+  --accent-on-dark: #f7b6c8;
+  --accent-on-light: #53162d;
+}
+
+[data-theme="corcho"][data-accent="hueso"] {
+  --accent-on-dark: #f4ead6;
+  --accent-on-light: #24180e;
+}
+
+/* ── Identidad: la foto, en su marco de polaroid apenas torcido ────────── */
+[data-theme="corcho"] .avatar {
+  background: var(--photo);
+  margin-bottom: calc(var(--space-3) + 22px);
+  border-radius: 2px;
+  box-shadow:
+    0 0 0 6px var(--polaroid),
+    0 16px 0 6px var(--polaroid),
+    0 18px 14px 4px rgb(0 0 0 / 30%);
+  transform: rotate(-2deg);
+}
+
+/* ── Títulos de sección: escritos sobre una tira de cinta de papel ────── */
+[data-theme="corcho"] .bank h2 {
+  position: relative;
+  z-index: 0;
+  justify-self: start;
+  width: fit-content;
+  margin: 0 0 var(--space-3) var(--space-1);
+  padding: var(--space-1) var(--space-3);
+  border-bottom: 0;
+}
+
+/* La cinta se tuerce; el texto, no. */
+[data-theme="corcho"] .bank h2::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  background: var(--tape);
+  box-shadow: 0 1px 2px rgb(0 0 0 / 18%);
+  clip-path: polygon(
+    0 6%,
+    2% 0,
+    98% 4%,
+    100% 0,
+    99% 50%,
+    100% 94%,
+    97% 100%,
+    1% 96%,
+    0 100%,
+    1% 48%
+  );
+  transform: rotate(-1.2deg);
+}
+
+[data-theme="corcho"] .bank:nth-of-type(even) h2::after {
+  transform: rotate(0.9deg);
+}
+
+/* ── Las notas: papel clavado, con el hilo de chinche a chinche ─────────── */
+[data-theme="corcho"] .port {
+  position: relative;
+  grid-template-columns: minmax(0, 1fr);
+}
+
+[data-theme="corcho"] .port-body,
+[data-theme="corcho"] .patchbay[data-shape] .port-body {
+  position: relative;
+  isolation: isolate;
+  margin-bottom: var(--space-3);
+  padding: 0 var(--space-4) 0 2.75rem;
+  border: 0;
+  background: none;
+}
+
+/* El papel: detrás del texto, con su sombra, y torcido en alternancia. */
+[data-theme="corcho"] .port-body::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  box-shadow: var(--note-shadow);
+  transform: rotate(-0.9deg);
+}
+
+[data-theme="corcho"] .port:nth-child(even) .port-body::before {
+  transform: rotate(0.7deg);
+}
+
+[data-theme="corcho"] .port:nth-child(3n) .port-body::before {
+  transform: rotate(-0.3deg);
+}
+
+/* Fichas en fila: las notas derechas y casi pegadas. */
+[data-theme="corcho"] .patchbay[data-shape="rows"] .port-body {
+  margin-bottom: var(--space-1);
+}
+
+[data-theme="corcho"] .patchbay[data-shape="rows"] .port-body::before {
+  transform: none;
+}
+
+[data-theme="corcho"] .port-name {
+  font-weight: 700;
+}
+
+/* La chinche: una cabeza de color con su brillo y su borde, clavada arriba a la izquierda. */
+[data-theme="corcho"] .jack,
+[data-theme="corcho"] .highlight-card::after,
+[data-theme="corcho"] .port.is-highlighted .port-body::after {
+  --pin: var(--color-accent);
+
+  position: absolute;
+  z-index: 2;
+  top: 12px;
+  left: 14px;
+  width: 14px;
+  height: 14px;
+  margin: 0;
+  border: 0;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 32%, var(--pin-gleam) 0 2px, var(--pin) 2.5px);
+  box-shadow:
+    inset 0 0 0 1px var(--pin-rim),
+    0 2px 3px rgb(0 0 0 / 40%);
+}
+
+[data-theme="corcho"] .jack::before {
+  display: none;
+}
+
+[data-theme="corcho"] .port:is(:hover, :focus-within) .jack {
+  transform: translateY(-1px) scale(1.12);
+}
+
+/* Al pasar o enfocar, la nota se despega apenas del corcho. */
+[data-theme="corcho"] .port:is(:hover, :focus-within) .port-body::before {
+  box-shadow: var(--note-shadow-lift);
+}
+
+/* El hilo: baja desde la cinta del título hasta la primera chinche… */
+[data-theme="corcho"] .port:first-child::before {
+  content: "";
+  position: absolute;
+  z-index: 1;
+  bottom: calc(100% - 19px);
+  left: 20px;
+  width: 2px;
+  height: calc(var(--space-3) + 19px);
+  border-radius: 1px;
+  background: var(--string);
+  box-shadow: 1px 1px 1px rgb(0 0 0 / 25%);
+}
+
+/* …y sigue de chinche en chinche, sobre el papel. Termina en la última. */
+[data-theme="corcho"] .port:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  z-index: 1;
+  top: 19px;
+  left: 20px;
+  width: 2px;
+  height: 100%;
+  border-radius: 1px;
+  background: var(--string);
+  box-shadow: 1px 1px 1px rgb(0 0 0 / 25%);
+}
+
+/* La firma: las chinches del primer grupo se clavan una por una. */
+[data-theme="corcho"] .bank:first-of-type .jack {
+  animation: corcho-clavar 320ms var(--ease-out) backwards;
+}
+
+[data-theme="corcho"] .bank:first-of-type .port:nth-child(2) .jack {
+  animation-delay: 120ms;
+}
+
+[data-theme="corcho"] .bank:first-of-type .port:nth-child(3) .jack {
+  animation-delay: 240ms;
+}
+
+[data-theme="corcho"] .bank:first-of-type .port:nth-child(4) .jack {
+  animation-delay: 360ms;
+}
+
+[data-theme="corcho"] .bank:first-of-type .port:nth-child(n + 5) .jack {
+  animation-delay: 480ms;
+}
+
+@keyframes corcho-clavar {
+  from {
+    transform: translateY(-6px) scale(1.7);
+  }
+  to {
+    transform: none;
+  }
+}
+
+/* ── En vivo: la nota amarilla con la chinche roja (sin pulso) ─────────── */
+[data-theme="corcho"] :is(.port.is-live .port-body, .highlight-card.is-live) {
+  color: var(--note-live-ink);
+}
+
+[data-theme="corcho"] .port.is-live .port-body::before,
+[data-theme="corcho"] .highlight-card.is-live::before {
+  background: var(--note-live);
+}
+
+[data-theme="corcho"] .port.is-live .jack,
+[data-theme="corcho"] .highlight-card.is-live::after {
+  --pin: var(--pin-live);
+}
+
+[data-theme="corcho"] .port.is-live .jack::after {
+  display: none;
+}
+
+[data-theme="corcho"]
+  :is(.port.is-live, .highlight-card.is-live)
+  :is(.port-meta, .live-label, .live-time, .port-icon, .go) {
+  color: var(--note-live-ink);
+}
+
+[data-theme="corcho"] .port.is-live .latest-toggle {
+  border-top-color: var(--note-live-ink);
+}
+
+/* El foco, en tinta y por dentro del papel amarillo (afuera caería sobre el corcho). */
+[data-theme="corcho"] .port.is-live :focus-visible,
+[data-theme="corcho"] .highlight-card.is-live:focus-visible {
+  outline-color: var(--note-live-ink);
+  outline-offset: -3px;
+}
+
+/* ── Destacado con acento: la nota clavada con dos chinches ─────────────── */
+[data-theme="corcho"] .port.is-highlighted .port-body {
+  padding: 0 var(--space-4) 0 2.75rem;
+  border: 0;
+  border-radius: 0;
+  background: none;
+}
+
+/* La segunda chinche, en la orilla de arriba a la derecha: no pisa la flecha. */
+[data-theme="corcho"] .port.is-highlighted .port-body::after {
+  content: "";
+  top: -5px;
+  right: 12px;
+  left: auto;
+}
+
+/* Destacados arriba: notas grandes, clavadas al centro; el papel se tuerce, el texto no. */
+[data-theme="corcho"] .highlight-card {
+  position: relative;
+  isolation: isolate;
+  border: 0;
+  border-radius: var(--radius-md);
+  background: none;
+}
+
+[data-theme="corcho"] .highlight-card::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  box-shadow: var(--note-shadow);
+  transform: rotate(-0.5deg);
+}
+
+[data-theme="corcho"] .highlights li:nth-child(even) .highlight-card::before {
+  transform: rotate(0.6deg);
+}
+
+[data-theme="corcho"] .highlight-card:is(:hover, :focus-visible)::before {
+  box-shadow: var(--note-shadow-lift);
+}
+
+/* Clavada al centro, en la orilla de arriba: no pisa el texto. */
+[data-theme="corcho"] .highlight-card::after {
+  content: "";
+  top: -5px;
+  left: calc(50% - 7px);
+}
+
+/* Fila de íconos: chapitas de papel clavadas en el corcho. */
+[data-theme="corcho"] .icon-link {
+  border: 0;
+  background: var(--color-surface);
+  box-shadow: var(--note-shadow);
+}
+
+/* ── Miniatura del panel: dos notas clavadas, el hilo y la nota en vivo ── */
+[data-theme="corcho"].theme-sample .theme-sample-avatar {
+  border-radius: 1px;
+  box-shadow:
+    0 0 0 2px var(--polaroid),
+    0 5px 0 2px var(--polaroid);
+  transform: rotate(-3deg);
+}
+
+[data-theme="corcho"].theme-sample .theme-sample-row {
+  height: 14px;
+  padding-left: 3px;
+  border-bottom: 0;
+  border-radius: 1px;
+  background: var(--color-surface);
+  box-shadow: 0 1px 2px rgb(0 0 0 / 30%);
+}
+
+[data-theme="corcho"].theme-sample .theme-sample-row.is-live {
+  background: var(--note-live);
+}
+
+[data-theme="corcho"].theme-sample .theme-sample-mark {
+  position: relative;
+  z-index: 1;
+  width: 7px;
+  height: 7px;
+  border: 0;
+  background: var(--color-accent);
+}
+
+[data-theme="corcho"].theme-sample .theme-sample-row.is-live .theme-sample-mark {
+  background: var(--pin-live);
+}
+
+[data-theme="corcho"].theme-sample .theme-sample-row + .theme-sample-row::before {
+  bottom: 7px;
+  left: 6px;
+  height: 20px;
+  background: var(--string);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-theme="corcho"] .bank:first-of-type .jack {
+    animation: none;
+  }
+}
+
+/* La cinta del título es de papel, no del acento: sin el filete de Técnico. */
+[data-theme="corcho"][data-accent][data-mode] .bank h2 {
+  border-bottom: 0;
+}
