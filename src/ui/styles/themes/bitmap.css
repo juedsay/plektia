@@ -1,0 +1,343 @@
+/*
+ * Bitmap (familia Enérgico, SPEC-styles): un afiche de pantalla de 8 bits. El
+ * nombre y los títulos de sección van en letra pixelada a escala póster; los
+ * links, en listas finas. Esquinas en escalera, nunca redondeadas. El rosa es
+ * solo de la etiqueta "EN VIVO". Se carga solo en las páginas con este estilo.
+ * AAA medido en tests/unit/ui/theme-tokens.test.ts.
+ */
+[data-theme="bitmap"] {
+  color-scheme: dark;
+
+  --color-bg: #0e0f13;
+  --color-fg: #f2f3f7;
+  --color-fg-muted: #c4c7d0;
+  --color-line: #3a3d47;
+  --color-line-soft: #24262d;
+  --color-surface: #1a1c22;
+  --color-live: #ff9ecf;
+  --color-live-ink: #0e0f13;
+  --color-accent: var(--accent-on-dark, #8fc1ff);
+  --color-thread: var(--color-accent);
+  --color-thread-twist: #0e0f13;
+  --color-focus: #f2f3f7;
+  --color-selection-bg: #f2f3f7;
+  --color-selection-fg: #0e0f13;
+
+  /* Sin carril de jacks: la lista ocupa todo el ancho. */
+  --jack-col: 0px;
+  --radius-md: 0px;
+  --radius-sm: 0px;
+  /* La escalera de las esquinas: un píxel de 4 px. */
+  --pixel: 4px;
+}
+
+[data-theme="bitmap"][data-mode="light"] {
+  color-scheme: light;
+
+  --color-bg: #f3f3ee;
+  --color-fg: #111216;
+  --color-fg-muted: #33363d;
+  --color-line: #b9bab3;
+  --color-line-soft: #dddcd5;
+  --color-surface: #ffffff;
+  --color-live: #8a0f4f;
+  --color-live-ink: #ffffff;
+  --color-accent: var(--accent-on-light, #0f3f86);
+  --color-thread: var(--color-accent);
+  --color-thread-twist: #f3f3ee;
+  --color-focus: #111216;
+  --color-selection-bg: #111216;
+  --color-selection-fg: #f3f3ee;
+}
+
+@media (prefers-color-scheme: light) {
+  [data-theme="bitmap"][data-mode="auto"] {
+    color-scheme: light;
+
+    --color-bg: #f3f3ee;
+    --color-fg: #111216;
+    --color-fg-muted: #33363d;
+    --color-line: #b9bab3;
+    --color-line-soft: #dddcd5;
+    --color-surface: #ffffff;
+    --color-live: #8a0f4f;
+    --color-live-ink: #ffffff;
+    --color-accent: var(--accent-on-light, #0f3f86);
+    --color-thread: var(--color-accent);
+    --color-thread-twist: #f3f3ee;
+    --color-focus: #111216;
+    --color-selection-bg: #111216;
+    --color-selection-fg: #f3f3ee;
+  }
+}
+
+/* Barras y cursores: azul, verde agua, ámbar, violeta o la tinta (el rosa es del en vivo). */
+[data-theme="bitmap"][data-accent="cielo"] {
+  --accent-on-dark: #8fc1ff;
+  --accent-on-light: #0f3f86;
+}
+
+[data-theme="bitmap"][data-accent="turquesa"] {
+  --accent-on-dark: #6fe0cf;
+  --accent-on-light: #06473f;
+}
+
+[data-theme="bitmap"][data-accent="ambar"] {
+  --accent-on-dark: #ffd166;
+  --accent-on-light: #5a3b00;
+}
+
+[data-theme="bitmap"][data-accent="lavanda"] {
+  --accent-on-dark: #c8b6ff;
+  --accent-on-light: #3e2b80;
+}
+
+[data-theme="bitmap"][data-accent="hueso"] {
+  --accent-on-dark: #f2f3f7;
+  --accent-on-light: #111216;
+}
+
+/* Esquinas en escalera de dos píxeles: el recorte de toda caja de Bitmap. */
+[data-theme="bitmap"] {
+  --stairs: polygon(
+    0 calc(var(--pixel) * 2),
+    var(--pixel) calc(var(--pixel) * 2),
+    var(--pixel) var(--pixel),
+    calc(var(--pixel) * 2) var(--pixel),
+    calc(var(--pixel) * 2) 0,
+    calc(100% - var(--pixel) * 2) 0,
+    calc(100% - var(--pixel) * 2) var(--pixel),
+    calc(100% - var(--pixel)) var(--pixel),
+    calc(100% - var(--pixel)) calc(var(--pixel) * 2),
+    100% calc(var(--pixel) * 2),
+    100% calc(100% - var(--pixel) * 2),
+    calc(100% - var(--pixel)) calc(100% - var(--pixel) * 2),
+    calc(100% - var(--pixel)) calc(100% - var(--pixel)),
+    calc(100% - var(--pixel) * 2) calc(100% - var(--pixel)),
+    calc(100% - var(--pixel) * 2) 100%,
+    calc(var(--pixel) * 2) 100%,
+    calc(var(--pixel) * 2) calc(100% - var(--pixel)),
+    var(--pixel) calc(100% - var(--pixel)),
+    var(--pixel) calc(100% - var(--pixel) * 2),
+    0 calc(100% - var(--pixel) * 2)
+  );
+}
+
+/* ── Identidad: el avatar en su marco de píxeles; el nombre, a escala póster ── */
+[data-theme="bitmap"] .identity {
+  position: relative;
+}
+
+/* El marco: detrás del avatar (la foto recorta lo que cuelga de él). */
+[data-theme="bitmap"] .identity::before {
+  content: "";
+  position: absolute;
+  top: calc(var(--space-4) - 8px);
+  left: 50%;
+  width: 104px;
+  height: 104px;
+  background: var(--color-accent);
+  clip-path: var(--stairs);
+  translate: -50% 0;
+  pointer-events: none;
+}
+
+[data-theme="bitmap"] .avatar {
+  position: relative;
+  border-radius: 0;
+  box-shadow: none;
+  font-family: var(--font-pixel, var(--font-name));
+  font-size: 3rem;
+  font-weight: 700;
+  clip-path: var(--stairs);
+}
+
+[data-theme="bitmap"] .identity h1 {
+  margin-top: var(--space-3);
+  font-family: var(--font-pixel, var(--font-name));
+  font-size: clamp(2.75rem, 11.5vw, 4.5rem);
+  font-weight: 700;
+  letter-spacing: 0;
+  line-height: 1;
+}
+
+/* ── Títulos de sección: pixelados, con su barra de píxeles en el acento ── */
+[data-theme="bitmap"] .bank h2 {
+  margin-left: 0;
+  padding-bottom: var(--space-2);
+  border-bottom: 0;
+  background: linear-gradient(var(--color-accent) 0 0) left bottom / 100% var(--pixel) no-repeat;
+  font-family: var(--font-pixel, var(--font-name));
+  font-size: 1.75rem;
+  font-weight: 700;
+  letter-spacing: 0;
+  line-height: 1.1;
+}
+
+/* ── La lista fina: una línea de 1 px y el nombre a peso normal ─────────── */
+[data-theme="bitmap"] .port {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+[data-theme="bitmap"] .jack {
+  display: none;
+}
+
+[data-theme="bitmap"] .port-body {
+  border-bottom: 1px solid var(--color-line);
+}
+
+[data-theme="bitmap"] .port-name {
+  font-weight: 500;
+}
+
+/* Al pasar o enfocar: el cursor de bloque delante del nombre. */
+[data-theme="bitmap"] .port-name::before {
+  content: "";
+  flex: none;
+  width: 0;
+  height: 1em;
+  margin-inline-end: calc(var(--space-2) * -1);
+  background: var(--color-accent);
+}
+
+[data-theme="bitmap"] .port-link:is(:hover, :focus-visible) .port-name::before {
+  width: 0.55em;
+  margin-inline-end: 0;
+}
+
+/* Flechas de puntas cuadradas: vectores de píxel, no de pincel. */
+[data-theme="bitmap"] :is(.go, .chevron) {
+  stroke-linecap: square;
+  stroke-linejoin: miter;
+}
+
+/*
+ * Cajas en escalera: el borde es la caja misma, recortada en escalera, y el
+ * relleno un ::before un píxel adentro, en escalera también.
+ */
+[data-theme="bitmap"] .patchbay[data-shape="cards"] .port-body,
+[data-theme="bitmap"] .port.is-highlighted .port-body,
+[data-theme="bitmap"] .highlight-card,
+[data-theme="bitmap"] .icon-link {
+  --box-edge: var(--color-line);
+  --box-fill: var(--color-surface);
+
+  position: relative;
+  isolation: isolate;
+  border: 0;
+  border-radius: 0;
+  background: var(--box-edge);
+  clip-path: var(--stairs);
+}
+
+[data-theme="bitmap"] .patchbay[data-shape="cards"] .port-body::before,
+[data-theme="bitmap"] .port.is-highlighted .port-body::before,
+[data-theme="bitmap"] .highlight-card::before,
+[data-theme="bitmap"] .icon-link::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: var(--pixel);
+  background: var(--box-fill);
+  clip-path: var(--stairs);
+}
+
+[data-theme="bitmap"] .patchbay[data-shape="cards"] .port-body {
+  margin-bottom: var(--space-2);
+  padding: 0 var(--space-4);
+}
+
+/* El foco, por dentro de la escalera (afuera lo recortaría). */
+[data-theme="bitmap"] :is(.highlight-card, .icon-link):focus-visible,
+[data-theme="bitmap"]
+  :is(.patchbay[data-shape="cards"] .port, .port.is-highlighted)
+  :is(.port-link, .latest-toggle):focus-visible {
+  outline-offset: -8px;
+}
+
+/* ── En vivo: la etiqueta rosa invertida, que parpadea cuatro veces y queda ── */
+[data-theme="bitmap"] .live-label {
+  padding: 1px 6px;
+  background: var(--color-live);
+  color: var(--color-live-ink);
+  font-family: var(--font-pixel, var(--font-data));
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  animation: bitmap-parpadeo 600ms steps(1, end) 4;
+}
+
+@keyframes bitmap-parpadeo {
+  50% {
+    background: transparent;
+    color: var(--color-live);
+  }
+}
+
+/* ── Destacado con acento: la caja en escalera con el borde de píxeles ─── */
+[data-theme="bitmap"] .port.is-highlighted .port-body {
+  --box-edge: var(--color-accent);
+  --box-fill: color-mix(in srgb, var(--color-accent) var(--highlight-tint), var(--color-bg));
+
+  margin-bottom: var(--space-2);
+  padding: 0 var(--space-4);
+}
+
+/* Destacados arriba: carteles en escalera, con el borde del acento. */
+[data-theme="bitmap"] .highlight-card {
+  --box-edge: var(--color-accent);
+}
+
+[data-theme="bitmap"] .highlight-card:is(:hover, :focus-visible) {
+  transform: none;
+}
+
+/* ── Miniatura del panel: el marco de píxeles, el título y la lista fina ── */
+[data-theme="bitmap"].theme-sample .theme-sample-avatar {
+  border-radius: 0;
+  box-shadow: 0 0 0 3px var(--color-accent);
+  font-family: var(--font-pixel, inherit);
+}
+
+[data-theme="bitmap"].theme-sample .theme-sample-rows::before {
+  content: "";
+  width: 34px;
+  height: 7px;
+  background: linear-gradient(90deg, var(--color-fg) 0 4px, transparent 4px 6px) left / 6px 100%
+    repeat-x;
+  border-bottom: 2px solid var(--color-accent);
+}
+
+[data-theme="bitmap"].theme-sample .theme-sample-row {
+  height: 10px;
+  border-bottom: 1px solid var(--color-line);
+}
+
+[data-theme="bitmap"].theme-sample .theme-sample-mark {
+  width: 4px;
+  height: 7px;
+  border: 0;
+  border-radius: 0;
+  background: var(--color-accent);
+}
+
+[data-theme="bitmap"].theme-sample .theme-sample-row.is-live .theme-sample-mark {
+  width: 12px;
+  background: var(--color-live);
+}
+
+[data-theme="bitmap"].theme-sample .theme-sample-row + .theme-sample-row::before {
+  display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-theme="bitmap"] .live-label {
+    animation: none;
+  }
+}
+
+/* La barra de píxeles del título es del acento con cualquier acento: sin el filete de Técnico. */
+[data-theme="bitmap"][data-accent][data-mode] .bank h2 {
+  border-bottom: 0;
+}

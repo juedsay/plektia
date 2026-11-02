@@ -1,5 +1,6 @@
 import type { Theme } from "@/domain/theme";
 
+import bitmap from "./bitmap.css?url";
 import cassette from "./cassette.css?url";
 import corcho from "./corcho.css?url";
 import lomo from "./lomo.css?url";
@@ -12,6 +13,7 @@ import subte from "./subte.css?url";
 // esa variante. "Técnico" vive en tokens.css y page.css.
 export const THEME_STYLESHEETS: Readonly<Partial<Record<Theme, string>>> = {
   punto,
+  bitmap,
   cassette,
   corcho,
   subte,
