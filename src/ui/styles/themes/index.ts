@@ -4,6 +4,7 @@ import bitmap from "./bitmap.css?url";
 import cassette from "./cassette.css?url";
 import corcho from "./corcho.css?url";
 import lomo from "./lomo.css?url";
+import manual from "./manual.css?url";
 import pedalera from "./pedalera.css?url";
 import punto from "./punto.css?url";
 import subte from "./subte.css?url";
@@ -18,5 +19,6 @@ export const THEME_STYLESHEETS: Readonly<Partial<Record<Theme, string>>> = {
   corcho,
   subte,
   lomo,
+  manual,
   pedalera,
 };

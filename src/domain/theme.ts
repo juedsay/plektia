@@ -170,7 +170,19 @@ export const THEME_RULES: Readonly<Record<Theme, ThemeRules>> = {
     defaultFont: "fraunces",
     sectionMark: "I",
   },
-  manual: upcoming("editorial"),
+  // Manual de consulta: lo destacado en azul por defecto; el rojo es del sello (en vivo).
+  manual: {
+    family: "editorial",
+    available: true,
+    thread: false,
+    accents: ["cielo", "ambar", "turquesa", "lavanda", "hueso"],
+    defaultAccent: "cielo",
+    shapes: ["rows", "cards"],
+    defaultShape: "rows",
+    fonts: ["bricolage", "fraunces", "nunito"],
+    defaultFont: "bricolage",
+    sectionMark: null,
+  },
   sumario: upcoming("editorial"),
 };
 

@@ -114,3 +114,17 @@ FIRST VIEWPORT: Barra superior; avatar cuadrado con esquinas en escalera dentro 
 FORM: Bitmap, propuesta aprobada por el usuario en la tanda de nueve mockups (se mostraron en el chat del 2026-10-30 y no quedaron en el repo; la decisión está en SPEC-styles.md, con el avatar obligatorio pedido por el usuario). Firma: la etiqueta "EN VIVO" parpadea cuatro veces en pasos duros y queda fija (nunca más de 5 s, WCAG 2.2.2); quieta con movimiento reducido. Al pasar por un link aparece un cursor de bloque delante del nombre.
 
 FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, DESIGN.md, and every shipping raster carrying its provenance
+
+## Direction contract — Manual (familia Editorial)
+
+THESIS: La página es un manual de consulta encarpetado: cada sección es un separador de color con su pestaña asomando en escalera por el borde, y cada link es una entrada del índice de ese capítulo. Rechaza el "dashboard de documentación" de íconos y tarjetas: lo editorial sale del sistema de separadores —color, posición de la pestaña— y del sello de goma.
+
+OWN-WORLD: Papel de manual (#f6f3ea) con tinta casi negra (#1a1c20); de noche, hoja oscura (#16181c) con tinta clara. Cuatro colores de separador fijos que rotan por sección (azul, ámbar, verde, violeta), cada pestaña con la tinta del papel encima y un filete del mismo color a lo ancho. El acento marca lo destacado y el aro del avatar. Bricolage por defecto. Rojo reservado al sello "EN VIVO", estampado y levemente torcido.
+
+STORY: El visitante ve la foto carnet y el nombre, encuentra el sello rojo si está en vivo, salta de pestaña en pestaña y toca la entrada que busca.
+
+FIRST VIEWPORT: Barra superior; avatar en foto carnet de esquinas apenas redondeadas; nombre y bio; la pestaña azul "Redes" a la izquierda con su filete; las entradas; más abajo la pestaña ámbar corrida a la derecha; el en vivo con su sello rojo.
+
+FORM: Manual, propuesta aprobada por el usuario en la tanda de nueve mockups (mostrados en el chat del 2026-10-30, no quedaron en el repo; la decisión está en SPEC-styles.md). Firma: al cargar, las pestañas se asoman una por una desde el borde; quietas con movimiento reducido.
+
+FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, DESIGN.md, and every shipping raster carrying its provenance

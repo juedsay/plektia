@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-11-02T12:00:00.000Z",
+  "generatedAt": "2026-11-02T18:00:00.000Z",
   "title": "Design System: Plektia",
   "extensions": {
     "colorMeta": {
@@ -1286,6 +1286,380 @@
           "oklch(65% 0.058 76.7)",
           "oklch(80% 0.058 76.7)",
           "oklch(95% 0.058 76.7)"
+        ]
+      },
+      "manual-hoja-noche": {
+        "role": "neutral",
+        "displayName": "Hoja de noche (Manual)",
+        "canonical": "oklch(20.9% 0.009 264.4)",
+        "cssVar": "--color-bg (oscuro): fondo, tinta de las pestañas, anillo de aire de la foto, --color-selection-fg, --color-thread-twist y --color-live-ink (oscuro)",
+        "theme": "manual",
+        "tonalRamp": [
+          "oklch(15% 0.009 264.4)",
+          "oklch(25% 0.009 264.4)",
+          "oklch(35% 0.009 264.4)",
+          "oklch(45% 0.009 264.4)",
+          "oklch(55% 0.009 264.4)",
+          "oklch(65% 0.009 264.4)",
+          "oklch(80% 0.009 264.4)",
+          "oklch(95% 0.009 264.4)"
+        ]
+      },
+      "manual-tinta-clara": {
+        "role": "neutral",
+        "displayName": "Tinta clara (Manual)",
+        "canonical": "oklch(93.7% 0.008 91.5)",
+        "cssVar": "--color-fg, --color-focus y --color-selection-bg (oscuro); acento hueso en oscuro",
+        "theme": "manual",
+        "tonalRamp": [
+          "oklch(15% 0.008 91.5)",
+          "oklch(25% 0.008 91.5)",
+          "oklch(35% 0.008 91.5)",
+          "oklch(45% 0.008 91.5)",
+          "oklch(55% 0.008 91.5)",
+          "oklch(65% 0.008 91.5)",
+          "oklch(80% 0.008 91.5)",
+          "oklch(95% 0.008 91.5)"
+        ]
+      },
+      "manual-tinta-clara-apagada": {
+        "role": "neutral",
+        "displayName": "Tinta clara apagada (Manual)",
+        "canonical": "oklch(81.7% 0.012 89.7)",
+        "cssVar": "--color-fg-muted (oscuro): bio y metadatos",
+        "theme": "manual",
+        "tonalRamp": [
+          "oklch(15% 0.012 89.7)",
+          "oklch(25% 0.012 89.7)",
+          "oklch(35% 0.012 89.7)",
+          "oklch(45% 0.012 89.7)",
+          "oklch(55% 0.012 89.7)",
+          "oklch(65% 0.012 89.7)",
+          "oklch(80% 0.012 89.7)",
+          "oklch(95% 0.012 89.7)"
+        ]
+      },
+      "manual-linea": {
+        "role": "neutral",
+        "displayName": "Línea (Manual)",
+        "canonical": "oklch(36.8% 0.014 269.3)",
+        "cssVar": "--color-line (oscuro): línea de puntos guía, filete de la sección sin título, borde de las tarjetas",
+        "theme": "manual",
+        "tonalRamp": [
+          "oklch(15% 0.014 269.3)",
+          "oklch(25% 0.014 269.3)",
+          "oklch(35% 0.014 269.3)",
+          "oklch(45% 0.014 269.3)",
+          "oklch(55% 0.014 269.3)",
+          "oklch(65% 0.014 269.3)",
+          "oklch(80% 0.014 269.3)",
+          "oklch(95% 0.014 269.3)"
+        ]
+      },
+      "manual-linea-tenue": {
+        "role": "neutral",
+        "displayName": "Línea tenue (Manual)",
+        "canonical": "oklch(29.7% 0.013 267.1)",
+        "cssVar": "--color-line-soft (oscuro): filete debajo de cada entrada",
+        "theme": "manual",
+        "tonalRamp": [
+          "oklch(15% 0.013 267.1)",
+          "oklch(25% 0.013 267.1)",
+          "oklch(35% 0.013 267.1)",
+          "oklch(45% 0.013 267.1)",
+          "oklch(55% 0.013 267.1)",
+          "oklch(65% 0.013 267.1)",
+          "oklch(80% 0.013 267.1)",
+          "oklch(95% 0.013 267.1)"
+        ]
+      },
+      "manual-superficie": {
+        "role": "neutral",
+        "displayName": "Superficie (Manual)",
+        "canonical": "oklch(25.6% 0.014 267.0)",
+        "cssVar": "--color-surface (oscuro): fondo de las entradas en cards",
+        "theme": "manual",
+        "tonalRamp": [
+          "oklch(15% 0.014 267.0)",
+          "oklch(25% 0.014 267.0)",
+          "oklch(35% 0.014 267.0)",
+          "oklch(45% 0.014 267.0)",
+          "oklch(55% 0.014 267.0)",
+          "oklch(65% 0.014 267.0)",
+          "oklch(80% 0.014 267.0)",
+          "oklch(95% 0.014 267.0)"
+        ]
+      },
+      "manual-sello": {
+        "role": "tertiary",
+        "displayName": "Sello rojo (Manual)",
+        "canonical": "oklch(78.8% 0.123 26.8)",
+        "cssVar": "--color-live (oscuro): borde y letras del sello \"EN VIVO\" y cronómetro, 7:1",
+        "theme": "manual",
+        "tonalRamp": [
+          "oklch(15% 0.123 26.8)",
+          "oklch(25% 0.123 26.8)",
+          "oklch(35% 0.123 26.8)",
+          "oklch(45% 0.123 26.8)",
+          "oklch(55% 0.123 26.8)",
+          "oklch(65% 0.123 26.8)",
+          "oklch(80% 0.123 26.8)",
+          "oklch(95% 0.123 26.8)"
+        ]
+      },
+      "manual-papel": {
+        "role": "neutral",
+        "displayName": "Papel de manual (Manual, claro)",
+        "canonical": "oklch(96.4% 0.012 91.5)",
+        "cssVar": "--color-bg (claro): fondo, tinta de las pestañas, anillo de aire de la foto, --color-selection-fg y --color-thread-twist (claro)",
+        "theme": "manual",
+        "tonalRamp": [
+          "oklch(15% 0.012 91.5)",
+          "oklch(25% 0.012 91.5)",
+          "oklch(35% 0.012 91.5)",
+          "oklch(45% 0.012 91.5)",
+          "oklch(55% 0.012 91.5)",
+          "oklch(65% 0.012 91.5)",
+          "oklch(80% 0.012 91.5)",
+          "oklch(95% 0.012 91.5)"
+        ]
+      },
+      "manual-tinta": {
+        "role": "neutral",
+        "displayName": "Tinta (Manual, claro)",
+        "canonical": "oklch(22.6% 0.008 264.4)",
+        "cssVar": "--color-fg, --color-focus y --color-selection-bg (claro); acento hueso en claro",
+        "theme": "manual",
+        "tonalRamp": [
+          "oklch(15% 0.008 264.4)",
+          "oklch(25% 0.008 264.4)",
+          "oklch(35% 0.008 264.4)",
+          "oklch(45% 0.008 264.4)",
+          "oklch(55% 0.008 264.4)",
+          "oklch(65% 0.008 264.4)",
+          "oklch(80% 0.008 264.4)",
+          "oklch(95% 0.008 264.4)"
+        ]
+      },
+      "manual-tinta-apagada": {
+        "role": "neutral",
+        "displayName": "Tinta apagada (Manual, claro)",
+        "canonical": "oklch(36.0% 0.013 267.2)",
+        "cssVar": "--color-fg-muted (claro): bio y metadatos",
+        "theme": "manual",
+        "tonalRamp": [
+          "oklch(15% 0.013 267.2)",
+          "oklch(25% 0.013 267.2)",
+          "oklch(35% 0.013 267.2)",
+          "oklch(45% 0.013 267.2)",
+          "oklch(55% 0.013 267.2)",
+          "oklch(65% 0.013 267.2)",
+          "oklch(80% 0.013 267.2)",
+          "oklch(95% 0.013 267.2)"
+        ]
+      },
+      "manual-linea-clara": {
+        "role": "neutral",
+        "displayName": "Línea (Manual, claro)",
+        "canonical": "oklch(80.5% 0.019 89.4)",
+        "cssVar": "--color-line (claro): línea de puntos guía, filete de la sección sin título, borde de las tarjetas",
+        "theme": "manual",
+        "tonalRamp": [
+          "oklch(15% 0.019 89.4)",
+          "oklch(25% 0.019 89.4)",
+          "oklch(35% 0.019 89.4)",
+          "oklch(45% 0.019 89.4)",
+          "oklch(55% 0.019 89.4)",
+          "oklch(65% 0.019 89.4)",
+          "oklch(80% 0.019 89.4)",
+          "oklch(95% 0.019 89.4)"
+        ]
+      },
+      "manual-linea-tenue-clara": {
+        "role": "neutral",
+        "displayName": "Línea tenue (Manual, claro)",
+        "canonical": "oklch(89.8% 0.018 89.4)",
+        "cssVar": "--color-line-soft (claro): filete debajo de cada entrada",
+        "theme": "manual",
+        "tonalRamp": [
+          "oklch(15% 0.018 89.4)",
+          "oklch(25% 0.018 89.4)",
+          "oklch(35% 0.018 89.4)",
+          "oklch(45% 0.018 89.4)",
+          "oklch(55% 0.018 89.4)",
+          "oklch(65% 0.018 89.4)",
+          "oklch(80% 0.018 89.4)",
+          "oklch(95% 0.018 89.4)"
+        ]
+      },
+      "manual-superficie-clara": {
+        "role": "neutral",
+        "displayName": "Superficie (Manual, claro)",
+        "canonical": "oklch(100% 0 0)",
+        "cssVar": "--color-surface y --color-live-ink (claro)",
+        "theme": "manual",
+        "tonalRamp": [
+          "oklch(15% 0 0)",
+          "oklch(25% 0 0)",
+          "oklch(35% 0 0)",
+          "oklch(45% 0 0)",
+          "oklch(55% 0 0)",
+          "oklch(65% 0 0)",
+          "oklch(80% 0 0)",
+          "oklch(95% 0 0)"
+        ]
+      },
+      "manual-sello-claro": {
+        "role": "tertiary",
+        "displayName": "Sello rojo (Manual, claro)",
+        "canonical": "oklch(39.5% 0.152 29.5)",
+        "cssVar": "--color-live (claro): borde y letras del sello \"EN VIVO\" y cronómetro, 7:1",
+        "theme": "manual",
+        "tonalRamp": [
+          "oklch(15% 0.152 29.5)",
+          "oklch(25% 0.152 29.5)",
+          "oklch(35% 0.152 29.5)",
+          "oklch(45% 0.152 29.5)",
+          "oklch(55% 0.152 29.5)",
+          "oklch(65% 0.152 29.5)",
+          "oklch(80% 0.152 29.5)",
+          "oklch(95% 0.152 29.5)"
+        ]
+      },
+      "manual-azul": {
+        "role": "primary",
+        "displayName": "Separador azul (Manual)",
+        "canonical": "oklch(78.1% 0.111 261.1)",
+        "cssVar": "--tab-1 (oscuro); acento cielo en oscuro (por defecto)",
+        "theme": "manual",
+        "tonalRamp": [
+          "oklch(15% 0.111 261.1)",
+          "oklch(25% 0.111 261.1)",
+          "oklch(35% 0.111 261.1)",
+          "oklch(45% 0.111 261.1)",
+          "oklch(55% 0.111 261.1)",
+          "oklch(65% 0.111 261.1)",
+          "oklch(80% 0.111 261.1)",
+          "oklch(95% 0.111 261.1)"
+        ]
+      },
+      "manual-azul-claro": {
+        "role": "primary",
+        "displayName": "Separador azul (Manual, claro)",
+        "canonical": "oklch(38.3% 0.129 259.6)",
+        "cssVar": "--tab-1 (claro); acento cielo en claro (por defecto)",
+        "theme": "manual",
+        "tonalRamp": [
+          "oklch(15% 0.129 259.6)",
+          "oklch(25% 0.129 259.6)",
+          "oklch(35% 0.129 259.6)",
+          "oklch(45% 0.129 259.6)",
+          "oklch(55% 0.129 259.6)",
+          "oklch(65% 0.129 259.6)",
+          "oklch(80% 0.129 259.6)",
+          "oklch(95% 0.129 259.6)"
+        ]
+      },
+      "manual-ambar": {
+        "role": "secondary",
+        "displayName": "Separador ámbar (Manual)",
+        "canonical": "oklch(83.2% 0.126 82.8)",
+        "cssVar": "--tab-2 (oscuro); acento ambar en oscuro",
+        "theme": "manual",
+        "tonalRamp": [
+          "oklch(15% 0.126 82.8)",
+          "oklch(25% 0.126 82.8)",
+          "oklch(35% 0.126 82.8)",
+          "oklch(45% 0.126 82.8)",
+          "oklch(55% 0.126 82.8)",
+          "oklch(65% 0.126 82.8)",
+          "oklch(80% 0.126 82.8)",
+          "oklch(95% 0.126 82.8)"
+        ]
+      },
+      "manual-ambar-claro": {
+        "role": "secondary",
+        "displayName": "Separador ámbar (Manual, claro)",
+        "canonical": "oklch(38.1% 0.080 77.1)",
+        "cssVar": "--tab-2 (claro); acento ambar en claro",
+        "theme": "manual",
+        "tonalRamp": [
+          "oklch(15% 0.080 77.1)",
+          "oklch(25% 0.080 77.1)",
+          "oklch(35% 0.080 77.1)",
+          "oklch(45% 0.080 77.1)",
+          "oklch(55% 0.080 77.1)",
+          "oklch(65% 0.080 77.1)",
+          "oklch(80% 0.080 77.1)",
+          "oklch(95% 0.080 77.1)"
+        ]
+      },
+      "manual-verde": {
+        "role": "secondary",
+        "displayName": "Separador verde (Manual)",
+        "canonical": "oklch(80.1% 0.088 173.3)",
+        "cssVar": "--tab-3 (oscuro); acento turquesa en oscuro",
+        "theme": "manual",
+        "tonalRamp": [
+          "oklch(15% 0.088 173.3)",
+          "oklch(25% 0.088 173.3)",
+          "oklch(35% 0.088 173.3)",
+          "oklch(45% 0.088 173.3)",
+          "oklch(55% 0.088 173.3)",
+          "oklch(65% 0.088 173.3)",
+          "oklch(80% 0.088 173.3)",
+          "oklch(95% 0.088 173.3)"
+        ]
+      },
+      "manual-verde-claro": {
+        "role": "secondary",
+        "displayName": "Separador verde (Manual, claro)",
+        "canonical": "oklch(36.7% 0.065 174.9)",
+        "cssVar": "--tab-3 (claro); acento turquesa en claro",
+        "theme": "manual",
+        "tonalRamp": [
+          "oklch(15% 0.065 174.9)",
+          "oklch(25% 0.065 174.9)",
+          "oklch(35% 0.065 174.9)",
+          "oklch(45% 0.065 174.9)",
+          "oklch(55% 0.065 174.9)",
+          "oklch(65% 0.065 174.9)",
+          "oklch(80% 0.065 174.9)",
+          "oklch(95% 0.065 174.9)"
+        ]
+      },
+      "manual-violeta": {
+        "role": "secondary",
+        "displayName": "Separador violeta (Manual)",
+        "canonical": "oklch(80.7% 0.090 300.4)",
+        "cssVar": "--tab-4 (oscuro); acento lavanda en oscuro",
+        "theme": "manual",
+        "tonalRamp": [
+          "oklch(15% 0.090 300.4)",
+          "oklch(25% 0.090 300.4)",
+          "oklch(35% 0.090 300.4)",
+          "oklch(45% 0.090 300.4)",
+          "oklch(55% 0.090 300.4)",
+          "oklch(65% 0.090 300.4)",
+          "oklch(80% 0.090 300.4)",
+          "oklch(95% 0.090 300.4)"
+        ]
+      },
+      "manual-violeta-claro": {
+        "role": "secondary",
+        "displayName": "Separador violeta (Manual, claro)",
+        "canonical": "oklch(36.0% 0.128 290.1)",
+        "cssVar": "--tab-4 (claro); acento lavanda en claro",
+        "theme": "manual",
+        "tonalRamp": [
+          "oklch(15% 0.128 290.1)",
+          "oklch(25% 0.128 290.1)",
+          "oklch(35% 0.128 290.1)",
+          "oklch(45% 0.128 290.1)",
+          "oklch(55% 0.128 290.1)",
+          "oklch(65% 0.128 290.1)",
+          "oklch(80% 0.128 290.1)",
+          "oklch(95% 0.128 290.1)"
         ]
       },
       "cassette-cuerpo": {
@@ -3128,6 +3502,14 @@
         "displayName": "Capítulo (Lomo)",
         "purpose": "Título de sección en Lomo cosido: versalitas armadas (mayúsculas a 0.8 del tamaño de sección, 600, tracking 0.09em) con el numeral romano a cuerpo completo en la tela. Fraunces por defecto; admite Bricolage."
       },
+      "manual-pestana": {
+        "displayName": "Pestaña (Manual)",
+        "purpose": "Título de sección en Manual: la fuente de nombres a 1rem y 700, tracking 0.01em, en el color del fondo sobre su separador (7:1), con text-wrap: balance y overflow-wrap: anywhere. Bricolage por defecto; admite Fraunces y Nunito. Los nombres de entrada suben a 600 y el destacado con acento a 700."
+      },
+      "manual-sello": {
+        "displayName": "Sello (Manual)",
+        "purpose": "\"EN VIVO\" en el sello de goma: mayúsculas, 800, tracking 0.08em, max(0.8em, 0.6875rem) para no bajar de 11 px, girado −3°."
+      },
       "cassette-lado": {
         "displayName": "Lado (Lado A / B)",
         "purpose": "Título de sección en Lado A / B: Kalam 700 a 1.375rem (--font-hand, sin precarga, solo en esta variante), con el rótulo \"Lado A · \", \"Lado B · \" o \"Cinta N · Lado A/B · \" delante y subrayado de tinta de 2 px. Los nombres van en Nunito por defecto; admite Bricolage y Space Mono."
@@ -3201,6 +3583,11 @@
         "name": "lomo-agujeros",
         "value": "::before { left: -5px; 3px × 3px; border-radius: 50%; background: var(--color-fg-muted); box-shadow: 21px 0 0 var(--color-fg-muted) }",
         "purpose": "Los dos agujeros de costura en los extremos de cada puntada; la sombra solo duplica el punto."
+      },
+      {
+        "name": "manual-foto-carnet",
+        "value": "0 0 0 3px var(--color-bg), 0 0 0 5px var(--color-accent)",
+        "purpose": "Aro del acento de la foto carnet en Manual (esquinas de 6 px); spread puro, no elevación ni foco."
       },
       {
         "name": "cassette-aro-avatar",
@@ -3340,6 +3727,11 @@
         "purpose": "Firma de Lomo cosido: las puntadas del primer cuadernillo se cosen una por una al cargar, una vez. Quietas con movimiento reducido."
       },
       {
+        "name": "manual-asomar",
+        "value": "420ms var(--ease-out) backwards, clip-path inset(100% 0 0 0) → inset(0); escalonado 0/90/180/270ms entre las secciones con título (la 4.ª y siguientes a 270ms)",
+        "purpose": "Firma de Manual: las pestañas se asoman una por una desde su filete al cargar, una vez. Quietas con movimiento reducido."
+      },
+      {
         "name": "cassette-escribir",
         "value": "900ms steps(24, end) backwards, clip-path inset revelado de izquierda a derecha",
         "purpose": "Firma de Lado A / B: el título del primer lado se escribe de izquierda a derecha al cargar, una vez. Quieto con movimiento reducido."
@@ -3413,7 +3805,8 @@
         "subte",
         "pedalera",
         "bitmap",
-        "lomo"
+        "lomo",
+        "manual"
       ],
       "rulesSource": "src/domain/theme.ts (familia, acentos, formas y tipografías por variante)",
       "variantCss": "src/ui/styles/themes/<variante>.css, acotado a [data-theme=\"<variante>\"] y en línea solo en las páginas que la eligen",
@@ -3846,6 +4239,101 @@
           "Contorno decorativo de 1 px en el ex libris (el foco sigue sólido)"
         ]
       },
+      "manual": {
+        "accents": {
+          "cielo": {
+            "dark": "#8fb8ff",
+            "light": "#123f86",
+            "tone": "el azul del primer separador",
+            "default": true
+          },
+          "ambar": {
+            "dark": "#f0c060",
+            "light": "#5a3c00",
+            "tone": "el ámbar del segundo separador"
+          },
+          "turquesa": {
+            "dark": "#7fd1b9",
+            "light": "#0a4a3d",
+            "tone": "el verde del tercer separador"
+          },
+          "lavanda": {
+            "dark": "#c9b3f2",
+            "light": "#3f2b7a",
+            "tone": "el violeta del cuarto separador"
+          },
+          "hueso": {
+            "dark": "#eceae4",
+            "light": "#1a1c20",
+            "tone": "la tinta misma"
+          }
+        },
+        "accentUse": "El acento marca lo destacado (la banderita; en cards también el borde de 1.5 px y el tinte) y el aro de la foto carnet. Nunca las pestañas ni sus filetes. Coral y rosa no se admiten (el rojo es del sello); arena tampoco (no es un separador).",
+        "tabs": {
+          "--tab-1": {
+            "color": "azul",
+            "dark": "#8fb8ff",
+            "light": "#123f86",
+            "offset": "0%"
+          },
+          "--tab-2": {
+            "color": "ámbar",
+            "dark": "#f0c060",
+            "light": "#5a3c00",
+            "offset": "18%"
+          },
+          "--tab-3": {
+            "color": "verde",
+            "dark": "#7fd1b9",
+            "light": "#0a4a3d",
+            "offset": "36%"
+          },
+          "--tab-4": {
+            "color": "violeta",
+            "dark": "#c9b3f2",
+            "light": "#3f2b7a",
+            "offset": "54%"
+          },
+          "rotation": "Cuenta solo las secciones con título (.bank-titled, :nth-child(4n + k of .bank-titled)): la primera es siempre azul y a la izquierda. El texto de la pestaña va en --color-bg y se mide a 7:1 contra cada --tab-N en los dos modos.",
+          "fit": "margin-left: min(offset, 100% − 14rem); max-width: max(100% − offset, 14rem): si un título largo no entra, la escalera se corre a la izquierda.",
+          "rule": "Filete de 3 px en el color de la pestaña, a todo el ancho, encima de las entradas. La sección sin título no tiene pestaña: filete de 1 px en --color-line."
+        },
+        "leader": "Línea de puntos guía de 2 px en --color-line entre el nombre y la flecha (mínimo 1.5rem), solo en rows.",
+        "highlight": "Banderita adhesiva de 6 × 28 px en el acento, esquinas de 2 px del lado de afuera, asomando 6 px por el canto derecho a 0.75rem del borde de arriba. En rows, sin caja ni tinte (conserva el filete de la entrada) y nombre a 700; en cards y en los destacados de arriba, conserva el borde y el tinte de la base.",
+        "live": {
+          "dark": {
+            "text": "#ff9a8f"
+          },
+          "light": {
+            "text": "#850f08"
+          },
+          "note": "Sello de goma: recuadro de 2 px en --color-live, esquinas de 3 px, mayúsculas a 800 con tracking 0.08em, max(0.8em, 0.6875rem), girado −3°. Es la única señal en vivo: sin pulso ni tinte."
+        },
+        "shapes": [
+          "rows",
+          "cards"
+        ],
+        "defaultShape": "rows",
+        "fonts": [
+          "bricolage",
+          "fraunces",
+          "nunito"
+        ],
+        "defaultFont": "bricolage",
+        "sectionMark": null,
+        "thread": false,
+        "jackCol": "0px",
+        "radiusMd": "6px",
+        "exceptions": [
+          "Sin hilo ni jacks: la lista a todo el ancho",
+          "Títulos de sección como pestañas de color en escalera (1rem, 700, texto en --color-bg) con filete de 3 px del separador, en vez del filete grafito",
+          "Línea de puntos guía entre nombre y flecha en rows",
+          "Nombres de entrada a 600 (700 el destacado con acento)",
+          "Destacado con acento sin caja en rows, marcado con la banderita",
+          "Señal en vivo: sello rojo de goma girado −3°, en vez del jack lima que late; único texto girado",
+          "Avatar en foto carnet de 6 px en vez de redondo"
+        ]
+      },
       "corcho": {
         "accents": {
           "cielo": {
@@ -4155,6 +4643,30 @@
       "css": ".ds-lomo-card{display:block;width:20rem;padding:0.75rem 1rem;border:1px solid #efe8da;border-top:3px double #efe8da;border-radius:0;background:none;color:#efe8da;text-decoration:none} .ds-lomo-card:focus-visible{outline:2px solid #efe8da;outline-offset:4px} .ds-lomo-card-name{display:block;font-family:Fraunces,Georgia,serif;font-size:1.0625rem;font-weight:500} .ds-lomo-card-meta{display:block;color:#c8bfae;font-size:0.8125rem}"
     },
     {
+      "name": "Separadores con entradas (Manual)",
+      "kind": "custom",
+      "refersTo": "manual-pestana",
+      "description": "Dos separadores de Manual: la pestaña azul a la izquierda y la ámbar corrida 18%, cada una con su filete de 3 px; entradas de índice con línea de puntos guía entre el nombre y la flecha.",
+      "html": "<section class=\"ds-manual\"><h2 class=\"ds-manual-tab\">Redes</h2><div class=\"ds-manual-ports\"><a class=\"ds-manual-link\" href=\"#\"><span class=\"ds-manual-text\"><span class=\"ds-manual-name\">YouTube</span><span class=\"ds-manual-meta\">@juedsay</span></span><span class=\"ds-manual-arrow\" aria-hidden=\"true\">↗</span></a><a class=\"ds-manual-link\" href=\"#\"><span class=\"ds-manual-text\"><span class=\"ds-manual-name\">Instagram</span><span class=\"ds-manual-meta\">@juedsay</span></span><span class=\"ds-manual-arrow\" aria-hidden=\"true\">↗</span></a></div><h2 class=\"ds-manual-tab is-2\">Proyectos</h2><div class=\"ds-manual-ports is-2\"><a class=\"ds-manual-link\" href=\"#\"><span class=\"ds-manual-text\"><span class=\"ds-manual-name\">Plektia</span><span class=\"ds-manual-meta\">Links, en vivo y MCP</span></span><span class=\"ds-manual-arrow\" aria-hidden=\"true\">↗</span></a></div></section>",
+      "css": ".ds-manual{width:22rem;padding:1rem;background:#16181c;color:#eceae4;font-family:system-ui,sans-serif} .ds-manual-tab{width:fit-content;margin:0;padding:0.25rem 1rem;border-radius:6px 6px 0 0;background:#8fb8ff;color:#16181c;font-family:'Bricolage Grotesque',system-ui,sans-serif;font-size:1rem;font-weight:700;letter-spacing:0.01em;line-height:1.2;animation:ds-asomar 420ms cubic-bezier(0.16,1,0.3,1) backwards} .ds-manual-tab.is-2{margin-left:18%;background:#f0c060;animation-delay:90ms} .ds-manual-ports{margin:0 0 1.5rem;border-top:3px solid #8fb8ff} .ds-manual-ports.is-2{border-top-color:#f0c060} .ds-manual-link{display:grid;grid-template-columns:minmax(0,max-content) minmax(1.5rem,1fr) auto;align-items:center;gap:0.75rem;min-height:3.25rem;padding:0.5rem 0;border-bottom:1px solid #2a2d34;color:inherit;text-decoration:none} .ds-manual-link::before{content:\"\";grid-row:1;grid-column:2;align-self:center;border-bottom:2px dotted #3c3f47} .ds-manual-text{grid-column:1} .ds-manual-name{display:block;font-family:'Bricolage Grotesque',system-ui,sans-serif;font-size:1.0625rem;font-weight:600;line-height:1.3} .ds-manual-meta{display:block;color:#c6c3bb;font-size:0.8125rem} .ds-manual-arrow{grid-column:3;color:#c6c3bb} .ds-manual-link:hover .ds-manual-name{text-decoration:underline} .ds-manual-link:focus-visible{outline:2px solid #eceae4;outline-offset:2px;border-radius:2px} @keyframes ds-asomar{from{clip-path:inset(100% 0 0 0)}to{clip-path:inset(0)}} @media (prefers-reduced-motion: reduce){.ds-manual-tab{animation:none}}"
+    },
+    {
+      "name": "Entrada en vivo con sello (Manual)",
+      "kind": "custom",
+      "refersTo": "manual-sello",
+      "description": "El sello de goma rojo \"EN VIVO\", girado −3°, encabeza el metadato; es la única señal en vivo, sin pulso ni tinte.",
+      "html": "<a class=\"ds-manual-live\" href=\"#\"><span class=\"ds-manual-live-name\">Twitch</span><span class=\"ds-manual-live-meta\"><span class=\"ds-manual-sello\">En vivo</span> · Programando</span></a>",
+      "css": ".ds-manual-live{display:block;width:22rem;padding:0.5rem 1rem;background:#16181c;color:#eceae4;font-family:system-ui,sans-serif;text-decoration:none} .ds-manual-live-name{display:block;font-family:'Bricolage Grotesque',system-ui,sans-serif;font-size:1.0625rem;font-weight:600} .ds-manual-live-meta{display:block;padding:3px 0 3px 2px;color:#c6c3bb;font-size:0.8125rem} .ds-manual-sello{display:inline-block;padding:0 6px;border:2px solid #ff9a8f;border-radius:3px;color:#ff9a8f;font-size:max(0.8em,0.6875rem);font-weight:800;letter-spacing:0.08em;text-transform:uppercase;transform:rotate(-3deg)} .ds-manual-live:focus-visible{outline:2px solid #eceae4;outline-offset:2px;border-radius:2px}"
+    },
+    {
+      "name": "Destacado con banderita (Manual)",
+      "kind": "custom",
+      "refersTo": "manual-banderita",
+      "description": "Destacado con acento en la forma rows: sin caja ni tinte, el nombre a 700 y la banderita adhesiva del acento asomando por el canto derecho.",
+      "html": "<div class=\"ds-manual-flag-wrap\"><a class=\"ds-manual-flag\" href=\"#\"><span class=\"ds-manual-flag-name\">Plektia</span><span class=\"ds-manual-flag-meta\">Esta página: links, en vivo y MCP</span></a></div>",
+      "css": ".ds-manual-flag-wrap{width:22rem;padding:1rem 1.5rem 1rem 1rem;background:#16181c;color:#eceae4;font-family:system-ui,sans-serif} .ds-manual-flag{position:relative;display:block;min-height:3.25rem;padding:0.5rem 0;border-bottom:1px solid #2a2d34;color:inherit;text-decoration:none} .ds-manual-flag::after{content:\"\";position:absolute;top:0.75rem;right:-6px;width:6px;height:1.75rem;border-radius:0 2px 2px 0;background:#8fb8ff} .ds-manual-flag-name{display:block;font-family:'Bricolage Grotesque',system-ui,sans-serif;font-size:1.0625rem;font-weight:700} .ds-manual-flag-meta{display:block;color:#c6c3bb;font-size:0.8125rem} .ds-manual-flag:hover .ds-manual-flag-name{text-decoration:underline} .ds-manual-flag:focus-visible{outline:2px solid #eceae4;outline-offset:2px;border-radius:2px}"
+    },
+    {
       "name": "Notas con hilo (Corcho)",
       "kind": "custom",
       "refersTo": "corcho-nota",
@@ -4330,6 +4842,26 @@
         "section": "typography"
       },
       {
+        "name": "La regla del sello rojo",
+        "body": "El rojo es la señal en vivo de Manual y de nada más: ningún separador ni acento es rojo o rojizo. El sello es la única marca del en vivo: la entrada no late, no se tiñe y no lleva banderita por estar en vivo.",
+        "section": "colors"
+      },
+      {
+        "name": "La regla de la primera pestaña azul",
+        "body": "La rotación cuenta solo las secciones con título (las que llevan `bank-titled`): la primera pestaña es siempre azul y va a la izquierda, aunque la página empiece con una sección sin título. Siguen ámbar, verde y violeta, y vuelve a empezar.",
+        "section": "colors"
+      },
+      {
+        "name": "La regla de la tinta del papel",
+        "body": "El título de cada pestaña va en el color del fondo (`--color-bg`) sobre su separador y se mide a 7:1 en los dos modos (`tests/unit/ui/theme-tokens.test.ts`). Un separador que no llega con su papel no entra.",
+        "section": "colors"
+      },
+      {
+        "name": "La regla del sello legible",
+        "body": "El sello va girado, por eso no baja de 11 px ni de 800: una letra torcida y chica deja de leerse.",
+        "section": "typography"
+      },
+      {
         "name": "La regla del amarillo",
         "body": "El amarillo es la señal en vivo de Corcho y de nada más: la nota en vivo es amarilla y lleva la chinche roja, en los links y también en los destacados de arriba. Ninguna otra nota, chinche o cinta es amarilla (por eso ámbar no es un acento admitido), y la nota en vivo no late.",
         "section": "colors"
@@ -4398,6 +4930,14 @@
       "**Do** reservar el rojo para el en vivo: la cinta y la puntada en `--ribbon`, el texto en `--color-live`.",
       "**Do** marcar el destacado con acento solo con el nombre en la tela a 700, sin caja.",
       "**Do** coser solo las puntadas del primer cuadernillo al cargar, y dejarlas quietas con movimiento reducido.",
+      "**Do** abrir cada sección con título con su pestaña de color y su filete de 3 px, con la primera siempre azul y a la izquierda.",
+      "**Do** rotar azul, ámbar, verde y violeta corridos 0/18/36/54 %, contando solo las secciones con título; si un título largo no entra, correr la escalera a la izquierda (mínimo 14rem).",
+      "**Do** escribir el título de la pestaña en el color del fondo, a 7:1 contra su separador en los dos modos.",
+      "**Do** separar la sección sin título con un filete de 1 px, sin pestaña.",
+      "**Do** llevar cada entrada en `rows` con su línea de puntos guía entre el nombre y la flecha.",
+      "**Do** marcar lo destacado con la banderita del acento asomando por el canto derecho; en `rows`, sin tarjeta.",
+      "**Do** estampar \"EN VIVO\" con el sello rojo de goma, girado −3°, a 800 y nunca por debajo de 11 px.",
+      "**Do** asomar las pestañas una por una al cargar, y dejarlas quietas con movimiento reducido.",
       "**Do** clavar cada nota con su chinche de 14 px en el acento, arriba a la izquierda.",
       "**Do** torcer solo el papel, en un pseudo-elemento detrás del texto; el texto, los íconos, la flecha y el foco quedan derechos.",
       "**Do** bajar el hilo rojo desde la cinta del título hasta la primera chinche, seguirlo de chinche en chinche y cortarlo en la última.",
@@ -4453,6 +4993,14 @@
       "**Don't** pintar el filete del capítulo con el acento.",
       "**Don't** usar tarjetas con sombra ni esquinas redondeadas: el libro es plano y recto.",
       "**Don't** sacar las excepciones de Lomo cosido de `[data-theme=\"lomo\"]`.",
+      "**Don't** usar rojo en separadores ni acentos (coral, rosa): el rojo es del sello.",
+      "**Don't** sumar otra señal en vivo al sello: ni pulso, ni tinte, ni banderita.",
+      "**Don't** encerrar el destacado con acento en una tarjeta en la forma `rows`.",
+      "**Don't** darle pestaña a la sección sin título ni contarla en la rotación.",
+      "**Don't** pintar las pestañas o sus filetes con el acento: los separadores son fijos.",
+      "**Don't** numerar secciones ni entradas, ni volver a jacks o al hilo dentro de Manual.",
+      "**Don't** girar otro texto que el sello.",
+      "**Don't** sacar las excepciones de Manual de `[data-theme=\"manual\"]`.",
       "**Don't** torcer texto: ni el título, ni el nombre, ni la flecha.",
       "**Don't** poner cinta en las notas: la cinta es solo de los títulos.",
       "**Don't** usar el amarillo fuera del en vivo ni admitir ámbar como acento.",
