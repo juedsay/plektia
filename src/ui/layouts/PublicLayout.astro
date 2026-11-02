@@ -78,10 +78,13 @@ const shareUrl = (canonical ?? publicUrl ?? new URL(Astro.url.pathname, Astro.ur
     )}
     {preview && <base target="_blank" />}
     {/* La marca queda declarada (botones y títulos del sitio) y se precarga si nombra la página. */}
-    <Font cssVariable="--font-brand" preload={nameFont === "bricolage"} />
-    {nameFont === "fraunces" && <Font cssVariable="--font-fraunces" preload />}
-    {nameFont === "nunito" && <Font cssVariable="--font-nunito" preload />}
-    {nameFont === "space_mono" && <Font cssVariable="--font-space-mono" preload />}
+    {/* En Bitmap se precarga solo la pixelada (pinta el nombre): a lo sumo una por página. */}
+    <Font cssVariable="--font-brand" preload={nameFont === "bricolage" && theme !== "bitmap"} />
+    {nameFont === "fraunces" && <Font cssVariable="--font-fraunces" preload={theme !== "bitmap"} />}
+    {nameFont === "nunito" && <Font cssVariable="--font-nunito" preload={theme !== "bitmap"} />}
+    {nameFont === "space_mono" && (
+      <Font cssVariable="--font-space-mono" preload={theme !== "bitmap"} />
+    )}
     <Seo
       title={title}
       description={description}
@@ -92,6 +95,7 @@ const shareUrl = (canonical ?? publicUrl ?? new URL(Astro.url.pathname, Astro.ur
     {THEME_STYLESHEETS[theme] && <link rel="stylesheet" href={THEME_STYLESHEETS[theme]} />}
     {/* Lado A / B escribe sus títulos a mano: la fuente se declara solo ahí. */}
     {theme === "cassette" && <Font cssVariable="--font-hand" />}
+    {theme === "bitmap" && <Font cssVariable="--font-pixel" preload />}
     <slot name="head" />
   </head>
   <body data-theme={theme} data-mode={mode} data-accent={accent} data-name-font={nameFont}>

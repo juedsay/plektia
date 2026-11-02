@@ -162,6 +162,28 @@ colors:
   pedalera-azul-claro: "#123f86"
   pedalera-violeta: "#c9b8f5"
   pedalera-violeta-claro: "#3d2d78"
+  bitmap-pantalla: "#0e0f13"
+  bitmap-tinta-clara: "#f2f3f7"
+  bitmap-tinta-clara-apagada: "#c4c7d0"
+  bitmap-borde: "#3a3d47"
+  bitmap-borde-tenue: "#24262d"
+  bitmap-superficie: "#1a1c22"
+  bitmap-en-vivo: "#ff9ecf"
+  bitmap-papel: "#f3f3ee"
+  bitmap-tinta: "#111216"
+  bitmap-tinta-apagada: "#33363d"
+  bitmap-borde-claro: "#b9bab3"
+  bitmap-borde-tenue-claro: "#dddcd5"
+  bitmap-superficie-claro: "#ffffff"
+  bitmap-en-vivo-claro: "#8a0f4f"
+  bitmap-cielo: "#8fc1ff"
+  bitmap-cielo-claro: "#0f3f86"
+  bitmap-turquesa: "#6fe0cf"
+  bitmap-turquesa-claro: "#06473f"
+  bitmap-ambar: "#ffd166"
+  bitmap-ambar-claro: "#5a3b00"
+  bitmap-lavanda: "#c8b6ff"
+  bitmap-lavanda-claro: "#3e2b80"
 typography:
   display:
     fontFamily: "Bricolage Grotesque, system-ui, sans-serif"
@@ -233,6 +255,27 @@ typography:
     fontWeight: 700
     lineHeight: 1.2
     letterSpacing: "0.1em"
+  bitmap-nombre:
+    fontFamily: "Pixelify Sans, ui-monospace, monospace"
+    fontSize: "clamp(2.75rem, 11.5vw, 4.5rem)"
+    fontWeight: 700
+    lineHeight: 1
+    letterSpacing: "0"
+  bitmap-titulo:
+    fontFamily: "Pixelify Sans, ui-monospace, monospace"
+    fontSize: "1.75rem"
+    fontWeight: 700
+    lineHeight: 1.1
+    letterSpacing: "0"
+  bitmap-inicial:
+    fontFamily: "Pixelify Sans, ui-monospace, monospace"
+    fontSize: "3rem"
+    fontWeight: 700
+  bitmap-en-vivo:
+    fontFamily: "Pixelify Sans, ui-monospace, monospace"
+    fontSize: "0.8125rem"
+    fontWeight: 700
+    letterSpacing: "0.04em"
 rounded:
   sm: "4px"
   md: "6px"
@@ -247,6 +290,7 @@ rounded:
   pedalera-gabinete-fila: "4px"
   pedalera-destacado: "12px"
   pedalera-etiqueta: "3px"
+  bitmap-esquina: "0"
 spacing:
   "1": "0.25rem"
   "2": "0.5rem"
@@ -533,6 +577,61 @@ components:
     textColor: "{colors.pedalera-tinta-clara}"
     rounded: "{rounded.pedalera-destacado}"
     padding: "1rem 1.25rem 1rem 40px"
+  bitmap-fila:
+    textColor: "{colors.bitmap-tinta-clara}"
+    padding: "0.75rem 0"
+    height: "3.25rem"
+  bitmap-caja:
+    backgroundColor: "{colors.bitmap-superficie}"
+    textColor: "{colors.bitmap-tinta-clara}"
+    rounded: "{rounded.bitmap-esquina}"
+    padding: "0 1rem"
+  bitmap-caja-claro:
+    backgroundColor: "{colors.bitmap-superficie-claro}"
+    textColor: "{colors.bitmap-tinta}"
+    rounded: "{rounded.bitmap-esquina}"
+    padding: "0 1rem"
+  bitmap-borde-escalera:
+    backgroundColor: "{colors.bitmap-borde}"
+    rounded: "{rounded.bitmap-esquina}"
+    padding: "4px"
+  bitmap-borde-escalera-acento:
+    backgroundColor: "{colors.bitmap-cielo}"
+    rounded: "{rounded.bitmap-esquina}"
+    padding: "4px"
+  bitmap-titulo:
+    textColor: "{colors.bitmap-tinta-clara}"
+    typography: "{typography.bitmap-titulo}"
+    padding: "0 0 0.5rem"
+  bitmap-barra:
+    backgroundColor: "{colors.bitmap-cielo}"
+    height: "4px"
+  bitmap-cursor:
+    backgroundColor: "{colors.bitmap-cielo}"
+    width: "0.55em"
+    height: "1em"
+  bitmap-avatar:
+    backgroundColor: "{colors.bitmap-superficie}"
+    textColor: "{colors.bitmap-tinta-clara}"
+    typography: "{typography.bitmap-inicial}"
+    rounded: "{rounded.bitmap-esquina}"
+    size: "88px"
+  bitmap-marco:
+    backgroundColor: "{colors.bitmap-cielo}"
+    rounded: "{rounded.bitmap-esquina}"
+    size: "104px"
+  bitmap-en-vivo:
+    backgroundColor: "{colors.bitmap-en-vivo}"
+    textColor: "{colors.bitmap-pantalla}"
+    typography: "{typography.bitmap-en-vivo}"
+    rounded: "{rounded.bitmap-esquina}"
+    padding: "1px 6px"
+  bitmap-en-vivo-claro:
+    backgroundColor: "{colors.bitmap-en-vivo-claro}"
+    textColor: "{colors.bitmap-superficie-claro}"
+    typography: "{typography.bitmap-en-vivo}"
+    rounded: "{rounded.bitmap-esquina}"
+    padding: "1px 6px"
 ---
 
 # Design System: Plektia
@@ -713,7 +812,7 @@ Desde [SPEC-styles](SPEC-styles.md), los cuatro "temas" del contrato de tokens p
 | Cercano | Corcho (`corcho`) | construida | Tablero de corcho: links como notas de papel clavadas con chinches del acento; un hilo rojo baja desde la cinta del título y sigue de chinche en chinche; las chinches del primer grupo se clavan al cargar | La nota amarilla con la chinche roja |
 | Enérgico | Subte (`subte`) | construida | Secciones como líneas de color con chapa "L<n>"; links como estaciones; la primera línea se traza al cargar | La estación rellena de ámbar que destella |
 | Enérgico | Pedalera (`pedalera`) | construida | Pedales encadenados por cables de patch que salen del costado de uno y entran en el siguiente, cada uno con su LED y su pisador; secciones como etiquetas de rotuladora; el avatar como perilla moleteada; los cables del primer grupo se enchufan al cargar | El LED rojo encendido, quieto |
-| Enérgico | Bitmap (`bitmap`) | próximamente | | |
+| Enérgico | Bitmap (`bitmap`) | construida | Afiche de pantalla de 8 bits: el nombre y los títulos de sección en letra pixelada a escala póster, con su barra de píxeles en el acento, sobre listas finas de 1 px; esquinas en escalera, nada redondeado; el avatar cuadrado en su marco de píxeles; un cursor de bloque delante del link al pasar o enfocar | La etiqueta rosa "EN VIVO" invertida, que parpadea cuatro veces y queda fija |
 | Editorial | Lomo cosido (`lomo`) | construida | El lomo con sus puntadas en la tela; capítulos con numeral romano; links como entradas de índice; las puntadas del primer cuadernillo se cosen al cargar | La cinta marcapáginas roja colgando sobre la entrada |
 | Editorial | Manual (`manual`), Sumario (`sumario`) | próximamente | | |
 
@@ -731,7 +830,7 @@ Todo lo documentado arriba (Overview a Do's and Don'ts) es el sistema de Técnic
 
 **La regla del peso.** CSS en línea solo de la variante elegida; script solo si la pieza firma lo necesita; a lo sumo una fuente propia precargada, alojada localmente y sin CDN. El presupuesto de la página pública no cambia.
 
-**La regla del isotipo.** El punto del isotipo de Plektia (en la barra superior, y el mismo componente en el pie) se pinta con `--color-live` en todas las variantes y ninguna lo redefine: toma el tono de texto en vivo de cada una (lima en Técnico, ámbar en Subte, rojo claro o granate en Pedalera). Es la única pieza fuera del en vivo que usa ese tono, y por eso no cuenta como un uso extra de la señal propia.
+**La regla del isotipo.** El punto del isotipo de Plektia (en la barra superior, y el mismo componente en el pie) se pinta con `--color-live` en todas las variantes y ninguna lo redefine: toma el tono de texto en vivo de cada una (lima en Técnico, ámbar en Subte, rojo claro o granate en Pedalera, rosa en Bitmap). Es la única pieza fuera del en vivo que usa ese tono, y por eso no cuenta como un uso extra de la señal propia.
 
 Además valen para todas: foco visible, 44 px táctiles, `prefers-reduced-motion` con la pieza firma quieta, y ninguna numeración de links salvo en Sumario. Las excepciones a una regla de Técnico son propias de cada variante, se documentan en su subsección y quedan acotadas a su `[data-theme]`.
 
@@ -1220,6 +1319,113 @@ Estas excepciones son propias de Pedalera y no se heredan a otras variantes ni a
 - **Don't** usar brillos de neón ni gradientes "gamer": color plano en gabinetes, cables y aros.
 - **Don't** volver a jacks o al hilo trenzado dentro de Pedalera, ni numerar secciones o pedales.
 - **Don't** sacar las excepciones de Pedalera de `[data-theme="pedalera"]`.
+
+### Bitmap (familia Enérgico)
+
+**La página es un afiche de pantalla de 8 bits.** El nombre y cada título de sección van en letra pixelada a escala póster, y debajo los links son listas finas, de una línea de 1 px. La energía sale del contraste entre la letra gorda pixelada y la lista finita, no de efectos: nada de scanlines, CRT, neón ni brillos "retro gamer". Todo es cuadrado, con esquinas en escalera de píxeles. No hay hilo ni carril de jacks: la lista ocupa todo el ancho de la columna (`--jack-col: 0px`).
+
+#### Colors
+
+Negro de pantalla con tinta blanca en oscuro; papel con tinta casi negra en claro. El acento es la barra de píxeles bajo cada título, el cursor de bloque, el marco del avatar y el borde de los destacados; el rosa es solo del en vivo. Los valores normativos están en el frontmatter (`bitmap-*`).
+
+- **Pantalla** (`bitmap-pantalla`) / **Papel** (`bitmap-papel`): fondo de la página en oscuro y en claro. En oscuro, la pantalla es también la tinta sobre el en vivo (`--color-live-ink`) y la de la selección; en claro, el papel es la tinta de la selección.
+- **Tinta clara** (`bitmap-tinta-clara`) / **Tinta** (`bitmap-tinta`): texto principal, foco y fondo de la selección.
+- **Tinta clara apagada** (`bitmap-tinta-clara-apagada`) / **Tinta apagada** (`bitmap-tinta-apagada`): `@handle`, bio y metadatos.
+- **Superficie** (`bitmap-superficie`, `bitmap-superficie-claro`): `--color-surface`, el relleno de las cajas en escalera (tarjetas, destacados de arriba, fila de íconos) y el fondo del avatar con inicial. En claro, el blanco es también la tinta sobre el en vivo.
+- **Borde** (`bitmap-borde`, `bitmap-borde-claro`): `--color-line`, la línea de 1 px bajo cada link de la lista fina y el borde en escalera de las tarjetas y de la fila de íconos.
+- **Borde tenue** (`bitmap-borde-tenue`, `bitmap-borde-tenue-claro`): `--color-line-soft`, los filetes secundarios de la base. La lista fina no lo usa: su línea va en `--color-line`.
+- **En vivo** (`bitmap-en-vivo`, `bitmap-en-vivo-claro`): `--color-live`, el rosa de la etiqueta "EN VIVO" invertida (fondo rosa, letras en `--color-live-ink`), del cronómetro y del isotipo. Rosa claro en oscuro y frambuesa en claro, medidos a 7:1.
+
+**Acentos admitidos** (cinco de los ocho; por defecto, cielo). El acento es la barra de píxeles de cada título, el cursor de bloque, el marco del avatar, el borde en escalera de los destacados de arriba y del destacado con acento, y el tinte de su relleno. Nunca la etiqueta en vivo ni el texto.
+
+| Acento | Barra y cursor | Oscuro | Claro |
+|---|---|---|---|
+| `cielo` (por defecto) | azul | `#8fc1ff` | `#0f3f86` |
+| `turquesa` | verde agua | `#6fe0cf` | `#06473f` |
+| `ambar` | ámbar | `#ffd166` | `#5a3b00` |
+| `lavanda` | violeta | `#c8b6ff` | `#3e2b80` |
+| `hueso` | la tinta misma | `#f2f3f7` | `#111216` |
+
+`coral`, `rosa` y `arena` no se admiten en Bitmap.
+
+**La regla del rosa.** El rosa es la señal en vivo de Bitmap y de nada más: la etiqueta "EN VIVO", el cronómetro y el isotipo (por la regla común). Ninguna barra, cursor, marco ni borde es rosa (por eso rosa y coral quedan afuera como acentos), y el rosa no marca foco ni hover.
+
+#### Typography
+
+**Display Font:** Pixelify Sans 700 (`--font-pixel`, con `ui-monospace, monospace` de respaldo), solo en Bitmap. Alojada localmente desde fontsource 5.3.0, auditado (OFL-1.1, sin scripts, procedencia SLSA); se sirve solo el subset latino a 700 (7,9 KB). Es la única fuente precargada en una página Bitmap.
+**Fuente de nombre:** Bricolage Grotesque por defecto en links y destacados de arriba; admite también **Space Mono** y **Nunito**, que en Bitmap se declaran sin precarga. Fraunces no se admite.
+**Body Font:** la del sistema, igual que Técnico.
+
+- **Nombre** (`bitmap-nombre`): a escala póster, de 2.75rem en el celular a 4.5rem (`clamp(2.75rem, 11.5vw, 4.5rem)`), interlineado 1, sin tracking.
+- **Título de sección** (`bitmap-titulo`): 1.75rem, interlineado 1.1, sin tracking, sobre su barra de píxeles.
+- **Inicial del avatar** (`bitmap-inicial`): 3rem.
+- **Etiqueta en vivo** (`bitmap-en-vivo`): al tamaño de los metadatos, en mayúsculas, con tracking de 0.04em.
+- **Nombre de link y de destacado:** la fuente de nombre elegida a 500, al tamaño de link de la base (1.0625rem).
+- Bitmap no numera secciones (`sectionMark: null`) ni dibuja el rótulo de sección del dueño.
+
+**La regla de la pixelada a escala.** La pixelada va solo donde es grande o es una marca corta: el nombre, los títulos de sección, la inicial del avatar y la etiqueta "EN VIVO". Los nombres de links, los destacados de arriba, la bio y los metadatos van en su fuente: el contraste entre la letra gorda y la lista fina es el motivo.
+
+#### Shapes
+
+- **Escalera** (`--stairs`): el recorte de toda caja de Bitmap, un polígono que muerde cada esquina con dos escalones de un píxel (`--pixel`: 4 px). Lo llevan el avatar, su marco, las tarjetas, los destacados y la fila de íconos.
+- **Nada redondeado:** `--radius-md` y `--radius-sm` en 0 (`bitmap-esquina`); flechas y chevron con puntas y uniones cuadradas (`stroke-linecap: square`, `stroke-linejoin: miter`).
+- **Caja en escalera:** la caja misma, recortada en escalera, se pinta del color del borde (`--box-edge`), y el relleno (`--box-fill`) es un `::before` un píxel adentro, recortado en escalera también y detrás del contenido. Así el borde de 4 px sigue los escalones; a un `border` común lo cortaría el recorte. Por defecto, borde en `--color-line` y relleno en `--color-surface`.
+- **Fila (forma `rows`, por defecto):** sin caja, con la línea de 1 px en `--color-line` debajo de cada link.
+- **Tarjeta (forma `cards`):** caja en escalera con 0 × 1rem adentro y 0.5rem entre tarjetas.
+- **Avatar:** cuadrado de 88 px recortado en escalera, sin el doble anillo de la base. **Marco de píxeles:** un cuadrado de 104 px en el acento, recortado en escalera y centrado detrás del avatar (8 px de marco a cada lado). Se dibuja en `.identity::before`, no en el avatar: la foto recorta lo que cuelga del avatar.
+- **Barra de píxeles:** 4 px (`--pixel`) del acento, a todo el ancho bajo cada título, en color plano.
+
+#### Components
+
+- **Título de sección:** pixelado, sin sangría, con la barra de píxeles en el acento; sin el filete de Técnico, con cualquier acento.
+- **Link (lista fina):** nombre a 500 en la fuente elegida, sin jack, con la flecha cuadrada a la derecha. Bitmap admite `rows` (por defecto) y `cards`; nunca `pills`.
+- **Cursor de bloque:** al pasar o enfocar un link, un bloque del acento de 0.55em × 1em aparece delante del nombre, de golpe, sin transición. En reposo mide 0 de ancho y un margen negativo del tamaño del hueco (−0.5rem) lo anula, así el nombre queda alineado con sus metadatos.
+- **Foco:** el anillo de la base, pero por dentro de la escalera (`outline-offset: -8px`) en tarjetas, destacados y fila de íconos, porque afuera lo recortaría el `clip-path`. En las filas sin caja va por fuera, como en la base.
+- **En vivo:** la etiqueta "EN VIVO" invertida, en rosa con letras en `--color-live-ink`, con 1 × 6 px adentro y sin esquinas; el cronómetro en `--color-live`. Parpadea al cargar (ver Firma) y queda fija.
+- **Destacado con acento:** caja en escalera con el borde en el acento y el relleno del acento al `--highlight-tint` (6%) sobre el fondo, con 0 × 1rem adentro y 0.5rem abajo, en las dos formas.
+- **Destacado arriba (cartel):** caja en escalera con el borde en el acento y relleno de superficie. No sube al pasar o enfocar.
+- **Fila de íconos:** cajas en escalera con borde en `--color-line`.
+- **Avatar:** la foto o la inicial pixelada sobre superficie, dentro de su marco de píxeles.
+- **Miniatura del panel:** avatar cuadrado con aro de 3 px del acento e inicial pixelada; un título de 34 × 7 px hecho de bloques de tinta de 4 px cada 6 px sobre una barra de 2 px del acento; filas de 10 px con línea de 1 px y un marcador de 4 × 7 px en el acento, que en la fila en vivo se ensancha a 12 px en rosa.
+
+#### Firma: la etiqueta que parpadea
+
+Al cargar, la etiqueta "EN VIVO" parpadea cuatro veces en pasos duros: cada ciclo dura 600 ms (`steps(1, end)`), y en su segunda mitad la etiqueta se vacía (fondo transparente, letras en rosa) y vuelve a llenarse. Son 2,4 s en total, a unos 1,7 parpadeos por segundo, y después queda fija, invertida: nunca más de 5 s (WCAG 2.2.2) ni más de tres destellos por segundo (WCAG 2.3.1). Sin script. Con `prefers-reduced-motion` no parpadea.
+
+#### Excepciones a Técnico, acotadas a `[data-theme="bitmap"]`
+
+Estas excepciones son propias de Bitmap y no se heredan a otras variantes ni a Técnico:
+
+- **Sin hilo ni jacks:** la lista ocupa todo el ancho.
+- **Nombre y títulos en Pixelify Sans:** el nombre a escala póster y los títulos a 1.75rem, con barra de píxeles del acento en vez del filete grafito.
+- **Nada redondeado:** radios en 0, avatar cuadrado y recorte en escalera en toda caja (excepción al avatar redondo y a las esquinas de 4 y 6 px).
+- **Cajas pintadas con fondo** en tarjetas, destacados y fila de íconos: el borde es el fondo de la caja recortada, no un `border`.
+- **Foco por dentro** (`outline-offset: -8px`) en las cajas en escalera.
+- **Señal en vivo:** la etiqueta rosa invertida que parpadea cuatro veces y queda fija, en vez del jack lima que late.
+- **El destacado de arriba no sube** al pasar o enfocar.
+
+#### Do's and Don'ts
+
+##### Do:
+- **Do** reservar la pixelada para el nombre (2.75 a 4.5rem), los títulos de sección, la inicial del avatar y la etiqueta "EN VIVO".
+- **Do** recortar toda caja con la escalera y armar su borde como la caja en el color del borde con un `::before` de relleno un píxel adentro.
+- **Do** llevar el foco por dentro de la escalera (`outline-offset: -8px`) en toda caja recortada.
+- **Do** dibujar el marco de píxeles del avatar en `.identity::before`, detrás del avatar.
+- **Do** mostrar el cursor de bloque solo al pasar o enfocar, sin dejar hueco en reposo.
+- **Do** hacer parpadear la etiqueta cuatro veces en pasos duros (600 ms cada una) y dejarla fija; quieta con movimiento reducido.
+- **Do** dibujar flechas y chevron con puntas cuadradas.
+- **Do** precargar solo la pixelada en Bitmap; la fuente de nombre se declara sin precarga.
+
+##### Don't:
+- **Don't** redondear nada: ni radios, ni avatar, ni puntas de trazo.
+- **Don't** poner los nombres de links, los destacados de arriba, la bio o los metadatos en la pixelada.
+- **Don't** usar el rosa fuera del en vivo ni admitir rosa o coral como acento.
+- **Don't** hacer parpadear la etiqueta en loop, más de cuatro veces ni más rápido que 600 ms por ciclo.
+- **Don't** dibujar el borde de una caja en escalera con `border` ni su foco por fuera: el `clip-path` los recorta.
+- **Don't** colgar el marco del avatar del avatar: la foto lo recorta.
+- **Don't** sumar scanlines, CRT, brillos de neón ni degradés "retro gamer".
+- **Don't** volver a jacks o al hilo trenzado dentro de Bitmap, ni numerar secciones o links.
+- **Don't** sacar las excepciones de Bitmap de `[data-theme="bitmap"]`.
 
 ### Lomo cosido (familia Editorial)
 

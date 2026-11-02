@@ -100,3 +100,17 @@ FIRST VIEWPORT: Barra superior; avatar como perilla con el borde moleteado; nomb
 FORM: Pedalera, propuesta aprobada por el usuario en la tanda de nueve mockups. Firma: los cables del primer grupo se enchufan uno por uno al cargar (se revelan de arriba hacia abajo); quietos con movimiento reducido. Sin script: el cable es CSS.
 
 FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, DESIGN.md, and every shipping raster carrying its provenance
+
+## Direction contract — Bitmap (familia Enérgico)
+
+THESIS: La página es un afiche de pantalla de 8 bits: el nombre y cada sección van en letra pixelada a escala póster, y debajo los links son listas finas, de una línea de 1 px. Rechaza el "retro gamer" de scanlines, CRT y neón: la energía sale del contraste entre la letra gorda pixelada y la lista finita, no de efectos.
+
+OWN-WORLD: Negro de pantalla (#0e0f13) con tinta blanca (#f2f3f7); de día, papel (#f3f3ee) con tinta casi negra. Pixelify Sans 700 (alojada, solo en Bitmap) para el nombre, los títulos de sección y la inicial del avatar; los links en la fuente de nombre elegida, finos. El acento es una barra de píxeles bajo cada título y el cursor de bloque del link (azul por defecto, verde agua, ámbar, violeta o la tinta). Esquinas en escalera de píxeles, nunca redondeadas. Rosa reservado al en vivo.
+
+STORY: El visitante ve el avatar en su marco de píxeles y el nombre gigante, ve la etiqueta rosa "EN VIVO" que parpadea si está transmitiendo, recorre los títulos pixelados y toca el link de la lista.
+
+FIRST VIEWPORT: Barra superior; avatar cuadrado con esquinas en escalera dentro de un marco de píxeles en el acento; el nombre en Pixelify a escala póster; bio; "Redes" pixelado con su barra de píxeles; la lista fina de links; el en vivo con su etiqueta rosa invertida.
+
+FORM: Bitmap, propuesta aprobada por el usuario en la tanda de nueve mockups (se mostraron en el chat del 2026-10-30 y no quedaron en el repo; la decisión está en SPEC-styles.md, con el avatar obligatorio pedido por el usuario). Firma: la etiqueta "EN VIVO" parpadea cuatro veces en pasos duros y queda fija (nunca más de 5 s, WCAG 2.2.2); quieta con movimiento reducido. Al pasar por un link aparece un cursor de bloque delante del nombre.
+
+FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, DESIGN.md, and every shipping raster carrying its provenance

@@ -537,7 +537,8 @@
         "Lado A", "L1", "I"; vacío vuelve al automático). Solo desde el panel; por MCP, más adelante.
   - [x] Corcho (notas clavadas, hilo rojo entre chinches, nota amarilla en vivo).
   - [x] Pedalera (pedales con LED y pisador, cables de patch, LED rojo en vivo).
-  - [ ] Bitmap, Manual y Sumario, una por PR.
+  - [x] Bitmap (títulos en Pixelify Sans, listas finas, etiqueta EN VIVO que parpadea 2,4 s).
+  - [ ] Manual y Sumario, una por PR.
 
 ### ✅ Checkpoint F11 · ENTREGA 8
 - [ ] Elegís un estilo que te represente y tu página sigue rápida, clara y AAA.

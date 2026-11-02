@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-11-01T12:00:00.000Z",
+  "generatedAt": "2026-11-02T12:00:00.000Z",
   "title": "Design System: Plektia",
   "extensions": {
     "colorMeta": {
@@ -2715,6 +2715,380 @@
           "oklch(80% 0.122 288.5)",
           "oklch(95% 0.122 288.5)"
         ]
+      },
+      "bitmap-pantalla": {
+        "role": "neutral",
+        "displayName": "Pantalla (Bitmap)",
+        "canonical": "oklch(16.9% 0.008 274.4)",
+        "cssVar": "--color-bg (oscuro); tinta sobre el en vivo y de la selección en oscuro",
+        "theme": "bitmap",
+        "tonalRamp": [
+          "oklch(15% 0.008 274.4)",
+          "oklch(25% 0.008 274.4)",
+          "oklch(35% 0.008 274.4)",
+          "oklch(45% 0.008 274.4)",
+          "oklch(55% 0.008 274.4)",
+          "oklch(65% 0.008 274.4)",
+          "oklch(80% 0.008 274.4)",
+          "oklch(95% 0.008 274.4)"
+        ]
+      },
+      "bitmap-tinta-clara": {
+        "role": "neutral",
+        "displayName": "Tinta clara (Bitmap)",
+        "canonical": "oklch(96.5% 0.005 275.0)",
+        "cssVar": "--color-fg, --color-focus, --color-selection-bg (oscuro)",
+        "theme": "bitmap",
+        "tonalRamp": [
+          "oklch(15% 0.005 275.0)",
+          "oklch(25% 0.005 275.0)",
+          "oklch(35% 0.005 275.0)",
+          "oklch(45% 0.005 275.0)",
+          "oklch(55% 0.005 275.0)",
+          "oklch(65% 0.005 275.0)",
+          "oklch(80% 0.005 275.0)",
+          "oklch(95% 0.005 275.0)"
+        ]
+      },
+      "bitmap-tinta-clara-apagada": {
+        "role": "neutral",
+        "displayName": "Tinta clara apagada (Bitmap)",
+        "canonical": "oklch(83.0% 0.013 271.3)",
+        "cssVar": "--color-fg-muted (oscuro): @handle, bio, metadatos",
+        "theme": "bitmap",
+        "tonalRamp": [
+          "oklch(15% 0.013 271.3)",
+          "oklch(25% 0.013 271.3)",
+          "oklch(35% 0.013 271.3)",
+          "oklch(45% 0.013 271.3)",
+          "oklch(55% 0.013 271.3)",
+          "oklch(65% 0.013 271.3)",
+          "oklch(80% 0.013 271.3)",
+          "oklch(95% 0.013 271.3)"
+        ]
+      },
+      "bitmap-borde": {
+        "role": "neutral",
+        "displayName": "Borde (Bitmap)",
+        "canonical": "oklch(36.1% 0.018 272.3)",
+        "cssVar": "--color-line (oscuro): línea de 1 px de la lista fina, borde en escalera de tarjetas e íconos",
+        "theme": "bitmap",
+        "tonalRamp": [
+          "oklch(15% 0.018 272.3)",
+          "oklch(25% 0.018 272.3)",
+          "oklch(35% 0.018 272.3)",
+          "oklch(45% 0.018 272.3)",
+          "oklch(55% 0.018 272.3)",
+          "oklch(65% 0.018 272.3)",
+          "oklch(80% 0.018 272.3)",
+          "oklch(95% 0.018 272.3)"
+        ]
+      },
+      "bitmap-borde-tenue": {
+        "role": "neutral",
+        "displayName": "Borde tenue (Bitmap)",
+        "canonical": "oklch(27.0% 0.013 272.9)",
+        "cssVar": "--color-line-soft (oscuro): filetes secundarios de la base",
+        "theme": "bitmap",
+        "tonalRamp": [
+          "oklch(15% 0.013 272.9)",
+          "oklch(25% 0.013 272.9)",
+          "oklch(35% 0.013 272.9)",
+          "oklch(45% 0.013 272.9)",
+          "oklch(55% 0.013 272.9)",
+          "oklch(65% 0.013 272.9)",
+          "oklch(80% 0.013 272.9)",
+          "oklch(95% 0.013 272.9)"
+        ]
+      },
+      "bitmap-superficie": {
+        "role": "neutral",
+        "displayName": "Superficie (Bitmap)",
+        "canonical": "oklch(22.7% 0.012 270.8)",
+        "cssVar": "--color-surface (oscuro): relleno de las cajas en escalera y del avatar con inicial",
+        "theme": "bitmap",
+        "tonalRamp": [
+          "oklch(15% 0.012 270.8)",
+          "oklch(25% 0.012 270.8)",
+          "oklch(35% 0.012 270.8)",
+          "oklch(45% 0.012 270.8)",
+          "oklch(55% 0.012 270.8)",
+          "oklch(65% 0.012 270.8)",
+          "oklch(80% 0.012 270.8)",
+          "oklch(95% 0.012 270.8)"
+        ]
+      },
+      "bitmap-en-vivo": {
+        "role": "tertiary",
+        "displayName": "Rosa en vivo (Bitmap)",
+        "canonical": "oklch(81.2% 0.129 348.7)",
+        "cssVar": "--color-live (oscuro): etiqueta EN VIVO invertida, cronómetro, isotipo",
+        "theme": "bitmap",
+        "tonalRamp": [
+          "oklch(15% 0.129 348.7)",
+          "oklch(25% 0.129 348.7)",
+          "oklch(35% 0.129 348.7)",
+          "oklch(45% 0.129 348.7)",
+          "oklch(55% 0.129 348.7)",
+          "oklch(65% 0.129 348.7)",
+          "oklch(80% 0.129 348.7)",
+          "oklch(95% 0.129 348.7)"
+        ]
+      },
+      "bitmap-papel": {
+        "role": "neutral",
+        "displayName": "Papel (Bitmap)",
+        "canonical": "oklch(96.3% 0.007 106.5)",
+        "cssVar": "--color-bg (claro); tinta de la selección en claro",
+        "theme": "bitmap",
+        "tonalRamp": [
+          "oklch(15% 0.007 106.5)",
+          "oklch(25% 0.007 106.5)",
+          "oklch(35% 0.007 106.5)",
+          "oklch(45% 0.007 106.5)",
+          "oklch(55% 0.007 106.5)",
+          "oklch(65% 0.007 106.5)",
+          "oklch(80% 0.007 106.5)",
+          "oklch(95% 0.007 106.5)"
+        ]
+      },
+      "bitmap-tinta": {
+        "role": "neutral",
+        "displayName": "Tinta (Bitmap)",
+        "canonical": "oklch(18.3% 0.008 274.4)",
+        "cssVar": "--color-fg, --color-focus, --color-selection-bg (claro)",
+        "theme": "bitmap",
+        "tonalRamp": [
+          "oklch(15% 0.008 274.4)",
+          "oklch(25% 0.008 274.4)",
+          "oklch(35% 0.008 274.4)",
+          "oklch(45% 0.008 274.4)",
+          "oklch(55% 0.008 274.4)",
+          "oklch(65% 0.008 274.4)",
+          "oklch(80% 0.008 274.4)",
+          "oklch(95% 0.008 274.4)"
+        ]
+      },
+      "bitmap-tinta-apagada": {
+        "role": "neutral",
+        "displayName": "Tinta apagada (Bitmap)",
+        "canonical": "oklch(33.3% 0.013 267.1)",
+        "cssVar": "--color-fg-muted (claro)",
+        "theme": "bitmap",
+        "tonalRamp": [
+          "oklch(15% 0.013 267.1)",
+          "oklch(25% 0.013 267.1)",
+          "oklch(35% 0.013 267.1)",
+          "oklch(45% 0.013 267.1)",
+          "oklch(55% 0.013 267.1)",
+          "oklch(65% 0.013 267.1)",
+          "oklch(80% 0.013 267.1)",
+          "oklch(95% 0.013 267.1)"
+        ]
+      },
+      "bitmap-borde-claro": {
+        "role": "neutral",
+        "displayName": "Borde claro (Bitmap)",
+        "canonical": "oklch(78.6% 0.01 113.2)",
+        "cssVar": "--color-line (claro)",
+        "theme": "bitmap",
+        "tonalRamp": [
+          "oklch(15% 0.01 113.2)",
+          "oklch(25% 0.01 113.2)",
+          "oklch(35% 0.01 113.2)",
+          "oklch(45% 0.01 113.2)",
+          "oklch(55% 0.01 113.2)",
+          "oklch(65% 0.01 113.2)",
+          "oklch(80% 0.01 113.2)",
+          "oklch(95% 0.01 113.2)"
+        ]
+      },
+      "bitmap-borde-tenue-claro": {
+        "role": "neutral",
+        "displayName": "Borde tenue claro (Bitmap)",
+        "canonical": "oklch(89.3% 0.01 100.0)",
+        "cssVar": "--color-line-soft (claro)",
+        "theme": "bitmap",
+        "tonalRamp": [
+          "oklch(15% 0.01 100.0)",
+          "oklch(25% 0.01 100.0)",
+          "oklch(35% 0.01 100.0)",
+          "oklch(45% 0.01 100.0)",
+          "oklch(55% 0.01 100.0)",
+          "oklch(65% 0.01 100.0)",
+          "oklch(80% 0.01 100.0)",
+          "oklch(95% 0.01 100.0)"
+        ]
+      },
+      "bitmap-superficie-claro": {
+        "role": "neutral",
+        "displayName": "Superficie clara (Bitmap)",
+        "canonical": "oklch(100.0% 0.0 89.9)",
+        "cssVar": "--color-surface (claro); también --color-live-ink en claro",
+        "theme": "bitmap",
+        "tonalRamp": [
+          "oklch(15% 0.0 89.9)",
+          "oklch(25% 0.0 89.9)",
+          "oklch(35% 0.0 89.9)",
+          "oklch(45% 0.0 89.9)",
+          "oklch(55% 0.0 89.9)",
+          "oklch(65% 0.0 89.9)",
+          "oklch(80% 0.0 89.9)",
+          "oklch(95% 0.0 89.9)"
+        ]
+      },
+      "bitmap-en-vivo-claro": {
+        "role": "tertiary",
+        "displayName": "Frambuesa en vivo (Bitmap)",
+        "canonical": "oklch(41.9% 0.161 356.4)",
+        "cssVar": "--color-live (claro)",
+        "theme": "bitmap",
+        "tonalRamp": [
+          "oklch(15% 0.161 356.4)",
+          "oklch(25% 0.161 356.4)",
+          "oklch(35% 0.161 356.4)",
+          "oklch(45% 0.161 356.4)",
+          "oklch(55% 0.161 356.4)",
+          "oklch(65% 0.161 356.4)",
+          "oklch(80% 0.161 356.4)",
+          "oklch(95% 0.161 356.4)"
+        ]
+      },
+      "bitmap-cielo": {
+        "role": "primary",
+        "displayName": "Barra cielo (Bitmap)",
+        "canonical": "oklch(79.9% 0.103 254.2)",
+        "cssVar": "acento cielo en oscuro (por defecto): barra, cursor, marco, borde de destacados",
+        "theme": "bitmap",
+        "tonalRamp": [
+          "oklch(15% 0.103 254.2)",
+          "oklch(25% 0.103 254.2)",
+          "oklch(35% 0.103 254.2)",
+          "oklch(45% 0.103 254.2)",
+          "oklch(55% 0.103 254.2)",
+          "oklch(65% 0.103 254.2)",
+          "oklch(80% 0.103 254.2)",
+          "oklch(95% 0.103 254.2)"
+        ]
+      },
+      "bitmap-cielo-claro": {
+        "role": "primary",
+        "displayName": "Barra cielo clara (Bitmap)",
+        "canonical": "oklch(38.2% 0.129 259.0)",
+        "cssVar": "acento cielo en claro (por defecto)",
+        "theme": "bitmap",
+        "tonalRamp": [
+          "oklch(15% 0.129 259.0)",
+          "oklch(25% 0.129 259.0)",
+          "oklch(35% 0.129 259.0)",
+          "oklch(45% 0.129 259.0)",
+          "oklch(55% 0.129 259.0)",
+          "oklch(65% 0.129 259.0)",
+          "oklch(80% 0.129 259.0)",
+          "oklch(95% 0.129 259.0)"
+        ]
+      },
+      "bitmap-turquesa": {
+        "role": "secondary",
+        "displayName": "Barra verde agua (Bitmap)",
+        "canonical": "oklch(83.6% 0.107 182.6)",
+        "cssVar": "acento turquesa en oscuro",
+        "theme": "bitmap",
+        "tonalRamp": [
+          "oklch(15% 0.107 182.6)",
+          "oklch(25% 0.107 182.6)",
+          "oklch(35% 0.107 182.6)",
+          "oklch(45% 0.107 182.6)",
+          "oklch(55% 0.107 182.6)",
+          "oklch(65% 0.107 182.6)",
+          "oklch(80% 0.107 182.6)",
+          "oklch(95% 0.107 182.6)"
+        ]
+      },
+      "bitmap-turquesa-claro": {
+        "role": "secondary",
+        "displayName": "Barra verde agua clara (Bitmap)",
+        "canonical": "oklch(35.8% 0.062 181.9)",
+        "cssVar": "acento turquesa en claro",
+        "theme": "bitmap",
+        "tonalRamp": [
+          "oklch(15% 0.062 181.9)",
+          "oklch(25% 0.062 181.9)",
+          "oklch(35% 0.062 181.9)",
+          "oklch(45% 0.062 181.9)",
+          "oklch(55% 0.062 181.9)",
+          "oklch(65% 0.062 181.9)",
+          "oklch(80% 0.062 181.9)",
+          "oklch(95% 0.062 181.9)"
+        ]
+      },
+      "bitmap-ambar": {
+        "role": "secondary",
+        "displayName": "Barra ámbar (Bitmap)",
+        "canonical": "oklch(88.0% 0.135 86.1)",
+        "cssVar": "acento ambar en oscuro",
+        "theme": "bitmap",
+        "tonalRamp": [
+          "oklch(15% 0.135 86.1)",
+          "oklch(25% 0.135 86.1)",
+          "oklch(35% 0.135 86.1)",
+          "oklch(45% 0.135 86.1)",
+          "oklch(55% 0.135 86.1)",
+          "oklch(65% 0.135 86.1)",
+          "oklch(80% 0.135 86.1)",
+          "oklch(95% 0.135 86.1)"
+        ]
+      },
+      "bitmap-ambar-claro": {
+        "role": "secondary",
+        "displayName": "Barra ámbar clara (Bitmap)",
+        "canonical": "oklch(37.9% 0.08 75.8)",
+        "cssVar": "acento ambar en claro",
+        "theme": "bitmap",
+        "tonalRamp": [
+          "oklch(15% 0.08 75.8)",
+          "oklch(25% 0.08 75.8)",
+          "oklch(35% 0.08 75.8)",
+          "oklch(45% 0.08 75.8)",
+          "oklch(55% 0.08 75.8)",
+          "oklch(65% 0.08 75.8)",
+          "oklch(80% 0.08 75.8)",
+          "oklch(95% 0.08 75.8)"
+        ]
+      },
+      "bitmap-lavanda": {
+        "role": "secondary",
+        "displayName": "Barra violeta (Bitmap)",
+        "canonical": "oklch(81.7% 0.103 295.3)",
+        "cssVar": "acento lavanda en oscuro",
+        "theme": "bitmap",
+        "tonalRamp": [
+          "oklch(15% 0.103 295.3)",
+          "oklch(25% 0.103 295.3)",
+          "oklch(35% 0.103 295.3)",
+          "oklch(45% 0.103 295.3)",
+          "oklch(55% 0.103 295.3)",
+          "oklch(65% 0.103 295.3)",
+          "oklch(80% 0.103 295.3)",
+          "oklch(95% 0.103 295.3)"
+        ]
+      },
+      "bitmap-lavanda-claro": {
+        "role": "secondary",
+        "displayName": "Barra violeta clara (Bitmap)",
+        "canonical": "oklch(36.4% 0.136 287.9)",
+        "cssVar": "acento lavanda en claro",
+        "theme": "bitmap",
+        "tonalRamp": [
+          "oklch(15% 0.136 287.9)",
+          "oklch(25% 0.136 287.9)",
+          "oklch(35% 0.136 287.9)",
+          "oklch(45% 0.136 287.9)",
+          "oklch(55% 0.136 287.9)",
+          "oklch(65% 0.136 287.9)",
+          "oklch(80% 0.136 287.9)",
+          "oklch(95% 0.136 287.9)"
+        ]
       }
     },
     "typographyMeta": {
@@ -2769,6 +3143,22 @@
       "pedalera-etiqueta": {
         "displayName": "Etiqueta de rotuladora (Pedalera)",
         "purpose": "Título de sección en Pedalera: la fuente de los nombres a 0.875rem y 700, mayúsculas con tracking 0.1em, en tinta invertida sobre una cinta fit-content de esquinas de 3 px. Sin filete; no numera ni muestra el rótulo de sección del dueño."
+      },
+      "bitmap-nombre": {
+        "displayName": "Nombre a escala póster (Bitmap)",
+        "purpose": "Nombre de la persona en Bitmap: Pixelify Sans 700 (--font-pixel, alojada, subset latino, única fuente precargada), clamp(2.75rem, 11.5vw, 4.5rem), interlineado 1, sin tracking."
+      },
+      "bitmap-titulo": {
+        "displayName": "Título pixelado (Bitmap)",
+        "purpose": "Título de sección en Bitmap: Pixelify Sans 700 a 1.75rem, interlineado 1.1, sin sangría ni filete, sobre la barra de píxeles de 4 px en el acento. No numera ni muestra el rótulo de sección del dueño."
+      },
+      "bitmap-inicial": {
+        "displayName": "Inicial del avatar (Bitmap)",
+        "purpose": "Inicial del avatar en Bitmap: Pixelify Sans 700 a 3rem."
+      },
+      "bitmap-en-vivo": {
+        "displayName": "Etiqueta EN VIVO (Bitmap)",
+        "purpose": "Etiqueta en vivo en Bitmap: Pixelify Sans 700 al tamaño de los metadatos, mayúsculas, tracking 0.04em, invertida en rosa. Los nombres de links y de destacados van en la fuente de nombre elegida (Bricolage por defecto; Space Mono, Nunito) a 500."
       }
     },
     "shadows": [
@@ -2876,6 +3266,26 @@
         "name": "pedalera-pisador",
         "value": "border: 2px solid var(--color-accent); box-shadow: inset 0 0 0 3px var(--color-bg)",
         "purpose": "Aro de acento, luz del color del tablero y capuchón (--color-line-soft; --color-line pisado; el acento en el destacado con acento)."
+      },
+      {
+        "name": "bitmap-escalera",
+        "value": "clip-path: var(--stairs) (polígono de 20 vértices, dos escalones de --pixel: 4px por esquina)",
+        "purpose": "Recorte de toda caja de Bitmap: avatar, marco, tarjetas, destacados, fila de íconos. No es sombra: Bitmap no tiene elevación."
+      },
+      {
+        "name": "bitmap-caja-escalera",
+        "value": "background: var(--box-edge); clip-path: var(--stairs); ::before { inset: var(--pixel); background: var(--box-fill); clip-path: var(--stairs); z-index: -1 } con isolation: isolate",
+        "purpose": "Borde de 4 px que sigue los escalones: la caja recortada en el color del borde y el relleno un píxel adentro. Borde --color-line (o el acento en destacados) y relleno --color-surface (o el acento al --highlight-tint sobre el fondo en el destacado con acento)."
+      },
+      {
+        "name": "bitmap-foco",
+        "value": "outline-offset: -8px",
+        "purpose": "El foco de la base, por dentro de la escalera en las cajas recortadas: afuera lo cortaría el clip-path."
+      },
+      {
+        "name": "bitmap-miniatura-avatar",
+        "value": "0 0 0 3px var(--color-accent)",
+        "purpose": "Aro de spread puro del avatar cuadrado en la miniatura del panel."
       }
     ],
     "motion": [
@@ -2948,6 +3358,16 @@
         "name": "pedalera-pisar",
         "value": "translateY(1px) scale(0.94), capuchón a --color-line; transición dur-fast ease-out de la base",
         "purpose": "Al pasar o enfocar un pedal o un destacado de arriba se pisa el pisador; el pedal no sube."
+      },
+      {
+        "name": "bitmap-parpadeo",
+        "value": "600ms steps(1, end) 4; al 50% fondo transparente y letras en --color-live",
+        "purpose": "Firma de Bitmap: la etiqueta EN VIVO parpadea cuatro veces en 2,4 s (~1,7 Hz) y queda fija, invertida (WCAG 2.2.2 y 2.3.1). Sin script. No parpadea con movimiento reducido."
+      },
+      {
+        "name": "bitmap-cursor",
+        "value": "width 0 → 0.55em y margin-inline-end -0.5rem → 0, sin transición",
+        "purpose": "Cursor de bloque del acento (0.55em × 1em) delante del nombre al pasar o enfocar un link; en reposo no deja hueco."
       }
     ],
     "breakpoints": [
@@ -2992,6 +3412,7 @@
         "corcho",
         "subte",
         "pedalera",
+        "bitmap",
         "lomo"
       ],
       "rulesSource": "src/domain/theme.ts (familia, acentos, formas y tipografías por variante)",
@@ -3281,6 +3702,83 @@
           "LED en vez del jack con ojo; el pedal en vivo sin pulso (la señal es el LED encendido)",
           "Títulos como etiquetas de rotuladora en tinta invertida y mayúsculas, sin filete",
           "Gradientes cónicos solo en el moleteado y la marca de la perilla"
+        ]
+      },
+      "bitmap": {
+        "accents": {
+          "cielo": {
+            "dark": "#8fc1ff",
+            "light": "#0f3f86",
+            "bar": "azul",
+            "default": true
+          },
+          "turquesa": {
+            "dark": "#6fe0cf",
+            "light": "#06473f",
+            "bar": "verde agua"
+          },
+          "ambar": {
+            "dark": "#ffd166",
+            "light": "#5a3b00",
+            "bar": "ámbar"
+          },
+          "lavanda": {
+            "dark": "#c8b6ff",
+            "light": "#3e2b80",
+            "bar": "violeta"
+          },
+          "hueso": {
+            "dark": "#f2f3f7",
+            "light": "#111216",
+            "bar": "la tinta misma"
+          }
+        },
+        "accent": "El acento es la barra de píxeles bajo cada título, el cursor de bloque, el marco del avatar, el borde en escalera de los destacados de arriba y del destacado con acento, y el tinte de su relleno. Nunca la etiqueta en vivo ni el texto. Coral, rosa y arena no se admiten.",
+        "live": {
+          "dark": {
+            "colorLive": "#ff9ecf",
+            "ink": "#0e0f13"
+          },
+          "light": {
+            "colorLive": "#8a0f4f",
+            "ink": "#ffffff"
+          },
+          "note": "El rosa es solo del en vivo: la etiqueta EN VIVO invertida (fondo --color-live, letras --color-live-ink, 1 × 6 px, sin esquinas), el cronómetro y el isotipo. Parpadea cuatro veces al cargar y queda fija."
+        },
+        "font": {
+          "family": "Pixelify Sans",
+          "cssVariable": "--font-pixel",
+          "weight": 700,
+          "source": "@fontsource/pixelify-sans 5.3.0, auditado (OFL-1.1, sin scripts, procedencia SLSA); solo subset latino, 7,9 KB",
+          "preload": "Única fuente precargada en Bitmap; la fuente de nombre se declara sin precarga.",
+          "use": "Solo el nombre, los títulos de sección, la inicial del avatar y la etiqueta EN VIVO."
+        },
+        "frame": "Avatar cuadrado de 88 px recortado en escalera, sin el doble anillo de la base, dentro de un marco de 104 px en el acento recortado en escalera y dibujado en .identity::before, porque la foto recorta lo que cuelga del avatar.",
+        "shapes": [
+          "rows",
+          "cards"
+        ],
+        "defaultShape": "rows",
+        "fonts": [
+          "bricolage",
+          "space_mono",
+          "nunito"
+        ],
+        "defaultFont": "bricolage",
+        "sectionMark": null,
+        "thread": false,
+        "jackCol": "0px",
+        "radiusMd": "0px",
+        "radiusSm": "0px",
+        "pixel": "4px",
+        "exceptions": [
+          "Sin hilo ni jacks: la lista a todo el ancho",
+          "Nombre y títulos en Pixelify Sans, con barra de píxeles del acento en vez del filete grafito",
+          "Nada redondeado: radios en 0, avatar cuadrado y recorte en escalera en toda caja",
+          "Cajas pintadas con fondo (borde = fondo de la caja recortada) en tarjetas, destacados y fila de íconos",
+          "Foco por dentro (outline-offset -8px) en las cajas en escalera",
+          "Señal en vivo: etiqueta rosa invertida que parpadea cuatro veces y queda fija, en vez del jack lima que late",
+          "El destacado de arriba no sube al pasar o enfocar"
         ]
       },
       "lomo": {
@@ -3593,6 +4091,30 @@
       "css": ".ds-ped-hl{width:22rem;padding:1rem 1rem 1rem calc(1rem + 18px);background:#121316;color:#eef0f3;font-family:system-ui,sans-serif} .ds-ped-hl-body{position:relative;display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:0.75rem;min-height:3.25rem;padding:0.5rem 0.75rem 0.5rem 34px;border:2px solid #7fd6c4;border-radius:10px;background:#24262b;box-shadow:inset 0 1px 0 rgb(255 255 255 / 7%),0 2px 4px rgb(0 0 0 / 45%);color:inherit;text-decoration:none} .ds-ped-hl-body:focus-visible{outline:2px solid #eef0f3;outline-offset:4px} .ds-ped-hl-led{position:absolute;top:calc(1.625rem - 4px);left:14px;width:8px;height:8px;border-radius:50%;background:#6b3f3a;box-shadow:0 0 0 2px #121316,inset 0 1px 1px rgb(0 0 0 / 35%)} .ds-ped-hl-name{display:block;font-family:'Bricolage Grotesque',system-ui,sans-serif;font-size:1.0625rem;font-weight:700} .ds-ped-hl-meta{display:block;color:#c3c7ce;font-size:0.8125rem} .ds-ped-hl-go{display:grid;place-items:center;width:18px;height:18px;padding:7px;border:2px solid #7fd6c4;border-radius:50%;background:#7fd6c4;box-shadow:inset 0 0 0 3px #121316;color:#121316;transition:transform 160ms cubic-bezier(0.16,1,0.3,1)} .ds-ped-hl-body:is(:hover,:focus-visible) .ds-ped-hl-go{transform:translateY(1px) scale(0.94)}"
     },
     {
+      "name": "Lista fina con título pixelado (Bitmap)",
+      "kind": "custom",
+      "refersTo": "bitmap-fila",
+      "description": "Una sección de Bitmap en forma rows: título en Pixelify con su barra de píxeles en el acento y links en lista fina con línea de 1 px; el cursor de bloque aparece al pasar o enfocar y la etiqueta EN VIVO rosa invertida parpadea cuatro veces y queda fija.",
+      "html": "<section class=\"ds-bm\"><h2 class=\"ds-bm-title\">Redes</h2><a class=\"ds-bm-link\" href=\"#\"><span><span class=\"ds-bm-name\">Twitch</span><span class=\"ds-bm-meta\"><b class=\"ds-bm-live\">En vivo</b> · Programando</span></span><svg class=\"ds-bm-go\" viewBox=\"0 0 24 24\" width=\"18\" height=\"18\" aria-hidden=\"true\"><path d=\"M7 17 17 7M8 7h9v9\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"square\" stroke-linejoin=\"miter\"/></svg></a><a class=\"ds-bm-link\" href=\"#\"><span><span class=\"ds-bm-name\">YouTube</span><span class=\"ds-bm-meta\">@juedsay</span></span><svg class=\"ds-bm-go\" viewBox=\"0 0 24 24\" width=\"18\" height=\"18\" aria-hidden=\"true\"><path d=\"M7 17 17 7M8 7h9v9\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"square\" stroke-linejoin=\"miter\"/></svg></a></section>",
+      "css": ".ds-bm{width:22rem;padding:1rem;background:#0e0f13;color:#f2f3f7;font-family:system-ui,sans-serif} .ds-bm-title{margin:0;padding-bottom:0.5rem;background:linear-gradient(#8fc1ff 0 0) left bottom/100% 4px no-repeat;font-family:'Pixelify Sans',ui-monospace,monospace;font-size:1.75rem;font-weight:700;letter-spacing:0;line-height:1.1} .ds-bm-link{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:0.75rem;min-height:3.25rem;padding:0.75rem 0;border-bottom:1px solid #3a3d47;color:inherit;text-decoration:none} .ds-bm-link:focus-visible{outline:2px solid #f2f3f7;outline-offset:4px} .ds-bm-name{display:flex;align-items:center;gap:0.5rem;font-family:'Bricolage Grotesque',system-ui,sans-serif;font-size:1.0625rem;font-weight:500;line-height:1.3} .ds-bm-name::before{content:\"\";flex:none;width:0;height:1em;margin-inline-end:-0.5rem;background:#8fc1ff} .ds-bm-link:is(:hover,:focus-visible) .ds-bm-name::before{width:0.55em;margin-inline-end:0} .ds-bm-meta{display:block;color:#c4c7d0;font-size:0.8125rem} .ds-bm-live{padding:1px 6px;background:#ff9ecf;color:#0e0f13;font-family:'Pixelify Sans',ui-monospace,monospace;font-weight:700;letter-spacing:0.04em;text-transform:uppercase;animation:ds-bm-parpadeo 600ms steps(1,end) 4} @keyframes ds-bm-parpadeo{50%{background:transparent;color:#ff9ecf}} .ds-bm-go{color:#c4c7d0} @media (prefers-reduced-motion: reduce){.ds-bm-live{animation:none}}"
+    },
+    {
+      "name": "Caja en escalera (Bitmap)",
+      "kind": "card",
+      "refersTo": "bitmap-caja",
+      "description": "Tarjeta y destacado con acento en Bitmap: la caja recortada en escalera en el color del borde y el relleno un píxel adentro; el foco va por dentro (outline-offset -8px).",
+      "html": "<div class=\"ds-bm-cards\"><a class=\"ds-bm-box\" href=\"#\"><span><span class=\"ds-bm-box-name\">Instagram</span><span class=\"ds-bm-box-meta\">@juedsay</span></span><svg class=\"ds-bm-go\" viewBox=\"0 0 24 24\" width=\"18\" height=\"18\" aria-hidden=\"true\"><path d=\"M7 17 17 7M8 7h9v9\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"square\" stroke-linejoin=\"miter\"/></svg></a><a class=\"ds-bm-box is-accent\" href=\"#\"><span><span class=\"ds-bm-box-name\">Plektia</span><span class=\"ds-bm-box-meta\">Esta página: links, en vivo y MCP</span></span><svg class=\"ds-bm-go\" viewBox=\"0 0 24 24\" width=\"18\" height=\"18\" aria-hidden=\"true\"><path d=\"M7 17 17 7M8 7h9v9\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"square\" stroke-linejoin=\"miter\"/></svg></a></div>",
+      "css": ".ds-bm-cards{width:22rem;padding:1rem;background:#0e0f13;color:#f2f3f7;font-family:system-ui,sans-serif} .ds-bm-box{--edge:#3a3d47;--fill:#1a1c22;position:relative;isolation:isolate;display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:0.75rem;min-height:3.25rem;margin-bottom:0.5rem;padding:0.75rem 1rem;background:var(--edge);clip-path:polygon(0 8px,4px 8px,4px 4px,8px 4px,8px 0,calc(100% - 8px) 0,calc(100% - 8px) 4px,calc(100% - 4px) 4px,calc(100% - 4px) 8px,100% 8px,100% calc(100% - 8px),calc(100% - 4px) calc(100% - 8px),calc(100% - 4px) calc(100% - 4px),calc(100% - 8px) calc(100% - 4px),calc(100% - 8px) 100%,8px 100%,8px calc(100% - 4px),4px calc(100% - 4px),4px calc(100% - 8px),0 calc(100% - 8px));color:inherit;text-decoration:none} .ds-bm-box::before{content:\"\";position:absolute;z-index:-1;inset:4px;background:var(--fill);clip-path:polygon(0 8px,4px 8px,4px 4px,8px 4px,8px 0,calc(100% - 8px) 0,calc(100% - 8px) 4px,calc(100% - 4px) 4px,calc(100% - 4px) 8px,100% 8px,100% calc(100% - 8px),calc(100% - 4px) calc(100% - 8px),calc(100% - 4px) calc(100% - 4px),calc(100% - 8px) calc(100% - 4px),calc(100% - 8px) 100%,8px 100%,8px calc(100% - 4px),4px calc(100% - 4px),4px calc(100% - 8px),0 calc(100% - 8px))} .ds-bm-box.is-accent{--edge:#8fc1ff;--fill:color-mix(in srgb,#8fc1ff 6%,#0e0f13)} .ds-bm-box:focus-visible{outline:2px solid #f2f3f7;outline-offset:-8px} .ds-bm-box-name{display:block;font-family:'Bricolage Grotesque',system-ui,sans-serif;font-size:1.0625rem;font-weight:500} .ds-bm-box-meta{display:block;color:#c4c7d0;font-size:0.8125rem} .ds-bm-box .ds-bm-go{color:#c4c7d0}"
+    },
+    {
+      "name": "Avatar en marco de píxeles (Bitmap)",
+      "kind": "custom",
+      "refersTo": "bitmap-avatar",
+      "description": "Avatar cuadrado de 88 px recortado en escalera con la inicial pixelada, sobre un marco de 104 px en el acento dibujado detrás (en el producto, en .identity::before), y el nombre a escala póster.",
+      "html": "<div class=\"ds-bm-id\"><div class=\"ds-bm-avatar\" aria-hidden=\"true\">J</div><p class=\"ds-bm-h1\">Julián</p></div>",
+      "css": ".ds-bm-id{position:relative;display:grid;justify-items:center;width:22rem;padding:1rem 1rem 1.5rem;background:#0e0f13;color:#f2f3f7} .ds-bm-id::before{content:\"\";position:absolute;top:calc(1rem - 8px);left:50%;width:104px;height:104px;background:#8fc1ff;clip-path:polygon(0 8px,4px 8px,4px 4px,8px 4px,8px 0,calc(100% - 8px) 0,calc(100% - 8px) 4px,calc(100% - 4px) 4px,calc(100% - 4px) 8px,100% 8px,100% calc(100% - 8px),calc(100% - 4px) calc(100% - 8px),calc(100% - 4px) calc(100% - 4px),calc(100% - 8px) calc(100% - 4px),calc(100% - 8px) 100%,8px 100%,8px calc(100% - 4px),4px calc(100% - 4px),4px calc(100% - 8px),0 calc(100% - 8px));translate:-50% 0} .ds-bm-avatar{position:relative;display:grid;place-items:center;width:88px;height:88px;background:#1a1c22;clip-path:polygon(0 8px,4px 8px,4px 4px,8px 4px,8px 0,calc(100% - 8px) 0,calc(100% - 8px) 4px,calc(100% - 4px) 4px,calc(100% - 4px) 8px,100% 8px,100% calc(100% - 8px),calc(100% - 4px) calc(100% - 8px),calc(100% - 4px) calc(100% - 4px),calc(100% - 8px) calc(100% - 4px),calc(100% - 8px) 100%,8px 100%,8px calc(100% - 4px),4px calc(100% - 4px),4px calc(100% - 8px),0 calc(100% - 8px));font-family:'Pixelify Sans',ui-monospace,monospace;font-size:3rem;font-weight:700} .ds-bm-h1{margin:0.75rem 0 0;font-family:'Pixelify Sans',ui-monospace,monospace;font-size:clamp(2.75rem,11.5vw,4.5rem);font-weight:700;letter-spacing:0;line-height:1}"
+    },
+    {
       "name": "Lado con temas (Lado A / B)",
       "kind": "custom",
       "refersTo": "cassette-tema",
@@ -3783,6 +4305,16 @@
         "section": "colors"
       },
       {
+        "name": "La regla del rosa",
+        "body": "El rosa es la señal en vivo de Bitmap y de nada más: la etiqueta \"EN VIVO\", el cronómetro y el isotipo (por la regla común). Ninguna barra, cursor, marco ni borde es rosa (por eso rosa y coral quedan afuera como acentos), y el rosa no marca foco ni hover.",
+        "section": "colors"
+      },
+      {
+        "name": "La regla de la pixelada a escala",
+        "body": "La pixelada va solo donde es grande o es una marca corta: el nombre, los títulos de sección, la inicial del avatar y la etiqueta \"EN VIVO\". Los nombres de links, los destacados de arriba, la bio y los metadatos van en su fuente: el contraste entre la letra gorda y la lista fina es el motivo.",
+        "section": "typography"
+      },
+      {
         "name": "La regla de la cinta",
         "body": "El rojo es la señal en vivo de Lomo cosido y de nada más: ninguna tela es roja ni rojiza (por eso coral, ámbar y rosa quedan afuera). La cinta (`--ribbon`) es gráfica y se mide a 3:1; el texto \"En vivo\" usa `--color-live`, que se mide a 7:1. No se intercambian.",
         "section": "colors"
@@ -3853,6 +4385,13 @@
       "**Do** rotular cada sección como etiqueta de rotuladora en tinta invertida.",
       "**Do** mantener el aro de acento del destacado también al pasar o enfocar.",
       "**Do** enchufar solo los cables del primer grupo al cargar, y dejarlos quietos con movimiento reducido.",
+      "**Do** recortar toda caja con la escalera y armar su borde como la caja en el color del borde con un `::before` de relleno un píxel adentro.",
+      "**Do** llevar el foco por dentro de la escalera (`outline-offset: -8px`) en toda caja recortada.",
+      "**Do** dibujar el marco de píxeles del avatar en `.identity::before`, detrás del avatar.",
+      "**Do** mostrar el cursor de bloque solo al pasar o enfocar, sin dejar hueco en reposo.",
+      "**Do** hacer parpadear la etiqueta cuatro veces en pasos duros (600 ms cada una) y dejarla fija; quieta con movimiento reducido.",
+      "**Do** dibujar flechas y chevron con puntas cuadradas.",
+      "**Do** precargar solo la pixelada en Bitmap; la fuente de nombre se declara sin precarga.",
       "**Do** coser cada entrada al lomo con su puntada de 14 × 3 px en la tela y sus dos agujeros de costura.",
       "**Do** abrir cada cuadernillo con el numeral romano a cuerpo completo en la tela y el título en versalitas armadas (mayúsculas a 0.8, tracking 0.09em, 600).",
       "**Do** trazar el filete del capítulo siempre en tinta, con cualquier acento.",
@@ -3900,6 +4439,14 @@
       "**Don't** usar brillos de neón ni gradientes \"gamer\": color plano en gabinetes, cables y aros.",
       "**Don't** volver a jacks o al hilo trenzado dentro de Pedalera, ni numerar secciones o pedales.",
       "**Don't** sacar las excepciones de Pedalera de `[data-theme=\"pedalera\"]`.",
+      "**Don't** poner los nombres de links, los destacados de arriba, la bio o los metadatos en la pixelada.",
+      "**Don't** usar el rosa fuera del en vivo ni admitir rosa o coral como acento.",
+      "**Don't** hacer parpadear la etiqueta en loop, más de cuatro veces ni más rápido que 600 ms por ciclo.",
+      "**Don't** dibujar el borde de una caja en escalera con `border` ni su foco por fuera: el `clip-path` los recorta.",
+      "**Don't** colgar el marco del avatar del avatar: la foto lo recorta.",
+      "**Don't** sumar scanlines, CRT, brillos de neón ni degradés \"retro gamer\".",
+      "**Don't** volver a jacks o al hilo trenzado dentro de Bitmap, ni numerar secciones o links.",
+      "**Don't** sacar las excepciones de Bitmap de `[data-theme=\"bitmap\"]`.",
       "**Don't** admitir telas rojas o rojizas (coral, ámbar, rosa): el rojo es de la cinta.",
       "**Don't** usar `--ribbon` para texto ni `--color-live` para la cinta.",
       "**Don't** poner itálica en nombres de Fraunces: se sirve solo en redonda.",

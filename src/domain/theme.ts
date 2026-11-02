@@ -144,7 +144,19 @@ export const THEME_RULES: Readonly<Record<Theme, ThemeRules>> = {
     defaultFont: "bricolage",
     sectionMark: null,
   },
-  bitmap: upcoming("energico"),
+  // Afiche de 8 bits: barras azules por defecto; el rosa es de la etiqueta "EN VIVO".
+  bitmap: {
+    family: "energico",
+    available: true,
+    thread: false,
+    accents: ["cielo", "turquesa", "ambar", "lavanda", "hueso"],
+    defaultAccent: "cielo",
+    shapes: ["rows", "cards"],
+    defaultShape: "rows",
+    fonts: ["bricolage", "space_mono", "nunito"],
+    defaultFont: "bricolage",
+    sectionMark: null,
+  },
   // Libro cosido: tinta azul por defecto; el rojo queda para la cinta (en vivo).
   lomo: {
     family: "editorial",

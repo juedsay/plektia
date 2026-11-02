@@ -107,6 +107,25 @@ export default defineConfig({
         ],
       },
     },
+    // Pixelada de Bitmap (SPEC-styles): fontsource 5.3.0 auditado (OFL-1.1, sin
+    // scripts, procedencia SLSA), solo el subset latino a 700 y solo en esa variante.
+    {
+      provider: fontProviders.local(),
+      name: "Pixelify Sans",
+      cssVariable: "--font-pixel",
+      fallbacks: ["ui-monospace", "monospace"],
+      options: {
+        variants: [
+          {
+            weight: 700,
+            style: "normal",
+            src: [
+              "./node_modules/@fontsource/pixelify-sans/files/pixelify-sans-latin-700-normal.woff2",
+            ],
+          },
+        ],
+      },
+    },
     {
       provider: fontProviders.local(),
       name: "Space Mono",
