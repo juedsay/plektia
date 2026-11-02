@@ -163,14 +163,15 @@ test.describe("panel: presentación de la página (/admin/page)", () => {
     await signIn(context, baseURL ?? "", "member@plektia.test");
   });
 
-  test("muestra lo guardado y los estilos que todavía no están", async ({ page }) => {
+  test("muestra lo guardado y los diez estilos para elegir", async ({ page }) => {
     await page.goto("/admin/page");
     await expect(page.getByLabel("Nombre", { exact: true })).toHaveValue("Miembro Demo");
     await expect(page.getByLabel("Bio")).toHaveValue(
       "Perfil de prueba con 50 links para medir el rendimiento.",
     );
     await expect(page.getByRole("radio", { name: /^Patchera/ })).toBeChecked();
-    await expect(page.getByRole("radio", { name: /^Sumario/ })).toBeDisabled();
+    await expect(page.locator('input[name="theme"]')).toHaveCount(10);
+    await expect(page.locator('input[name="theme"]:disabled')).toHaveCount(0);
     await expect(page.getByRole("checkbox", { name: /Mostrar @miembro-demo/ })).toBeChecked();
     expect(await violations(page)).toEqual([]);
   });

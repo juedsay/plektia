@@ -206,6 +206,27 @@ colors:
   bitmap-ambar-claro: "#5a3b00"
   bitmap-lavanda: "#c8b6ff"
   bitmap-lavanda-claro: "#3e2b80"
+  sumario-tinta: "#141311"
+  sumario-tinta-clara: "#f1ede4"
+  sumario-tinta-clara-apagada: "#c9c3b6"
+  sumario-filete: "#45413a"
+  sumario-filete-tenue: "#2c2a26"
+  sumario-superficie: "#1f1d1a"
+  sumario-folio-en-vivo: "#ff8d80"
+  sumario-papel: "#fbfaf6"
+  sumario-tinta-apagada: "#3b3833"
+  sumario-filete-claro: "#c9c4b8"
+  sumario-filete-tenue-claro: "#e6e2d8"
+  sumario-superficie-clara: "#ffffff"
+  sumario-folio-en-vivo-claro: "#8a0d07"
+  sumario-cielo: "#8fb8ff"
+  sumario-cielo-claro: "#123f86"
+  sumario-ambar: "#f0c060"
+  sumario-ambar-claro: "#5a3c00"
+  sumario-turquesa: "#7fd1b9"
+  sumario-turquesa-claro: "#0a4a3d"
+  sumario-lavanda: "#c9b3f2"
+  sumario-lavanda-claro: "#3f2b7a"
 typography:
   display:
     fontFamily: "Bricolage Grotesque, system-ui, sans-serif"
@@ -309,6 +330,23 @@ typography:
     fontSize: "0.8125rem"
     fontWeight: 700
     letterSpacing: "0.04em"
+  sumario-nombre:
+    fontFamily: "Fraunces, Georgia, serif"
+    fontSize: "clamp(2.75rem, 12vw, 3.75rem)"
+    fontWeight: 600
+    lineHeight: 1.05
+    letterSpacing: "-0.02em"
+  sumario-folio:
+    fontFamily: "Fraunces, Georgia, serif"
+    fontSize: "1.75rem"
+    fontWeight: 500
+    lineHeight: 1
+    fontFeature: "lnum, tnum"
+  sumario-apartado:
+    fontFamily: "system-ui, -apple-system, Segoe UI, Roboto, sans-serif"
+    fontSize: "0.875rem"
+    fontWeight: 700
+    letterSpacing: "0.14em"
 rounded:
   sm: "4px"
   md: "6px"
@@ -325,6 +363,7 @@ rounded:
   pedalera-destacado: "12px"
   pedalera-etiqueta: "3px"
   bitmap-esquina: "0"
+  sumario-esquina: "0"
 spacing:
   "1": "0.25rem"
   "2": "0.5rem"
@@ -703,6 +742,42 @@ components:
     typography: "{typography.bitmap-en-vivo}"
     rounded: "{rounded.bitmap-esquina}"
     padding: "1px 6px"
+  sumario-retrato:
+    backgroundColor: "{colors.sumario-superficie}"
+    textColor: "{colors.sumario-tinta-clara}"
+    rounded: "{rounded.sumario-esquina}"
+    width: "88px"
+    height: "110px"
+  sumario-apartado:
+    textColor: "{colors.sumario-tinta-clara}"
+    typography: "{typography.sumario-apartado}"
+    padding: "0.5rem 0"
+  sumario-folio:
+    textColor: "{colors.sumario-tinta-clara}"
+    typography: "{typography.sumario-folio}"
+    width: "3.25rem"
+  sumario-folio-destacado:
+    textColor: "{colors.sumario-cielo}"
+    typography: "{typography.sumario-folio}"
+  sumario-folio-en-vivo:
+    textColor: "{colors.sumario-folio-en-vivo}"
+    typography: "{typography.sumario-folio}"
+  sumario-folio-en-vivo-claro:
+    textColor: "{colors.sumario-folio-en-vivo-claro}"
+    typography: "{typography.sumario-folio}"
+  sumario-nota:
+    textColor: "{colors.sumario-tinta-clara}"
+    height: "3.25rem"
+  sumario-nota-tarjeta:
+    backgroundColor: "{colors.sumario-superficie}"
+    textColor: "{colors.sumario-tinta-clara}"
+    rounded: "{rounded.sumario-esquina}"
+    padding: "0 1rem"
+  sumario-nota-de-tapa:
+    backgroundColor: "transparent"
+    textColor: "{colors.sumario-tinta-clara}"
+    rounded: "{rounded.sumario-esquina}"
+    padding: "1rem 0"
 ---
 
 # Design System: Plektia
@@ -873,7 +948,7 @@ SVG absoluto sobre la patchera, sin eventos de puntero, que nunca mueve el layou
 
 ## Estilos: familias y variantes
 
-Desde [SPEC-styles](SPEC-styles.md), los cuatro "temas" del contrato de tokens pasaron a ser **familias** (Técnico, Cercano, Enérgico, Editorial) con **variantes** adentro: diez en total. `pages.theme` guarda la variante y es el valor de `data-theme`; la familia y lo que admite cada variante se deducen en `src/domain/theme.ts`. Cada variante tiene su propio motivo y su pieza firma; todas comparten la estructura, el contenido y las clases de los componentes, y redefinen sus marcadores (el jack pasa a ser punto, estación, LED, folio).
+Desde [SPEC-styles](SPEC-styles.md), los cuatro "temas" del contrato de tokens pasaron a ser **familias** (Técnico, Cercano, Enérgico, Editorial) con **variantes** adentro: diez en total, todas construidas. `pages.theme` guarda la variante y es el valor de `data-theme`; la familia y lo que admite cada variante se deducen en `src/domain/theme.ts`. Cada variante tiene su propio motivo y su pieza firma; todas comparten la estructura, el contenido y las clases de los componentes, y redefinen sus marcadores (el jack pasa a ser punto, estación, LED, folio).
 
 | Familia | Variante (`data-theme`) | Estado | Pieza firma | Señal en vivo |
 |---|---|---|---|---|
@@ -886,7 +961,7 @@ Desde [SPEC-styles](SPEC-styles.md), los cuatro "temas" del contrato de tokens p
 | Enérgico | Bitmap (`bitmap`) | construida | Afiche de pantalla de 8 bits: el nombre y los títulos de sección en letra pixelada a escala póster, con su barra de píxeles en el acento, sobre listas finas de 1 px; esquinas en escalera, nada redondeado; el avatar cuadrado en su marco de píxeles; un cursor de bloque delante del link al pasar o enfocar | La etiqueta rosa "EN VIVO" invertida, que parpadea cuatro veces y queda fija |
 | Editorial | Lomo cosido (`lomo`) | construida | El lomo con sus puntadas en la tela; capítulos con numeral romano; links como entradas de índice; las puntadas del primer cuadernillo se cosen al cargar | La cinta marcapáginas roja colgando sobre la entrada |
 | Editorial | Manual (`manual`) | construida | Manual de consulta encarpetado: secciones como separadores de color (azul, ámbar, verde, violeta) con su pestaña asomando en escalera; links como entradas de índice con línea de puntos guía; lo destacado con una banderita adhesiva del acento; las pestañas se asoman una por una al cargar | El sello de goma rojo "EN VIVO", girado |
-| Editorial | Sumario (`sumario`) | próximamente | | |
+| Editorial | Sumario (`sumario`) | construida | El sumario de una revista: links como notas con su folio grande, numeradas de corrido por toda la página (la única variante que numera los links); secciones como apartados en versalitas entre un filete grueso y uno fino; el nombre a cuerpo de tapa y el retrato rectangular con doble filete; los folios del primer apartado se imprimen al cargar | El folio rojo de la nota, quieto |
 
 Todo lo documentado arriba (Overview a Do's and Don'ts) es el sistema de Técnico y la base de todas las variantes. Cada variante escribe su CSS en `src/ui/styles/themes/<variante>.css`, acotado a `[data-theme="<variante>"]`, y se carga en línea solo en las páginas que la eligieron.
 
@@ -908,7 +983,7 @@ Además valen para todas: foco visible, 44 px táctiles, `prefers-reduced-motion
 
 ### Grilla de estilos del panel
 
-En Panel → Página, "Estilo" es una grilla por familia: el nombre de la familia en display 500 con su público en body-sm hueso apagado debajo, y las variantes en celdas de 9.5rem mínimo. Cada celda es una opción con borde grafito tenue de 1 px y esquinas de 6 px; la elegida pasa a borde hueso con un anillo interior de 1 px. Adentro va una **miniatura real**: el fondo, el acento y la señal en vivo de la variante en el modo de la página, el avatar de 28 px con aro de acento de 2 px y dos filas (la de arriba en vivo). Cada variante redefine la miniatura con su motivo (en Técnico, jacks unidos por un tramo de hilo). Las variantes no construidas quedan a 55% de opacidad, sin seleccionar, con el texto "Próximamente". El panel en sí conserva la estética de Técnico.
+En Panel → Página, "Estilo" es una grilla por familia: el nombre de la familia en display 500 con su público en body-sm hueso apagado debajo, y las variantes en celdas de 9.5rem mínimo. Cada celda es una opción con borde grafito tenue de 1 px y esquinas de 6 px; la elegida pasa a borde hueso con un anillo interior de 1 px. Adentro va una **miniatura real**: el fondo, el acento y la señal en vivo de la variante en el modo de la página, el avatar de 28 px con aro de acento de 2 px y dos filas (la de arriba en vivo). Cada variante redefine la miniatura con su motivo (en Técnico, jacks unidos por un tramo de hilo). Las diez variantes están construidas y se pueden elegir; si se suma una variante nueva antes de estar terminada, su celda queda a 55% de opacidad, sin seleccionar, con el texto "Próximamente". El panel en sí conserva la estética de Técnico.
 
 ### Punto (familia Cercano)
 
@@ -1705,3 +1780,117 @@ Estas excepciones son propias de Manual y no se heredan a otras variantes ni a T
 - **Don't** numerar secciones ni entradas, ni volver a jacks o al hilo dentro de Manual.
 - **Don't** girar otro texto que el sello.
 - **Don't** sacar las excepciones de Manual de `[data-theme="manual"]`.
+
+### Sumario (familia Editorial)
+
+**La página es el sumario de una revista.** Cada link es una nota con su folio grande a la izquierda, numerada de corrido como las páginas de la edición, y cada sección es un apartado en versalitas entre un filete grueso y uno fino. Lo editorial sale de la tipografía (folios a cuerpo grande, versalitas, el nombre a cuerpo de tapa) y de la retícula, no del "blog minimal" de tarjetas con bordes redondeados. Es la única variante que numera los links. No hay hilo: el carril de jacks pasa a ser la columna de los folios, de 3.25rem en todos los anchos (`--jack-col`), que se ensancha a 4.5rem cuando la página lista más de 99 links (la lista lleva `data-folio-digits="3"`).
+
+#### Colors
+
+Papel de revista y tinta casi negra en claro; de noche, papel oscuro con tinta clara. El acento colorea el folio de lo destacado y el filete de las notas de tapa, y el rojo es solo del en vivo. Los valores normativos están en el frontmatter (`sumario-*`).
+
+- **Tinta** (`sumario-tinta`): en oscuro, el papel de noche (fondo de la página, tinta de la selección); en claro, el texto principal, los folios, el foco, el fondo de la selección y los filetes de los apartados. Es también el acento `hueso` en claro.
+- **Papel de revista** (`sumario-papel`): fondo de la página en claro y tinta de la selección en claro.
+- **Tinta clara** (`sumario-tinta-clara`): en oscuro, el texto principal, los folios, el foco, el fondo de la selección, los filetes de los apartados y el doble filete del retrato. Es también el acento `hueso` en oscuro.
+- **Tinta apagada** (`sumario-tinta-clara-apagada`, `sumario-tinta-apagada`): bio, metadatos y flechas.
+- **Filete** (`sumario-filete`, `sumario-filete-claro`): el filete de 1 px debajo de cada nota y de cada nota de tapa, y el borde de las notas en la forma `cards`. **Filete tenue** (`sumario-filete-tenue`, `sumario-filete-tenue-claro`): los filetes secundarios de la base.
+- **Superficie** (`sumario-superficie`, `sumario-superficie-clara`): el fondo de las notas en la forma `cards` y del retrato cuando lleva la inicial. En claro es también la tinta sobre el rojo (`--color-live-ink`).
+- **Folio en vivo** (`sumario-folio-en-vivo` en oscuro, `sumario-folio-en-vivo-claro` en claro): `--color-live`. Es texto y se mide a 7:1.
+
+**Acentos admitidos** (cinco de los ocho; por defecto, cielo). El acento es el color de lo destacado: el folio de la nota destacada y el filete de las notas de tapa. Nunca los filetes de los apartados.
+
+| Acento | Tono | Oscuro | Claro |
+|---|---|---|---|
+| `cielo` (por defecto) | azul | `#8fb8ff` | `#123f86` |
+| `ambar` | ámbar | `#f0c060` | `#5a3c00` |
+| `turquesa` | verde | `#7fd1b9` | `#0a4a3d` |
+| `lavanda` | violeta | `#c9b3f2` | `#3f2b7a` |
+| `hueso` | la tinta misma | `#f1ede4` | `#141311` |
+
+`coral`, `rosa` y `arena` no se admiten en Sumario: coral y rosa son rojizos, y el rojo es del en vivo.
+
+**La regla del folio rojo.** El rojo es la señal en vivo de Sumario y de nada más: el folio de la nota en vivo, a 700 y quieto (sin pulso ni el relleno del jack de la base). La nota de tapa en vivo, que no tiene folio, cambia su filete de acento por el rojo. Fuera de eso, el rojo solo está donde la base lo pone como texto (la etiqueta "En vivo" y el cronómetro del metadato) y en el isotipo, por la regla común. Ningún acento es rojo ni rojizo.
+
+**La regla del folio en el acento.** El acento marca lo destacado y nada más: el folio de la nota destacada a 700, y el filete grueso de las notas de tapa (y de la nota destacada en `cards`). Si la nota destacada está en vivo, su folio va en rojo: gana la señal.
+
+**La regla del apartado de tinta.** Los dos filetes de cada apartado son siempre de tinta (`--color-fg`), con cualquier acento y en cualquier modo.
+
+#### Typography
+
+**Display Font:** Fraunces variable (subset latino, alojada localmente), por defecto en el nombre, los folios y los nombres de las notas. Admite también **Bricolage Grotesque** y **Nunito**; Space Mono no se admite.
+**Body Font:** la del sistema, igual que Técnico; también en los apartados.
+
+- **Nombre de tapa** (`sumario-nombre`): el nombre de la página a cuerpo de tapa, `clamp(2.75rem, 12vw, 3.75rem)`, 600, interlínea 1.05 y tracking de −0.02em, a 0.75rem del retrato.
+- **Folio** (`sumario-folio`): la fuente de nombres a 1.75rem, 500, interlínea 1, con cifras de caja alta y tabulares (`lining-nums tabular-nums`), en dos cifras con cero adelante (`decimal-leading-zero`: 01, 02…). El folio destacado y el folio en vivo suben a 700.
+- **Apartado** (`sumario-apartado`): versalitas armadas a mano, no `font-variant: small-caps`: la fuente del cuerpo a 0.875rem, 700, en mayúsculas y con tracking de 0.14em.
+- **Nota:** el nombre de cada nota sube a 600 (en Técnico es 500); el de la nota destacada, a 700.
+
+**La regla de la línea base.** El folio y el título de la nota se alinean por la primera línea base (`align-items: first baseline`), no por el centro de la fila: el folio grande y el nombre se leen como una sola línea de sumario.
+
+Como en Lomo cosido, Fraunces se sirve solo en redonda: ni el nombre ni los folios llevan itálica.
+
+#### Shapes
+
+- **Ángulos rectos en todo:** `--radius-md` y `--radius-sm` en 0 (`sumario-esquina`): retrato, notas en `cards`, notas de tapa y fila de íconos.
+- **Retrato de tapa (avatar):** un rectángulo de 88 × 110 px, sin redondeo, con doble filete de tinta: un anillo de spread puro (4 px de fondo y 1 px de tinta) y un contorno de 1 px de tinta a 8 px de distancia. La inicial va a 2.5rem.
+- **Filete del apartado:** 3 px sólido de tinta arriba y 1 px sólido de tinta abajo, con 0.5rem de aire arriba y abajo, a todo el ancho de la columna (sin la sangría del carril).
+- **Filete de nota:** 1 px sólido en `--color-line` debajo del cuerpo de cada nota; la columna del folio queda sin filete.
+- **Filete de tapa:** 3 px sólido en el acento arriba de la nota de tapa y 1 px en `--color-line` abajo; sin caja, sin fondo y sin aire lateral, alineada a la retícula de las notas.
+
+#### Components
+
+- **Apartado (título de sección):** las versalitas entre los dos filetes de tinta. Sumario no numera secciones (`sectionMark: null`) ni dibuja el rótulo de sección del dueño: numera notas.
+- **Nota (fila de link, forma `rows`):** el folio en su columna y, a la derecha, el ícono, el nombre a 600, el metadato y la flecha, sobre el filete de nota. Al pasar o enfocar, el folio se subraya (2 px, a 4 px de la línea base) en vez de moverse.
+- **Folio:** un contador que arranca en la lista y suma una vez por cada link listado (cada `.port`), de corrido por toda la página, atravesando los apartados. La sub-fila del último video no suma, y las secciones ocultas y los destacados que suben arriba no se renderizan en la lista, así que no cortan la numeración. Es decorativo (`aria-hidden`, como el jack que reemplaza): el orden lo da la lista.
+- **Nota en tarjeta (forma `cards`):** el cuerpo de la nota en una caja de borde de 1 px en filete, con fondo de superficie, esquinas rectas, aire horizontal de 1rem y 0.5rem hasta la siguiente; el folio queda afuera, en su columna. Sumario admite `rows` (por defecto) y `cards`; nunca `pills`.
+- **En vivo:** el folio en rojo a 700, quieto. Sin pulso, sin relleno y sin otra marca propia.
+- **Destacado con acento:** en `rows`, sin caja, sin tinte y sin borde de acento: conserva el filete de nota, y la marcan el folio en el acento a 700 y el nombre a 700. En `cards` conserva su caja (la misma de las demás notas, sin el borde de 1.5 px ni el tinte de la base) y suma arriba el filete de tapa de 3 px en el acento.
+- **Nota de tapa (destacado arriba):** el filete de tapa, sin caja; el nombre a 1.125rem, como en la base. No levita al pasar: el nombre se subraya (1 px, a 3 px de la línea base), como el folio de las demás notas. En vivo, el filete de arriba pasa al rojo.
+- **Fila de íconos:** cada botón con esquinas rectas.
+- **Miniatura del panel:** el retrato de 24 × 30 px sin redondeo, con anillo de 2 px de fondo y 1 px de tinta; arriba de las filas, un apartado de 2 px y 1 px de tinta; y los folios de verdad en Fraunces 700 a 10 px: "01" en rojo en la fila en vivo y "02" en el acento.
+
+**La regla del folio de corrido.** Los links se numeran una sola vez y de corrido, del primero al último que se lista, sin volver a empezar en cada apartado. Solo cuenta lo que está en la lista: nada que no sea un link listado suma un folio.
+
+#### Firma: los folios que se imprimen
+
+Al cargar, los folios del primer apartado se imprimen uno por uno, de abajo hacia arriba (`clip-path` de `inset(100% 0 0 0)` a `inset(0)`), en 300 ms con la curva `ease-out`, escalonados cada 110 ms (el cuarto y los siguientes, juntos a los 330 ms), una sola vez. Los demás apartados están quietos desde el principio. Con `prefers-reduced-motion` los folios aparecen impresos y quietos.
+
+#### Excepciones a Técnico, acotadas a `[data-theme="sumario"]`
+
+Estas excepciones son propias de Sumario y no se heredan a otras variantes ni a Técnico:
+
+- **Sin hilo ni jacks:** el carril pasa a ser la columna de los folios, de 3.25rem en todos los anchos (4.5rem con folios de tres cifras).
+- **Links numerados:** es la única variante que numera los links, con el folio en vez del jack, alineado al título por la línea base.
+- **Señal en vivo:** el folio rojo y quieto, en vez del jack lima que late.
+- **Apartados en versalitas** de la fuente del cuerpo a 0.875rem, entre un filete de 3 px y uno de 1 px de tinta, en vez del título a 1.25rem con filete grafito.
+- **Nombres de nota a 600** (700 el destacado).
+- **Destacado con acento sin caja en `rows`**, y **notas de tapa sin caja, sin tinte y sin levitar**, marcadas por el filete grueso del acento.
+- **Ángulos rectos** en todo: `--radius-md` y `--radius-sm` en 0.
+- **Retrato rectangular** de 88 × 110 px con contorno decorativo de 1 px, que no es foco: el foco sigue siendo el contorno sólido de 2 px en `--color-focus`.
+- **Nombre a cuerpo de tapa**, `clamp(2.75rem, 12vw, 3.75rem)`.
+
+#### Do's and Don'ts
+
+##### Do:
+- **Do** numerar las notas de corrido por toda la página, con folio de dos cifras (`decimal-leading-zero`), contando solo los links listados.
+- **Do** ensanchar la columna del folio a 4.5rem cuando la página lista más de 99 links.
+- **Do** alinear el folio y el título de la nota por la línea base.
+- **Do** dejar el folio como decoración (`aria-hidden`): el orden lo da la lista.
+- **Do** abrir cada apartado con versalitas armadas (0.875rem, 700, tracking 0.14em) entre un filete de 3 px y uno de 1 px, siempre de tinta.
+- **Do** reservar el rojo para el folio de la nota en vivo, y para el filete de una nota de tapa en vivo.
+- **Do** marcar lo destacado con el folio en el acento a 700; en `cards`, sumarle el filete de tapa a su caja.
+- **Do** llevar las notas de tapa como un filete grueso del acento, sin caja y alineadas a la retícula, que se subrayan al pasar.
+- **Do** mantener todos los ángulos rectos y el retrato de 88 × 110 px con su doble filete.
+- **Do** imprimir solo los folios del primer apartado al cargar, y dejarlos quietos con movimiento reducido.
+
+##### Don't:
+- **Don't** reiniciar la numeración en cada apartado ni contar la sub-fila del último video.
+- **Don't** usar rojo fuera del en vivo, ni admitir acentos rojizos (coral, rosa).
+- **Don't** hacer latir el folio en vivo ni sumarle otra marca.
+- **Don't** pintar los filetes de los apartados con el acento.
+- **Don't** encerrar el destacado con acento en una caja en la forma `rows`, ni darle caja o tinte a las notas de tapa.
+- **Don't** hacer levitar las notas de tapa al pasar.
+- **Don't** redondear esquinas: ni el retrato, ni las tarjetas, ni la fila de íconos.
+- **Don't** poner itálica en el nombre ni en los folios de Fraunces.
+- **Don't** numerar secciones, ni volver a jacks o al hilo dentro de Sumario.
+- **Don't** sacar las excepciones de Sumario de `[data-theme="sumario"]`.

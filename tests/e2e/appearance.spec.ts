@@ -549,6 +549,37 @@ test("el estilo Manual se elige en el panel y se ve en la página, AAA en los do
   }
 });
 
+// Estilo Sumario (SPEC-styles): folios grandes y versalitas, AAA en los dos modos.
+test("el estilo Sumario se elige en el panel y se ve en la página, AAA en los dos modos", async ({
+  page,
+  context,
+  browser,
+  baseURL,
+}) => {
+  await signIn(context, baseURL ?? "", "avatar@plektia.test");
+  await page.goto("/admin/page");
+  await page.getByRole("radio", { name: /^Sumario/ }).check();
+  await page.getByRole("button", { name: "Guardar" }).click();
+  await expect(page).toHaveURL(/\/admin\/page\?guardado$/);
+  try {
+    for (const scheme of ["dark", "light"] as const) {
+      const { visitor, close } = await visit(browser, baseURL ?? "", scheme);
+      await expect(visitor.locator("body")).toHaveAttribute("data-theme", "sumario");
+      await expect(visitor.locator('link[rel="stylesheet"][href*="sumario"]')).toHaveCount(1);
+      const results = await new AxeBuilder({ page: visitor })
+        .withTags(["wcag2a", "wcag2aa", "wcag2aaa", "wcag21aa", "wcag22aa"])
+        .analyze();
+      expect(results.violations.map((violation) => violation.id)).toEqual([]);
+      await close();
+    }
+  } finally {
+    await page.goto("/admin/page");
+    await page.getByRole("radio", { name: /^Patchera/ }).check();
+    await page.getByRole("button", { name: "Guardar" }).click();
+    await expect(page).toHaveURL(/\/admin\/page\?guardado$/);
+  }
+});
+
 // Rótulo de sección (tarea 38d): el dueño reemplaza "Lado A" por el suyo.
 test("el rótulo escrito en el panel reemplaza al del estilo en la página", async ({
   page,

@@ -531,7 +531,7 @@
   - Punto (Cercano): hileras de lana, retazos cosidos, en vivo índigo teñido, AAA en los dos modos.
 - [x] **Tarea 38b: Subte** (Enérgico) · M · Deps: 38a
 - [x] **Tarea 38c: Lomo cosido** (Editorial) · M · Deps: 38a
-- [ ] **Tarea 38d: Segunda tanda** · L · Deps: 38a
+- [x] **Tarea 38d: Segunda tanda** · L · Deps: 38a
   - [x] Lado A/B (con "Cinta 2 · Lado A" desde la tercera sección).
   - [x] Rótulo de sección editable por el dueño (`sections.label`, hasta 16 caracteres; reemplaza
         "Lado A", "L1", "I"; vacío vuelve al automático). Solo desde el panel; por MCP, más adelante.
@@ -539,7 +539,7 @@
   - [x] Pedalera (pedales con LED y pisador, cables de patch, LED rojo en vivo).
   - [x] Bitmap (títulos en Pixelify Sans, listas finas, etiqueta EN VIVO que parpadea 2,4 s).
   - [x] Manual (separadores con pestañas en escalera, entradas de índice, sello rojo en vivo).
-  - [ ] Sumario.
+  - [x] Sumario (folios de corrido, versalitas, folio rojo en vivo). Las diez variantes, construidas.
 
 ### ✅ Checkpoint F11 · ENTREGA 8
 - [ ] Elegís un estilo que te represente y tu página sigue rápida, clara y AAA.

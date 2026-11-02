@@ -1,0 +1,346 @@
+/*
+ * Sumario (familia Editorial, SPEC-styles): el sumario de una revista. Cada link
+ * es una nota con su folio grande, numerada de corrido como las páginas de la
+ * edición, y cada sección un apartado en versalitas. El rojo es solo del folio
+ * de la nota en vivo. Se carga solo en las páginas con este estilo. AAA medido
+ * en tests/unit/ui/theme-tokens.test.ts.
+ */
+[data-theme="sumario"] {
+  color-scheme: dark;
+
+  --color-bg: #141311;
+  --color-fg: #f1ede4;
+  --color-fg-muted: #c9c3b6;
+  --color-line: #45413a;
+  --color-line-soft: #2c2a26;
+  --color-surface: #1f1d1a;
+  --color-live: #ff8d80;
+  --color-live-ink: #141311;
+  --color-accent: var(--accent-on-dark, #8fb8ff);
+  --color-thread: var(--color-accent);
+  --color-thread-twist: #141311;
+  --color-focus: #f1ede4;
+  --color-selection-bg: #f1ede4;
+  --color-selection-fg: #141311;
+
+  /* La columna de los folios. */
+  --jack-col: 3.25rem;
+  --radius-md: 0px;
+  --radius-sm: 0px;
+}
+
+[data-theme="sumario"][data-mode="light"] {
+  color-scheme: light;
+
+  --color-bg: #fbfaf6;
+  --color-fg: #141311;
+  --color-fg-muted: #3b3833;
+  --color-line: #c9c4b8;
+  --color-line-soft: #e6e2d8;
+  --color-surface: #ffffff;
+  --color-live: #8a0d07;
+  --color-live-ink: #ffffff;
+  --color-accent: var(--accent-on-light, #123f86);
+  --color-thread: var(--color-accent);
+  --color-thread-twist: #fbfaf6;
+  --color-focus: #141311;
+  --color-selection-bg: #141311;
+  --color-selection-fg: #fbfaf6;
+}
+
+@media (prefers-color-scheme: light) {
+  [data-theme="sumario"][data-mode="auto"] {
+    color-scheme: light;
+
+    --color-bg: #fbfaf6;
+    --color-fg: #141311;
+    --color-fg-muted: #3b3833;
+    --color-line: #c9c4b8;
+    --color-line-soft: #e6e2d8;
+    --color-surface: #ffffff;
+    --color-live: #8a0d07;
+    --color-live-ink: #ffffff;
+    --color-accent: var(--accent-on-light, #123f86);
+    --color-thread: var(--color-accent);
+    --color-thread-twist: #fbfaf6;
+    --color-focus: #141311;
+    --color-selection-bg: #141311;
+    --color-selection-fg: #fbfaf6;
+  }
+}
+
+/* Folios destacados: azul, ámbar, verde, violeta o la tinta (el rojo es del en vivo). */
+[data-theme="sumario"][data-accent="cielo"] {
+  --accent-on-dark: #8fb8ff;
+  --accent-on-light: #123f86;
+}
+
+[data-theme="sumario"][data-accent="ambar"] {
+  --accent-on-dark: #f0c060;
+  --accent-on-light: #5a3c00;
+}
+
+[data-theme="sumario"][data-accent="turquesa"] {
+  --accent-on-dark: #7fd1b9;
+  --accent-on-light: #0a4a3d;
+}
+
+[data-theme="sumario"][data-accent="lavanda"] {
+  --accent-on-dark: #c9b3f2;
+  --accent-on-light: #3f2b7a;
+}
+
+[data-theme="sumario"][data-accent="hueso"] {
+  --accent-on-dark: #f1ede4;
+  --accent-on-light: #141311;
+}
+
+/* ── Identidad: el retrato de tapa con doble filete; el nombre a cuerpo grande ── */
+[data-theme="sumario"] .avatar {
+  width: 88px;
+  height: 110px;
+  border-radius: 0;
+  box-shadow:
+    0 0 0 4px var(--color-bg),
+    0 0 0 5px var(--color-fg);
+  outline: 1px solid var(--color-fg);
+  outline-offset: 8px;
+  font-size: 2.5rem;
+}
+
+[data-theme="sumario"] .avatar-image img {
+  height: 110px;
+}
+
+[data-theme="sumario"] .identity h1 {
+  margin-top: var(--space-3);
+  font-size: clamp(2.75rem, 12vw, 3.75rem);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+}
+
+/* ── Apartados: versalitas armadas con el filete grueso de la revista ─── */
+[data-theme="sumario"] .patchbay {
+  counter-reset: sumario-folio;
+}
+
+[data-theme="sumario"] .bank h2 {
+  margin-left: 0;
+  padding: var(--space-2) 0 var(--space-2);
+  border-top: 3px solid var(--color-fg);
+  border-bottom: 1px solid var(--color-fg);
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+/* ── Las notas: el folio grande, numerado de corrido ─────────────────────── */
+[data-theme="sumario"] .port {
+  align-items: first baseline;
+  counter-increment: sumario-folio;
+}
+
+/* Con más de 99 notas, la columna crece para el folio de tres cifras. */
+[data-theme="sumario"] .patchbay[data-folio-digits="3"] {
+  --jack-col: 4.5rem;
+}
+
+[data-theme="sumario"] .jack {
+  justify-self: start;
+  width: auto;
+  height: auto;
+  margin-top: 0;
+  border: 0;
+  border-radius: 0;
+  color: var(--color-fg);
+  font-family: var(--font-name);
+  font-size: 1.75rem;
+  font-variant-numeric: lining-nums tabular-nums;
+  font-weight: 500;
+  line-height: 1;
+}
+
+[data-theme="sumario"] .jack::before {
+  content: counter(sumario-folio, decimal-leading-zero);
+  position: static;
+  inset: auto;
+  border-radius: 0;
+  background: none;
+  box-shadow: none;
+}
+
+[data-theme="sumario"] .port:is(:hover, :focus-within) .jack {
+  transform: none;
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 4px;
+}
+
+[data-theme="sumario"] .port-body {
+  border-bottom: 1px solid var(--color-line);
+}
+
+[data-theme="sumario"] .port-name {
+  font-weight: 600;
+}
+
+[data-theme="sumario"] .patchbay[data-shape="cards"] .port-body {
+  margin-bottom: var(--space-2);
+  padding: 0 var(--space-4);
+  border: 1px solid var(--color-line);
+  background: var(--color-surface);
+}
+
+/* La firma: los folios del primer apartado se imprimen uno por uno. */
+[data-theme="sumario"] .bank:first-of-type .jack {
+  animation: sumario-imprimir 300ms var(--ease-out) backwards;
+}
+
+[data-theme="sumario"] .bank:first-of-type .port:nth-child(2) .jack {
+  animation-delay: 110ms;
+}
+
+[data-theme="sumario"] .bank:first-of-type .port:nth-child(3) .jack {
+  animation-delay: 220ms;
+}
+
+[data-theme="sumario"] .bank:first-of-type .port:nth-child(n + 4) .jack {
+  animation-delay: 330ms;
+}
+
+@keyframes sumario-imprimir {
+  from {
+    clip-path: inset(100% 0 0 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+/* ── En vivo: el folio en rojo (sin pulso) ──────────────────────────────── */
+[data-theme="sumario"] .port.is-live .jack {
+  color: var(--color-live);
+  font-weight: 700;
+}
+
+[data-theme="sumario"] .port.is-live .jack::after {
+  display: none;
+}
+
+/* El folio sigue siendo número: sin el relleno del jack en vivo de la base. */
+[data-theme="sumario"] .port.is-live .jack::before {
+  background: none;
+  box-shadow: none;
+}
+
+/* ── Destacado con acento: el folio en el acento y la nota a 700 ───────── */
+[data-theme="sumario"] .patchbay[data-shape="rows"] .port.is-highlighted .port-body {
+  margin-bottom: 0;
+  padding: 0;
+  border: 0;
+  border-bottom: 1px solid var(--color-line);
+  border-radius: 0;
+  background: none;
+}
+
+/* En tarjetas, la nota destacada conserva su caja y suma el filete de tapa. */
+[data-theme="sumario"] .patchbay[data-shape="cards"] .port.is-highlighted .port-body {
+  border-top: 3px solid var(--color-accent);
+}
+
+[data-theme="sumario"] .port.is-highlighted:not(.is-live) .jack {
+  color: var(--color-accent);
+  font-weight: 700;
+}
+
+[data-theme="sumario"] .port.is-highlighted .port-name {
+  font-weight: 700;
+}
+
+/* Notas de tapa (destacados arriba): filete grueso del acento arriba, sin caja. */
+[data-theme="sumario"] .highlight-card {
+  border: 0;
+  border-top: 3px solid var(--color-accent);
+  border-bottom: 1px solid var(--color-line);
+  border-radius: 0;
+  background: none;
+  padding-inline: 0;
+}
+
+/* La nota de tapa no levita: se subraya, como las demás notas. */
+[data-theme="sumario"] .highlight-card:is(:hover, :focus-visible) {
+  transform: none;
+}
+
+[data-theme="sumario"] .highlight-card:hover .highlight-name {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+
+[data-theme="sumario"] .highlight-name {
+  font-size: var(--text-lg);
+}
+
+[data-theme="sumario"] .highlight-card.is-live {
+  border-top-color: var(--color-live);
+}
+
+[data-theme="sumario"] .icon-link {
+  border-radius: 0;
+}
+
+/* ── Miniatura del panel: el retrato, el apartado y los folios ──────────── */
+[data-theme="sumario"].theme-sample .theme-sample-avatar {
+  width: 24px;
+  height: 30px;
+  border-radius: 0;
+  box-shadow:
+    0 0 0 2px var(--color-bg),
+    0 0 0 3px var(--color-fg);
+}
+
+[data-theme="sumario"].theme-sample .theme-sample-rows::before {
+  content: "";
+  height: 4px;
+  border-top: 2px solid var(--color-fg);
+  border-bottom: 1px solid var(--color-fg);
+}
+
+/* Los folios de verdad: 01 en vivo (rojo) y 02 en el acento. */
+[data-theme="sumario"].theme-sample .theme-sample-mark {
+  width: auto;
+  height: auto;
+  border: 0;
+  border-radius: 0;
+  background: none;
+}
+
+[data-theme="sumario"].theme-sample .theme-sample-mark::before {
+  content: "02";
+  color: var(--color-accent);
+  font: 700 10px/1 var(--font-fraunces, Georgia, serif);
+}
+
+[data-theme="sumario"].theme-sample .theme-sample-row.is-live .theme-sample-mark::before {
+  content: "01";
+  color: var(--color-live);
+}
+
+[data-theme="sumario"].theme-sample .theme-sample-row + .theme-sample-row::before {
+  display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-theme="sumario"] .bank:first-of-type .jack {
+    animation: none;
+  }
+}
+
+/* El filete del apartado es de tinta con cualquier acento. */
+[data-theme="sumario"][data-accent][data-mode] .bank h2 {
+  border-bottom-color: var(--color-fg);
+}
