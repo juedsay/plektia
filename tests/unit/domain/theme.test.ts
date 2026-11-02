@@ -25,6 +25,7 @@ describe("estilos", () => {
       "pedalera",
       "bitmap",
       "lomo",
+      "manual",
     ]);
   });
 
@@ -33,7 +34,7 @@ describe("estilos", () => {
       ok: true,
       value: { theme: "punto" },
     });
-    const upcoming = parsePageSettings({ ...settings, theme: "manual" });
+    const upcoming = parsePageSettings({ ...settings, theme: "sumario" });
     expect(upcoming.ok).toBe(false);
     if (!upcoming.ok) expect(Object.keys(upcoming.error.fields)).toEqual(["theme"]);
   });

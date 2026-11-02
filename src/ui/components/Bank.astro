@@ -17,7 +17,7 @@ const headingId = `bank-${id}`;
 
 {links.length > 0 &&
   (title && showTitle ? (
-    <section class="bank" aria-labelledby={headingId}>
+    <section class="bank bank-titled" aria-labelledby={headingId}>
       {/* En el h2: `attr()` del `::before` lee los atributos del propio h2. */}
       <h2 id={headingId} data-label={label ?? undefined}>
         {title}

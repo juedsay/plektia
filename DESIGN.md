@@ -78,6 +78,28 @@ colors:
   lomo-violeta-claro: "#4a3878"
   lomo-ocre: "#d9c39a"
   lomo-ocre-claro: "#5a4422"
+  manual-hoja-noche: "#16181c"
+  manual-tinta-clara: "#eceae4"
+  manual-tinta-clara-apagada: "#c6c3bb"
+  manual-linea: "#3c3f47"
+  manual-linea-tenue: "#2a2d34"
+  manual-superficie: "#20232a"
+  manual-sello: "#ff9a8f"
+  manual-papel: "#f6f3ea"
+  manual-tinta: "#1a1c20"
+  manual-tinta-apagada: "#3a3d44"
+  manual-linea-clara: "#c4bfb2"
+  manual-linea-tenue-clara: "#e2ddd0"
+  manual-superficie-clara: "#ffffff"
+  manual-sello-claro: "#850f08"
+  manual-azul: "#8fb8ff"
+  manual-azul-claro: "#123f86"
+  manual-ambar: "#f0c060"
+  manual-ambar-claro: "#5a3c00"
+  manual-verde: "#7fd1b9"
+  manual-verde-claro: "#0a4a3d"
+  manual-violeta: "#c9b3f2"
+  manual-violeta-claro: "#3f2b7a"
   cassette-cuerpo: "#16171b"
   cassette-tinta-clara: "#ecebe4"
   cassette-tinta-clara-apagada: "#c4c3bb"
@@ -234,6 +256,17 @@ typography:
     fontWeight: 600
     lineHeight: 1.2
     letterSpacing: "0.09em"
+  manual-pestana:
+    fontFamily: "Bricolage Grotesque, system-ui, sans-serif"
+    fontSize: "1rem"
+    fontWeight: 700
+    lineHeight: 1.2
+    letterSpacing: "0.01em"
+  manual-sello:
+    fontFamily: "system-ui, -apple-system, Segoe UI, Roboto, sans-serif"
+    fontSize: "max(0.8em, 0.6875rem)"
+    fontWeight: 800
+    letterSpacing: "0.08em"
   cassette-lado:
     fontFamily: "Kalam, cursive"
     fontSize: "1.375rem"
@@ -284,6 +317,7 @@ rounded:
   punto-pastilla: "1.625rem"
   subte-capsula: "18px"
   lomo-esquina: "2px"
+  manual-sello: "3px"
   cassette-esquina: "4px"
   corcho-esquina: "3px"
   pedalera-gabinete: "10px"
@@ -431,6 +465,43 @@ components:
     backgroundColor: "{colors.lomo-cinta-claro}"
     width: "10px"
     height: "38px"
+  manual-pestana:
+    backgroundColor: "{colors.manual-azul}"
+    textColor: "{colors.manual-hoja-noche}"
+    typography: "{typography.manual-pestana}"
+    rounded: "{rounded.md}"
+    padding: "0.25rem 1rem"
+  manual-pestana-ambar:
+    backgroundColor: "{colors.manual-ambar}"
+    textColor: "{colors.manual-hoja-noche}"
+  manual-pestana-verde:
+    backgroundColor: "{colors.manual-verde}"
+    textColor: "{colors.manual-hoja-noche}"
+  manual-pestana-violeta:
+    backgroundColor: "{colors.manual-violeta}"
+    textColor: "{colors.manual-hoja-noche}"
+  manual-entrada:
+    textColor: "{colors.manual-tinta-clara}"
+    height: "3.25rem"
+  manual-entrada-tarjeta:
+    backgroundColor: "{colors.manual-superficie}"
+    textColor: "{colors.manual-tinta-clara}"
+    rounded: "{rounded.md}"
+    padding: "0 1rem"
+  manual-sello:
+    textColor: "{colors.manual-sello}"
+    typography: "{typography.manual-sello}"
+    rounded: "{rounded.manual-sello}"
+    padding: "0 6px"
+  manual-sello-claro:
+    textColor: "{colors.manual-sello-claro}"
+    typography: "{typography.manual-sello}"
+    rounded: "{rounded.manual-sello}"
+    padding: "0 6px"
+  manual-banderita:
+    backgroundColor: "{colors.manual-azul}"
+    width: "6px"
+    height: "1.75rem"
   cassette-franja:
     backgroundColor: "{colors.cassette-cielo}"
     height: "8px"
@@ -814,7 +885,8 @@ Desde [SPEC-styles](SPEC-styles.md), los cuatro "temas" del contrato de tokens p
 | Enérgico | Pedalera (`pedalera`) | construida | Pedales encadenados por cables de patch que salen del costado de uno y entran en el siguiente, cada uno con su LED y su pisador; secciones como etiquetas de rotuladora; el avatar como perilla moleteada; los cables del primer grupo se enchufan al cargar | El LED rojo encendido, quieto |
 | Enérgico | Bitmap (`bitmap`) | construida | Afiche de pantalla de 8 bits: el nombre y los títulos de sección en letra pixelada a escala póster, con su barra de píxeles en el acento, sobre listas finas de 1 px; esquinas en escalera, nada redondeado; el avatar cuadrado en su marco de píxeles; un cursor de bloque delante del link al pasar o enfocar | La etiqueta rosa "EN VIVO" invertida, que parpadea cuatro veces y queda fija |
 | Editorial | Lomo cosido (`lomo`) | construida | El lomo con sus puntadas en la tela; capítulos con numeral romano; links como entradas de índice; las puntadas del primer cuadernillo se cosen al cargar | La cinta marcapáginas roja colgando sobre la entrada |
-| Editorial | Manual (`manual`), Sumario (`sumario`) | próximamente | | |
+| Editorial | Manual (`manual`) | construida | Manual de consulta encarpetado: secciones como separadores de color (azul, ámbar, verde, violeta) con su pestaña asomando en escalera; links como entradas de índice con línea de puntos guía; lo destacado con una banderita adhesiva del acento; las pestañas se asoman una por una al cargar | El sello de goma rojo "EN VIVO", girado |
+| Editorial | Sumario (`sumario`) | próximamente | | |
 
 Todo lo documentado arriba (Overview a Do's and Don'ts) es el sistema de Técnico y la base de todas las variantes. Cada variante escribe su CSS en `src/ui/styles/themes/<variante>.css`, acotado a `[data-theme="<variante>"]`, y se carga en línea solo en las páginas que la eligieron.
 
@@ -1520,3 +1592,116 @@ Estas excepciones son propias de Lomo cosido y no se heredan a otras variantes n
 - **Don't** pintar el filete del capítulo con el acento.
 - **Don't** usar tarjetas con sombra ni esquinas redondeadas: el libro es plano y recto.
 - **Don't** sacar las excepciones de Lomo cosido de `[data-theme="lomo"]`.
+
+### Manual (familia Editorial)
+
+**La página es un manual de consulta encarpetado.** Cada sección con título es un separador de color con su pestaña asomando en escalera por el borde, y cada link es una entrada del índice de ese capítulo, con su línea de puntos guía hasta la flecha. Lo editorial sale del sistema de separadores (el color y la posición de cada pestaña) y del sello de goma, no del "dashboard de documentación" de íconos y tarjetas. No hay hilo ni carril de jacks: las entradas ocupan todo el ancho de la columna (`--jack-col: 0px`).
+
+#### Colors
+
+Papel de manual y tinta casi negra en claro; de noche, hoja oscura con tinta clara. Cuatro separadores de color fijos rotan por sección, el acento marca lo destacado y el aro de la foto, y el rojo es solo del sello. Los valores normativos están en el frontmatter (`manual-*`).
+
+- **Hoja de noche** (`manual-hoja-noche`) / **Papel de manual** (`manual-papel`): fondo de la página en oscuro y en claro. Es también la tinta de las pestañas (el título va en el color del papel sobre el separador), el anillo de aire de la foto carnet y la tinta de la selección.
+- **Tinta clara** (`manual-tinta-clara`) / **Tinta** (`manual-tinta`): texto principal, foco y fondo de la selección. Es también el acento `hueso`.
+- **Tinta apagada** (`manual-tinta-clara-apagada`, `manual-tinta-apagada`): bio y metadatos.
+- **Línea** (`manual-linea`, `manual-linea-clara`): la línea de puntos guía de cada entrada, el filete fino de la sección sin título y el borde de las entradas en la forma `cards`. **Línea tenue** (`manual-linea-tenue`, `manual-linea-tenue-clara`): el filete de 1 px debajo de cada entrada.
+- **Superficie** (`manual-superficie`, `manual-superficie-clara`): solo el fondo de las entradas en la forma `cards`.
+- **Sello** (`manual-sello` en oscuro, `manual-sello-claro` en claro): `--color-live`, el borde y las letras del sello "EN VIVO" y el cronómetro. Es texto y se mide a 7:1.
+
+**Los cuatro separadores** (`--tab-1..4`, `manual-azul`, `manual-ambar`, `manual-verde`, `manual-violeta` y sus `-claro`), fijos e independientes del acento elegido, en el orden en que rotan:
+
+| Separador | Color | Oscuro | Claro | Corrimiento de la pestaña |
+|---|---|---|---|---|
+| `--tab-1` | azul | `#8fb8ff` | `#123f86` | 0% |
+| `--tab-2` | ámbar | `#f0c060` | `#5a3c00` | 18% |
+| `--tab-3` | verde | `#7fd1b9` | `#0a4a3d` | 36% |
+| `--tab-4` | violeta | `#c9b3f2` | `#3f2b7a` | 54% |
+
+**Acentos admitidos** (cinco de los ocho; por defecto, cielo). Son los cuatro tonos de separador y la tinta. El acento marca lo destacado (la banderita y, en `cards`, el borde y el tinte) y el aro de la foto carnet; nunca las pestañas ni sus filetes.
+
+| Acento | Tono | Oscuro | Claro |
+|---|---|---|---|
+| `cielo` (por defecto) | el azul del primer separador | `#8fb8ff` | `#123f86` |
+| `ambar` | el ámbar del segundo | `#f0c060` | `#5a3c00` |
+| `turquesa` | el verde del tercero | `#7fd1b9` | `#0a4a3d` |
+| `lavanda` | el violeta del cuarto | `#c9b3f2` | `#3f2b7a` |
+| `hueso` | la tinta misma | `#eceae4` | `#1a1c20` |
+
+`coral`, `rosa` y `arena` no se admiten en Manual: los dos primeros son rojizos y el rojo es del sello; arena no es un color de separador.
+
+**La regla del sello rojo.** El rojo es la señal en vivo de Manual y de nada más: ningún separador ni acento es rojo o rojizo. El sello es la única marca del en vivo: la entrada no late, no se tiñe y no lleva banderita por estar en vivo.
+
+**La regla de la primera pestaña azul.** La rotación cuenta solo las secciones con título (las que llevan `bank-titled`): la primera pestaña es siempre azul y va a la izquierda, aunque la página empiece con una sección sin título. Siguen ámbar, verde y violeta, y vuelve a empezar.
+
+**La regla de la tinta del papel.** El título de cada pestaña va en el color del fondo (`--color-bg`) sobre su separador y se mide a 7:1 en los dos modos (`tests/unit/ui/theme-tokens.test.ts`). Un separador que no llega con su papel no entra.
+
+#### Typography
+
+**Display Font:** Bricolage Grotesque por defecto en los nombres y las pestañas. Admite también **Fraunces** y **Nunito**; Space Mono no se admite.
+**Body Font:** la del sistema, igual que Técnico.
+
+- **Pestaña** (`manual-pestana`): el título de sección en la fuente de nombres a 1rem (en Técnico, 1.25rem), 700, tracking 0.01em, con `text-wrap: balance` y corte en cualquier punto si una palabra no entra (`overflow-wrap: anywhere`).
+- **Entrada:** el nombre de cada entrada sube a 600 (en Técnico es 500); el del destacado con acento, a 700.
+- **Sello** (`manual-sello`): "EN VIVO" en mayúsculas, 800, tracking 0.08em, a 0.8 del metadato y nunca por debajo de 11 px (`max(0.8em, 0.6875rem)`).
+
+**La regla del sello legible.** El sello va girado, por eso no baja de 11 px ni de 800: una letra torcida y chica deja de leerse.
+
+#### Shapes
+
+- **Pestaña:** caja de ancho justo con las esquinas de arriba de 6 px y las de abajo rectas, apoyada sobre su filete; aire de 0.25rem × 1rem. Se corre a la derecha según su separador (0/18/36/54 %), pero conserva al menos 14rem de ancho: si un título largo no entra, la escalera se corre a la izquierda y el título se parte en líneas parejas.
+- **Filete del separador:** 3 px sólido en el color de la pestaña, a todo el ancho, encima de las entradas. La sección sin título no tiene pestaña: la separa un filete de 1 px en `--color-line`.
+- **Línea de puntos guía:** punteado de 2 px en `--color-line`, centrado en la línea del nombre, entre el nombre y la flecha (al menos 1.5rem); solo en la forma `rows`.
+- **Foto carnet (avatar):** esquinas de 6 px (`--radius-md`), con un anillo de spread puro de 3 px del fondo y 2 px del acento.
+- **Banderita adhesiva:** tira de 6 × 28 px (1.75rem) en el acento, con esquinas de 2 px solo del lado de afuera, que asoma 6 px por el canto derecho de la entrada, a 0.75rem de su borde de arriba.
+- **Sello:** recuadro de 2 px en `--color-live`, esquinas de 3 px, aire horizontal de 6 px, girado −3°. El metadato que lo contiene deja 3 px arriba y abajo y 2 px a la izquierda para que las esquinas giradas no se recorten.
+- **Esquinas:** `--radius-md` queda en 6 px, como en Técnico: pestañas, foto, tarjetas y fila de íconos.
+
+#### Components
+
+- **Separador (título de sección):** la pestaña de color con su filete de 3 px; sin el filete grafito de Técnico debajo del título. Manual no numera secciones (`sectionMark: null`) ni dibuja el rótulo de sección del dueño: la pestaña es solo el título.
+- **Sección sin título:** sin pestaña, separada del capítulo anterior por el filete fino; no cuenta en la rotación.
+- **Entrada de índice (fila de link, forma `rows`):** a todo el ancho y sin jack; el nombre a 600, la línea de puntos guía y la flecha (con la miniatura de vista previa antes de la flecha, si la hay), sobre un filete de 1 px en línea tenue.
+- **Entrada en tarjeta (forma `cards`):** caja con borde de 1 px en línea, esquinas de 6 px y fondo de superficie, a 0.5rem de la anterior; sin línea de puntos. Manual admite `rows` (por defecto) y `cards`; nunca `pills`.
+- **En vivo:** el sello rojo "EN VIVO" encabeza el metadato del link; el cronómetro, si lo hay, sigue en `--color-live`. Sin pulso y sin otra marca.
+- **Destacado con acento:** en `rows`, sin caja, sin tinte y sin borde: conserva el filete de las demás entradas, el nombre sube a 700 y la banderita del acento asoma por el canto derecho. En `cards`, conserva el borde de 1.5 px y el tinte del acento de la base, más la banderita.
+- **Destacado arriba (tarjeta):** el borde y el tinte del acento de la base, más su banderita.
+- **Fila de íconos:** cada botón con esquinas de 6 px.
+- **Miniatura del panel:** la foto carnet de 28 px con esquinas de 4 px; tres pestañas de 7 px de alto en escalera (azul, ámbar, verde, al 22 % de ancho cada una) sobre un filete azul de 2 px; dos filas con marcas de 3 px en tinta apagada, la de arriba en vivo con un sello de 14 × 7 px, borde de 1.5 px en `--color-live` y girado −6°.
+
+#### Firma: las pestañas que se asoman
+
+Al cargar, las pestañas se asoman una por una desde su filete: cada una se revela de abajo arriba (`clip-path` de `inset(100% 0 0 0)` a `inset(0)`) en 420 ms con la curva `ease-out`, escalonadas cada 90 ms entre las secciones con título (la cuarta y las siguientes, juntas a los 270 ms), una sola vez. Con `prefers-reduced-motion` las pestañas aparecen quietas.
+
+#### Excepciones a Técnico, acotadas a `[data-theme="manual"]`
+
+Estas excepciones son propias de Manual y no se heredan a otras variantes ni a Técnico:
+
+- **Sin hilo ni jacks:** el carril queda en 0 y las entradas van a todo el ancho.
+- **Títulos de sección como pestañas de color** en escalera, a 1rem y 700, con el texto en el color del fondo y filete de 3 px en el color de la pestaña, en vez del título a 1.25rem con filete grafito.
+- **Línea de puntos guía** entre el nombre y la flecha en la forma `rows`.
+- **Nombres de entrada a 600** (700 el destacado con acento).
+- **Destacado con acento sin caja en `rows`**, marcado con la banderita del acento.
+- **Señal en vivo:** el sello rojo de goma, girado −3°, en vez del jack lima que late. Es el único texto girado.
+- **Avatar en foto carnet** de esquinas de 6 px, en vez de redondo.
+
+#### Do's and Don'ts
+
+##### Do:
+- **Do** abrir cada sección con título con su pestaña de color y su filete de 3 px, con la primera siempre azul y a la izquierda.
+- **Do** rotar azul, ámbar, verde y violeta corridos 0/18/36/54 %, contando solo las secciones con título; si un título largo no entra, correr la escalera a la izquierda (mínimo 14rem).
+- **Do** escribir el título de la pestaña en el color del fondo, a 7:1 contra su separador en los dos modos.
+- **Do** separar la sección sin título con un filete de 1 px, sin pestaña.
+- **Do** llevar cada entrada en `rows` con su línea de puntos guía entre el nombre y la flecha.
+- **Do** marcar lo destacado con la banderita del acento asomando por el canto derecho; en `rows`, sin tarjeta.
+- **Do** estampar "EN VIVO" con el sello rojo de goma, girado −3°, a 800 y nunca por debajo de 11 px.
+- **Do** asomar las pestañas una por una al cargar, y dejarlas quietas con movimiento reducido.
+
+##### Don't:
+- **Don't** usar rojo en separadores ni acentos (coral, rosa): el rojo es del sello.
+- **Don't** sumar otra señal en vivo al sello: ni pulso, ni tinte, ni banderita.
+- **Don't** encerrar el destacado con acento en una tarjeta en la forma `rows`.
+- **Don't** darle pestaña a la sección sin título ni contarla en la rotación.
+- **Don't** pintar las pestañas o sus filetes con el acento: los separadores son fijos.
+- **Don't** numerar secciones ni entradas, ni volver a jacks o al hilo dentro de Manual.
+- **Don't** girar otro texto que el sello.
+- **Don't** sacar las excepciones de Manual de `[data-theme="manual"]`.

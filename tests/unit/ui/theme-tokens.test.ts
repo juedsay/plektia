@@ -90,6 +90,20 @@ describe.each(VARIANTS)("estilo %s", (theme) => {
     ).toBeGreaterThanOrEqual(7);
   });
 
+  // Manual: el título de cada separador va con la tinta del papel sobre su pestaña de color.
+  if (theme === "manual") {
+    it.each([
+      ["oscuro", `[data-theme="${theme}"]`, dark],
+      ["claro", `[data-theme="${theme}"][data-mode="light"]`, light],
+    ] as const)("%s: el texto de las pestañas cumple AAA", (_mode, selector, colors) => {
+      const tones = hexes(block(css, selector), "--tab-");
+      expect(Object.keys(tones)).toHaveLength(4);
+      for (const [tab, tone] of Object.entries(tones)) {
+        expect(contrast(colors["--color-bg"] ?? "", tone), tab).toBeGreaterThanOrEqual(7);
+      }
+    });
+  }
+
   it.each(THEME_RULES[theme].accents)(
     "acento %s: AAA en los dos modos, también bajo un destacado",
     (accent) => {

@@ -1,0 +1,349 @@
+/*
+ * Manual (familia Editorial, SPEC-styles): un manual de consulta encarpetado.
+ * Cada sección es un separador de color con su pestaña asomando en escalera, y
+ * cada link es una entrada del índice. El rojo es solo del sello "EN VIVO". Se
+ * carga solo en las páginas con este estilo. AAA medido en
+ * tests/unit/ui/theme-tokens.test.ts.
+ */
+[data-theme="manual"] {
+  color-scheme: dark;
+
+  --color-bg: #16181c;
+  --color-fg: #eceae4;
+  --color-fg-muted: #c6c3bb;
+  --color-line: #3c3f47;
+  --color-line-soft: #2a2d34;
+  --color-surface: #20232a;
+  --color-live: #ff9a8f;
+  --color-live-ink: #16181c;
+  --color-accent: var(--accent-on-dark, #8fb8ff);
+  --color-thread: var(--color-accent);
+  --color-thread-twist: #16181c;
+  --color-focus: #eceae4;
+  --color-selection-bg: #eceae4;
+  --color-selection-fg: #16181c;
+
+  /* Los cuatro separadores, en el orden en que rotan (con la tinta del papel encima). */
+  --tab-1: #8fb8ff;
+  --tab-2: #f0c060;
+  --tab-3: #7fd1b9;
+  --tab-4: #c9b3f2;
+
+  --jack-col: 0px;
+  --radius-md: 6px;
+}
+
+[data-theme="manual"][data-mode="light"] {
+  color-scheme: light;
+
+  --color-bg: #f6f3ea;
+  --color-fg: #1a1c20;
+  --color-fg-muted: #3a3d44;
+  --color-line: #c4bfb2;
+  --color-line-soft: #e2ddd0;
+  --color-surface: #ffffff;
+  --color-live: #850f08;
+  --color-live-ink: #ffffff;
+  --color-accent: var(--accent-on-light, #123f86);
+  --color-thread: var(--color-accent);
+  --color-thread-twist: #f6f3ea;
+  --color-focus: #1a1c20;
+  --color-selection-bg: #1a1c20;
+  --color-selection-fg: #f6f3ea;
+
+  --tab-1: #123f86;
+  --tab-2: #5a3c00;
+  --tab-3: #0a4a3d;
+  --tab-4: #3f2b7a;
+}
+
+@media (prefers-color-scheme: light) {
+  [data-theme="manual"][data-mode="auto"] {
+    color-scheme: light;
+
+    --color-bg: #f6f3ea;
+    --color-fg: #1a1c20;
+    --color-fg-muted: #3a3d44;
+    --color-line: #c4bfb2;
+    --color-line-soft: #e2ddd0;
+    --color-surface: #ffffff;
+    --color-live: #850f08;
+    --color-live-ink: #ffffff;
+    --color-accent: var(--accent-on-light, #123f86);
+    --color-thread: var(--color-accent);
+    --color-thread-twist: #f6f3ea;
+    --color-focus: #1a1c20;
+    --color-selection-bg: #1a1c20;
+    --color-selection-fg: #f6f3ea;
+
+    --tab-1: #123f86;
+    --tab-2: #5a3c00;
+    --tab-3: #0a4a3d;
+    --tab-4: #3f2b7a;
+  }
+}
+
+/* Lo destacado: azul, ámbar, verde, violeta o la tinta (el rojo es del sello). */
+[data-theme="manual"][data-accent="cielo"] {
+  --accent-on-dark: #8fb8ff;
+  --accent-on-light: #123f86;
+}
+
+[data-theme="manual"][data-accent="ambar"] {
+  --accent-on-dark: #f0c060;
+  --accent-on-light: #5a3c00;
+}
+
+[data-theme="manual"][data-accent="turquesa"] {
+  --accent-on-dark: #7fd1b9;
+  --accent-on-light: #0a4a3d;
+}
+
+[data-theme="manual"][data-accent="lavanda"] {
+  --accent-on-dark: #c9b3f2;
+  --accent-on-light: #3f2b7a;
+}
+
+[data-theme="manual"][data-accent="hueso"] {
+  --accent-on-dark: #eceae4;
+  --accent-on-light: #1a1c20;
+}
+
+/* ── Identidad: la foto carnet, con el aro del acento ─────────────────── */
+[data-theme="manual"] .avatar {
+  border-radius: var(--radius-md);
+  box-shadow:
+    0 0 0 3px var(--color-bg),
+    0 0 0 5px var(--color-accent);
+}
+
+/* ── Separadores: la pestaña de color, corrida en escalera, y su filete ── */
+/* La rotación cuenta solo las secciones con título: la primera pestaña es siempre azul. */
+[data-theme="manual"] .bank {
+  --tab: var(--tab-1);
+  --tab-offset: 0%;
+}
+
+[data-theme="manual"] .bank:nth-child(4n + 2 of .bank-titled) {
+  --tab: var(--tab-2);
+  --tab-offset: 18%;
+}
+
+[data-theme="manual"] .bank:nth-child(4n + 3 of .bank-titled) {
+  --tab: var(--tab-3);
+  --tab-offset: 36%;
+}
+
+[data-theme="manual"] .bank:nth-child(4n + 4 of .bank-titled) {
+  --tab: var(--tab-4);
+  --tab-offset: 54%;
+}
+
+/* Si un título largo no entra, la escalera se corre a la izquierda. */
+[data-theme="manual"] .patchbay[data-shape] .bank h2 {
+  width: fit-content;
+  max-width: max(calc(100% - var(--tab-offset)), 14rem);
+  margin: 0 0 0 min(var(--tab-offset), calc(100% - 14rem));
+  padding: var(--space-1) var(--space-4);
+  border-bottom: 0;
+  border-radius: var(--radius-md) var(--radius-md) 0 0;
+  background: var(--tab);
+  color: var(--color-bg);
+  font-size: var(--text-md);
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  overflow-wrap: anywhere;
+  text-wrap: balance;
+}
+
+/* El filete del separador, a todo el ancho, en el color de la pestaña. */
+[data-theme="manual"] .bank-titled .ports {
+  border-top: 3px solid var(--tab);
+}
+
+/* Una hoja sin rótulo igual se separa del capítulo anterior. */
+[data-theme="manual"] .bank:not(.bank-titled) .ports {
+  border-top: 1px solid var(--color-line);
+}
+
+/* La firma: las pestañas se asoman una por una desde el borde. */
+[data-theme="manual"] .bank h2 {
+  animation: manual-asomar 420ms var(--ease-out) backwards;
+}
+
+[data-theme="manual"] .bank:nth-child(2 of .bank-titled) h2 {
+  animation-delay: 90ms;
+}
+
+[data-theme="manual"] .bank:nth-child(3 of .bank-titled) h2 {
+  animation-delay: 180ms;
+}
+
+[data-theme="manual"] .bank:nth-child(n + 4 of .bank-titled) h2 {
+  animation-delay: 270ms;
+}
+
+@keyframes manual-asomar {
+  from {
+    clip-path: inset(100% 0 0 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+/* ── Las entradas del índice: nombre, línea de puntos guía y la flecha ─── */
+[data-theme="manual"] .port {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+[data-theme="manual"] .jack {
+  display: none;
+}
+
+[data-theme="manual"] .port-body {
+  border-bottom: 1px solid var(--color-line-soft);
+}
+
+[data-theme="manual"] .port-name {
+  font-weight: 600;
+}
+
+[data-theme="manual"] .patchbay[data-shape="rows"] .port-link {
+  grid-template-columns: minmax(0, max-content) minmax(1.5rem, 1fr) auto;
+}
+
+[data-theme="manual"] .patchbay[data-shape="rows"] .port-link:has(.preview-thumb) {
+  grid-template-columns: minmax(0, max-content) minmax(1.5rem, 1fr) auto auto;
+}
+
+[data-theme="manual"] .patchbay[data-shape="rows"] .port-link::before {
+  content: "";
+  grid-row: 1;
+  grid-column: 2;
+  align-self: center;
+  border-bottom: 2px dotted var(--color-line);
+}
+
+[data-theme="manual"] .patchbay[data-shape="rows"] .port-link > span:first-child {
+  grid-column: 1;
+}
+
+[data-theme="manual"] .patchbay[data-shape="cards"] .port-body {
+  margin-top: var(--space-2);
+  padding: 0 var(--space-4);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+}
+
+/* ── En vivo: el sello de goma rojo, estampado y apenas torcido ────────── */
+[data-theme="manual"] .live-label {
+  display: inline-block;
+  padding: 0 6px;
+  border: 2px solid var(--color-live);
+  border-radius: 3px;
+  color: var(--color-live);
+  font-size: max(0.8em, 0.6875rem);
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  transform: rotate(-3deg);
+}
+
+/* Lugar para las esquinas giradas del sello (el metadato recorta lo que se sale). */
+[data-theme="manual"] .port-meta:has(.live-label) {
+  padding: 3px 0 3px 2px;
+}
+
+/* ── Destacados: la banderita adhesiva del acento, asomando por el canto ── */
+[data-theme="manual"] .patchbay[data-shape="rows"] .port.is-highlighted .port-body {
+  position: relative;
+  margin-bottom: 0;
+  padding: 0;
+  border: 0;
+  border-bottom: 1px solid var(--color-line-soft);
+  border-radius: 0;
+  background: none;
+}
+
+[data-theme="manual"] .patchbay[data-shape="cards"] .port.is-highlighted .port-body {
+  position: relative;
+  border: 1.5px solid var(--color-accent);
+  background: color-mix(in srgb, var(--color-accent) var(--highlight-tint), var(--color-bg));
+}
+
+[data-theme="manual"] .port.is-highlighted .port-body::after,
+[data-theme="manual"] .highlight-card::after {
+  content: "";
+  position: absolute;
+  top: var(--space-3);
+  right: -6px;
+  width: 6px;
+  height: 1.75rem;
+  border-radius: 0 2px 2px 0;
+  background: var(--color-accent);
+}
+
+[data-theme="manual"] .port.is-highlighted .port-name {
+  font-weight: 700;
+}
+
+/* Destacados arriba: el borde y el tinte del acento de la base, más su banderita. */
+[data-theme="manual"] .highlight-card {
+  position: relative;
+}
+
+[data-theme="manual"] .icon-link {
+  border-radius: var(--radius-md);
+}
+
+/* ── Miniatura del panel: pestañas en escalera, entradas y el sello ────── */
+[data-theme="manual"].theme-sample .theme-sample-avatar {
+  border-radius: 4px;
+}
+
+[data-theme="manual"].theme-sample .theme-sample-rows {
+  gap: 5px;
+}
+
+[data-theme="manual"].theme-sample .theme-sample-rows::before {
+  content: "";
+  height: 7px;
+  background:
+    linear-gradient(var(--tab-1) 0 0) 0 0 / 22% 100% no-repeat,
+    linear-gradient(var(--tab-2) 0 0) 34% 0 / 22% 100% no-repeat,
+    linear-gradient(var(--tab-3) 0 0) 68% 0 / 22% 100% no-repeat;
+  border-bottom: 2px solid var(--tab-1);
+}
+
+[data-theme="manual"].theme-sample .theme-sample-mark {
+  width: 3px;
+  height: 3px;
+  border: 0;
+  background: var(--color-fg-muted);
+}
+
+[data-theme="manual"].theme-sample .theme-sample-row.is-live .theme-sample-mark {
+  width: 14px;
+  height: 7px;
+  border: 1.5px solid var(--color-live);
+  border-radius: 1px;
+  background: none;
+  transform: rotate(-6deg);
+}
+
+[data-theme="manual"].theme-sample .theme-sample-row + .theme-sample-row::before {
+  display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-theme="manual"] .bank h2 {
+    animation: none;
+  }
+}
+
+/* La pestaña ya marca la sección: sin el filete de Técnico. */
+[data-theme="manual"][data-accent][data-mode] .bank h2 {
+  border-bottom: 0;
+}
