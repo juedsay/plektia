@@ -15,28 +15,18 @@ describe("estilos", () => {
     }
   });
 
-  it("las variantes construidas están disponibles; las demás, todavía no", () => {
-    expect(AVAILABLE_THEMES).toEqual([
-      "tecnico",
-      "punto",
-      "cassette",
-      "corcho",
-      "subte",
-      "pedalera",
-      "bitmap",
-      "lomo",
-      "manual",
-    ]);
+  it("las diez variantes están construidas y disponibles", () => {
+    expect(AVAILABLE_THEMES).toEqual(THEMES);
   });
 
-  it("se puede elegir un estilo disponible, pero no uno que todavía no está", () => {
+  it("se puede elegir un estilo disponible, pero no uno que no existe", () => {
     expect(parsePageSettings({ ...settings, theme: "punto" })).toMatchObject({
       ok: true,
       value: { theme: "punto" },
     });
-    const upcoming = parsePageSettings({ ...settings, theme: "sumario" });
-    expect(upcoming.ok).toBe(false);
-    if (!upcoming.ok) expect(Object.keys(upcoming.error.fields)).toEqual(["theme"]);
+    const unknown = parsePageSettings({ ...settings, theme: "neon" });
+    expect(unknown.ok).toBe(false);
+    if (!unknown.ok) expect(Object.keys(unknown.error.fields)).toEqual(["theme"]);
   });
 
   it("lo que la variante no admite se reemplaza por lo suyo, sin tocar lo guardado", () => {

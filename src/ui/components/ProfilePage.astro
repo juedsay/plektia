@@ -22,6 +22,10 @@ const description = page.bio ?? `Todos los links de ${page.displayName} en un so
 // Lo que la variante admite (SPEC-styles): si algo guardado no aplica, se usa lo suyo.
 const appearance = effectiveAppearance(page.theme, page);
 const rules = THEME_RULES[page.theme];
+// Sumario numera los links de corrido: con más de 99, el folio necesita tres cifras.
+const listedCount =
+  page.sections.reduce((total, section) => total + listedLinks(section.links).length, 0) +
+  listedLinks(page.unsectionedLinks).length;
 ---
 
 <PublicLayout
@@ -43,7 +47,12 @@ const rules = THEME_RULES[page.theme];
   <div data-stats-handle={preview ? undefined : page.handle}>
     <IconRow links={iconLinksOf(page)} />
     <HighlightCards links={topLinksOf(page)} />
-    <div class="patchbay" data-patchbay data-shape={appearance.linkShape}>
+    <div
+      class="patchbay"
+      data-patchbay
+      data-shape={appearance.linkShape}
+      data-folio-digits={listedCount > 99 ? "3" : undefined}
+    >
       {rules.thread && <svg class="thread" aria-hidden="true"></svg>}
       {page.sections.map((section) => (
         <Bank

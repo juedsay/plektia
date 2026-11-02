@@ -52,20 +52,6 @@ const ALL_ACCENTS: readonly Accent[] = [
 const ALL_SHAPES: readonly LinkShape[] = ["rows", "cards", "pills"];
 const ALL_FONTS: readonly NameFont[] = ["bricolage", "fraunces", "nunito", "space_mono"];
 
-/** Una variante que todavía no se construyó: admite lo mismo que técnico hasta entonces. */
-const upcoming = (family: ThemeFamily): ThemeRules => ({
-  family,
-  available: false,
-  thread: false,
-  accents: ALL_ACCENTS,
-  defaultAccent: "hueso",
-  shapes: ALL_SHAPES,
-  defaultShape: "rows",
-  fonts: ALL_FONTS,
-  defaultFont: "bricolage",
-  sectionMark: null,
-});
-
 export const THEME_RULES: Readonly<Record<Theme, ThemeRules>> = {
   tecnico: {
     family: "tecnico",
@@ -183,7 +169,19 @@ export const THEME_RULES: Readonly<Record<Theme, ThemeRules>> = {
     defaultFont: "bricolage",
     sectionMark: null,
   },
-  sumario: upcoming("editorial"),
+  // Sumario de revista: folios destacados en azul por defecto; el rojo es del folio en vivo.
+  sumario: {
+    family: "editorial",
+    available: true,
+    thread: false,
+    accents: ["cielo", "ambar", "turquesa", "lavanda", "hueso"],
+    defaultAccent: "cielo",
+    shapes: ["rows", "cards"],
+    defaultShape: "rows",
+    fonts: ["fraunces", "bricolage", "nunito"],
+    defaultFont: "fraunces",
+    sectionMark: null,
+  },
 };
 
 export const AVAILABLE_THEMES: readonly Theme[] = THEMES.filter(

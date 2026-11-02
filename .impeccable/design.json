@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-11-02T18:00:00.000Z",
+  "generatedAt": "2026-11-02T21:00:00.000Z",
   "title": "Design System: Plektia",
   "extensions": {
     "colorMeta": {
@@ -1651,6 +1651,363 @@
         "canonical": "oklch(36.0% 0.128 290.1)",
         "cssVar": "--tab-4 (claro); acento lavanda en claro",
         "theme": "manual",
+        "tonalRamp": [
+          "oklch(15% 0.128 290.1)",
+          "oklch(25% 0.128 290.1)",
+          "oklch(35% 0.128 290.1)",
+          "oklch(45% 0.128 290.1)",
+          "oklch(55% 0.128 290.1)",
+          "oklch(65% 0.128 290.1)",
+          "oklch(80% 0.128 290.1)",
+          "oklch(95% 0.128 290.1)"
+        ]
+      },
+      "sumario-tinta": {
+        "role": "neutral",
+        "displayName": "Tinta (Sumario)",
+        "canonical": "oklch(18.7% 0.004 84.6)",
+        "cssVar": "--color-bg, --color-selection-fg, --color-thread-twist y --color-live-ink (oscuro); --color-fg, --color-focus y --color-selection-bg (claro): folios y filetes de los apartados en claro; acento hueso en claro",
+        "theme": "sumario",
+        "tonalRamp": [
+          "oklch(15% 0.004 84.6)",
+          "oklch(25% 0.004 84.6)",
+          "oklch(35% 0.004 84.6)",
+          "oklch(45% 0.004 84.6)",
+          "oklch(55% 0.004 84.6)",
+          "oklch(65% 0.004 84.6)",
+          "oklch(80% 0.004 84.6)",
+          "oklch(95% 0.004 84.6)"
+        ]
+      },
+      "sumario-tinta-clara": {
+        "role": "neutral",
+        "displayName": "Tinta clara (Sumario)",
+        "canonical": "oklch(94.7% 0.013 86.8)",
+        "cssVar": "--color-fg, --color-focus y --color-selection-bg (oscuro): texto, folios, filetes de los apartados y doble filete del retrato; acento hueso en oscuro",
+        "theme": "sumario",
+        "tonalRamp": [
+          "oklch(15% 0.013 86.8)",
+          "oklch(25% 0.013 86.8)",
+          "oklch(35% 0.013 86.8)",
+          "oklch(45% 0.013 86.8)",
+          "oklch(55% 0.013 86.8)",
+          "oklch(65% 0.013 86.8)",
+          "oklch(80% 0.013 86.8)",
+          "oklch(95% 0.013 86.8)"
+        ]
+      },
+      "sumario-tinta-clara-apagada": {
+        "role": "neutral",
+        "displayName": "Tinta clara apagada (Sumario)",
+        "canonical": "oklch(81.8% 0.019 86.2)",
+        "cssVar": "--color-fg-muted (oscuro): bio, metadatos y flechas",
+        "theme": "sumario",
+        "tonalRamp": [
+          "oklch(15% 0.019 86.2)",
+          "oklch(25% 0.019 86.2)",
+          "oklch(35% 0.019 86.2)",
+          "oklch(45% 0.019 86.2)",
+          "oklch(55% 0.019 86.2)",
+          "oklch(65% 0.019 86.2)",
+          "oklch(80% 0.019 86.2)",
+          "oklch(95% 0.019 86.2)"
+        ]
+      },
+      "sumario-filete": {
+        "role": "neutral",
+        "displayName": "Filete (Sumario)",
+        "canonical": "oklch(37.7% 0.013 81.7)",
+        "cssVar": "--color-line (oscuro): filete de 1 px de cada nota y de las notas de tapa; borde de las notas en cards",
+        "theme": "sumario",
+        "tonalRamp": [
+          "oklch(15% 0.013 81.7)",
+          "oklch(25% 0.013 81.7)",
+          "oklch(35% 0.013 81.7)",
+          "oklch(45% 0.013 81.7)",
+          "oklch(55% 0.013 81.7)",
+          "oklch(65% 0.013 81.7)",
+          "oklch(80% 0.013 81.7)",
+          "oklch(95% 0.013 81.7)"
+        ]
+      },
+      "sumario-filete-tenue": {
+        "role": "neutral",
+        "displayName": "Filete tenue (Sumario)",
+        "canonical": "oklch(28.6% 0.008 84.6)",
+        "cssVar": "--color-line-soft (oscuro): filetes secundarios de la base",
+        "theme": "sumario",
+        "tonalRamp": [
+          "oklch(15% 0.008 84.6)",
+          "oklch(25% 0.008 84.6)",
+          "oklch(35% 0.008 84.6)",
+          "oklch(45% 0.008 84.6)",
+          "oklch(55% 0.008 84.6)",
+          "oklch(65% 0.008 84.6)",
+          "oklch(80% 0.008 84.6)",
+          "oklch(95% 0.008 84.6)"
+        ]
+      },
+      "sumario-superficie": {
+        "role": "neutral",
+        "displayName": "Superficie (Sumario)",
+        "canonical": "oklch(23.2% 0.006 78.2)",
+        "cssVar": "--color-surface (oscuro): notas en cards y retrato con inicial",
+        "theme": "sumario",
+        "tonalRamp": [
+          "oklch(15% 0.006 78.2)",
+          "oklch(25% 0.006 78.2)",
+          "oklch(35% 0.006 78.2)",
+          "oklch(45% 0.006 78.2)",
+          "oklch(55% 0.006 78.2)",
+          "oklch(65% 0.006 78.2)",
+          "oklch(80% 0.006 78.2)",
+          "oklch(95% 0.006 78.2)"
+        ]
+      },
+      "sumario-folio-en-vivo": {
+        "role": "tertiary",
+        "displayName": "Folio en vivo (Sumario)",
+        "canonical": "oklch(76.4% 0.140 27.6)",
+        "cssVar": "--color-live (oscuro): folio en vivo, filete de la nota de tapa en vivo, etiqueta \"En vivo\" y cronómetro; 7:1",
+        "theme": "sumario",
+        "tonalRamp": [
+          "oklch(15% 0.140 27.6)",
+          "oklch(25% 0.140 27.6)",
+          "oklch(35% 0.140 27.6)",
+          "oklch(45% 0.140 27.6)",
+          "oklch(55% 0.140 27.6)",
+          "oklch(65% 0.140 27.6)",
+          "oklch(80% 0.140 27.6)",
+          "oklch(95% 0.140 27.6)"
+        ]
+      },
+      "sumario-papel": {
+        "role": "neutral",
+        "displayName": "Papel de revista (Sumario, claro)",
+        "canonical": "oklch(98.5% 0.005 95.1)",
+        "cssVar": "--color-bg, --color-selection-fg y --color-thread-twist (claro)",
+        "theme": "sumario",
+        "tonalRamp": [
+          "oklch(15% 0.005 95.1)",
+          "oklch(25% 0.005 95.1)",
+          "oklch(35% 0.005 95.1)",
+          "oklch(45% 0.005 95.1)",
+          "oklch(55% 0.005 95.1)",
+          "oklch(65% 0.005 95.1)",
+          "oklch(80% 0.005 95.1)",
+          "oklch(95% 0.005 95.1)"
+        ]
+      },
+      "sumario-tinta-apagada": {
+        "role": "neutral",
+        "displayName": "Tinta apagada (Sumario, claro)",
+        "canonical": "oklch(34.2% 0.010 80.7)",
+        "cssVar": "--color-fg-muted (claro): bio, metadatos y flechas",
+        "theme": "sumario",
+        "tonalRamp": [
+          "oklch(15% 0.010 80.7)",
+          "oklch(25% 0.010 80.7)",
+          "oklch(35% 0.010 80.7)",
+          "oklch(45% 0.010 80.7)",
+          "oklch(55% 0.010 80.7)",
+          "oklch(65% 0.010 80.7)",
+          "oklch(80% 0.010 80.7)",
+          "oklch(95% 0.010 80.7)"
+        ]
+      },
+      "sumario-filete-claro": {
+        "role": "neutral",
+        "displayName": "Filete (Sumario, claro)",
+        "canonical": "oklch(82.1% 0.017 88.0)",
+        "cssVar": "--color-line (claro)",
+        "theme": "sumario",
+        "tonalRamp": [
+          "oklch(15% 0.017 88.0)",
+          "oklch(25% 0.017 88.0)",
+          "oklch(35% 0.017 88.0)",
+          "oklch(45% 0.017 88.0)",
+          "oklch(55% 0.017 88.0)",
+          "oklch(65% 0.017 88.0)",
+          "oklch(80% 0.017 88.0)",
+          "oklch(95% 0.017 88.0)"
+        ]
+      },
+      "sumario-filete-tenue-claro": {
+        "role": "neutral",
+        "displayName": "Filete tenue (Sumario, claro)",
+        "canonical": "oklch(91.3% 0.014 88.7)",
+        "cssVar": "--color-line-soft (claro)",
+        "theme": "sumario",
+        "tonalRamp": [
+          "oklch(15% 0.014 88.7)",
+          "oklch(25% 0.014 88.7)",
+          "oklch(35% 0.014 88.7)",
+          "oklch(45% 0.014 88.7)",
+          "oklch(55% 0.014 88.7)",
+          "oklch(65% 0.014 88.7)",
+          "oklch(80% 0.014 88.7)",
+          "oklch(95% 0.014 88.7)"
+        ]
+      },
+      "sumario-superficie-clara": {
+        "role": "neutral",
+        "displayName": "Superficie (Sumario, claro)",
+        "canonical": "oklch(100% 0 0)",
+        "cssVar": "--color-surface y --color-live-ink (claro)",
+        "theme": "sumario",
+        "tonalRamp": [
+          "oklch(15% 0 0)",
+          "oklch(25% 0 0)",
+          "oklch(35% 0 0)",
+          "oklch(45% 0 0)",
+          "oklch(55% 0 0)",
+          "oklch(65% 0 0)",
+          "oklch(80% 0 0)",
+          "oklch(95% 0 0)"
+        ]
+      },
+      "sumario-folio-en-vivo-claro": {
+        "role": "tertiary",
+        "displayName": "Folio en vivo (Sumario, claro)",
+        "canonical": "oklch(40.4% 0.157 29.3)",
+        "cssVar": "--color-live (claro): folio en vivo, filete de la nota de tapa en vivo, etiqueta \"En vivo\" y cronómetro; 7:1",
+        "theme": "sumario",
+        "tonalRamp": [
+          "oklch(15% 0.157 29.3)",
+          "oklch(25% 0.157 29.3)",
+          "oklch(35% 0.157 29.3)",
+          "oklch(45% 0.157 29.3)",
+          "oklch(55% 0.157 29.3)",
+          "oklch(65% 0.157 29.3)",
+          "oklch(80% 0.157 29.3)",
+          "oklch(95% 0.157 29.3)"
+        ]
+      },
+      "sumario-cielo": {
+        "role": "primary",
+        "displayName": "Azul (Sumario)",
+        "canonical": "oklch(78.1% 0.111 261.1)",
+        "cssVar": "acento cielo en oscuro (por defecto)",
+        "theme": "sumario",
+        "tonalRamp": [
+          "oklch(15% 0.111 261.1)",
+          "oklch(25% 0.111 261.1)",
+          "oklch(35% 0.111 261.1)",
+          "oklch(45% 0.111 261.1)",
+          "oklch(55% 0.111 261.1)",
+          "oklch(65% 0.111 261.1)",
+          "oklch(80% 0.111 261.1)",
+          "oklch(95% 0.111 261.1)"
+        ]
+      },
+      "sumario-cielo-claro": {
+        "role": "primary",
+        "displayName": "Azul (Sumario, claro)",
+        "canonical": "oklch(38.3% 0.129 259.6)",
+        "cssVar": "acento cielo en claro (por defecto)",
+        "theme": "sumario",
+        "tonalRamp": [
+          "oklch(15% 0.129 259.6)",
+          "oklch(25% 0.129 259.6)",
+          "oklch(35% 0.129 259.6)",
+          "oklch(45% 0.129 259.6)",
+          "oklch(55% 0.129 259.6)",
+          "oklch(65% 0.129 259.6)",
+          "oklch(80% 0.129 259.6)",
+          "oklch(95% 0.129 259.6)"
+        ]
+      },
+      "sumario-ambar": {
+        "role": "secondary",
+        "displayName": "Ámbar (Sumario)",
+        "canonical": "oklch(83.2% 0.126 82.8)",
+        "cssVar": "acento ambar en oscuro",
+        "theme": "sumario",
+        "tonalRamp": [
+          "oklch(15% 0.126 82.8)",
+          "oklch(25% 0.126 82.8)",
+          "oklch(35% 0.126 82.8)",
+          "oklch(45% 0.126 82.8)",
+          "oklch(55% 0.126 82.8)",
+          "oklch(65% 0.126 82.8)",
+          "oklch(80% 0.126 82.8)",
+          "oklch(95% 0.126 82.8)"
+        ]
+      },
+      "sumario-ambar-claro": {
+        "role": "secondary",
+        "displayName": "Ámbar (Sumario, claro)",
+        "canonical": "oklch(38.1% 0.080 77.1)",
+        "cssVar": "acento ambar en claro",
+        "theme": "sumario",
+        "tonalRamp": [
+          "oklch(15% 0.080 77.1)",
+          "oklch(25% 0.080 77.1)",
+          "oklch(35% 0.080 77.1)",
+          "oklch(45% 0.080 77.1)",
+          "oklch(55% 0.080 77.1)",
+          "oklch(65% 0.080 77.1)",
+          "oklch(80% 0.080 77.1)",
+          "oklch(95% 0.080 77.1)"
+        ]
+      },
+      "sumario-turquesa": {
+        "role": "secondary",
+        "displayName": "Verde (Sumario)",
+        "canonical": "oklch(80.1% 0.088 173.3)",
+        "cssVar": "acento turquesa en oscuro",
+        "theme": "sumario",
+        "tonalRamp": [
+          "oklch(15% 0.088 173.3)",
+          "oklch(25% 0.088 173.3)",
+          "oklch(35% 0.088 173.3)",
+          "oklch(45% 0.088 173.3)",
+          "oklch(55% 0.088 173.3)",
+          "oklch(65% 0.088 173.3)",
+          "oklch(80% 0.088 173.3)",
+          "oklch(95% 0.088 173.3)"
+        ]
+      },
+      "sumario-turquesa-claro": {
+        "role": "secondary",
+        "displayName": "Verde (Sumario, claro)",
+        "canonical": "oklch(36.7% 0.065 174.9)",
+        "cssVar": "acento turquesa en claro",
+        "theme": "sumario",
+        "tonalRamp": [
+          "oklch(15% 0.065 174.9)",
+          "oklch(25% 0.065 174.9)",
+          "oklch(35% 0.065 174.9)",
+          "oklch(45% 0.065 174.9)",
+          "oklch(55% 0.065 174.9)",
+          "oklch(65% 0.065 174.9)",
+          "oklch(80% 0.065 174.9)",
+          "oklch(95% 0.065 174.9)"
+        ]
+      },
+      "sumario-lavanda": {
+        "role": "secondary",
+        "displayName": "Violeta (Sumario)",
+        "canonical": "oklch(80.7% 0.090 300.4)",
+        "cssVar": "acento lavanda en oscuro",
+        "theme": "sumario",
+        "tonalRamp": [
+          "oklch(15% 0.090 300.4)",
+          "oklch(25% 0.090 300.4)",
+          "oklch(35% 0.090 300.4)",
+          "oklch(45% 0.090 300.4)",
+          "oklch(55% 0.090 300.4)",
+          "oklch(65% 0.090 300.4)",
+          "oklch(80% 0.090 300.4)",
+          "oklch(95% 0.090 300.4)"
+        ]
+      },
+      "sumario-lavanda-claro": {
+        "role": "secondary",
+        "displayName": "Violeta (Sumario, claro)",
+        "canonical": "oklch(36.0% 0.128 290.1)",
+        "cssVar": "acento lavanda en claro",
+        "theme": "sumario",
         "tonalRamp": [
           "oklch(15% 0.128 290.1)",
           "oklch(25% 0.128 290.1)",
@@ -3510,6 +3867,18 @@
         "displayName": "Sello (Manual)",
         "purpose": "\"EN VIVO\" en el sello de goma: mayúsculas, 800, tracking 0.08em, max(0.8em, 0.6875rem) para no bajar de 11 px, girado −3°."
       },
+      "sumario-nombre": {
+        "displayName": "Nombre de tapa (Sumario)",
+        "purpose": "El nombre de la página a cuerpo de tapa: clamp(2.75rem, 12vw, 3.75rem), 600, interlínea 1.05, tracking −0.02em, a 0.75rem del retrato. Fraunces por defecto; admite Bricolage y Nunito. Solo en redonda."
+      },
+      "sumario-folio": {
+        "displayName": "Folio (Sumario)",
+        "purpose": "El número de cada nota: la fuente de nombres a 1.75rem, 500, interlínea 1, lining-nums tabular-nums, decimal-leading-zero (01, 02…), alineado al título por la primera línea base. 700 el destacado (en el acento) y el en vivo (en rojo). Decorativo (aria-hidden)."
+      },
+      "sumario-apartado": {
+        "displayName": "Apartado (Sumario)",
+        "purpose": "Título de sección en versalitas armadas: la fuente del cuerpo a 0.875rem, 700, mayúsculas, tracking 0.14em, entre un filete de 3 px y uno de 1 px de tinta. No numera ni muestra el rótulo de sección del dueño. Los nombres de nota suben a 600 y el destacado a 700."
+      },
       "cassette-lado": {
         "displayName": "Lado (Lado A / B)",
         "purpose": "Título de sección en Lado A / B: Kalam 700 a 1.375rem (--font-hand, sin precarga, solo en esta variante), con el rótulo \"Lado A · \", \"Lado B · \" o \"Cinta N · Lado A/B · \" delante y subrayado de tinta de 2 px. Los nombres van en Nunito por defecto; admite Bricolage y Space Mono."
@@ -3588,6 +3957,11 @@
         "name": "manual-foto-carnet",
         "value": "0 0 0 3px var(--color-bg), 0 0 0 5px var(--color-accent)",
         "purpose": "Aro del acento de la foto carnet en Manual (esquinas de 6 px); spread puro, no elevación ni foco."
+      },
+      {
+        "name": "sumario-retrato",
+        "value": "0 0 0 4px var(--color-bg), 0 0 0 5px var(--color-fg); outline: 1px solid var(--color-fg); outline-offset: 8px",
+        "purpose": "Doble filete de tinta del retrato rectangular de 88 × 110 px en Sumario; spread puro y contorno decorativo, no elevación ni foco."
       },
       {
         "name": "cassette-aro-avatar",
@@ -3732,6 +4106,11 @@
         "purpose": "Firma de Manual: las pestañas se asoman una por una desde su filete al cargar, una vez. Quietas con movimiento reducido."
       },
       {
+        "name": "sumario-imprimir",
+        "value": "300ms var(--ease-out) backwards, clip-path inset(100% 0 0 0) → inset(0); escalonado 0/110/220/330ms (el 4.º y siguientes a 330ms)",
+        "purpose": "Firma de Sumario: los folios del primer apartado se imprimen uno por uno, de abajo hacia arriba, al cargar, una vez. Quietos con movimiento reducido; el folio en vivo no late."
+      },
+      {
         "name": "cassette-escribir",
         "value": "900ms steps(24, end) backwards, clip-path inset revelado de izquierda a derecha",
         "purpose": "Firma de Lado A / B: el título del primer lado se escribe de izquierda a derecha al cargar, una vez. Quieto con movimiento reducido."
@@ -3806,7 +4185,8 @@
         "pedalera",
         "bitmap",
         "lomo",
-        "manual"
+        "manual",
+        "sumario"
       ],
       "rulesSource": "src/domain/theme.ts (familia, acentos, formas y tipografías por variante)",
       "variantCss": "src/ui/styles/themes/<variante>.css, acotado a [data-theme=\"<variante>\"] y en línea solo en las páginas que la eligen",
@@ -4334,6 +4714,73 @@
           "Avatar en foto carnet de 6 px en vez de redondo"
         ]
       },
+      "sumario": {
+        "accents": {
+          "cielo": {
+            "dark": "#8fb8ff",
+            "light": "#123f86",
+            "tone": "azul",
+            "default": true
+          },
+          "ambar": {
+            "dark": "#f0c060",
+            "light": "#5a3c00",
+            "tone": "ámbar"
+          },
+          "turquesa": {
+            "dark": "#7fd1b9",
+            "light": "#0a4a3d",
+            "tone": "verde"
+          },
+          "lavanda": {
+            "dark": "#c9b3f2",
+            "light": "#3f2b7a",
+            "tone": "violeta"
+          },
+          "hueso": {
+            "dark": "#f1ede4",
+            "light": "#141311",
+            "tone": "la tinta misma"
+          }
+        },
+        "accentUse": "El acento marca lo destacado: el folio de la nota destacada a 700 y el filete de 3 px de las notas de tapa (y de la nota destacada en cards). Nunca los filetes de los apartados, que son siempre --color-fg. Coral y rosa no se admiten (el rojo es del en vivo); arena tampoco.",
+        "live": {
+          "dark": "#ff8d80",
+          "light": "#8a0d07",
+          "note": "El folio de la nota en vivo en --color-live a 700, quieto: sin pulso (::after apagado) ni relleno del jack. La nota de tapa en vivo, sin folio, pasa su filete de arriba a --color-live. Si la nota destacada está en vivo, gana el rojo."
+        },
+        "folio": "counter-reset: sumario-folio en .patchbay; counter-increment en cada .port; content: counter(sumario-folio, decimal-leading-zero) en .jack::before. De corrido por toda la página; la sub-fila del último video no suma; secciones ocultas y destacados que suben arriba no se renderizan en la lista. aria-hidden (el orden lo da la lista). Alineado al título con align-items: first baseline. Hover y foco: subrayado de 2 px a 4 px.",
+        "section": "Versalitas armadas en la fuente del cuerpo (0.875rem, 700, mayúsculas, tracking 0.14em) entre border-top de 3 px y border-bottom de 1 px en --color-fg, padding 0.5rem 0, sin sangría del carril.",
+        "portrait": "Rectángulo de 88 × 110 px, radio 0, con anillo de 4 px de fondo y 1 px de tinta y outline decorativo de 1 px de tinta a 8 px; inicial a 2.5rem.",
+        "coverNotes": "Destacados arriba: border-top de 3 px en el acento, border-bottom de 1 px en --color-line, sin caja, sin fondo, padding-inline 0. No levitan al pasar: el nombre se subraya (1 px a 3 px).",
+        "shapes": [
+          "rows",
+          "cards"
+        ],
+        "defaultShape": "rows",
+        "fonts": [
+          "fraunces",
+          "bricolage",
+          "nunito"
+        ],
+        "defaultFont": "fraunces",
+        "sectionMark": null,
+        "thread": false,
+        "jackCol": "3.25rem en todos los anchos; 4.5rem con data-folio-digits=\"3\" (más de 99 links listados)",
+        "radiusMd": "0",
+        "radiusSm": "0",
+        "exceptions": [
+          "Sin hilo ni jacks: el carril es la columna de los folios (3.25rem; 4.5rem con tres cifras)",
+          "Única variante que numera los links: folio de corrido en vez de jack, alineado por la línea base",
+          "Señal en vivo: el folio rojo y quieto en vez del jack lima que late",
+          "Apartados en versalitas de la fuente del cuerpo a 0.875rem entre filetes de 3 y 1 px de tinta",
+          "Nombres de nota a 600 (700 el destacado)",
+          "Destacado con acento sin caja en rows; notas de tapa sin caja, sin tinte y sin levitar",
+          "Ángulos rectos: --radius-md y --radius-sm en 0",
+          "Retrato rectangular de 88 × 110 px con contorno decorativo de 1 px (el foco sigue sólido)",
+          "Nombre a cuerpo de tapa: clamp(2.75rem, 12vw, 3.75rem)"
+        ]
+      },
       "corcho": {
         "accents": {
           "cielo": {
@@ -4422,7 +4869,7 @@
       }
     ],
     "adminStyleGrid": {
-      "summary": "Panel → Página → Estilo: grilla por familia (celdas de 9.5rem mínimo, borde grafito tenue, 6 px); la elegida con borde hueso y anillo interior de 1 px; miniatura real con los tokens de la variante en el modo de la página; las no construidas a 55% de opacidad con \"Próximamente\"."
+      "summary": "Panel → Página → Estilo: grilla por familia (celdas de 9.5rem mínimo, borde grafito tenue, 6 px); la elegida con borde hueso y anillo interior de 1 px; miniatura real con los tokens de la variante en el modo de la página. Las diez variantes están construidas; una variante nueva sin terminar quedaría a 55% de opacidad con \"Próximamente\"."
     }
   },
   "components": [
@@ -4667,6 +5114,30 @@
       "css": ".ds-manual-flag-wrap{width:22rem;padding:1rem 1.5rem 1rem 1rem;background:#16181c;color:#eceae4;font-family:system-ui,sans-serif} .ds-manual-flag{position:relative;display:block;min-height:3.25rem;padding:0.5rem 0;border-bottom:1px solid #2a2d34;color:inherit;text-decoration:none} .ds-manual-flag::after{content:\"\";position:absolute;top:0.75rem;right:-6px;width:6px;height:1.75rem;border-radius:0 2px 2px 0;background:#8fb8ff} .ds-manual-flag-name{display:block;font-family:'Bricolage Grotesque',system-ui,sans-serif;font-size:1.0625rem;font-weight:700} .ds-manual-flag-meta{display:block;color:#c6c3bb;font-size:0.8125rem} .ds-manual-flag:hover .ds-manual-flag-name{text-decoration:underline} .ds-manual-flag:focus-visible{outline:2px solid #eceae4;outline-offset:2px;border-radius:2px}"
     },
     {
+      "name": "Apartado con notas foliadas (Sumario)",
+      "kind": "custom",
+      "refersTo": "sumario-folio",
+      "description": "Un apartado de Sumario: versalitas entre un filete de 3 px y uno de 1 px de tinta; notas con su folio grande alineado por la línea base. 01 en vivo (rojo), 03 destacado (en el acento); los folios se imprimen al cargar.",
+      "html": "<section class=\"ds-sumario\"><h2 class=\"ds-sumario-apartado\">Redes</h2><a class=\"ds-sumario-nota is-live\" href=\"#\"><span class=\"ds-sumario-folio\" aria-hidden=\"true\">01</span><span class=\"ds-sumario-cuerpo\"><span><span class=\"ds-sumario-nombre\">Twitch</span><span class=\"ds-sumario-meta\"><span class=\"ds-sumario-vivo\">En vivo</span> · Programando</span></span><span class=\"ds-sumario-flecha\" aria-hidden=\"true\">↗</span></span></a><a class=\"ds-sumario-nota\" href=\"#\"><span class=\"ds-sumario-folio\" aria-hidden=\"true\">02</span><span class=\"ds-sumario-cuerpo\"><span><span class=\"ds-sumario-nombre\">YouTube</span><span class=\"ds-sumario-meta\">@juedsay</span></span><span class=\"ds-sumario-flecha\" aria-hidden=\"true\">↗</span></span></a><a class=\"ds-sumario-nota is-highlighted\" href=\"#\"><span class=\"ds-sumario-folio\" aria-hidden=\"true\">03</span><span class=\"ds-sumario-cuerpo\"><span><span class=\"ds-sumario-nombre\">Plektia</span><span class=\"ds-sumario-meta\">Esta página: links, en vivo y MCP</span></span><span class=\"ds-sumario-flecha\" aria-hidden=\"true\">↗</span></span></a></section>",
+      "css": ".ds-sumario{width:22rem;padding:1rem;background:#141311;color:#f1ede4;font-family:system-ui,sans-serif} .ds-sumario-apartado{margin:0;padding:0.5rem 0;border-top:3px solid #f1ede4;border-bottom:1px solid #f1ede4;font-size:0.875rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase} .ds-sumario-nota{display:grid;grid-template-columns:3.25rem minmax(0,1fr);align-items:first baseline;color:inherit;text-decoration:none} .ds-sumario-folio{font-family:Fraunces,Georgia,serif;font-size:1.75rem;font-weight:500;line-height:1;font-variant-numeric:lining-nums tabular-nums;animation:ds-imprimir 300ms cubic-bezier(0.16,1,0.3,1) backwards} .ds-sumario-nota:nth-of-type(2) .ds-sumario-folio{animation-delay:110ms} .ds-sumario-nota:nth-of-type(3) .ds-sumario-folio{animation-delay:220ms} .ds-sumario-cuerpo{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;column-gap:0.75rem;min-height:3.25rem;padding:0.75rem 0;border-bottom:1px solid #45413a} .ds-sumario-nombre{display:block;font-family:Fraunces,Georgia,serif;font-size:1.0625rem;font-weight:600;line-height:1.3} .ds-sumario-meta{display:block;color:#c9c3b6;font-size:0.8125rem} .ds-sumario-vivo{color:#ff8d80} .ds-sumario-flecha{color:#c9c3b6} .ds-sumario-nota.is-live .ds-sumario-folio{color:#ff8d80;font-weight:700} .ds-sumario-nota.is-highlighted .ds-sumario-folio{color:#8fb8ff;font-weight:700} .ds-sumario-nota.is-highlighted .ds-sumario-nombre{font-weight:700} .ds-sumario-nota:is(:hover,:focus-visible) .ds-sumario-folio{text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:4px} .ds-sumario-nota:focus-visible{outline:2px solid #f1ede4;outline-offset:2px} @keyframes ds-imprimir{from{clip-path:inset(100% 0 0 0)}to{clip-path:inset(0)}} @media (prefers-reduced-motion: reduce){.ds-sumario-folio{animation:none}}"
+    },
+    {
+      "name": "Nota de tapa (Sumario)",
+      "kind": "card",
+      "refersTo": "sumario-nota-de-tapa",
+      "description": "Destacado arriba: un filete de 3 px en el acento arriba y uno de 1 px abajo, sin caja ni fondo, alineado a la retícula; al pasar no levita, el nombre se subraya.",
+      "html": "<div class=\"ds-sumario-tapa-wrap\"><a class=\"ds-sumario-tapa\" href=\"#\"><span><span class=\"ds-sumario-tapa-name\">GitHub</span><span class=\"ds-sumario-tapa-meta\">@juedsay</span></span><span class=\"ds-sumario-tapa-go\" aria-hidden=\"true\">↗</span></a></div>",
+      "css": ".ds-sumario-tapa-wrap{width:22rem;padding:1rem;background:#141311;color:#f1ede4;font-family:system-ui,sans-serif} .ds-sumario-tapa{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:0.75rem;min-height:4.5rem;padding:1rem 0;border-top:3px solid #8fb8ff;border-bottom:1px solid #45413a;border-radius:0;background:none;color:inherit;text-decoration:none} .ds-sumario-tapa-name{display:block;font-family:Fraunces,Georgia,serif;font-size:1.125rem;font-weight:600;line-height:1.25} .ds-sumario-tapa-meta{display:block;color:#c9c3b6;font-size:0.8125rem} .ds-sumario-tapa-go{color:#c9c3b6} .ds-sumario-tapa:hover .ds-sumario-tapa-name{text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:3px} .ds-sumario-tapa:focus-visible{outline:2px solid #f1ede4;outline-offset:2px}"
+    },
+    {
+      "name": "Retrato de tapa (Sumario)",
+      "kind": "custom",
+      "refersTo": "sumario-retrato",
+      "description": "El avatar como retrato rectangular de 88 × 110 px, sin redondeo, con doble filete de tinta (anillo de spread y contorno decorativo a 8 px), y el nombre a cuerpo de tapa debajo.",
+      "html": "<div class=\"ds-sumario-identidad\"><span class=\"ds-sumario-retrato\">J</span><span class=\"ds-sumario-tapa-nombre\">Julián (dev)</span></div>",
+      "css": ".ds-sumario-identidad{display:grid;justify-items:center;width:22rem;padding:1.5rem 1rem;background:#141311;color:#f1ede4} .ds-sumario-retrato{display:grid;place-items:center;width:88px;height:110px;border-radius:0;background:#1f1d1a;font-family:Fraunces,Georgia,serif;font-size:2.5rem;box-shadow:0 0 0 4px #141311,0 0 0 5px #f1ede4;outline:1px solid #f1ede4;outline-offset:8px} .ds-sumario-tapa-nombre{margin-top:1.5rem;font-family:Fraunces,Georgia,serif;font-size:clamp(2.75rem,12vw,3.75rem);font-weight:600;letter-spacing:-0.02em;line-height:1.05}"
+    },
+    {
       "name": "Notas con hilo (Corcho)",
       "kind": "custom",
       "refersTo": "corcho-nota",
@@ -4862,6 +5333,31 @@
         "section": "typography"
       },
       {
+        "name": "La regla del folio rojo",
+        "body": "El rojo es la señal en vivo de Sumario y de nada más: el folio de la nota en vivo, a 700 y quieto (sin pulso ni el relleno del jack de la base). La nota de tapa en vivo, que no tiene folio, cambia su filete de acento por el rojo. Fuera de eso, el rojo solo está donde la base lo pone como texto (la etiqueta \"En vivo\" y el cronómetro del metadato) y en el isotipo, por la regla común. Ningún acento es rojo ni rojizo.",
+        "section": "colors"
+      },
+      {
+        "name": "La regla del folio en el acento",
+        "body": "El acento marca lo destacado y nada más: el folio de la nota destacada a 700, y el filete grueso de las notas de tapa (y de la nota destacada en `cards`). Si la nota destacada está en vivo, su folio va en rojo: gana la señal.",
+        "section": "colors"
+      },
+      {
+        "name": "La regla del apartado de tinta",
+        "body": "Los dos filetes de cada apartado son siempre de tinta (`--color-fg`), con cualquier acento y en cualquier modo.",
+        "section": "colors"
+      },
+      {
+        "name": "La regla de la línea base",
+        "body": "El folio y el título de la nota se alinean por la primera línea base (`align-items: first baseline`), no por el centro de la fila: el folio grande y el nombre se leen como una sola línea de sumario.",
+        "section": "typography"
+      },
+      {
+        "name": "La regla del folio de corrido",
+        "body": "Los links se numeran una sola vez y de corrido, del primero al último que se lista, sin volver a empezar en cada apartado. Solo cuenta lo que está en la lista: nada que no sea un link listado suma un folio.",
+        "section": "components"
+      },
+      {
         "name": "La regla del amarillo",
         "body": "El amarillo es la señal en vivo de Corcho y de nada más: la nota en vivo es amarilla y lleva la chinche roja, en los links y también en los destacados de arriba. Ninguna otra nota, chinche o cinta es amarilla (por eso ámbar no es un acento admitido), y la nota en vivo no late.",
         "section": "colors"
@@ -4938,6 +5434,16 @@
       "**Do** marcar lo destacado con la banderita del acento asomando por el canto derecho; en `rows`, sin tarjeta.",
       "**Do** estampar \"EN VIVO\" con el sello rojo de goma, girado −3°, a 800 y nunca por debajo de 11 px.",
       "**Do** asomar las pestañas una por una al cargar, y dejarlas quietas con movimiento reducido.",
+      "**Do** numerar las notas de corrido por toda la página, con folio de dos cifras (`decimal-leading-zero`), contando solo los links listados.",
+      "**Do** ensanchar la columna del folio a 4.5rem cuando la página lista más de 99 links.",
+      "**Do** alinear el folio y el título de la nota por la línea base.",
+      "**Do** dejar el folio como decoración (`aria-hidden`): el orden lo da la lista.",
+      "**Do** abrir cada apartado con versalitas armadas (0.875rem, 700, tracking 0.14em) entre un filete de 3 px y uno de 1 px, siempre de tinta.",
+      "**Do** reservar el rojo para el folio de la nota en vivo, y para el filete de una nota de tapa en vivo.",
+      "**Do** marcar lo destacado con el folio en el acento a 700; en `cards`, sumarle el filete de tapa a su caja.",
+      "**Do** llevar las notas de tapa como un filete grueso del acento, sin caja y alineadas a la retícula, que se subrayan al pasar.",
+      "**Do** mantener todos los ángulos rectos y el retrato de 88 × 110 px con su doble filete.",
+      "**Do** imprimir solo los folios del primer apartado al cargar, y dejarlos quietos con movimiento reducido.",
       "**Do** clavar cada nota con su chinche de 14 px en el acento, arriba a la izquierda.",
       "**Do** torcer solo el papel, en un pseudo-elemento detrás del texto; el texto, los íconos, la flecha y el foco quedan derechos.",
       "**Do** bajar el hilo rojo desde la cinta del título hasta la primera chinche, seguirlo de chinche en chinche y cortarlo en la última.",
@@ -5001,6 +5507,16 @@
       "**Don't** numerar secciones ni entradas, ni volver a jacks o al hilo dentro de Manual.",
       "**Don't** girar otro texto que el sello.",
       "**Don't** sacar las excepciones de Manual de `[data-theme=\"manual\"]`.",
+      "**Don't** reiniciar la numeración en cada apartado ni contar la sub-fila del último video.",
+      "**Don't** usar rojo fuera del en vivo, ni admitir acentos rojizos (coral, rosa).",
+      "**Don't** hacer latir el folio en vivo ni sumarle otra marca.",
+      "**Don't** pintar los filetes de los apartados con el acento.",
+      "**Don't** encerrar el destacado con acento en una caja en la forma `rows`, ni darle caja o tinte a las notas de tapa.",
+      "**Don't** hacer levitar las notas de tapa al pasar.",
+      "**Don't** redondear esquinas: ni el retrato, ni las tarjetas, ni la fila de íconos.",
+      "**Don't** poner itálica en el nombre ni en los folios de Fraunces.",
+      "**Don't** numerar secciones, ni volver a jacks o al hilo dentro de Sumario.",
+      "**Don't** sacar las excepciones de Sumario de `[data-theme=\"sumario\"]`.",
       "**Don't** torcer texto: ni el título, ni el nombre, ni la flecha.",
       "**Don't** poner cinta en las notas: la cinta es solo de los títulos.",
       "**Don't** usar el amarillo fuera del en vivo ni admitir ámbar como acento.",

@@ -128,3 +128,17 @@ FIRST VIEWPORT: Barra superior; avatar en foto carnet de esquinas apenas redonde
 FORM: Manual, propuesta aprobada por el usuario en la tanda de nueve mockups (mostrados en el chat del 2026-10-30, no quedaron en el repo; la decisión está en SPEC-styles.md). Firma: al cargar, las pestañas se asoman una por una desde el borde; quietas con movimiento reducido.
 
 FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, DESIGN.md, and every shipping raster carrying its provenance
+
+## Direction contract — Sumario (familia Editorial)
+
+THESIS: La página es el sumario de una revista: cada link es una nota con su folio grande a la izquierda, numerada de corrido como las páginas de la edición, y cada sección es un apartado en versalitas con su filete. Rechaza el "blog minimal" de tarjetas y bordes redondeados: lo editorial sale de la tipografía —folios grandes, versalitas, retrato de tapa— y de la retícula.
+
+OWN-WORLD: Papel de revista (#fbfaf6) con tinta casi negra (#141311); de noche, papel oscuro (#141311) con tinta clara (#f1ede4). Fraunces por defecto para el nombre, los folios y las notas; versalitas armadas (mayúsculas chicas con tracking) en los apartados. El acento colorea el folio de lo destacado y el filete de las notas de tapa (azul, ámbar, verde, violeta o la tinta). Rojo reservado al folio de la nota en vivo.
+
+STORY: El visitante ve el retrato y el nombre a cuerpo de tapa, encuentra el folio rojo si está en vivo, recorre los apartados y toca la nota que busca por su folio.
+
+FIRST VIEWPORT: Barra superior; retrato rectangular con doble filete; el nombre grande en Fraunces; bio; el apartado "REDES" en versalitas con filete grueso; las notas con folios 01, 02, 03 en una columna; la nota en vivo con su folio en rojo.
+
+FORM: Sumario, propuesta aprobada por el usuario en la tanda de nueve mockups (mostrados en el chat del 2026-10-30, no quedaron en el repo; la decisión está en SPEC-styles.md, con el avatar obligatorio pedido por el usuario). Firma: los folios del primer apartado se imprimen uno por uno al cargar (aparecen de abajo hacia arriba); quietos con movimiento reducido. Es la única variante que numera los links (SPEC-styles, regla 9).
+
+FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, DESIGN.md, and every shipping raster carrying its provenance
