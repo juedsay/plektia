@@ -180,3 +180,12 @@ button {
 .submit {
   justify-self: start;
 }
+
+/*
+ * El nodo de acento del isotipo es siempre lima, en todos los estilos: es la
+ * marca, no la señal en vivo de la variante. Sobre fondo claro va la lima
+ * oscura de la marca (docs/brand/brief.md), según el color-scheme del estilo.
+ */
+.isotype-node {
+  fill: light-dark(#2e5200, #c6f432);
+}

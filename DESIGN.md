@@ -807,7 +807,7 @@ El sistema es un **contrato de tokens tematizable**: la v1 trae el tema "técnic
 Una paleta casi monocroma de negro frío y hueso cálido, con un único acento ácido que solo significa "en vivo".
 
 ### Primary
-- **Lima en vivo** (`lima-en-vivo`): la señal de transmisión en curso y nada más. Se usa en el aro y el ojo del jack en vivo, en su pulso, en el tramo de hilo que llega a ese jack, en la etiqueta "En vivo" y su cronómetro, y en el nodo de acento del isotipo. Sobre el fondo da 14.5:1.
+- **Lima en vivo** (`lima-en-vivo`): la señal de transmisión en curso y nada más. Se usa en el aro y el ojo del jack en vivo, en su pulso, en el tramo de hilo que llega a ese jack, y en la etiqueta "En vivo" y su cronómetro. Sobre el fondo da 14.5:1. El nodo del isotipo también es lima, pero como marca (ver la regla del isotipo).
 - **Tinta en vivo** (`tinta-en-vivo`): el color de texto previsto sobre una superficie lima, si alguna vez hace falta.
 
 ### Neutral
@@ -977,7 +977,7 @@ Todo lo documentado arriba (Overview a Do's and Don'ts) es el sistema de Técnic
 
 **La regla del peso.** CSS en línea solo de la variante elegida; script solo si la pieza firma lo necesita; a lo sumo una fuente propia precargada, alojada localmente y sin CDN. El presupuesto de la página pública no cambia.
 
-**La regla del isotipo.** El punto del isotipo de Plektia (en la barra superior, y el mismo componente en el pie) se pinta con `--color-live` en todas las variantes y ninguna lo redefine: toma el tono de texto en vivo de cada una (lima en Técnico, ámbar en Subte, rojo claro o granate en Pedalera, rosa en Bitmap). Es la única pieza fuera del en vivo que usa ese tono, y por eso no cuenta como un uso extra de la señal propia.
+**La regla del isotipo.** El punto del isotipo de Plektia (en la barra superior, en el pie y donde aparezca el componente) es la marca, no la señal en vivo: es siempre lima en todas las variantes, `#C6F432` sobre fondo oscuro y la lima oscura de la marca `#2E5200` sobre fondo claro (`.isotype-node` con `light-dark()` en `base.css`, según el `color-scheme` de cada variante). Ninguna variante lo redefine, y nunca toma el color en vivo de la variante.
 
 Además valen para todas: foco visible, 44 px táctiles, `prefers-reduced-motion` con la pieza firma quieta, y ninguna numeración de links salvo en Sumario. Las excepciones a una regla de Técnico son propias de cada variante, se documentan en su subsección y quedan acotadas a su `[data-theme]`.
 
@@ -1187,7 +1187,7 @@ Corcho claro con notas crema y tinta marrón casi negra en claro; corcho oscuro 
 - **Polaroid** (`corcho-polaroid` en oscuro; `corcho-papel-claro` en claro) y **foto** (`corcho-papel` en oscuro; `corcho-foto-claro` en claro): el marco y el fondo del avatar.
 - **Nota en vivo** (`corcho-nota-en-vivo`, `corcho-nota-en-vivo-claro`): `--note-live`, el papel amarillo de la nota en vivo, con la tinta del modo encima (`--note-live-ink`: `corcho-tablero` en oscuro, `corcho-tinta` en claro).
 - **Chinche en vivo** (`corcho-chinche-en-vivo`, `corcho-chinche-en-vivo-claro`): `--pin-live`, la chinche roja de la nota en vivo. Es un rojo aparte del hilo: más claro en oscuro (`#ff7a6b` contra `#e0473b`) y más encendido en claro (`#d8291d` contra `#a11f17`).
-- **En vivo** (`corcho-en-vivo`, `corcho-en-vivo-claro`): `--color-live`. Dentro de la nota amarilla la etiqueta y el cronómetro van en la tinta de la nota, así que en Corcho este tono solo lo usan las piezas de la base que no se redefinen, como el punto del isotipo.
+- **En vivo** (`corcho-en-vivo`, `corcho-en-vivo-claro`): `--color-live`. Dentro de la nota amarilla la etiqueta y el cronómetro van en la tinta de la nota, así que en Corcho este tono solo lo usan las piezas de la base que no se redefinen.
 
 **Acentos admitidos** (cinco de los ocho; por defecto, cielo). El acento es la cabeza de cada chinche: la de cada nota, la segunda del destacado con acento, la de los destacados de arriba y la de la miniatura. Nunca el hilo, la cinta ni el papel.
 
@@ -1481,7 +1481,7 @@ Negro de pantalla con tinta blanca en oscuro; papel con tinta casi negra en clar
 - **Superficie** (`bitmap-superficie`, `bitmap-superficie-claro`): `--color-surface`, el relleno de las cajas en escalera (tarjetas, destacados de arriba, fila de íconos) y el fondo del avatar con inicial. En claro, el blanco es también la tinta sobre el en vivo.
 - **Borde** (`bitmap-borde`, `bitmap-borde-claro`): `--color-line`, la línea de 1 px bajo cada link de la lista fina y el borde en escalera de las tarjetas y de la fila de íconos.
 - **Borde tenue** (`bitmap-borde-tenue`, `bitmap-borde-tenue-claro`): `--color-line-soft`, los filetes secundarios de la base. La lista fina no lo usa: su línea va en `--color-line`.
-- **En vivo** (`bitmap-en-vivo`, `bitmap-en-vivo-claro`): `--color-live`, el rosa de la etiqueta "EN VIVO" invertida (fondo rosa, letras en `--color-live-ink`), del cronómetro y del isotipo. Rosa claro en oscuro y frambuesa en claro, medidos a 7:1.
+- **En vivo** (`bitmap-en-vivo`, `bitmap-en-vivo-claro`): `--color-live`, el rosa de la etiqueta "EN VIVO" invertida (fondo rosa, letras en `--color-live-ink`), y del cronómetro. Rosa claro en oscuro y frambuesa en claro, medidos a 7:1.
 
 **Acentos admitidos** (cinco de los ocho; por defecto, cielo). El acento es la barra de píxeles de cada título, el cursor de bloque, el marco del avatar, el borde en escalera de los destacados de arriba y del destacado con acento, y el tinte de su relleno. Nunca la etiqueta en vivo ni el texto.
 
@@ -1495,7 +1495,7 @@ Negro de pantalla con tinta blanca en oscuro; papel con tinta casi negra en clar
 
 `coral`, `rosa` y `arena` no se admiten en Bitmap.
 
-**La regla del rosa.** El rosa es la señal en vivo de Bitmap y de nada más: la etiqueta "EN VIVO", el cronómetro y el isotipo (por la regla común). Ninguna barra, cursor, marco ni borde es rosa (por eso rosa y coral quedan afuera como acentos), y el rosa no marca foco ni hover.
+**La regla del rosa.** El rosa es la señal en vivo de Bitmap y de nada más: la etiqueta "EN VIVO" y el cronómetro. Ninguna barra, cursor, marco ni borde es rosa (por eso rosa y coral quedan afuera como acentos), y el rosa no marca foco ni hover.
 
 #### Typography
 
@@ -1809,7 +1809,7 @@ Papel de revista y tinta casi negra en claro; de noche, papel oscuro con tinta c
 
 `coral`, `rosa` y `arena` no se admiten en Sumario: coral y rosa son rojizos, y el rojo es del en vivo.
 
-**La regla del folio rojo.** El rojo es la señal en vivo de Sumario y de nada más: el folio de la nota en vivo, a 700 y quieto (sin pulso ni el relleno del jack de la base). La nota de tapa en vivo, que no tiene folio, cambia su filete de acento por el rojo. Fuera de eso, el rojo solo está donde la base lo pone como texto (la etiqueta "En vivo" y el cronómetro del metadato) y en el isotipo, por la regla común. Ningún acento es rojo ni rojizo.
+**La regla del folio rojo.** El rojo es la señal en vivo de Sumario y de nada más: el folio de la nota en vivo, a 700 y quieto (sin pulso ni el relleno del jack de la base). La nota de tapa en vivo, que no tiene folio, cambia su filete de acento por el rojo. Fuera de eso, el rojo solo está donde la base lo pone como texto (la etiqueta "En vivo" y el cronómetro del metadato). Ningún acento es rojo ni rojizo.
 
 **La regla del folio en el acento.** El acento marca lo destacado y nada más: el folio de la nota destacada a 700, y el filete grueso de las notas de tapa (y de la nota destacada en `cards`). Si la nota destacada está en vivo, su folio va en rojo: gana la señal.
 
