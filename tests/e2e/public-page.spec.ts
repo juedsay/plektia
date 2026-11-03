@@ -147,7 +147,14 @@ test.describe("página pública", () => {
       "content",
       /\/og\.png$/,
     );
-    await expect(page.locator('link[rel="icon"]')).toHaveAttribute("href", "/favicon.svg");
+    await expect(page.locator('link[rel="icon"][type="image/svg+xml"]')).toHaveAttribute(
+      "href",
+      "/favicon.svg",
+    );
+    await expect(page.locator('link[rel="icon"][sizes="32x32"]')).toHaveAttribute(
+      "href",
+      "/favicon.ico",
+    );
     const data = JSON.parse(
       (await page.locator('script[type="application/ld+json"]').textContent()) ?? "{}",
     ) as { "@type"?: string; mainEntity?: { alternateName?: string } };
@@ -171,7 +178,7 @@ test.describe("página pública", () => {
     expect(sitemapText).toMatch(/<loc>[^<]+\/demo-segunda<\/loc>/);
     const robots = await request.get("/robots.txt");
     expect(await robots.text()).toContain("Disallow: /admin");
-    for (const path of ["/favicon.svg", "/og.png", "/apple-touch-icon.png"]) {
+    for (const path of ["/favicon.svg", "/favicon.ico", "/og.png", "/apple-touch-icon.png"]) {
       expect((await request.get(path)).ok(), path).toBe(true);
     }
   });
