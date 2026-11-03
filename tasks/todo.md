@@ -491,6 +491,9 @@
   - **Verificar:** integración con el proveedor en modo prueba + un envío real.
 
 - [ ] **Tarea 33: Revisión final y publicación** · S · Deps: todas
+  - [x] Auditoría de seguridad (perfil rápido, 2026-11-03): sin hallazgos confirmados; dos huecos de revocación corregidos (conexión MCP revocada leyendo directo en PostgREST; cuenta dada de baja escribiendo en `link-previews`). Diferidos: pipeline de crons/ingesta y barrido de revocación en todos los caminos.
+  - [ ] `/webperf` sobre la página pública.
+  - [ ] README de portfolio.
   - `/security-review` sobre todo el repo, `/webperf` sobre la página pública, `/ship` (checklist de lanzamiento) y pasar el repo a público.
   - **Aceptación:**
     - Sin hallazgos altos abiertos.
