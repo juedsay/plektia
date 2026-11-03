@@ -3553,7 +3553,7 @@
         "role": "tertiary",
         "displayName": "Rosa en vivo (Bitmap)",
         "canonical": "oklch(81.2% 0.129 348.7)",
-        "cssVar": "--color-live (oscuro): etiqueta EN VIVO invertida, cronómetro, isotipo",
+        "cssVar": "--color-live (oscuro): etiqueta EN VIVO invertida y cronómetro",
         "theme": "bitmap",
         "tonalRamp": [
           "oklch(15% 0.129 348.7)",
@@ -4516,7 +4516,7 @@
             "colorLive": "#8a0f4f",
             "ink": "#ffffff"
           },
-          "note": "El rosa es solo del en vivo: la etiqueta EN VIVO invertida (fondo --color-live, letras --color-live-ink, 1 × 6 px, sin esquinas), el cronómetro y el isotipo. Parpadea cuatro veces al cargar y queda fija."
+          "note": "El rosa es solo del en vivo: la etiqueta EN VIVO invertida (fondo --color-live, letras --color-live-ink, 1 × 6 px, sin esquinas) y el cronómetro. Parpadea cuatro veces al cargar y queda fija."
         },
         "font": {
           "family": "Pixelify Sans",
@@ -5274,7 +5274,7 @@
       },
       {
         "name": "La regla del isotipo",
-        "body": "El punto del isotipo de Plektia (en la barra superior, y el mismo componente en el pie) se pinta con `--color-live` en todas las variantes y ninguna lo redefine: toma el tono de texto en vivo de cada una. Es la única pieza fuera del en vivo que usa ese tono, y por eso no cuenta como un uso extra de la señal propia.",
+        "body": "El punto del isotipo de Plektia (en la barra superior, en el pie y donde aparezca el componente) es la marca, no la señal en vivo: es siempre lima en todas las variantes, `#C6F432` sobre fondo oscuro y la lima oscura de la marca `#2E5200` sobre fondo claro (`.isotype-node` con `light-dark()` en `base.css`, según el `color-scheme` de cada variante). Ninguna variante lo redefine, y nunca toma el color en vivo de la variante.",
         "section": "colors"
       },
       {
@@ -5289,7 +5289,7 @@
       },
       {
         "name": "La regla del rosa",
-        "body": "El rosa es la señal en vivo de Bitmap y de nada más: la etiqueta \"EN VIVO\", el cronómetro y el isotipo (por la regla común). Ninguna barra, cursor, marco ni borde es rosa (por eso rosa y coral quedan afuera como acentos), y el rosa no marca foco ni hover.",
+        "body": "El rosa es la señal en vivo de Bitmap y de nada más: la etiqueta \"EN VIVO\" y el cronómetro. Ninguna barra, cursor, marco ni borde es rosa (por eso rosa y coral quedan afuera como acentos), y el rosa no marca foco ni hover.",
         "section": "colors"
       },
       {
@@ -5334,7 +5334,7 @@
       },
       {
         "name": "La regla del folio rojo",
-        "body": "El rojo es la señal en vivo de Sumario y de nada más: el folio de la nota en vivo, a 700 y quieto (sin pulso ni el relleno del jack de la base). La nota de tapa en vivo, que no tiene folio, cambia su filete de acento por el rojo. Fuera de eso, el rojo solo está donde la base lo pone como texto (la etiqueta \"En vivo\" y el cronómetro del metadato) y en el isotipo, por la regla común. Ningún acento es rojo ni rojizo.",
+        "body": "El rojo es la señal en vivo de Sumario y de nada más: el folio de la nota en vivo, a 700 y quieto (sin pulso ni el relleno del jack de la base). La nota de tapa en vivo, que no tiene folio, cambia su filete de acento por el rojo. Fuera de eso, el rojo solo está donde la base lo pone como texto (la etiqueta \"En vivo\" y el cronómetro del metadato). Ningún acento es rojo ni rojizo.",
         "section": "colors"
       },
       {
