@@ -94,7 +94,7 @@ const shareUrl = (canonical ?? publicUrl ?? new URL(Astro.url.pathname, Astro.ur
       type={type}
       structuredData={structuredData}
     />
-    {themeStyle && <style is:inline set:html={themeStyle} />}
+    {themeStyle && <style is:inline set:html={THEME_INLINE_STYLES[theme]} />}
     {/* Lado A / B escribe sus títulos a mano: la fuente se declara solo ahí. */}
     {theme === "cassette" && <Font cssVariable="--font-hand" />}
     {theme === "bitmap" && <Font cssVariable="--font-pixel" preload />}
