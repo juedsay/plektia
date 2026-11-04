@@ -18,6 +18,13 @@
   "cache": {
     "enabled": true,
   },
+  // La puerta de entrada (`default`) corre en cada pedido sin caché y arma la
+  // clave sin los parámetros de seguimiento; la app (`App`) es la cacheada.
+  // Ver src/worker.ts y la actualización del ADR 0003.
+  "exports": {
+    "default": { "type": "worker", "cache": { "enabled": false } },
+    "App": { "type": "worker", "cache": { "enabled": true } },
+  },
   "triggers": {
     // Deben coincidir con src/worker.ts: cada 10 minutos el estado en vivo,
     // cada hora el contenido destacado de YouTube y una vez por mes la

@@ -1,6 +1,7 @@
 import type { APIRoute } from "astro";
 
 import { statsEvents } from "@/composition/runtime";
+import { COUNTRY_HEADER } from "@/infrastructure/http/gateway";
 
 // Beacon de estadísticas (SPEC-click-analytics, "Endpoint POST /api/e"):
 // visitas y clics de la página pública. Responde siempre 204, haya contado o
@@ -30,8 +31,9 @@ export const POST: APIRoute = async ({ request, url, clientAddress, locals }) =>
   const body = await request.text();
   if (new TextEncoder().encode(body).byteLength > MAX_BODY_BYTES) return noContent();
 
-  // El país lo informa Cloudflare; la IP solo sirve para el límite y no se guarda.
-  const country = (request as Request & { cf?: { country?: unknown } }).cf?.country;
+  // El país lo informa Cloudflare y la puerta de entrada lo pasa en un encabezado
+  // propio (src/worker.ts); la IP solo sirve para el límite y no se guarda.
+  const country = request.headers.get(COUNTRY_HEADER) ?? undefined;
   try {
     await statsEvents()({ body, ip: clientAddress, country, viewerId: locals.user?.id ?? null });
   } catch (error) {

@@ -53,4 +53,16 @@ test.describe("caché", () => {
     const second = await request.get(path);
     expect(second.headers()["cf-cache-status"]).toBe("HIT");
   });
+
+  test("los parámetros de seguimiento (utm, fbclid) no parten la caché", async ({ request }) => {
+    test.skip(!remote, "la caché del Worker no existe en local (ADR 0003)");
+    // Así llega una visita desde la bio de Instagram: un fbclid distinto por clic.
+    const path = `/plektia?e2e=${randomBytes(4).toString("hex")}`;
+    const first = await request.get(path);
+    expect(first.headers()["cf-cache-status"]).toBe("MISS");
+    const fromInstagram = await request.get(
+      `${path}&utm_source=ig&utm_medium=social&fbclid=${randomBytes(8).toString("hex")}`,
+    );
+    expect(fromInstagram.headers()["cf-cache-status"]).toBe("HIT");
+  });
 });

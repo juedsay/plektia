@@ -55,5 +55,16 @@ En local (`wrangler dev`) la caché del Worker no se emula: `ctx.cache` no exist
   | Cualquier otra ruta | `private, no-store`: lo que no está en la política no se cachea |
 
 - **Purga:** `WorkerPageCache` (`src/infrastructure/cache/purge.ts`) usa `cache.purge` de `cloudflare:workers`, sin el contexto de la petición. Una purga fallida solo deja rastro en el log, porque lo cacheado vence solo.
-- **Desvío de la spec, por ahora:** los parámetros de la URL forman parte de la clave de caché, así que `/juedsay?utm_source=x` es una entrada aparte. Ignorarlos exige partir el Worker en una puerta de entrada sin caché y la app en otro *entrypoint* con `cf.cacheKey`, y mover la purga a ese *entrypoint*. Las páginas no cambian según los parámetros, así que el costo es solo alguna consulta de más.
+- ~~**Desvío de la spec, por ahora:** los parámetros de la URL forman parte de la clave de caché.~~ Resuelto el 2026-11-04 (ver abajo).
 - **El host no está en la clave:** la caché es del Worker, no del dominio. **Al sumar un dominio propio**, las URLs absolutas de la página (la canónica, `og:url`, `og:image` y el sitemap) tienen que salir de una configuración fija y no del pedido. Si no, una página cacheada desde `workers.dev` se serviría con esas URLs en el dominio nuevo. Está en el checklist de apertura (CAPABILITY-MAP).
+
+## Actualización (2026-11-04): la clave de caché ignora los parámetros de seguimiento
+
+La auditoría de rendimiento midió que el desvío no era "alguna consulta de más": las visitas desde una bio llegan con `utm_*` y, desde Meta, con un `fbclid` distinto por clic, así que casi todas eran `MISS` (TTFB de 0,6 a 1,3 s contra ~0,1 s con `HIT`).
+
+- **Dos entradas** (`src/worker.ts`, `wrangler.jsonc` → `exports`):
+  - `default`, **sin caché**: corre en cada pedido, saca de la clave los parámetros de seguimiento (`utm_*`, `fbclid`, `gclid`, `msclkid`, `igshid`, `ttclid` y otros; `src/infrastructure/http/gateway.ts`) y le pasa el pedido a `App` por `ctx.exports` con `cf.cacheKey`.
+  - `App`, **con caché**: la app de Astro, sin cambios.
+- **La purga sigue funcionando**: cada purga solo alcanza la caché de la entrada que la hace. Las Actions del panel y el MCP corren dentro de `App`; el cron llega a `default` y se lo pasa a `App` por RPC (`runScheduled`, que no pasa por la caché), así que sus purgas también son de `App`.
+- **El país de las estadísticas** ya no se lee de `request.cf` (no está garantizado que cruce a `App`): la puerta lo pasa en `x-plektia-country` y descarta siempre el valor que mande el visitante.
+- **Verificación:** `tests/e2e/cache.spec.ts` comprueba en producción que una URL con `utm`/`fbclid` sale `HIT` de la entrada de la URL limpia. En local la caché sigue sin existir, pero los E2E corren sobre las dos entradas.
