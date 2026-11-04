@@ -13,3 +13,7 @@ const bio = Astro.props.bio;
 <script type="application/ld+json" is:inline set:html={jsonLd(data)} />
 <!-- ruleid: plektia-no-set-html -->
 <script type="application/ld+json" is:inline set:html={JSON.stringify(data)} />
+<!-- ok: plektia-no-set-html -->
+<style is:inline set:html={THEME_INLINE_STYLES[theme]} />
+<!-- ruleid: plektia-no-set-html -->
+<style is:inline set:html={Astro.props.css} />

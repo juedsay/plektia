@@ -7,6 +7,9 @@ rules:
     languages: [generic]
     paths:
       include: ["*.astro"]
-    # Única excepción: datos estructurados pasados por `jsonLd()` (src/ui/view/seo.ts),
-    # que escapa `<`, `>` y `&` y tiene tests contra el cierre de `</script>`.
-    pattern-regex: 'set:html\s*=\s*\{(?!jsonLd\()'
+    # Excepciones:
+    # - datos estructurados pasados por `jsonLd()` (src/ui/view/seo.ts), que escapa
+    #   `<`, `>` y `&` y tiene tests contra el cierre de `</script>`;
+    # - la hoja de un estilo, `THEME_INLINE_STYLES[...]` (src/ui/styles/themes/inline.ts):
+    #   CSS fijo del build, sin nada que escriba el usuario (`set:text` rompería `>`).
+    pattern-regex: 'set:html\s*=\s*\{(?!jsonLd\(|THEME_INLINE_STYLES\[)'
