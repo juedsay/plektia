@@ -11,14 +11,14 @@ import ShareDialog from "@/ui/components/ShareDialog.astro";
 import Topbar from "@/ui/components/Topbar.astro";
 import type { Accent, ColorMode, NameFont } from "@/domain/page";
 import type { Theme } from "@/domain/theme";
-import { THEME_STYLESHEETS } from "@/ui/styles/themes";
+import { styleHash, THEME_INLINE_STYLES } from "@/ui/styles/themes/inline";
 
 interface Props {
   title: string;
   description: string;
   /** URL canónica absoluta; se omite en páginas que no deben indexarse (404). */
   canonical?: URL | undefined;
-  /** La variante de estilo (SPEC-styles); su hoja se enlaza solo si la usa. */
+  /** La variante de estilo (SPEC-styles); su hoja va en línea solo si la usa. */
   theme?: Theme;
   /** Claro, oscuro o el del dispositivo de quien visita (SPEC-appearance). */
   mode?: ColorMode;
@@ -57,6 +57,8 @@ const {
   preview = false,
   publicUrl,
 } = Astro.props;
+const themeStyle = THEME_INLINE_STYLES[theme];
+if (themeStyle) Astro.csp?.insertStyleHash(styleHash(themeStyle));
 // Se comparte la URL canónica (sin query strings); si no hay, la pública indicada
 // o, en último caso, la de la página.
 const shareUrl = (canonical ?? publicUrl ?? new URL(Astro.url.pathname, Astro.url)).href;
@@ -92,7 +94,7 @@ const shareUrl = (canonical ?? publicUrl ?? new URL(Astro.url.pathname, Astro.ur
       type={type}
       structuredData={structuredData}
     />
-    {THEME_STYLESHEETS[theme] && <link rel="stylesheet" href={THEME_STYLESHEETS[theme]} />}
+    {themeStyle && <style is:inline set:html={themeStyle} />}
     {/* Lado A / B escribe sus títulos a mano: la fuente se declara solo ahí. */}
     {theme === "cassette" && <Font cssVariable="--font-hand" />}
     {theme === "bitmap" && <Font cssVariable="--font-pixel" preload />}

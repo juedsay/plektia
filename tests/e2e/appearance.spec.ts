@@ -24,6 +24,24 @@ const background = (page: Page) =>
   page.evaluate(() => getComputedStyle(document.body).backgroundColor);
 
 /**
+ * La hoja de la variante va en línea y la CSP la deja aplicar: un `<style>`
+ * bloqueado queda sin `sheet`. Ya no hay un `<link>` que la bloquee el render.
+ */
+async function themeStyleApplied(page: Page, theme: string) {
+  await expect(page.locator(`link[rel="stylesheet"][href*="${theme}"]`)).toHaveCount(0);
+  return page.evaluate(
+    (name) =>
+      [...document.styleSheets].some(
+        (sheet) =>
+          sheet.ownerNode instanceof HTMLStyleElement &&
+          sheet.cssRules.length > 0 &&
+          sheet.ownerNode.textContent.includes(`data-theme=${name}]`),
+      ),
+    theme,
+  );
+}
+
+/**
  * Un visitante nuevo, con el modo de su dispositivo: la página pública se
  * cachea un minuto en el navegador, así que cada visita va en su propio contexto.
  */
@@ -311,7 +329,7 @@ test("el estilo Punto se elige en el panel y se ve en la página, AAA en los dos
       await expect(visitor.locator("body")).toHaveAttribute("data-accent", "coral");
       await expect(visitor.locator("body")).toHaveAttribute("data-name-font", "bricolage");
       await expect(visitor.locator("[data-patchbay]")).toHaveAttribute("data-shape", "cards");
-      await expect(visitor.locator('link[rel="stylesheet"][href*="punto"]')).toHaveCount(1);
+      expect(await themeStyleApplied(visitor, "punto")).toBe(true);
       await expect(visitor.locator("svg.thread")).toHaveCount(0);
       const results = await new AxeBuilder({ page: visitor })
         .withTags(["wcag2a", "wcag2aa", "wcag2aaa", "wcag21aa", "wcag22aa"])
@@ -346,7 +364,7 @@ test("el estilo Subte se elige en el panel y se ve en la página, AAA en los dos
       // Hueso no es una línea de Subte: usa la suya (coral). Las filas sí las admite.
       await expect(visitor.locator("body")).toHaveAttribute("data-accent", "coral");
       await expect(visitor.locator("[data-patchbay]")).toHaveAttribute("data-shape", "rows");
-      await expect(visitor.locator('link[rel="stylesheet"][href*="subte"]')).toHaveCount(1);
+      expect(await themeStyleApplied(visitor, "subte")).toBe(true);
       const results = await new AxeBuilder({ page: visitor })
         .withTags(["wcag2a", "wcag2aa", "wcag2aaa", "wcag21aa", "wcag22aa"])
         .analyze();
@@ -379,7 +397,7 @@ test("el estilo Lomo cosido se elige en el panel y se ve en la página, AAA en l
       await expect(visitor.locator("body")).toHaveAttribute("data-theme", "lomo");
       // Hueso es una de sus telas: queda. Bricolage también la admite.
       await expect(visitor.locator("body")).toHaveAttribute("data-accent", "hueso");
-      await expect(visitor.locator('link[rel="stylesheet"][href*="lomo"]')).toHaveCount(1);
+      expect(await themeStyleApplied(visitor, "lomo")).toBe(true);
       const results = await new AxeBuilder({ page: visitor })
         .withTags(["wcag2a", "wcag2aa", "wcag2aaa", "wcag21aa", "wcag22aa"])
         .analyze();
@@ -410,7 +428,7 @@ test("el estilo Lado A / B se elige en el panel y se ve en la página, AAA en lo
     for (const scheme of ["dark", "light"] as const) {
       const { visitor, close } = await visit(browser, baseURL ?? "", scheme);
       await expect(visitor.locator("body")).toHaveAttribute("data-theme", "cassette");
-      await expect(visitor.locator('link[rel="stylesheet"][href*="cassette"]')).toHaveCount(1);
+      expect(await themeStyleApplied(visitor, "cassette")).toBe(true);
       const results = await new AxeBuilder({ page: visitor })
         .withTags(["wcag2a", "wcag2aa", "wcag2aaa", "wcag21aa", "wcag22aa"])
         .analyze();
@@ -441,7 +459,7 @@ test("el estilo Corcho se elige en el panel y se ve en la página, AAA en los do
     for (const scheme of ["dark", "light"] as const) {
       const { visitor, close } = await visit(browser, baseURL ?? "", scheme);
       await expect(visitor.locator("body")).toHaveAttribute("data-theme", "corcho");
-      await expect(visitor.locator('link[rel="stylesheet"][href*="corcho"]')).toHaveCount(1);
+      expect(await themeStyleApplied(visitor, "corcho")).toBe(true);
       const results = await new AxeBuilder({ page: visitor })
         .withTags(["wcag2a", "wcag2aa", "wcag2aaa", "wcag21aa", "wcag22aa"])
         .analyze();
@@ -472,7 +490,7 @@ test("el estilo Pedalera se elige en el panel y se ve en la página, AAA en los 
     for (const scheme of ["dark", "light"] as const) {
       const { visitor, close } = await visit(browser, baseURL ?? "", scheme);
       await expect(visitor.locator("body")).toHaveAttribute("data-theme", "pedalera");
-      await expect(visitor.locator('link[rel="stylesheet"][href*="pedalera"]')).toHaveCount(1);
+      expect(await themeStyleApplied(visitor, "pedalera")).toBe(true);
       const results = await new AxeBuilder({ page: visitor })
         .withTags(["wcag2a", "wcag2aa", "wcag2aaa", "wcag21aa", "wcag22aa"])
         .analyze();
@@ -503,7 +521,7 @@ test("el estilo Bitmap se elige en el panel y se ve en la página, AAA en los do
     for (const scheme of ["dark", "light"] as const) {
       const { visitor, close } = await visit(browser, baseURL ?? "", scheme);
       await expect(visitor.locator("body")).toHaveAttribute("data-theme", "bitmap");
-      await expect(visitor.locator('link[rel="stylesheet"][href*="bitmap"]')).toHaveCount(1);
+      expect(await themeStyleApplied(visitor, "bitmap")).toBe(true);
       const results = await new AxeBuilder({ page: visitor })
         .withTags(["wcag2a", "wcag2aa", "wcag2aaa", "wcag21aa", "wcag22aa"])
         .analyze();
@@ -534,7 +552,7 @@ test("el estilo Manual se elige en el panel y se ve en la página, AAA en los do
     for (const scheme of ["dark", "light"] as const) {
       const { visitor, close } = await visit(browser, baseURL ?? "", scheme);
       await expect(visitor.locator("body")).toHaveAttribute("data-theme", "manual");
-      await expect(visitor.locator('link[rel="stylesheet"][href*="manual"]')).toHaveCount(1);
+      expect(await themeStyleApplied(visitor, "manual")).toBe(true);
       const results = await new AxeBuilder({ page: visitor })
         .withTags(["wcag2a", "wcag2aa", "wcag2aaa", "wcag21aa", "wcag22aa"])
         .analyze();
@@ -565,7 +583,7 @@ test("el estilo Sumario se elige en el panel y se ve en la página, AAA en los d
     for (const scheme of ["dark", "light"] as const) {
       const { visitor, close } = await visit(browser, baseURL ?? "", scheme);
       await expect(visitor.locator("body")).toHaveAttribute("data-theme", "sumario");
-      await expect(visitor.locator('link[rel="stylesheet"][href*="sumario"]')).toHaveCount(1);
+      expect(await themeStyleApplied(visitor, "sumario")).toBe(true);
       const results = await new AxeBuilder({ page: visitor })
         .withTags(["wcag2a", "wcag2aa", "wcag2aaa", "wcag21aa", "wcag22aa"])
         .analyze();
