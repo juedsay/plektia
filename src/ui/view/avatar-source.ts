@@ -186,3 +186,24 @@ export function zoomCrop(image: Dimensions, crop: Crop, zoom: number): Crop {
 
 /** Calidades que se prueban, de mejor a peor, hasta que el archivo entre en 200 KB. */
 export const ENCODE_QUALITIES = [0.9, 0.8, 0.7, 0.6, 0.5] as const;
+
+/**
+ * El mensaje cuando la Action del avatar ni siquiera corrió: sin sesión, el
+ * navegador mandó la foto desde otra dirección, demasiados pedidos o un
+ * archivo que el servidor no acepta por tamaño. Sin estado conocido, uno general.
+ */
+export function saveFailureMessage(status: number | undefined): string {
+  switch (status) {
+    case 401:
+      return "Tu sesión venció. Volvé a entrar y probá de nuevo.";
+    case 403:
+      return "El navegador mandó la foto desde otra dirección. Recargá el panel y probá de nuevo.";
+    case 411:
+    case 413:
+      return "La foto es demasiado pesada. Probá con otra.";
+    case 429:
+      return "Demasiados cambios seguidos. Esperá un minuto y probá de nuevo.";
+    default:
+      return "No pudimos guardar la foto. Probá de nuevo.";
+  }
+}

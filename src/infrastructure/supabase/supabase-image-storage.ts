@@ -24,7 +24,13 @@ export class SupabaseImageStorage implements ImageStorage {
       cacheControl: "31536000",
       upsert: false,
     });
-    return error ? err("rejected") : ok(undefined);
+    if (error) {
+      // Sin esto, un rechazo de Storage (la política, el token, el tamaño) no deja rastro.
+      const status = "statusCode" in error ? String(error.statusCode) : "?";
+      console.warn(`storage: ${this.bucket} rechazó la subida (${status})`, error.message);
+      return err("rejected");
+    }
+    return ok(undefined);
   }
 
   async remove(path: string): Promise<void> {

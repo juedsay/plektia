@@ -14,6 +14,7 @@ import {
   MAX_ZOOM,
   MIN_ZOOM,
   moveCrop,
+  saveFailureMessage,
   SOURCE_MAX_BYTES,
   sourceErrorMessage,
   zoomCrop,
@@ -253,18 +254,16 @@ export function connectAvatarEditor(root: HTMLElement) {
         const form = new FormData();
         form.set("pageId", pageId);
         form.set("avatar", encoded);
-        const { data } = await actions.pages.setAvatar(form);
+        const { data, error: failure } = await actions.pages.setAvatar(form);
         if (data?.ok) {
           // Se recarga la pantalla con el avatar nuevo.
           leaving = true;
           window.location.assign("/admin/page?avatar");
           return;
         }
-        // Sin respuesta (sesión vencida, límite de pedidos): un mensaje general.
+        // Sin respuesta de la Action: el mensaje según el estado (sesión, origen, límite, tamaño).
         showError(
-          data
-            ? (data.fields["avatar"] ?? data.message)
-            : "No pudimos guardar la foto. Probá de nuevo.",
+          data ? (data.fields["avatar"] ?? data.message) : saveFailureMessage(failure.status),
         );
       } catch {
         // La red se cortó en el medio (o falló el navegador): se puede reintentar.

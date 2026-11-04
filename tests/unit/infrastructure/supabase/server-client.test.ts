@@ -1,7 +1,9 @@
 import { describe, expect, it } from "vitest";
 
 import {
+  cookiesOfRequest,
   createSupabaseServerClient,
+  rememberWrittenCookies,
   secureCookieAttributes,
 } from "@/infrastructure/supabase/server-client";
 
@@ -42,5 +44,46 @@ describe("createSupabaseServerClient", () => {
     );
     expect(client.auth).toBeDefined();
     expect(written).toEqual([]);
+  });
+});
+
+describe("cookiesOfRequest: la sesión renovada en el pedido la ven todos sus clientes", () => {
+  const header = "sb-proyecto-auth-token=viejo; tema=oscuro";
+
+  it("sin escrituras, son las del pedido", () => {
+    expect(cookiesOfRequest(header, { set: () => undefined })).toEqual([
+      { name: "sb-proyecto-auth-token", value: "viejo" },
+      { name: "tema", value: "oscuro" },
+    ]);
+  });
+
+  it("lo que otro cliente escribió en el mismo pedido gana sobre lo que trajo el pedido", () => {
+    const cookies = { set: () => undefined };
+    rememberWrittenCookies(cookies, [
+      { name: "sb-proyecto-auth-token", value: "renovado", options: { maxAge: 3600 } },
+    ]);
+    expect(cookiesOfRequest(header, cookies)).toContainEqual({
+      name: "sb-proyecto-auth-token",
+      value: "renovado",
+    });
+  });
+
+  it("una cookie borrada (maxAge 0) ya no se lee", () => {
+    const cookies = { set: () => undefined };
+    rememberWrittenCookies(cookies, [
+      { name: "sb-proyecto-auth-token", value: "", options: { maxAge: 0 } },
+    ]);
+    expect(cookiesOfRequest(header, cookies)).toEqual([{ name: "tema", value: "oscuro" }]);
+  });
+
+  it("las escrituras de un pedido no se mezclan con las de otro", () => {
+    const first = { set: () => undefined };
+    rememberWrittenCookies(first, [
+      { name: "sb-proyecto-auth-token", value: "de-otro", options: {} },
+    ]);
+    expect(cookiesOfRequest(header, { set: () => undefined })).toContainEqual({
+      name: "sb-proyecto-auth-token",
+      value: "viejo",
+    });
   });
 });
