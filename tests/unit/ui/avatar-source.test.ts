@@ -6,6 +6,7 @@ import {
   initialCrop,
   MAX_ZOOM,
   moveCrop,
+  saveFailureMessage,
   SOURCE_MAX_BYTES,
   sniffSourceType,
   sourceErrorMessage,
@@ -141,5 +142,19 @@ describe("recorte", () => {
       y: 0,
       size: 800,
     });
+  });
+});
+
+describe("saveFailureMessage: cuando la Action del avatar no corrió", () => {
+  it.each([
+    [401, /sesión venció/],
+    [403, /otra dirección/],
+    [413, /demasiado pesada/],
+    [411, /demasiado pesada/],
+    [429, /Esperá un minuto/],
+    [500, /No pudimos guardar la foto/],
+    [undefined, /No pudimos guardar la foto/],
+  ])("estado %s", (status, message) => {
+    expect(saveFailureMessage(status)).toMatch(message);
   });
 });
