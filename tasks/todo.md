@@ -492,7 +492,7 @@
 
 - [ ] **Tarea 33: Revisión final y publicación** · S · Deps: todas
   - [x] Auditoría de seguridad (perfil rápido, 2026-11-03): sin hallazgos confirmados; dos huecos de revocación corregidos (conexión MCP revocada leyendo directo en PostgREST; cuenta dada de baja escribiendo en `link-previews`). Diferidos: pipeline de crons/ingesta y barrido de revocación en todos los caminos.
-  - [ ] `/webperf` sobre la página pública.
+  - [x] `/webperf` sobre la página pública (2026-11-04): score 100, LCP 1,4–1,6 s, CLS 0. Arreglado el hallazgo alto: `utm`/`fbclid` partían la caché (#107: de ~0,7–1,1 s a ~0,05–0,24 s del lado del servidor). Pendientes medios: CLS de las fuentes de respaldo en Android, hoja CSS de los estilos no Técnico que bloquea el render, peso de Bricolage (77 KB).
   - [ ] README de portfolio.
   - `/security-review` sobre todo el repo, `/webperf` sobre la página pública, `/ship` (checklist de lanzamiento) y pasar el repo a público.
   - **Aceptación:**
