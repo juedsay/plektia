@@ -36,15 +36,12 @@ export default defineConfig({
   // Fuente de la marca servida desde el propio sitio (cero pedidos a Google):
   // solo el subset latino con eje óptico. Astro genera la precarga y un respaldo
   // con métricas ajustadas para que el cambio de fuente no mueva el layout.
-  // Las listas sans terminan en `system-ui` a propósito: Astro ajusta solo el
-  // último genérico, y `system-ui` incluye Roboto, Segoe UI y Helvetica Neue
-  // (con `sans-serif` ajustaba solo Arial, que Android no trae).
   fonts: [
     {
       provider: fontProviders.local(),
       name: "Bricolage Grotesque",
       cssVariable: "--font-brand",
-      fallbacks: ["system-ui"],
+      fallbacks: ["system-ui", "sans-serif"],
       options: {
         variants: [
           {
@@ -80,7 +77,7 @@ export default defineConfig({
       provider: fontProviders.local(),
       name: "Nunito",
       cssVariable: "--font-nunito",
-      fallbacks: ["system-ui"],
+      fallbacks: ["system-ui", "sans-serif"],
       options: {
         variants: [
           {
