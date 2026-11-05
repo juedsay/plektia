@@ -51,6 +51,12 @@
 
   --radius-sm: 4px;
   --radius-md: 6px;
+  /* Formas del sitio y del panel (DESIGN.md, "Shapes"): pastilla para lo que
+     se toca, 12 px para los campos y 16 px para lo que contiene. La página
+     pública no las usa: cada estilo tiene su propia forma. */
+  --radius-pill: 999px;
+  --radius-field: 12px;
+  --radius-card: 16px;
 
   --text-section: 1.25rem;
   --text-link: 1.0625rem;

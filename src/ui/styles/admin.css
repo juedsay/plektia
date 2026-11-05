@@ -19,7 +19,7 @@
   left: var(--space-2);
   z-index: 10;
   padding: var(--space-2) var(--space-4);
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-pill);
   background: var(--color-fg);
   color: var(--color-bg);
   font-weight: 600;
@@ -53,7 +53,7 @@
   min-width: var(--target-min);
   min-height: var(--target-min);
   justify-content: center;
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-card);
   text-decoration: none;
 }
 
@@ -79,7 +79,7 @@
   min-height: var(--target-min);
   padding: var(--space-1) var(--space-3);
   border: 1px solid var(--color-line);
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-field);
   cursor: pointer;
   list-style: none;
   transition: background-color var(--dur-fast) var(--ease-out);
@@ -186,7 +186,7 @@
   min-height: var(--row-min);
   padding: var(--space-2) var(--space-3);
   border: 0;
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-pill);
   background: transparent;
   cursor: pointer;
   text-align: start;
@@ -205,7 +205,7 @@
 
 .switcher-new {
   border-top: 1px solid var(--color-line-soft);
-  border-radius: 0 0 var(--radius-md) var(--radius-md);
+  border-radius: 0 0 var(--radius-card) var(--radius-card);
   font-weight: 600;
 }
 
@@ -238,7 +238,7 @@
   min-height: var(--target-min);
   padding: 0 var(--space-2);
   border: 0;
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-pill);
   background: transparent;
   color: var(--color-fg-muted);
   cursor: pointer;
@@ -292,7 +292,7 @@
   margin: 0;
   padding: var(--space-3);
   border: 1px solid var(--color-line);
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-card);
   background: var(--color-bg);
 }
 
@@ -306,7 +306,7 @@
   min-height: var(--target-min);
   padding: 0 var(--space-3);
   border: 1px solid transparent;
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-pill);
   background: transparent;
   color: var(--color-fg);
   font: inherit;
@@ -471,7 +471,7 @@
 .admin-tag {
   padding: 0 var(--space-2);
   border: 1px solid var(--color-line);
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius-pill);
   color: var(--color-fg-muted);
   font-family: var(--font-body);
   font-size: var(--text-xs);
@@ -510,7 +510,7 @@
   align-items: stretch;
   min-height: var(--target-min);
   border: 1px solid var(--color-line);
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-field);
   background: var(--color-surface);
 }
 
@@ -622,7 +622,7 @@
     align-items: center;
     min-height: var(--target-min);
     padding: 0 var(--space-3);
-    border-radius: var(--radius-md);
+    border-radius: var(--radius-pill);
     font-size: var(--text-md);
   }
 
@@ -776,7 +776,7 @@
   min-height: var(--target-min);
   padding: var(--space-2) var(--space-3);
   border: 1px solid var(--color-line-soft);
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-pill);
   font-family: var(--font-body);
   cursor: pointer;
 }
@@ -927,7 +927,7 @@
   display: flex;
   align-items: stretch;
   border: 1px solid var(--color-line);
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-field);
   background: var(--color-surface);
 }
 
@@ -974,7 +974,7 @@
   min-height: var(--target-min);
   padding: var(--space-3);
   border: 1px solid var(--color-line);
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-field);
   background: var(--color-surface);
   color: var(--color-fg);
   font: inherit;
@@ -1056,7 +1056,7 @@
   min-height: var(--target-min);
   padding: 0 var(--space-3);
   border: 0;
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-pill);
   background: transparent;
   color: var(--color-fg-muted);
   font-size: var(--text-sm);
@@ -1109,7 +1109,7 @@
   margin: 0 0 var(--space-3);
   padding: var(--space-3) var(--space-4);
   border: 2px solid var(--color-fg);
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-card);
   background: var(--color-surface);
 }
 
@@ -1150,7 +1150,7 @@
   width: max-content;
   max-width: calc(100vw - 2 * var(--space-4));
   padding: var(--space-2) var(--space-2) var(--space-2) var(--space-4);
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-pill);
   background: var(--color-fg);
   color: var(--color-bg);
   font-size: var(--text-sm);
@@ -1170,7 +1170,7 @@
   min-height: var(--target-min);
   padding: 0 var(--space-4);
   border: 1px solid var(--color-bg);
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius-pill);
   background: transparent;
   color: var(--color-bg);
   font: inherit;
@@ -1211,7 +1211,7 @@
   height: var(--target-min);
   padding: 0;
   border: 0;
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-pill);
   background: transparent;
   color: var(--color-fg-muted);
   cursor: grab;
@@ -1238,7 +1238,7 @@
 /* Lo que se está moviendo: fondo de superficie y un anillo hueso (sin sombra). */
 .editor-link.is-dragging,
 .editor-group.is-dragging {
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-card);
   background: var(--color-surface);
   box-shadow: 0 0 0 1px var(--color-fg);
 }
@@ -1305,7 +1305,7 @@
   min-height: var(--target-min);
   padding: 0 var(--space-3);
   border: 1px solid var(--color-line);
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-field);
   background: var(--color-surface);
   color: var(--color-fg);
   font: inherit;
@@ -1447,7 +1447,7 @@
   height: min(48rem, calc(100vh - var(--admin-nav-height) - 12rem));
   min-height: 28rem;
   border: 1px solid var(--color-line);
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-card);
   background: var(--color-bg);
 }
 
@@ -1576,7 +1576,7 @@
   width: min(280px, 100%);
   aspect-ratio: 1;
   border: 1px solid var(--color-line);
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-card);
   background: var(--color-surface);
 }
 
@@ -1711,7 +1711,7 @@
   margin-top: var(--space-3);
   padding: var(--space-4);
   border: 1px solid var(--color-line);
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-card);
 }
 
 .users-revoke p {
@@ -1739,7 +1739,7 @@
 .connections-url code {
   padding: var(--space-2) var(--space-3);
   border: 1px solid var(--color-line);
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-field);
   overflow-wrap: anywhere;
 }
 
@@ -1784,7 +1784,7 @@
   min-height: var(--target-min);
   padding: 0 var(--space-4);
   border: 1px solid var(--color-line);
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-pill);
   color: var(--color-fg-muted);
   text-decoration: none;
 }
@@ -1812,7 +1812,7 @@
   gap: var(--space-1);
   padding: var(--space-4);
   border: 1px solid var(--color-line-soft);
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-card);
 }
 
 .stats-total-name,
@@ -1929,7 +1929,7 @@
 .stats-empty {
   padding: var(--space-6);
   border: 1px dashed var(--color-line);
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-card);
 }
 
 .stats-empty-link {
@@ -1983,7 +1983,7 @@
   gap: 2px;
   padding: var(--space-2);
   border: 1px solid var(--color-line-soft);
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-card);
   font-family: var(--font-body);
   cursor: pointer;
 }
@@ -2021,7 +2021,7 @@
   align-items: center;
   margin-bottom: var(--space-1);
   padding: 10px;
-  border-radius: 6px;
+  border-radius: calc(var(--radius-card) - var(--space-2));
   background: var(--color-bg);
   color: var(--color-fg);
 }
@@ -2123,7 +2123,7 @@
   gap: var(--space-2);
   padding: var(--space-2) var(--space-2) var(--space-2) var(--space-3);
   border: 1px solid var(--color-line);
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-pill);
   background: var(--color-bg);
   animation: save-bar-in var(--dur-base) var(--ease-out);
 }
@@ -2185,7 +2185,7 @@
     height: 88dvh;
     padding: var(--space-4) var(--space-4) calc(var(--space-4) + env(safe-area-inset-bottom));
     border-top: 1px solid var(--color-line);
-    border-radius: var(--radius-md) var(--radius-md) 0 0;
+    border-radius: var(--radius-card) var(--radius-card) 0 0;
     background: var(--color-bg);
     transform: translateY(100%);
     visibility: hidden;

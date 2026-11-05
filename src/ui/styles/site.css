@@ -23,7 +23,7 @@
   align-items: center;
   min-height: var(--target-min);
   padding: 0 var(--space-3);
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-pill);
   color: var(--color-fg-muted);
   font-size: var(--text-sm);
   text-decoration: none;
