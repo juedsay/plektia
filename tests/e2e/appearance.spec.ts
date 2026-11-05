@@ -62,15 +62,13 @@ async function backToPatchera(page: Page) {
   await page.getByRole("radio", { name: /^Hueso$/ }).check();
   await page.getByRole("radio", { name: /^Filas/ }).check();
   await page.getByRole("radio", { name: /^Bricolage/ }).check();
-  await page.getByRole("button", { name: "Guardar" }).click();
-  await expect(page).toHaveURL(/\/admin\/page\?guardado$/);
+  await saveIfChanged(page);
 }
 
 async function chooseMode(page: Page, name: "Automático" | "Oscuro" | "Claro") {
   await page.goto("/admin/page");
   await page.getByRole("radio", { name: new RegExp(`^${name}`) }).check();
-  await page.getByRole("button", { name: "Guardar" }).click();
-  await expect(page).toHaveURL(/\/admin\/page\?guardado$/);
+  await saveIfChanged(page);
 }
 
 test.describe.configure({ mode: "serial" });
@@ -129,6 +127,14 @@ test("en automático, decide el dispositivo de quien visita", async ({
 async function chooseAccent(page: Page, name: string) {
   await page.goto("/admin/page");
   await page.getByRole("radio", { name, exact: true }).check();
+  await saveIfChanged(page);
+}
+
+/** "Guardar" aparece solo con cambios: si ya estaba así, no hay nada que guardar. */
+async function saveIfChanged(page: Page) {
+  // El aviso de cambios se conecta aparte: se espera a que esté.
+  await expect(page.locator("form[data-floating]")).toBeAttached();
+  if (!(await page.locator("form[data-dirty]").count())) return;
   await page.getByRole("button", { name: "Guardar" }).click();
   await expect(page).toHaveURL(/\/admin\/page\?guardado$/);
 }

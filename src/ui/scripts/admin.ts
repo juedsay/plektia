@@ -24,6 +24,16 @@ if (themeOptions) {
   });
 }
 
+// En el celular, la vista previa de la pantalla Página es una hoja.
+const sheetWorkspace = document.querySelector<HTMLElement>(
+  "[data-workspace]:has([data-preview-sheet])",
+);
+if (sheetWorkspace) {
+  void import("@/ui/scripts/preview-sheet").then(({ connectPreviewSheet }) => {
+    connectPreviewSheet(sheetWorkspace);
+  });
+}
+
 // Y cada cambio se ve en la vista previa antes de guardar.
 const draftFrame = document.querySelector<HTMLIFrameElement>("iframe[data-draft-preview]");
 if (themeOptions && draftFrame) {

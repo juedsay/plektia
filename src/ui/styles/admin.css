@@ -2085,44 +2085,174 @@
   display: none;
 }
 
-/* Barra de guardado de la pantalla Página: queda fija abajo mientras se
-   recorren los ajustes (en el celular, sobre la barra de navegación). */
+/* ── Pantalla Página: barra de guardado y vista previa en hoja ───────────────
+   Sin JavaScript, la barra va al final del formulario y la vista previa debajo
+   (o al lado, en escritorio). Con JavaScript (unsaved-changes.ts y
+   preview-sheet.ts), la barra flota abajo solo con cambios sin guardar y, en
+   el celular, la vista previa es una hoja que sube desde abajo. */
+
 .save-bar {
-  position: sticky;
-  bottom: calc(var(--admin-nav-height) + env(safe-area-inset-bottom));
-  z-index: 4;
   align-items: center;
   justify-content: flex-end;
-  margin-inline: calc(-1 * var(--space-3));
-  padding: var(--space-3);
-  border-top: 1px solid var(--color-line-soft);
-  background: var(--color-bg);
 }
 
 .save-bar-status {
-  flex: 1 1 12rem;
+  flex: 1 1 auto;
   margin: 0;
   color: var(--color-fg-muted);
   font-size: var(--text-sm);
 }
 
-.save-bar-status:empty {
+.save-bar-status:empty,
+.save-bar [hidden],
+.preview-fab[hidden],
+.preview-sheet-backdrop[hidden],
+.preview-sheet-head [hidden] {
   display: none;
 }
 
-.save-bar [hidden] {
-  display: none;
+/* Flotante: a lo ancho, arriba de la barra de navegación del celular, y oculta
+   sin cambios. */
+.admin-form[data-floating] .save-bar {
+  position: fixed;
+  right: var(--space-3);
+  bottom: calc(var(--admin-nav-height) + var(--space-3) + env(safe-area-inset-bottom));
+  left: var(--space-3);
+  z-index: 6;
+  flex-wrap: nowrap;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-2) var(--space-2) var(--space-3);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-md);
+  background: var(--color-bg);
+  animation: save-bar-in var(--dur-base) var(--ease-out);
 }
 
-/* En el celular, el aviso va en su línea y los botones quedan juntos. */
-@media (max-width: 40rem) {
-  .save-bar-status {
-    flex-basis: 100%;
+.admin-form[data-floating] .save-bar-status {
+  white-space: nowrap;
+}
+
+.admin-form[data-floating] .save-bar .button {
+  padding-inline: var(--space-3);
+}
+
+@keyframes save-bar-in {
+  from {
+    opacity: 0;
   }
 }
 
+.admin-form[data-floating]:not([data-dirty]) .save-bar {
+  display: none;
+}
+
+/* Con la barra a la vista, el final del formulario no queda tapado. */
+.admin-form[data-floating][data-dirty] {
+  padding-bottom: calc(var(--target-min) + var(--space-8));
+}
+
+.preview-sheet-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.preview-sheet-title {
+  margin: 0;
+  font-size: var(--text-md);
+}
+
+/* "Vista previa" sin cambios: abajo a la derecha, sobre la navegación. */
+.preview-fab {
+  position: fixed;
+  right: var(--space-3);
+  bottom: calc(var(--admin-nav-height) + var(--space-3) + env(safe-area-inset-bottom));
+  z-index: 6;
+}
+
+.workspace:has(.admin-form[data-dirty]) .preview-fab {
+  display: none;
+}
+
+@media (max-width: 75.99rem) {
+  .workspace[data-sheet] .workspace-preview {
+    position: fixed;
+    inset: auto 0 0;
+    z-index: 30;
+    grid-template-rows: auto auto minmax(0, 1fr);
+    justify-items: stretch;
+    height: 88dvh;
+    padding: var(--space-4) var(--space-4) calc(var(--space-4) + env(safe-area-inset-bottom));
+    border-top: 1px solid var(--color-line);
+    border-radius: var(--radius-md) var(--radius-md) 0 0;
+    background: var(--color-bg);
+    transform: translateY(100%);
+    visibility: hidden;
+    transition:
+      transform var(--dur-base) var(--ease-out),
+      visibility 0s linear var(--dur-base);
+  }
+
+  .workspace[data-sheet] .workspace-preview[data-open] {
+    transform: none;
+    visibility: visible;
+    transition: transform var(--dur-base) var(--ease-out);
+  }
+
+  .workspace[data-sheet] .workspace-preview-frame {
+    justify-self: center;
+    height: 100%;
+    min-height: 0;
+  }
+
+  .preview-sheet-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 29;
+    background: rgb(0 0 0 / 0.45);
+  }
+
+  .workspace:not([data-sheet-open]) .preview-sheet-backdrop {
+    display: none;
+  }
+}
+
+/* Con la barra lateral, la navegación ya no va abajo: lo flotante baja y la
+   barra se centra en el contenido, como el aviso de "Deshacer". */
 @media (min-width: 60rem) {
-  .save-bar {
-    bottom: 0;
+  .admin-form[data-floating] .save-bar {
+    right: auto;
+    bottom: var(--space-6);
+    left: calc(50% + var(--admin-sidebar) / 2);
+    width: max-content;
+    transform: translateX(-50%);
+  }
+
+  .preview-fab {
+    bottom: var(--space-6);
+  }
+}
+
+/* En escritorio la vista previa ya está al lado: ni hoja ni botones para abrirla. */
+@media (min-width: 76rem) {
+  /* La barra va bajo la columna de los ajustes, no entre las dos columnas. */
+  .admin-form[data-floating] .save-bar {
+    left: calc(var(--admin-sidebar) + var(--space-10));
+    transform: none;
+  }
+
+  .preview-fab,
+  .save-bar-preview,
+  .preview-sheet-backdrop,
+  .preview-sheet-head button {
+    display: none;
+  }
+}
+
+/* En pantallas muy angostas, "Guardar" a secas para que entre todo en la barra. */
+@media (max-width: 26rem) {
+  .save-bar-long {
+    display: none;
   }
 }
