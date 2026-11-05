@@ -391,20 +391,29 @@ const effective = effectiveAppearance(chosenTheme, {
             {fields.theme && <p class="field-error">{fields.theme}</p>}
           </fieldset>
 
-          <fieldset class="field choice-group">
+          {/*
+            Opciones compactas (pensadas para el celular): el modo es un control
+            segmentado, los acentos son círculos y la forma y la tipografía son
+            fichas con una muestra. Cada una sigue siendo un radio con su nombre.
+          */}
+          <fieldset class="field choice-group" aria-describedby="mode-hint">
             <legend>Modo</legend>
-            {COLOR_MODES.map((mode) => (
-              <label class="choice">
-                <input
-                  type="radio"
-                  name="colorMode"
-                  value={mode}
-                  checked={values.colorMode === mode}
-                />
-                <span class="choice-name">{MODE_NAMES[mode]?.name}</span>
-                <span class="choice-hint">{MODE_NAMES[mode]?.hint}</span>
-              </label>
-            ))}
+            <div class="segmented">
+              {COLOR_MODES.map((mode) => (
+                <label class="segmented-option" title={MODE_NAMES[mode]?.hint}>
+                  <input
+                    type="radio"
+                    name="colorMode"
+                    value={mode}
+                    checked={values.colorMode === mode}
+                  />
+                  <span>{MODE_NAMES[mode]?.name}</span>
+                </label>
+              ))}
+            </div>
+            <p class="field-hint" id="mode-hint">
+              Automático sigue el modo del celular de cada visitante.
+            </p>
             {fields.colorMode && <p class="field-error">{fields.colorMode}</p>}
           </fieldset>
 
@@ -416,7 +425,11 @@ const effective = effectiveAppearance(chosenTheme, {
             </p>
             <div class="accent-options">
               {ACCENTS.map((accent) => (
-                <label class="accent-option" hidden={!themeRules.accents.includes(accent)}>
+                <label
+                  class="accent-option"
+                  title={ACCENT_NAMES[accent]}
+                  hidden={!themeRules.accents.includes(accent)}
+                >
                   <input
                     type="radio"
                     name="accent"
@@ -424,7 +437,7 @@ const effective = effectiveAppearance(chosenTheme, {
                     checked={effective.accent === accent}
                   />
                   <span class="accent-swatch" data-accent={accent} aria-hidden="true" />
-                  <span class="choice-name">{ACCENT_NAMES[accent]}</span>
+                  <span class="visually-hidden">{ACCENT_NAMES[accent]}</span>
                 </label>
               ))}
             </div>
@@ -433,41 +446,59 @@ const effective = effectiveAppearance(chosenTheme, {
 
           <fieldset class="field choice-group">
             <legend>Forma de los links</legend>
-            {LINK_SHAPES.map((shape) => (
-              <label class="choice" hidden={!themeRules.shapes.includes(shape)}>
-                <input
-                  type="radio"
-                  name="linkShape"
-                  value={shape}
-                  checked={effective.linkShape === shape}
-                />
-                <span class="choice-name">{SHAPE_NAMES[shape]?.name}</span>
-                <span class="choice-hint">{SHAPE_NAMES[shape]?.hint}</span>
-              </label>
-            ))}
+            <div class="option-tiles">
+              {LINK_SHAPES.map((shape) => (
+                <label
+                  class="option-tile"
+                  title={SHAPE_NAMES[shape]?.hint}
+                  hidden={!themeRules.shapes.includes(shape)}
+                >
+                  <input
+                    type="radio"
+                    name="linkShape"
+                    value={shape}
+                    checked={effective.linkShape === shape}
+                  />
+                  <span class="shape-sample" data-shape={shape} aria-hidden="true">
+                    <span />
+                    <span />
+                  </span>
+                  <span class="choice-name">{SHAPE_NAMES[shape]?.name}</span>
+                </label>
+              ))}
+            </div>
             {fields.linkShape && <p class="field-error">{fields.linkShape}</p>}
           </fieldset>
 
           <fieldset class="field choice-group" aria-describedby="name-font-hint">
             <legend>Tipografía de los nombres</legend>
             <p class="field-hint" id="name-font-hint">
-              Para tu nombre, los títulos de sección y los nombres de los links. Cada opción se
-              muestra con su letra.
+              Para tu nombre, los títulos de sección y los nombres de los links.
             </p>
-            {NAME_FONTS.map((font) => (
-              <label class="choice" hidden={!themeRules.fonts.includes(font)}>
-                <input
-                  type="radio"
-                  name="nameFont"
-                  value={font}
-                  checked={effective.nameFont === font}
-                />
-                <span class="choice-name font-sample" data-name-font={font}>
-                  {FONT_NAMES[font]?.name}
-                </span>
-                <span class="choice-hint">{FONT_NAMES[font]?.hint}</span>
-              </label>
-            ))}
+            <div class="option-tiles">
+              {NAME_FONTS.map((font) => (
+                <label
+                  class="option-tile"
+                  title={FONT_NAMES[font]?.hint}
+                  hidden={!themeRules.fonts.includes(font)}
+                >
+                  <input
+                    type="radio"
+                    name="nameFont"
+                    value={font}
+                    checked={effective.nameFont === font}
+                  />
+                  <span
+                    class="font-tile-sample font-sample"
+                    data-name-font={font}
+                    aria-hidden="true"
+                  >
+                    Aa
+                  </span>
+                  <span class="choice-name">{FONT_NAMES[font]?.name}</span>
+                </label>
+              ))}
+            </div>
             {fields.nameFont && <p class="field-error">{fields.nameFont}</p>}
           </fieldset>
 
