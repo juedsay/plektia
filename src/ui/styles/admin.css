@@ -707,6 +707,9 @@
 /* ── Opciones (tema, mostrar @handle) ─────────────────────────────────────── */
 
 .choice-group {
+  /* Un fieldset crece hasta el ancho de su contenido: sin esto, las filas
+     deslizables de estilos desbordan la pantalla. */
+  min-width: 0;
   margin: 0;
   padding: 0;
   border: 0;
@@ -2110,6 +2113,11 @@
 
 /* Estilos de la página (SPEC-styles): una grilla por familia, con una miniatura
    que usa los tokens reales de cada variante, en el modo de la página. */
+/* Hijo de grilla: sin esto, crece hasta el ancho de su fila deslizable. */
+.theme-family {
+  min-width: 0;
+}
+
 .theme-family + .theme-family {
   margin-top: var(--space-4);
 }
@@ -2132,6 +2140,32 @@
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(9.5rem, 1fr));
   gap: var(--space-2);
+}
+
+/* En el celular, cada familia es una fila que se desliza de costado: los diez
+   estilos entran en cuatro filas en vez de ocupar varias pantallas. La
+   siguiente tarjeta asoma para que se note que hay más. Las flechas del
+   teclado recorren los estilos y el navegador los trae a la vista. */
+@media (max-width: 40rem) {
+  .theme-options {
+    display: flex;
+    margin-inline: calc(-1 * var(--space-5));
+    padding: 2px var(--space-5) var(--space-2);
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-padding-inline: var(--space-5);
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+  }
+
+  .theme-options::-webkit-scrollbar {
+    display: none;
+  }
+
+  .field .theme-option {
+    flex: 0 0 9.5rem;
+    scroll-snap-align: start;
+  }
 }
 
 .field .theme-option {

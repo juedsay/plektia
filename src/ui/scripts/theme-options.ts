@@ -69,6 +69,16 @@ export function connectThemeOptions(form: HTMLFormElement): void {
     }, 0);
   });
 
+  // En el celular cada familia es una fila deslizable: al entrar, la del estilo
+  // elegido lo muestra (sin mover la página, solo la fila).
+  const checkedTheme = radios("theme").find((radio) => radio.checked);
+  const row = checkedTheme?.closest<HTMLElement>(".theme-options");
+  const card = checkedTheme?.closest("label");
+  if (row && card && row.scrollWidth > row.clientWidth) {
+    row.scrollLeft =
+      card.offsetLeft - row.offsetLeft - parseFloat(getComputedStyle(row).paddingLeft);
+  }
+
   form.addEventListener("change", (event) => {
     const target = event.target;
     if (!(target instanceof HTMLInputElement) || target.type !== "radio") return;
