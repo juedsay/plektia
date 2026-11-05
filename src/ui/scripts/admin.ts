@@ -34,6 +34,14 @@ if (sheetWorkspace) {
   });
 }
 
+// Atajos a las partes de la pantalla Página: marcan dónde se está.
+const shortcuts = document.querySelector<HTMLElement>("[data-section-shortcuts]");
+if (shortcuts) {
+  void import("@/ui/scripts/section-shortcuts").then(({ connectSectionShortcuts }) => {
+    connectSectionShortcuts(shortcuts);
+  });
+}
+
 // Y cada cambio se ve en la vista previa antes de guardar.
 const draftFrame = document.querySelector<HTMLIFrameElement>("iframe[data-draft-preview]");
 if (themeOptions && draftFrame) {

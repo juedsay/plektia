@@ -111,3 +111,25 @@ test("al guardar, el aviso flota abajo y se va solo", async ({ page, context, ba
   // Se va solo a los 6 s, sin que haga falta tocarlo.
   await expect(toast).toBeHidden({ timeout: 10_000 });
 });
+
+test.describe("atajos en el celular", () => {
+  test.use({ viewport: { width: 390, height: 844 } });
+
+  test("los atajos llevan a cada parte y marcan dónde se está", async ({
+    page,
+    context,
+    baseURL,
+  }) => {
+    await signIn(context, baseURL ?? "", "avatar@plektia.test");
+    await page.goto("/admin/page");
+    const shortcuts = page.getByRole("navigation", { name: "Partes de la pantalla" });
+    await shortcuts.getByRole("link", { name: "Modo" }).click();
+    await expect(page.locator("#modo legend")).toBeInViewport();
+    await expect(shortcuts.getByRole("link", { name: "Modo" })).toHaveAttribute(
+      "aria-current",
+      "true",
+    );
+    // Los atajos siguen a la vista después de bajar.
+    await expect(shortcuts).toBeInViewport();
+  });
+});
