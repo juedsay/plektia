@@ -162,8 +162,22 @@ const effective = effectiveAppearance(chosenTheme, {
   {currentPage ? (
     <div class="workspace" data-workspace>
       <div class="workspace-editor" id="panel-ajustes">
+        {/*
+          Atajos a cada parte de la pantalla: fijos arriba mientras se baja, para
+          no recorrerla a ciegas. Sin JavaScript son links a cada sección; con
+          JavaScript, además, marcan dónde se está (section-shortcuts.ts).
+        */}
+        <nav class="section-shortcuts" aria-label="Partes de la pantalla" data-section-shortcuts>
+          <a href="#perfil">Perfil</a>
+          <a href="#estilo">Estilo</a>
+          <a href="#modo">Modo</a>
+          <a href="#acento">Color</a>
+          <a href="#forma">Forma</a>
+          <a href="#letra">Letra</a>
+        </nav>
         <section
           class="avatar-editor"
+          id="perfil"
           aria-labelledby="avatar-title"
           data-avatar-editor
           data-page-id={currentPage.id}
@@ -333,7 +347,7 @@ const effective = effectiveAppearance(chosenTheme, {
             )}
           </div>
 
-          <fieldset class="field choice-group" aria-describedby="theme-hint">
+          <fieldset class="field choice-group" aria-describedby="theme-hint" id="estilo">
             <legend>Estilo</legend>
             <p class="field-hint" id="theme-hint">
               Cada estilo trae sus colores, su tipografía y su forma. Al elegirlo, los ajustes de
@@ -396,7 +410,7 @@ const effective = effectiveAppearance(chosenTheme, {
             segmentado, los acentos son círculos y la forma y la tipografía son
             fichas con una muestra. Cada una sigue siendo un radio con su nombre.
           */}
-          <fieldset class="field choice-group" aria-describedby="mode-hint">
+          <fieldset class="field choice-group" aria-describedby="mode-hint" id="modo">
             <legend>Modo</legend>
             <div class="segmented">
               {COLOR_MODES.map((mode) => (
@@ -417,7 +431,7 @@ const effective = effectiveAppearance(chosenTheme, {
             {fields.colorMode && <p class="field-error">{fields.colorMode}</p>}
           </fieldset>
 
-          <fieldset class="field choice-group" aria-describedby="accent-hint">
+          <fieldset class="field choice-group" aria-describedby="accent-hint" id="acento">
             <legend>Acento</legend>
             <p class="field-hint" id="accent-hint">
               El color del hilo, los jacks y los títulos de sección. Cada uno tiene su tono para
@@ -444,7 +458,7 @@ const effective = effectiveAppearance(chosenTheme, {
             {fields.accent && <p class="field-error">{fields.accent}</p>}
           </fieldset>
 
-          <fieldset class="field choice-group">
+          <fieldset class="field choice-group" id="forma">
             <legend>Forma de los links</legend>
             <div class="option-tiles">
               {LINK_SHAPES.map((shape) => (
@@ -470,7 +484,7 @@ const effective = effectiveAppearance(chosenTheme, {
             {fields.linkShape && <p class="field-error">{fields.linkShape}</p>}
           </fieldset>
 
-          <fieldset class="field choice-group" aria-describedby="name-font-hint">
+          <fieldset class="field choice-group" aria-describedby="name-font-hint" id="letra">
             <legend>Tipografía de los nombres</legend>
             <p class="field-hint" id="name-font-hint">
               Para tu nombre, los títulos de sección y los nombres de los links.

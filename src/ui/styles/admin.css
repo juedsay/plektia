@@ -2446,3 +2446,70 @@
     display: none;
   }
 }
+
+/* ── Atajos a las partes de la pantalla Página ──────────────────────────────
+   Chips en pastilla, fijos debajo de la barra de arriba mientras se baja (en
+   el celular la barra también es fija: su altura la mide section-shortcuts.ts).
+   Si no entran, se deslizan de costado. */
+.section-shortcuts {
+  position: sticky;
+  top: var(--admin-bar-height, 0px);
+  z-index: 4;
+  display: flex;
+  gap: var(--space-2);
+  margin: 0 calc(-1 * var(--space-5)) var(--space-6);
+  padding: var(--space-2) var(--space-5);
+  overflow-x: auto;
+  background: var(--color-bg);
+  scrollbar-width: none;
+}
+
+.section-shortcuts::-webkit-scrollbar {
+  display: none;
+}
+
+.section-shortcuts a {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  min-height: calc(var(--target-min) - 8px);
+  padding: 0 var(--space-4);
+  border: 1px solid var(--color-line-soft);
+  border-radius: var(--radius-pill);
+  color: var(--color-fg);
+  font-size: var(--text-sm);
+  text-decoration: none;
+}
+
+.section-shortcuts a:hover {
+  border-color: var(--color-fg);
+}
+
+.section-shortcuts a[aria-current="true"] {
+  border-color: var(--color-fg);
+  background: var(--color-fg);
+  color: var(--color-bg);
+}
+
+/* Al saltar a una parte, su título queda a la vista, debajo de la barra y los atajos. */
+#perfil,
+#estilo,
+#modo,
+#acento,
+#forma,
+#letra {
+  scroll-margin-top: calc(var(--admin-bar-height, 0px) + var(--target-min) + var(--space-6));
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  :root:has(.section-shortcuts) {
+    scroll-behavior: smooth;
+  }
+}
+
+@media (min-width: 60rem) {
+  .section-shortcuts {
+    margin-inline: 0;
+    padding-inline: 0;
+  }
+}
