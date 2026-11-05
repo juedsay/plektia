@@ -351,6 +351,9 @@ rounded:
   sm: "4px"
   md: "6px"
   full: "50%"
+  pill: "999px"
+  field: "12px"
+  card: "16px"
   punto-retazo: "12px"
   punto-pastilla: "1.625rem"
   subte-capsula: "18px"
@@ -876,7 +879,21 @@ Plano. No hay sombras de elevación, ni capas flotantes con desenfoque, ni tarje
 
 ## Shapes
 
-Dos formas conviven. El **círculo** es la forma de la marca y de la patchera: jacks (18 px, aro de 2.5 px), avatar (88 px con doble anillo), el pulso del en vivo y los nodos del isotipo. El **rectángulo de esquinas apenas suavizadas** es la forma funcional: 6 px en botones de ícono, miniatura de video y aviso flotante; 4 px en el badge de duración y en el contorno de foco. No hay píldoras ni esquinas grandes.
+El **círculo** es la forma de la marca y de la patchera: jacks (18 px, aro de 2.5 px), avatar (88 px con doble anillo), el pulso del en vivo y los nodos del isotipo.
+
+En el sitio y el panel (landing, login, contacto, consentimiento y `/admin`), la forma dice qué es cada cosa:
+
+- **Pastilla** (`rounded.pill`) para lo que se toca: botones, chips de opciones, controles segmentados, la barra de guardado y los avisos flotantes.
+- **12 px** (`rounded.field`) para los campos: texto, selects y el selector de página.
+- **16 px** (`rounded.card`) para lo que contiene: tarjetas de estilo, avisos, la vista previa y la hoja.
+- Un elemento dentro de otro lleva el radio de afuera menos el relleno, para que las esquinas encajen.
+- 4 px quedan para el badge de duración y el contorno de foco (salvo en los botones, donde el foco sigue la pastilla).
+
+Los botones responden: se aclaran al pasar el mouse y se hunden apenas al apretarlos (`scale(0.98)`), sin animación si el sistema pide reducir el movimiento.
+
+La página pública no usa estas formas: cada estilo define las suyas (Bitmap y Sumario son rectos a propósito) y el dueño elige la forma de sus links (filas, tarjetas o pastillas).
+
+Antes regía "no hay píldoras ni esquinas grandes" con 6 px para todo. Se cambió en noviembre de 2026: con un mismo radio, un botón, un campo y una tarjeta se veían iguales, y en el celular la pastilla es la forma más reconocible de "esto se toca".
 
 El trazo es la otra forma recurrente: el hilo de 3.2 px con extremos redondeados, marcas diagonales de 1 px cada 4.2 px que lo hacen leer como cordón torcido, un nudo de lazo cerrado al inicio y la punta suelta al final. Los íconos son SVG de trazo 1.8 con extremos redondeados.
 
@@ -983,7 +1000,7 @@ Además valen para todas: foco visible, 44 px táctiles, `prefers-reduced-motion
 
 ### Grilla de estilos del panel
 
-En Panel → Página, "Estilo" es una grilla por familia: el nombre de la familia en display 500 con su público en body-sm hueso apagado debajo, y las variantes en celdas de 9.5rem mínimo. Cada celda es una opción con borde grafito tenue de 1 px y esquinas de 6 px; la elegida pasa a borde hueso con un anillo interior de 1 px. Adentro va una **miniatura real**: el fondo, el acento y la señal en vivo de la variante en el modo de la página, el avatar de 28 px con aro de acento de 2 px y dos filas (la de arriba en vivo). Cada variante redefine la miniatura con su motivo (en Técnico, jacks unidos por un tramo de hilo). Las diez variantes están construidas y se pueden elegir; si se suma una variante nueva antes de estar terminada, su celda queda a 55% de opacidad, sin seleccionar, con el texto "Próximamente". El panel en sí conserva la estética de Técnico.
+En Panel → Página, "Estilo" es una grilla por familia: el nombre de la familia en display 500 con su público en body-sm hueso apagado debajo, y las variantes en celdas de 9.5rem mínimo. Cada celda es una opción con borde grafito tenue de 1 px y esquinas de 16 px (`rounded.card`; la miniatura de adentro, 8 px); la elegida pasa a borde hueso con un anillo interior de 1 px. Adentro va una **miniatura real**: el fondo, el acento y la señal en vivo de la variante en el modo de la página, el avatar de 28 px con aro de acento de 2 px y dos filas (la de arriba en vivo). Cada variante redefine la miniatura con su motivo (en Técnico, jacks unidos por un tramo de hilo). Las diez variantes están construidas y se pueden elegir; si se suma una variante nueva antes de estar terminada, su celda queda a 55% de opacidad, sin seleccionar, con el texto "Próximamente". El panel en sí conserva la estética de Técnico.
 
 ### Punto (familia Cercano)
 

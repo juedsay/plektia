@@ -69,7 +69,7 @@ button {
   min-height: var(--target-min);
   padding: var(--space-3);
   border: 1px solid var(--color-line);
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-field);
   background: var(--color-surface);
   color: var(--color-fg);
   font: inherit;
@@ -118,7 +118,7 @@ button {
   align-items: start;
   padding: var(--space-4);
   border: 1px solid var(--color-line);
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-card);
   background: var(--color-surface);
 }
 
@@ -158,13 +158,26 @@ button {
   min-height: var(--target-min);
   padding: var(--space-2) var(--space-5);
   border: 1px solid var(--color-fg);
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-pill);
   background: var(--color-fg);
   color: var(--color-bg);
   font-family: var(--font-display);
   font-weight: 500;
   text-decoration: none;
   cursor: pointer;
+  transition:
+    background-color var(--dur-fast) var(--ease-out),
+    color var(--dur-fast) var(--ease-out),
+    transform var(--dur-fast) var(--ease-out);
+}
+
+/* Al pasar el mouse se aclara un poco; al apretar se hunde apenas. */
+.button:hover {
+  background: color-mix(in srgb, var(--color-fg) 85%, var(--color-bg));
+}
+
+.button:active:not(:disabled) {
+  transform: scale(0.98);
 }
 
 .button.is-quiet {
@@ -172,9 +185,28 @@ button {
   color: var(--color-fg);
 }
 
+.button.is-quiet:hover {
+  background: color-mix(in srgb, var(--color-fg) 8%, transparent);
+}
+
+/* El contorno de foco sigue la forma del botón (el global es de 4 px). */
+.button:focus-visible {
+  border-radius: var(--radius-pill);
+}
+
 .button:disabled {
   cursor: progress;
   opacity: 0.7;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .button {
+    transition: none;
+  }
+
+  .button:active:not(:disabled) {
+    transform: none;
+  }
 }
 
 .submit {
