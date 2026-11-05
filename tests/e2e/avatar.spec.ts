@@ -6,8 +6,11 @@ import { EXIF_SEGMENT, jpeg, PNG_SIGNATURE, SVG_WITH_SCRIPT, webp } from "../sup
 import { signIn } from "./support/session";
 
 async function violations(page: Page) {
+  // La vista previa de /admin/page es otro documento (la página pública, con su
+  // propio test de axe): sus landmarks repetirían los del panel entre marcos.
   const results = await new AxeBuilder({ page })
     .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa", "best-practice"])
+    .exclude("[data-preview-frame]")
     .analyze();
   return results.violations.map((violation) => violation.id);
 }
