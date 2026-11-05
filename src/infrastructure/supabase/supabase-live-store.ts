@@ -43,6 +43,10 @@ export class SupabaseLiveStore implements LiveStore {
               handle: row.handle,
               channelId: row.channel_id,
               channelCheckedAt: row.channel_checked_at,
+              liveCheckedAt:
+                "live_checked_at" in row && typeof row.live_checked_at === "string"
+                  ? row.live_checked_at
+                  : null,
             },
           ]
         : [],

@@ -67,9 +67,9 @@ select is(public.ingest_try_lock('featured', 600), false, 'no lo toma dos veces'
 select public.ingest_release_lock('featured');
 select is(public.ingest_try_lock('featured', 600), true, 'liberado, se vuelve a tomar');
 
-select is(public.ingest_consume_quota_from('{youtube}', '{8}', 5), true, 'gasta cuota dentro del límite');
-select is(public.ingest_consume_quota_from('{youtube}', '{8}', 4), false, 'no pasa el límite diario');
-select is(public.ingest_consume_quota_from('{youtube}', '{8}', 3), true, 'lo que entra, entra');
+select is(public.ingest_consume_quota_from('{pruebatotal}', '{8}', 5), true, 'gasta cuota dentro del límite');
+select is(public.ingest_consume_quota_from('{pruebatotal}', '{8}', 4), false, 'no pasa el límite diario');
+select is(public.ingest_consume_quota_from('{pruebatotal}', '{8}', 3), true, 'lo que entra, entra');
 
 -- Fondos: el total, el del trabajo y el de la cuenta, todo o nada.
 select is(

@@ -111,6 +111,16 @@ export class IngestQuotaBudget implements QuotaBudget {
     return data === true;
   }
 
+  /** Cuánto queda hoy en el más gastado de sus fondos (sin reservar nada). */
+  async remaining(): Promise<number> {
+    const { data, error } = await this.ingest.call("ingest_quota_remaining", {
+      p_buckets: this.buckets.map((bucket) => bucket.name),
+      p_limits: this.buckets.map((bucket) => bucket.limit),
+    });
+    if (error) throw unexpected("ingest_quota_remaining", error);
+    return data ?? 0;
+  }
+
   async exhaust(): Promise<void> {
     const [total] = this.buckets;
     const { error } = await this.ingest.call("ingest_exhaust_quota", {

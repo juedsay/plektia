@@ -59,6 +59,42 @@ export function quotaBuckets(scope: QuotaScope): readonly [QuotaBucket, ...Quota
   ];
 }
 
+/** Cada cuánto corre el cron del en vivo, en minutos (LIVE_CRON en src/worker.ts). */
+export const LIVE_CRON_MINUTES = 10;
+
+/**
+ * Unidades por canal de YouTube en una revisión: la playlist de directos (1) y
+ * su parte del lote de detalles (1 cada 50 videos, 3 por canal). Se redondea
+ * para arriba: mejor revisar un canal menos que pasarse.
+ */
+export const YOUTUBE_UNITS_PER_CHANNEL = 1.1;
+
+/** Cuántas corridas del cron faltan hoy, hasta la medianoche del Pacífico (cuando se renueva la cuota). */
+export function liveRunsLeftToday(now: Date, everyMinutes = LIVE_CRON_MINUTES): number {
+  const parts = new Intl.DateTimeFormat("en-US", {
+    timeZone: "America/Los_Angeles",
+    hour: "numeric",
+    minute: "numeric",
+    hourCycle: "h23",
+  }).formatToParts(now);
+  const hour = Number(parts.find((part) => part.type === "hour")?.value ?? 0);
+  const minute = Number(parts.find((part) => part.type === "minute")?.value ?? 0);
+  const minutesLeft = 24 * 60 - (hour * 60 + minute);
+  return Math.max(1, Math.ceil(minutesLeft / everyMinutes));
+}
+
+/**
+ * Cuántos canales de YouTube revisa esta corrida: lo que queda del fondo del en
+ * vivo, repartido entre las corridas que faltan hoy. Con muchos canales, cada
+ * uno se revisa menos seguido; nunca se gasta todo a la tarde.
+ */
+export function youtubeChannelsPerRun(remainingUnits: number, runsLeft: number): number {
+  return Math.max(
+    0,
+    Math.floor(remainingUnits / Math.max(1, runsLeft) / YOUTUBE_UNITS_PER_CHANNEL),
+  );
+}
+
 interface LiveConfig extends IngestConfig {
   readonly YOUTUBE_API_KEY?: string;
   readonly TWITCH_CLIENT_ID?: string;
@@ -75,7 +111,10 @@ export function createFeaturedRefresh(
 ): (() => Promise<RefreshSummary>) | null {
   if (!config.YOUTUBE_API_KEY) return null;
   const ingest = createIngestClient(config);
-  const provider = youtubeProvider(config.YOUTUBE_API_KEY, ingest, { job: "featured" });
+  const provider = youtubeProvider(
+    config.YOUTUBE_API_KEY,
+    new IngestQuotaBudget(ingest, quotaBuckets({ job: "featured" })),
+  );
   return refreshFeatured({ store: new SupabaseFeaturedStore(ingest), provider, cache });
 }
 
@@ -93,7 +132,8 @@ export function createLiveRefresh(
   const hasTwitch = Boolean(TWITCH_CLIENT_ID && TWITCH_CLIENT_SECRET);
   if (!YOUTUBE_API_KEY && !hasTwitch) return null;
   const ingest = createIngestClient(config);
-  const youtube = YOUTUBE_API_KEY ? youtubeProvider(YOUTUBE_API_KEY, ingest, scope) : undefined;
+  const budget = new IngestQuotaBudget(ingest, quotaBuckets(scope));
+  const youtube = YOUTUBE_API_KEY ? youtubeProvider(YOUTUBE_API_KEY, budget) : undefined;
   const twitch =
     TWITCH_CLIENT_ID && TWITCH_CLIENT_SECRET
       ? new TwitchProvider(
@@ -107,18 +147,17 @@ export function createLiveRefresh(
     providers: { ...(youtube ? { youtube } : {}), ...(twitch ? { twitch } : {}) },
     ...(youtube ? { youtubeChannels: youtube } : {}),
     cache,
+    // El cron reparte su fondo a lo largo del día; "Comprobar ahora" usa el suyo.
+    ...(scope.job === "live"
+      ? {
+          youtubeChannelsPerRun: async () =>
+            youtubeChannelsPerRun(await budget.remaining(), liveRunsLeftToday(new Date())),
+        }
+      : {}),
   });
 }
 
 /** YouTube, con el presupuesto diario de cuota del trabajo que lo usa. */
-function youtubeProvider(
-  apiKey: string,
-  ingest: ReturnType<typeof createIngestClient>,
-  scope: QuotaScope,
-) {
-  return new YouTubeProvider(
-    apiKey,
-    createSafeFetch({ allowedHosts: [YOUTUBE_API_HOST] }),
-    new IngestQuotaBudget(ingest, quotaBuckets(scope)),
-  );
+function youtubeProvider(apiKey: string, budget: IngestQuotaBudget) {
+  return new YouTubeProvider(apiKey, createSafeFetch({ allowedHosts: [YOUTUBE_API_HOST] }), budget);
 }

@@ -20,6 +20,8 @@ const CHANNEL_RETRY_MS = 24 * 60 * 60 * 1000;
 export interface LiveRefreshSummary {
   readonly skipped: boolean;
   readonly checked: number;
+  /** Canales de YouTube que quedaron para la próxima corrida (tope de cuota). */
+  readonly deferred: number;
   readonly purged: readonly string[];
   /** El error de cada proveedor que falló (sus canales quedan sin revisar). */
   readonly failed: Readonly<Partial<Record<LiveProvider, ProviderError>>>;
@@ -33,6 +35,12 @@ interface Deps {
   readonly youtubeChannels?: Pick<FeaturedContentProvider, "resolveChannel">;
   readonly cache: PageCache;
   readonly now?: () => Date;
+  /**
+   * Cuántos canales de YouTube puede revisar esta corrida del cron sin agotar
+   * la cuota del día antes de tiempo. Sin esto, todos. "Comprobar ahora" no lo
+   * usa: tiene su propio fondo.
+   */
+  readonly youtubeChannelsPerRun?: () => Promise<number>;
 }
 
 /**
@@ -45,7 +53,7 @@ export function refreshLive(deps: Deps) {
   return async (ownerId?: string): Promise<LiveRefreshSummary> => {
     const job = ownerId ? `${LIVE_JOB}:${ownerId}` : LIVE_JOB;
     if (!(await deps.store.tryLock(job, LOCK_SECONDS))) {
-      return { skipped: true, checked: 0, purged: [], failed: {} };
+      return { skipped: true, checked: 0, deferred: 0, purged: [], failed: {} };
     }
     try {
       return await run(deps, now(), ownerId);
@@ -61,6 +69,7 @@ async function run(deps: Deps, now: Date, ownerId?: string): Promise<LiveRefresh
   const failed: Partial<Record<LiveProvider, ProviderError>> = {};
   const toPurge = new Set<string>();
   let checked = 0;
+  let deferred = 0;
 
   // La clave con que se consulta a cada proveedor → el handle del link. Si
   // resolver un `@handle` nuevo falla, se dejan de resolver los demás en esta
@@ -75,7 +84,19 @@ async function run(deps: Deps, now: Date, ownerId?: string): Promise<LiveRefresh
     keys.set(target.provider, byKey);
   }
 
+  // Con un tope para YouTube, se revisan los primeros: los que llevan más tiempo
+  // sin revisar (así vienen de la base). Los demás, en las corridas siguientes.
+  const youtubeKeys = keys.get("youtube");
+  if (youtubeKeys && !ownerId && deps.youtubeChannelsPerRun) {
+    const allowed = Math.max(0, Math.floor(await deps.youtubeChannelsPerRun()));
+    if (youtubeKeys.size > allowed) {
+      keys.set("youtube", new Map([...youtubeKeys].slice(0, allowed)));
+      deferred = youtubeKeys.size - allowed;
+    }
+  }
+
   for (const [provider, byKey] of keys) {
+    if (byKey.size === 0) continue;
     const adapter = providers[provider];
     if (!adapter || failed[provider]) continue;
     const result = await adapter.checkLive([...byKey.keys()]);
@@ -93,7 +114,7 @@ async function run(deps: Deps, now: Date, ownerId?: string): Promise<LiveRefresh
 
   if (resolution.error && !failed.youtube) failed.youtube = resolution.error;
   for (const page of toPurge) await cache.purgeProfile(page);
-  return { skipped: false, checked, purged: [...toPurge], failed };
+  return { skipped: false, checked, deferred, purged: [...toPurge], failed };
 }
 
 /** Twitch se consulta por login; YouTube, por el ID `UC…` (que se resuelve una vez). */

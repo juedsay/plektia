@@ -53,6 +53,8 @@ describe("SupabaseLiveStore contra Supabase local", () => {
       handle: LOGIN,
       channelId: null,
       channelCheckedAt: null,
+      // Nunca revisado: va primero en la próxima corrida.
+      liveCheckedAt: null,
     });
   });
 
