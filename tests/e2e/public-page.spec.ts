@@ -83,7 +83,7 @@ test.describe("página pública", () => {
     await expect(page.locator('a[href*="github.com"]')).toHaveCount(0);
     await expect(page.getByRole("heading", { level: 1 })).toHaveText("Plektia");
     await expect(page.locator(".identity").getByText("@plektia", { exact: true })).toBeVisible();
-    await expect(page.getByText("Todos tus links, unidos por un hilo.")).toBeVisible();
+    await expect(page.getByText("Todos tus links, unidos a tu estilo.")).toBeVisible();
     await expect(page.getByRole("heading", { level: 2 })).toHaveText([
       "Novedades",
       "Sobre Plektia",
