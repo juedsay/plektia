@@ -29,7 +29,10 @@ test("ver, cambiar el permiso y desconectar una app", async ({
     .analyze();
   expect(results.violations.map((violation) => violation.id)).toEqual([]);
 
-  const row = page.locator(".connections-row").filter({ hasText: "E2E MCP" }).first();
+  // La fila de esta app: mcp.spec.ts conecta otras "E2E MCP" en la misma cuenta, en paralelo.
+  const row = page.locator(".connections-row").filter({
+    has: page.locator(`input[name="clientId"][value="${clientId}"]`),
+  });
   await expect(row).toContainText("Solo lectura");
   await row.getByRole("button", { name: /Permitir edición/ }).click();
   await expect(page.getByRole("status").filter({ hasText: "Permiso actualizado" })).toBeVisible();
@@ -45,10 +48,8 @@ test("ver, cambiar el permiso y desconectar una app", async ({
     });
   expect((await call()).status()).toBe(200);
 
-  // Las conexiones se ordenan de la más nueva: esta es la primera con ese nombre.
-  const sameRow = page.locator(".connections-row").filter({ hasText: "E2E MCP" }).first();
-  await sameRow.locator("summary").click();
-  await sameRow.getByRole("button", { name: /Sí, desconectar/ }).click();
+  await row.locator("summary").click();
+  await row.getByRole("button", { name: /Sí, desconectar/ }).click();
   await expect(page.getByRole("status").filter({ hasText: "App desconectada" })).toBeVisible();
   expect((await grantOf(clientId))?.revoked_at).not.toBeNull();
   expect((await call()).status()).toBe(401);

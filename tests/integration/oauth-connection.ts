@@ -32,16 +32,8 @@ export async function sessionFor(email: string): Promise<SupabaseClient<Database
 
 const base64url = (bytes: Buffer) => bytes.toString("base64url");
 
-export interface Connection {
-  clientId: string;
-  accessToken: string;
-}
-
-/** Registra un cliente, lo autoriza con el permiso elegido y canjea el código. */
-export async function connect(
-  owner: SupabaseClient<Database>,
-  canWrite: boolean,
-): Promise<Connection> {
+/** Registro dinámico de un cliente de prueba; devuelve su `client_id`. */
+async function register(): Promise<string> {
   const registered = await fetch(`${AUTH}/oauth/clients/register`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -55,6 +47,25 @@ export async function connect(
   });
   expect(registered.status).toBe(201);
   const { client_id: clientId } = await registered.json<{ client_id: string }>();
+  return clientId;
+}
+
+export interface Connection {
+  clientId: string;
+  accessToken: string;
+}
+
+/**
+ * Registra un cliente (o reusa `existingClientId`), lo autoriza con el permiso
+ * elegido y canjea el código. Siempre pasa por el consentimiento: si Supabase
+ * ya diera la app por aprobada, falla.
+ */
+export async function connect(
+  owner: SupabaseClient<Database>,
+  canWrite: boolean,
+  existingClientId?: string,
+): Promise<Connection> {
+  const clientId = existingClientId ?? (await register());
 
   const codeVerifier = base64url(randomBytes(32));
   const authorize = new URL(`${AUTH}/oauth/authorize`);

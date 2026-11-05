@@ -3,6 +3,7 @@ import { beforeAll, describe, expect, inject, it } from "vitest";
 
 import type { Database } from "@/infrastructure/supabase/database.types";
 import { SupabaseMcpTokenVerifier } from "@/infrastructure/mcp/token-verifier";
+import { SupabaseMcpConnections } from "@/infrastructure/supabase/supabase-mcp-connections";
 
 import { connect, sessionFor } from "./oauth-connection";
 
@@ -62,5 +63,20 @@ describe("OAuth de los clientes MCP", () => {
     expect(supabaseRevoked.error).toBeNull();
 
     expect(await verifier.verify(accessToken)).toBeNull();
+  });
+
+  it("desconectar desde el panel corta el acceso, se puede repetir y la app vuelve a pedir permiso", async () => {
+    const { clientId, accessToken } = await connect(owner, true);
+    const connections = new SupabaseMcpConnections(owner);
+
+    expect(await connections.revoke(clientId)).toEqual({ ok: true, value: undefined });
+    expect(await verifier.verify(accessToken)).toBeNull();
+    // Un doble clic no da error.
+    expect(await connections.revoke(clientId)).toEqual({ ok: true, value: undefined });
+
+    // Supabase ya no la da por aprobada: reconectarla pasa por el consentimiento
+    // (si lo salteara, el grant cortado la dejaría afuera para siempre).
+    const again = await connect(owner, false, clientId);
+    expect(await verifier.verify(again.accessToken)).toMatchObject({ clientId, canWrite: false });
   });
 });

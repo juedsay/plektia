@@ -87,14 +87,19 @@ export class SupabaseMcpConnections implements McpConnections {
   }
 
   async revoke(clientId: string): Promise<Result<void, ConsentError>> {
-    // Primero el grant: desde ese momento `/mcp` rechaza el token. Después
-    // Supabase invalida los refresh tokens; si ya no lo tenía, no importa.
+    // Primero Supabase: invalida los refresh tokens y olvida el consentimiento,
+    // así la próxima vez que la app pida conectarse se vuelve a preguntar. Si
+    // fallara después de cortar el grant, Supabase seguiría dando la app por
+    // aprobada (salta el consentimiento) y el grant cortado no la dejaría volver
+    // a conectarse. Si falla acá, no se cambió nada: la conexión sigue en la
+    // lista y se puede reintentar.
+    const supabase = await this.client.auth.oauth.revokeGrant({ clientId });
+    if (supabase.error && supabase.error.status !== 404) {
+      throw new Error(`mcp: Supabase no revocó el grant OAuth: ${supabase.error.message}`);
+    }
+    // Después el grant: desde ese momento `/mcp` rechaza el access token vigente.
     const { error } = await this.client.rpc("mcp_revoke_grant", { p_client_id: clientId });
     if (error) return err(error.code === "42501" ? "forbidden" : "not_found");
-    const revoked = await this.client.auth.oauth.revokeGrant({ clientId });
-    if (revoked.error) {
-      console.warn("mcp: Supabase no revocó el grant OAuth", revoked.error.message);
-    }
     return ok(undefined);
   }
 
