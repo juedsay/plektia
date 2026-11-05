@@ -108,11 +108,20 @@ export const featuredRefresh = () => createFeaturedRefresh(env, pageCache());
 /** Refresco del estado en vivo (cron); `null` sin credenciales de ningún proveedor. */
 export const liveRefresh = () => createLiveRefresh(env, pageCache());
 
-/** "Comprobar ahora": una vez por minuto por cuenta, y solo sus canales. */
+/**
+ * "Comprobar ahora": una vez por minuto por cuenta, solo sus canales, y con la
+ * cuota de YouTube de su propio fondo (la de los crons no se toca).
+ */
 export const liveCheckNow = () =>
   checkNow({
     limiter: new CloudflareRateLimiter(env.LIVE_CHECK_RATE_LIMITER),
-    refresh: liveRefresh(),
+    refresh: liveRefresh()
+      ? (ownerId) => {
+          const refresh = createLiveRefresh(env, pageCache(), { job: "check-now", ownerId });
+          if (!refresh) throw new Error("live: sin proveedores");
+          return refresh(ownerId);
+        }
+      : null,
   });
 
 /**

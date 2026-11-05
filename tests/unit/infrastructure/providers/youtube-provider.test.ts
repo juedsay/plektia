@@ -37,11 +37,16 @@ function fakeYouTube(routes: Readonly<Record<string, Route>>) {
 
 class CountingBudget implements QuotaBudget {
   spent = 0;
+  exhausted = false;
   constructor(private readonly limit = Number.POSITIVE_INFINITY) {}
   tryConsume(units: number) {
-    if (this.spent + units > this.limit) return Promise.resolve(false);
+    if (this.exhausted || this.spent + units > this.limit) return Promise.resolve(false);
     this.spent += units;
     return Promise.resolve(true);
+  }
+  exhaust() {
+    this.exhausted = true;
+    return Promise.resolve();
   }
 }
 
@@ -296,6 +301,22 @@ describe("YouTubeProvider · errores y cuota", () => {
   ] as const)("%i → %s", async (status, body, expected) => {
     const { youtube } = provider({ channels: () => ({ status, body }) });
     expect(await youtube.resolveChannel("@canal")).toEqual({ ok: false, error: expected });
+  });
+
+  it("si Google dice que no hay más cuota, las llamadas siguientes no salen", async () => {
+    const budget = new CountingBudget();
+    const quotaExceeded = { error: { code: 403, errors: [{ reason: "quotaExceeded" }] } };
+    const { youtube, calls } = provider(
+      { channels: () => ({ status: 403, body: quotaExceeded }) },
+      budget,
+    );
+    expect(await youtube.resolveChannel("@canal")).toEqual({ ok: false, error: "quota_exceeded" });
+    expect(budget.exhausted).toBe(true);
+    expect(await youtube.resolveChannel("@otro")).toEqual({
+      ok: false,
+      error: "budget_exhausted",
+    });
+    expect(calls).toHaveLength(1);
   });
 
   it("sin presupuesto, no gasta cuota", async () => {
