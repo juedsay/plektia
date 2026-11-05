@@ -14,12 +14,17 @@ export interface LiveTarget {
   /** Solo YouTube: el ID `UC…` si ya se resolvió. */
   readonly channelId: string | null;
   readonly channelCheckedAt: string | null;
+  /** La última revisión del en vivo que salió bien (`null` si nunca). */
+  readonly liveCheckedAt: string | null;
 }
 
 export interface LiveStore {
   tryLock(job: string, seconds: number): Promise<boolean>;
   releaseLock(job: string): Promise<void>;
-  /** Todos los canales vigilados, o solo los de una cuenta. */
+  /**
+   * Todos los canales vigilados (del revisado hace más tiempo al más reciente),
+   * o solo los de una cuenta.
+   */
   targets(ownerId?: string): Promise<readonly LiveTarget[]>;
   /** Guarda el canal de YouTube resuelto (o `null` si no existe). */
   saveChannel(handle: string, channelId: string | null, error: string | null): Promise<void>;

@@ -23,7 +23,14 @@ const live = (title: string): LiveState => ({
 });
 
 function target(provider: LiveProvider, handle: string, extra: Partial<LiveTarget> = {}) {
-  return { provider, handle, channelId: null, channelCheckedAt: null, ...extra };
+  return {
+    provider,
+    handle,
+    channelId: null,
+    channelCheckedAt: null,
+    liveCheckedAt: null,
+    ...extra,
+  };
 }
 
 /** Base falsa: guarda el último estado por canal y purga solo si cambió. */
@@ -87,6 +94,7 @@ function setup(
   targets: LiveTarget[],
   providers: { twitch?: FakeProvider; youtube?: FakeProvider },
   resolve: Result<string | null, ProviderError> = ok(CHANNEL),
+  youtubeChannelsPerRun?: number,
 ) {
   const store = new FakeStore(targets);
   const cache = new RecordingPageCache();
@@ -102,6 +110,9 @@ function setup(
     },
     cache,
     now: () => NOW,
+    ...(youtubeChannelsPerRun === undefined
+      ? {}
+      : { youtubeChannelsPerRun: () => Promise.resolve(youtubeChannelsPerRun) }),
   });
   return { store, cache, refresh, resolved };
 }
@@ -200,7 +211,13 @@ describe("refreshLive", () => {
     const twitch = new FakeProvider();
     const { store, refresh } = setup([target("twitch", "canal")], { twitch });
     store.locked = true;
-    expect(await refresh()).toEqual({ skipped: true, checked: 0, purged: [], failed: {} });
+    expect(await refresh()).toEqual({
+      skipped: true,
+      checked: 0,
+      deferred: 0,
+      purged: [],
+      failed: {},
+    });
     expect(twitch.batches).toEqual([]);
 
     store.locked = false;
@@ -216,5 +233,42 @@ describe("refreshLive", () => {
     await refresh();
     expect(store.askedFor).toEqual(["cuenta-1", undefined]);
     expect(store.lockedJobs).toEqual(["live:cuenta-1", "live"]);
+  });
+
+  describe("con tope de cuota por corrida", () => {
+    // La base los devuelve del revisado hace más tiempo al más reciente.
+    const watched = [
+      target("youtube", "@a", { channelId: "UCaaaaaaaaaaaaaaaaaaaaaa" }),
+      target("youtube", "@b", { channelId: "UCbbbbbbbbbbbbbbbbbbbbbb" }),
+      target("youtube", "@c", { channelId: "UCcccccccccccccccccccccc" }),
+      target("twitch", "streamer"),
+    ];
+
+    it("revisa solo los que entran, empezando por los revisados hace más tiempo", async () => {
+      const youtube = new FakeProvider();
+      const twitch = new FakeProvider();
+      const { refresh } = setup(watched, { youtube, twitch }, ok(CHANNEL), 2);
+      const summary = await refresh();
+      expect(youtube.batches).toEqual([["UCaaaaaaaaaaaaaaaaaaaaaa", "UCbbbbbbbbbbbbbbbbbbbbbb"]]);
+      expect(summary.deferred).toBe(1);
+      // Twitch no tiene cuota por unidades: se revisa entero.
+      expect(twitch.batches).toEqual([["streamer"]]);
+    });
+
+    it("sin cuota para esta corrida, YouTube no sale y queda todo para después", async () => {
+      const youtube = new FakeProvider();
+      const { refresh } = setup(watched, { youtube }, ok(CHANNEL), 0);
+      const summary = await refresh();
+      expect(youtube.batches).toEqual([]);
+      expect(summary.deferred).toBe(3);
+    });
+
+    it("Comprobar ahora (una cuenta) no usa el tope: tiene su propio fondo", async () => {
+      const youtube = new FakeProvider();
+      const { refresh } = setup(watched, { youtube }, ok(CHANNEL), 0);
+      const summary = await refresh("11111111-1111-4111-8111-111111111111");
+      expect(youtube.batches).toHaveLength(1);
+      expect(summary.deferred).toBe(0);
+    });
   });
 });

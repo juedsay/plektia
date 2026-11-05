@@ -3,7 +3,13 @@ import { describe, expect, it } from "vitest";
 import { checkNow } from "@/application/live/check-now";
 import type { LiveRefreshSummary } from "@/application/live/refresh-live";
 
-const summary: LiveRefreshSummary = { skipped: false, checked: 2, purged: [], failed: {} };
+const summary: LiveRefreshSummary = {
+  skipped: false,
+  checked: 2,
+  deferred: 0,
+  purged: [],
+  failed: {},
+};
 
 function setup(allowed: boolean, configured = true) {
   const limited: string[] = [];

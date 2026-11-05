@@ -664,6 +664,7 @@ export type Database = {
           channel_checked_at: string;
           channel_id: string;
           handle: string;
+          live_checked_at: string;
           provider: string;
         }[];
       };
@@ -677,6 +678,10 @@ export type Database = {
         }[];
       };
       ingest_purge_stats: { Args: Record<PropertyKey, never>; Returns: undefined };
+      ingest_quota_remaining: {
+        Args: { p_buckets: string[]; p_limits: number[] };
+        Returns: number;
+      };
       ingest_release_lock: { Args: { p_job: string }; Returns: undefined };
       ingest_try_lock: { Args: { p_job: string; p_seconds: number }; Returns: boolean };
       link_featured: { Args: { p_link_id: string }; Returns: Json };
