@@ -1,6 +1,6 @@
 # Plektia
 
-**Todos tus links en una sola página, unidos por un hilo.** Plektia es una página de links
+**Todos tus links en una sola página, unidos a tu estilo.** Plektia es una página de links
 para creadores que sabe cuándo estás transmitiendo en vivo, muestra tu último video y se
 puede editar desde un panel, desde la terminal o pidiéndoselo a un agente de IA por MCP.
 

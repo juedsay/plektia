@@ -10,7 +10,7 @@ import "@/ui/styles/site.css";
 // completa (beneficios, ejemplos, preguntas) llega con el registro abierto (v2).
 const canonical = new URL("/", Astro.url);
 const description =
-  "Plektia: todos tus links en una sola página, unidos por un hilo. Por ahora, por invitación.";
+  "Plektia: todos tus links en una sola página, unidos a tu estilo. Por ahora, por invitación.";
 const structuredData = {
   "@context": "https://schema.org",
   "@type": "WebSite",
@@ -21,7 +21,7 @@ const structuredData = {
 ---
 
 <PublicLayout
-  title="Plektia · Todos tus links, unidos por un hilo"
+  title="Plektia · Todos tus links, unidos a tu estilo"
   description={description}
   canonical={canonical}
   structuredData={structuredData}
@@ -35,7 +35,7 @@ const structuredData = {
       <h1 id="hero-title">plektia</h1>
       <p class="handle">Todo tejido.</p>
       <p class="bio">
-        Todos tus links en una sola página, unidos por un hilo: tus redes, tus proyectos y tus
+        Todos tus links en una sola página, unidos a tu estilo: tus redes, tus proyectos y tus
         streams.
       </p>
     </section>

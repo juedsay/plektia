@@ -44,7 +44,7 @@ where owner_id in (
 );
 
 -- Página oficial (/plektia), como la que carga la cuenta Admin en producción.
-update public.pages set bio = 'Todos tus links, unidos por un hilo.' where handle = 'plektia';
+update public.pages set bio = 'Todos tus links, unidos a tu estilo.' where handle = 'plektia';
 
 insert into public.sections (id, owner_id, page_id, title) values
   ('5e000000-0000-4000-8000-000000000201', 'adadadad-0000-4000-8000-00000000ad01', 'adadadad-0000-4000-8000-00000000ad01', 'Novedades'),
@@ -53,7 +53,7 @@ insert into public.sections (id, owner_id, page_id, title) values
 
 insert into public.links (owner_id, page_id, section_id, title, url, description) values
   ('adadadad-0000-4000-8000-00000000ad01', 'adadadad-0000-4000-8000-00000000ad01', '5e000000-0000-4000-8000-000000000201', 'Ya está la página pública', 'https://app.plektia.workers.dev/', 'El diseño de la patchera, con el hilo'),
-  ('adadadad-0000-4000-8000-00000000ad01', 'adadadad-0000-4000-8000-00000000ad01', '5e000000-0000-4000-8000-000000000202', 'Qué es Plektia', 'https://app.plektia.workers.dev/', 'Todos tus links, unidos por un hilo'),
+  ('adadadad-0000-4000-8000-00000000ad01', 'adadadad-0000-4000-8000-00000000ad01', '5e000000-0000-4000-8000-000000000202', 'Qué es Plektia', 'https://app.plektia.workers.dev/', 'Todos tus links, unidos a tu estilo'),
   ('adadadad-0000-4000-8000-00000000ad01', 'adadadad-0000-4000-8000-00000000ad01', '5e000000-0000-4000-8000-000000000202', 'Contacto', 'https://app.plektia.workers.dev/contact', 'Pedí tu invitación o escribinos'),
   ('adadadad-0000-4000-8000-00000000ad01', 'adadadad-0000-4000-8000-00000000ad01', '5e000000-0000-4000-8000-000000000202', 'Entrar', 'https://app.plektia.workers.dev/login', 'Si ya tenés tu invitación'),
   ('adadadad-0000-4000-8000-00000000ad01', 'adadadad-0000-4000-8000-00000000ad01', '5e000000-0000-4000-8000-000000000203', 'Política de privacidad', 'https://app.plektia.workers.dev/legal/privacy', 'Qué datos guardamos y cómo pedir que los borremos');
