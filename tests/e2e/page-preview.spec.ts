@@ -73,6 +73,10 @@ test.describe("en el celular", () => {
     await page.goto("/admin/page");
     const save = page.getByRole("button", { name: /^Guardar/ });
     await expect(save).toBeHidden();
+    // Los estilos se deslizan de costado dentro de su fila: la página no.
+    expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(
+      390,
+    );
 
     // Sin cambios: "Vista previa" flota abajo y abre la hoja.
     await page.getByRole("button", { name: "Vista previa" }).click();
@@ -96,23 +100,14 @@ test.describe("en el celular", () => {
 
 test("al guardar, el aviso flota abajo y se va solo", async ({ page, context, baseURL }) => {
   await signIn(context, baseURL ?? "", "avatar@plektia.test");
-  await page.goto("/admin/page");
-  // La bio: ninguna otra prueba de esta cuenta depende de ella (el modo y el
-  // estilo los revisa appearance.spec.ts, en paralelo).
-  const bio = page.getByLabel("Bio");
-  const before = await bio.inputValue();
-  await bio.fill("Bio del aviso de guardado");
-  await page.getByRole("button", { name: /^Guardar/ }).click();
-  await expect(page).toHaveURL(/\/admin\/page\?guardado$/);
+  // Lo que se ve después de guardar (la Action redirige a ?guardado). No se
+  // guarda de verdad: guardar manda el formulario entero y pisaría el estilo y
+  // el acento que appearance.spec.ts cambia en esta cuenta, en paralelo.
+  await page.goto("/admin/page?guardado");
 
   const toast = page.getByRole("status").filter({ hasText: "Guardado" });
   await expect(toast).toBeInViewport();
   await expect(toast.getByRole("link", { name: /Ver página/ })).toBeVisible();
   // Se va solo a los 6 s, sin que haga falta tocarlo.
   await expect(toast).toBeHidden({ timeout: 10_000 });
-
-  // Volver a lo de antes.
-  await page.getByLabel("Bio").fill(before);
-  await page.getByRole("button", { name: /^Guardar/ }).click();
-  await expect(page).toHaveURL(/\/admin\/page\?guardado$/);
 });
