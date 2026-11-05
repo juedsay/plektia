@@ -887,6 +887,24 @@ export type Database = {
         };
         Returns: undefined;
       };
+      owner_read_allowed: { Args: Record<PropertyKey, never>; Returns: boolean };
+      page_link_clicks: {
+        Args: { p_from: string; p_page: string; p_to: string };
+        Returns: {
+          clicks: number;
+          link_id: string;
+          title: string;
+        }[];
+      };
+      page_stats_breakdown: {
+        Args: { p_from: string; p_page: string; p_to: string };
+        Returns: {
+          clicks: number;
+          dimension: string;
+          value: string;
+          views: number;
+        }[];
+      };
       reorder_sections: {
         Args: { expected_versions: number[]; ids: string[]; target_page: string };
         Returns: undefined;
