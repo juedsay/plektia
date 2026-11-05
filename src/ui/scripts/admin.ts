@@ -17,6 +17,14 @@ if (themeOptions) {
   });
 }
 
+// Y cada cambio se ve en la vista previa antes de guardar.
+const draftFrame = document.querySelector<HTMLIFrameElement>("iframe[data-draft-preview]");
+if (themeOptions && draftFrame) {
+  void import("@/ui/scripts/draft-preview").then(({ connectDraftPreview }) => {
+    connectDraftPreview(themeOptions, draftFrame);
+  });
+}
+
 // El editor del avatar solo se carga en la pantalla que lo tiene (/admin/page).
 const avatarEditor = document.querySelector<HTMLElement>("[data-avatar-editor]");
 if (avatarEditor) {

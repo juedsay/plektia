@@ -142,6 +142,7 @@ const effective = effectiveAppearance(chosenTheme, {
   account={account}
   panelMode={panelMode}
   notice={notice}
+  wide
 >
   {/* Las tipografías a elegir, para que cada opción se muestre con su letra (solo en esta pantalla). */}
   <Fragment slot="head">
@@ -159,322 +160,373 @@ const effective = effectiveAppearance(chosenTheme, {
   </header>
 
   {currentPage ? (
-    <>
-      <section
-        class="avatar-editor"
-        aria-labelledby="avatar-title"
-        data-avatar-editor
-        data-page-id={currentPage.id}
+    <div class="workspace" data-workspace>
+      <div class="workspace-tabs" role="tablist" aria-label="Ajustes y vista previa" hidden>
+        <button
+          type="button"
+          role="tab"
+          id="tab-ajustes"
+          aria-controls="panel-ajustes"
+          aria-selected="true"
+        >
+          Ajustes
+        </button>
+        <button
+          type="button"
+          role="tab"
+          id="tab-vista-previa"
+          aria-controls="panel-vista-previa"
+          aria-selected="false"
+          tabindex="-1"
+        >
+          Vista previa
+        </button>
+      </div>
+
+      <div
+        class="workspace-editor"
+        id="panel-ajustes"
+        role="tabpanel"
+        aria-labelledby="tab-ajustes"
       >
-        <h2 id="avatar-title" class="avatar-editor-title">
-          Avatar
-        </h2>
-        {avatarNotice && <Alert variant="success" message={avatarNotice} />}
-        {avatarError && <Alert variant="error" message={avatarError} />}
-        <div class="avatar-editor-current">
-          {avatarSrc ? (
-            <img
-              class="avatar-editor-image"
-              src={avatarSrc}
-              alt="Tu avatar actual"
-              width="88"
-              height="88"
-            />
-          ) : (
-            <div class="avatar-editor-image avatar-editor-initial" aria-hidden="true">
-              {initialOf(currentPage.displayName)}
+        <section
+          class="avatar-editor"
+          aria-labelledby="avatar-title"
+          data-avatar-editor
+          data-page-id={currentPage.id}
+        >
+          <h2 id="avatar-title" class="avatar-editor-title">
+            Avatar
+          </h2>
+          {avatarNotice && <Alert variant="success" message={avatarNotice} />}
+          {avatarError && <Alert variant="error" message={avatarError} />}
+          <div class="avatar-editor-current">
+            {avatarSrc ? (
+              <img
+                class="avatar-editor-image"
+                src={avatarSrc}
+                alt="Tu avatar actual"
+                width="88"
+                height="88"
+              />
+            ) : (
+              <div class="avatar-editor-image avatar-editor-initial" aria-hidden="true">
+                {initialOf(currentPage.displayName)}
+              </div>
+            )}
+            <div class="avatar-editor-choose">
+              <label class="button is-quiet avatar-editor-pick" for="avatar-file">
+                Elegir foto
+              </label>
+              <input
+                id="avatar-file"
+                class="visually-hidden"
+                type="file"
+                accept="image/jpeg,image/png,image/webp"
+                aria-describedby="avatar-hint"
+                data-avatar-file
+              />
+              <p class="field-hint" id="avatar-hint">
+                JPEG, PNG o WebP de hasta 5 MB. Se recorta en cuadrado y se le borran los datos de
+                la cámara y la ubicación.
+              </p>
+              <noscript>
+                <p class="field-hint">Para elegir y recortar una foto necesitás JavaScript.</p>
+              </noscript>
+              {avatarSrc && (
+                <form method="post" action={actions.pages.removeAvatar}>
+                  <input type="hidden" name="pageId" value={currentPage.id} />
+                  <button type="submit" class="button is-quiet">
+                    Sacar avatar
+                  </button>
+                </form>
+              )}
             </div>
-          )}
-          <div class="avatar-editor-choose">
-            <label class="button is-quiet avatar-editor-pick" for="avatar-file">
-              Elegir foto
-            </label>
-            <input
-              id="avatar-file"
-              class="visually-hidden"
-              type="file"
-              accept="image/jpeg,image/png,image/webp"
-              aria-describedby="avatar-hint"
-              data-avatar-file
-            />
-            <p class="field-hint" id="avatar-hint">
-              JPEG, PNG o WebP de hasta 5 MB. Se recorta en cuadrado y se le borran los datos de la
-              cámara y la ubicación.
+          </div>
+
+          <p class="field-error" role="alert" data-avatar-error hidden></p>
+
+          <div class="avatar-crop" data-avatar-crop hidden>
+            <div class="avatar-crop-frame">
+              <canvas
+                class="avatar-crop-canvas"
+                width="560"
+                height="560"
+                tabindex="0"
+                aria-label="Recorte de la foto"
+                aria-describedby="avatar-crop-help"
+                data-avatar-canvas
+              ></canvas>
+            </div>
+            <p class="field-hint" id="avatar-crop-help">
+              Arrastrá la foto o movela con las flechas. Acercala o alejala con el zoom, o con más y
+              menos.
             </p>
-            <noscript>
-              <p class="field-hint">Para elegir y recortar una foto necesitás JavaScript.</p>
-            </noscript>
-            {avatarSrc && (
-              <form method="post" action={actions.pages.removeAvatar}>
-                <input type="hidden" name="pageId" value={currentPage.id} />
-                <button type="submit" class="button is-quiet">
-                  Sacar avatar
-                </button>
-              </form>
+            <div class="field">
+              <label for="avatar-zoom">Zoom</label>
+              <input
+                id="avatar-zoom"
+                type="range"
+                min="1"
+                max="4"
+                step="0.01"
+                value="1"
+                data-avatar-zoom
+              />
+            </div>
+            <div class="admin-form-actions">
+              <button type="button" class="button" data-avatar-save>
+                Guardar avatar
+              </button>
+              <button type="button" class="button is-quiet" data-avatar-cancel>
+                Cancelar
+              </button>
+            </div>
+          </div>
+          <p class="visually-hidden" role="status" data-avatar-status></p>
+        </section>
+
+        <form
+          class="admin-form"
+          method="post"
+          action={actions.pages.update}
+          novalidate
+          data-theme-options
+          data-chosen-accent={values.accent}
+          data-chosen-linkshape={values.linkShape}
+          data-chosen-namefont={values.nameFont}
+        >
+          <input type="hidden" name="pageId" value={currentPage.id} />
+          {justSaved && publicUrl && (
+            <Alert variant="success" message="Guardado. Tu página pública ya muestra los cambios.">
+              <div class="alert-actions">
+                <a class="button is-quiet" href={publicUrl} target="_blank" rel="noopener">
+                  Ver página<span class="visually-hidden"> (se abre en otra pestaña)</span>
+                </a>
+              </div>
+            </Alert>
+          )}
+          {message && <Alert variant="error" message={message} />}
+
+          <div class="field">
+            <label for="displayName">Nombre</label>
+            <input
+              id="displayName"
+              name="displayName"
+              required
+              maxlength="60"
+              autocomplete="off"
+              value={values.displayName}
+              aria-describedby={fields.displayName ? "displayName-error" : undefined}
+              aria-invalid={fields.displayName ? "true" : undefined}
+            />
+            {fields.displayName && (
+              <p class="field-error" id="displayName-error">
+                {fields.displayName}
+              </p>
             )}
           </div>
-        </div>
 
-        <p class="field-error" role="alert" data-avatar-error hidden></p>
-
-        <div class="avatar-crop" data-avatar-crop hidden>
-          <div class="avatar-crop-frame">
-            <canvas
-              class="avatar-crop-canvas"
-              width="560"
-              height="560"
-              tabindex="0"
-              aria-label="Recorte de la foto"
-              aria-describedby="avatar-crop-help"
-              data-avatar-canvas
-            ></canvas>
-          </div>
-          <p class="field-hint" id="avatar-crop-help">
-            Arrastrá la foto o movela con las flechas. Acercala o alejala con el zoom, o con más y
-            menos.
-          </p>
           <div class="field">
-            <label for="avatar-zoom">Zoom</label>
-            <input
-              id="avatar-zoom"
-              type="range"
-              min="1"
-              max="4"
-              step="0.01"
-              value="1"
-              data-avatar-zoom
+            <label for="bio">Bio</label>
+            <textarea
+              id="bio"
+              name="bio"
+              rows="3"
+              maxlength={BIO_MAX_LENGTH}
+              data-single-line
+              data-counter="bio-count"
+              aria-describedby={fields.bio ? "bio-error bio-hint" : "bio-hint"}
+              aria-invalid={fields.bio ? "true" : undefined}
+              set:text={values.bio}
             />
-          </div>
-          <div class="admin-form-actions">
-            <button type="button" class="button" data-avatar-save>
-              Guardar avatar
-            </button>
-            <button type="button" class="button is-quiet" data-avatar-cancel>
-              Cancelar
-            </button>
-          </div>
-        </div>
-        <p class="visually-hidden" role="status" data-avatar-status></p>
-      </section>
-
-      <form
-        class="admin-form"
-        method="post"
-        action={actions.pages.update}
-        novalidate
-        data-theme-options
-        data-chosen-accent={values.accent}
-        data-chosen-linkshape={values.linkShape}
-        data-chosen-namefont={values.nameFont}
-      >
-        <input type="hidden" name="pageId" value={currentPage.id} />
-        {justSaved && publicUrl && (
-          <Alert variant="success" message="Guardado. Tu página pública ya muestra los cambios.">
-            <div class="alert-actions">
-              <a class="button is-quiet" href={publicUrl} target="_blank" rel="noopener">
-                Ver página<span class="visually-hidden"> (se abre en otra pestaña)</span>
-              </a>
-            </div>
-          </Alert>
-        )}
-        {message && <Alert variant="error" message={message} />}
-
-        <div class="field">
-          <label for="displayName">Nombre</label>
-          <input
-            id="displayName"
-            name="displayName"
-            required
-            maxlength="60"
-            autocomplete="off"
-            value={values.displayName}
-            aria-describedby={fields.displayName ? "displayName-error" : undefined}
-            aria-invalid={fields.displayName ? "true" : undefined}
-          />
-          {fields.displayName && (
-            <p class="field-error" id="displayName-error">
-              {fields.displayName}
+            <p class="field-hint" id="bio-hint">
+              Opcional. Una línea, hasta {BIO_MAX_LENGTH} caracteres:{" "}
+              <span id="bio-count" class="field-count">
+                {values.bio.length} de {BIO_MAX_LENGTH}
+              </span>
+              .
             </p>
-          )}
-        </div>
-
-        <div class="field">
-          <label for="bio">Bio</label>
-          <textarea
-            id="bio"
-            name="bio"
-            rows="3"
-            maxlength={BIO_MAX_LENGTH}
-            data-single-line
-            data-counter="bio-count"
-            aria-describedby={fields.bio ? "bio-error bio-hint" : "bio-hint"}
-            aria-invalid={fields.bio ? "true" : undefined}
-            set:text={values.bio}
-          />
-          <p class="field-hint" id="bio-hint">
-            Opcional. Una línea, hasta {BIO_MAX_LENGTH} caracteres:{" "}
-            <span id="bio-count" class="field-count">
-              {values.bio.length} de {BIO_MAX_LENGTH}
-            </span>
-            .
-          </p>
-          {fields.bio && (
-            <p class="field-error" id="bio-error">
-              {fields.bio}
-            </p>
-          )}
-        </div>
-
-        <fieldset class="field choice-group" aria-describedby="theme-hint">
-          <legend>Estilo</legend>
-          <p class="field-hint" id="theme-hint">
-            Cada estilo trae sus colores, su tipografía y su forma. Al elegirlo, los ajustes de
-            abajo muestran lo que admite.
-          </p>
-          {THEME_FAMILIES.map((family) => (
-            <div class="theme-family">
-              <p class="theme-family-name">
-                {FAMILY_NAMES[family]?.name}
-                <span>{FAMILY_NAMES[family]?.hint}</span>
+            {fields.bio && (
+              <p class="field-error" id="bio-error">
+                {fields.bio}
               </p>
-              <div class="theme-options">
-                {THEMES.filter((theme) => THEME_RULES[theme].family === family).map((theme) => (
-                  <label
-                    class:list={["theme-option", { "is-disabled": !THEME_RULES[theme].available }]}
-                  >
-                    <input
-                      type="radio"
-                      name="theme"
-                      value={theme}
-                      checked={values.theme === theme}
-                      disabled={!THEME_RULES[theme].available}
-                    />
-                    <span
-                      class="theme-sample"
-                      data-theme={theme}
-                      data-mode={values.colorMode}
-                      data-accent={THEME_RULES[theme].defaultAccent}
-                      aria-hidden="true"
+            )}
+          </div>
+
+          <fieldset class="field choice-group" aria-describedby="theme-hint">
+            <legend>Estilo</legend>
+            <p class="field-hint" id="theme-hint">
+              Cada estilo trae sus colores, su tipografía y su forma. Al elegirlo, los ajustes de
+              abajo muestran lo que admite.
+            </p>
+            {THEME_FAMILIES.map((family) => (
+              <div class="theme-family">
+                <p class="theme-family-name">
+                  {FAMILY_NAMES[family]?.name}
+                  <span>{FAMILY_NAMES[family]?.hint}</span>
+                </p>
+                <div class="theme-options">
+                  {THEMES.filter((theme) => THEME_RULES[theme].family === family).map((theme) => (
+                    <label
+                      class:list={[
+                        "theme-option",
+                        { "is-disabled": !THEME_RULES[theme].available },
+                      ]}
                     >
-                      <span class="theme-sample-avatar">
-                        {initialOf(values.displayName || "P")}
-                      </span>
-                      <span class="theme-sample-rows">
-                        <span class="theme-sample-row is-live">
-                          <span class="theme-sample-mark" />
+                      <input
+                        type="radio"
+                        name="theme"
+                        value={theme}
+                        checked={values.theme === theme}
+                        disabled={!THEME_RULES[theme].available}
+                      />
+                      <span
+                        class="theme-sample"
+                        data-theme={theme}
+                        data-mode={values.colorMode}
+                        data-accent={THEME_RULES[theme].defaultAccent}
+                        aria-hidden="true"
+                      >
+                        <span class="theme-sample-avatar">
+                          {initialOf(values.displayName || "P")}
                         </span>
-                        <span class="theme-sample-row">
-                          <span class="theme-sample-mark" />
+                        <span class="theme-sample-rows">
+                          <span class="theme-sample-row is-live">
+                            <span class="theme-sample-mark" />
+                          </span>
+                          <span class="theme-sample-row">
+                            <span class="theme-sample-mark" />
+                          </span>
                         </span>
                       </span>
-                    </span>
-                    <span class="choice-name">{THEME_NAMES[theme].name}</span>
-                    <span class="choice-hint">
-                      {THEME_RULES[theme].available ? THEME_NAMES[theme].hint : "Próximamente"}
-                    </span>
-                  </label>
-                ))}
+                      <span class="choice-name">{THEME_NAMES[theme].name}</span>
+                      <span class="choice-hint">
+                        {THEME_RULES[theme].available ? THEME_NAMES[theme].hint : "Próximamente"}
+                      </span>
+                    </label>
+                  ))}
+                </div>
               </div>
-            </div>
-          ))}
-          {fields.theme && <p class="field-error">{fields.theme}</p>}
-        </fieldset>
+            ))}
+            {fields.theme && <p class="field-error">{fields.theme}</p>}
+          </fieldset>
 
-        <fieldset class="field choice-group">
-          <legend>Modo</legend>
-          {COLOR_MODES.map((mode) => (
-            <label class="choice">
-              <input
-                type="radio"
-                name="colorMode"
-                value={mode}
-                checked={values.colorMode === mode}
-              />
-              <span class="choice-name">{MODE_NAMES[mode]?.name}</span>
-              <span class="choice-hint">{MODE_NAMES[mode]?.hint}</span>
-            </label>
-          ))}
-          {fields.colorMode && <p class="field-error">{fields.colorMode}</p>}
-        </fieldset>
-
-        <fieldset class="field choice-group" aria-describedby="accent-hint">
-          <legend>Acento</legend>
-          <p class="field-hint" id="accent-hint">
-            El color del hilo, los jacks y los títulos de sección. Cada uno tiene su tono para claro
-            y para oscuro.
-          </p>
-          <div class="accent-options">
-            {ACCENTS.map((accent) => (
-              <label class="accent-option" hidden={!themeRules.accents.includes(accent)}>
+          <fieldset class="field choice-group">
+            <legend>Modo</legend>
+            {COLOR_MODES.map((mode) => (
+              <label class="choice">
                 <input
                   type="radio"
-                  name="accent"
-                  value={accent}
-                  checked={effective.accent === accent}
+                  name="colorMode"
+                  value={mode}
+                  checked={values.colorMode === mode}
                 />
-                <span class="accent-swatch" data-accent={accent} aria-hidden="true" />
-                <span class="choice-name">{ACCENT_NAMES[accent]}</span>
+                <span class="choice-name">{MODE_NAMES[mode]?.name}</span>
+                <span class="choice-hint">{MODE_NAMES[mode]?.hint}</span>
               </label>
             ))}
+            {fields.colorMode && <p class="field-error">{fields.colorMode}</p>}
+          </fieldset>
+
+          <fieldset class="field choice-group" aria-describedby="accent-hint">
+            <legend>Acento</legend>
+            <p class="field-hint" id="accent-hint">
+              El color del hilo, los jacks y los títulos de sección. Cada uno tiene su tono para
+              claro y para oscuro.
+            </p>
+            <div class="accent-options">
+              {ACCENTS.map((accent) => (
+                <label class="accent-option" hidden={!themeRules.accents.includes(accent)}>
+                  <input
+                    type="radio"
+                    name="accent"
+                    value={accent}
+                    checked={effective.accent === accent}
+                  />
+                  <span class="accent-swatch" data-accent={accent} aria-hidden="true" />
+                  <span class="choice-name">{ACCENT_NAMES[accent]}</span>
+                </label>
+              ))}
+            </div>
+            {fields.accent && <p class="field-error">{fields.accent}</p>}
+          </fieldset>
+
+          <fieldset class="field choice-group">
+            <legend>Forma de los links</legend>
+            {LINK_SHAPES.map((shape) => (
+              <label class="choice" hidden={!themeRules.shapes.includes(shape)}>
+                <input
+                  type="radio"
+                  name="linkShape"
+                  value={shape}
+                  checked={effective.linkShape === shape}
+                />
+                <span class="choice-name">{SHAPE_NAMES[shape]?.name}</span>
+                <span class="choice-hint">{SHAPE_NAMES[shape]?.hint}</span>
+              </label>
+            ))}
+            {fields.linkShape && <p class="field-error">{fields.linkShape}</p>}
+          </fieldset>
+
+          <fieldset class="field choice-group" aria-describedby="name-font-hint">
+            <legend>Tipografía de los nombres</legend>
+            <p class="field-hint" id="name-font-hint">
+              Para tu nombre, los títulos de sección y los nombres de los links. Cada opción se
+              muestra con su letra.
+            </p>
+            {NAME_FONTS.map((font) => (
+              <label class="choice" hidden={!themeRules.fonts.includes(font)}>
+                <input
+                  type="radio"
+                  name="nameFont"
+                  value={font}
+                  checked={effective.nameFont === font}
+                />
+                <span class="choice-name font-sample" data-name-font={font}>
+                  {FONT_NAMES[font]?.name}
+                </span>
+                <span class="choice-hint">{FONT_NAMES[font]?.hint}</span>
+              </label>
+            ))}
+            {fields.nameFont && <p class="field-error">{fields.nameFont}</p>}
+          </fieldset>
+
+          <div class="field">
+            <label class="choice">
+              <input type="checkbox" name="showHandle" checked={values.showHandle} />
+              <span class="choice-name">Mostrar @{currentPage.handle}</span>
+              <span class="choice-hint">Debajo de tu nombre, en la página pública.</span>
+            </label>
           </div>
-          {fields.accent && <p class="field-error">{fields.accent}</p>}
-        </fieldset>
 
-        <fieldset class="field choice-group">
-          <legend>Forma de los links</legend>
-          {LINK_SHAPES.map((shape) => (
-            <label class="choice" hidden={!themeRules.shapes.includes(shape)}>
-              <input
-                type="radio"
-                name="linkShape"
-                value={shape}
-                checked={effective.linkShape === shape}
-              />
-              <span class="choice-name">{SHAPE_NAMES[shape]?.name}</span>
-              <span class="choice-hint">{SHAPE_NAMES[shape]?.hint}</span>
-            </label>
-          ))}
-          {fields.linkShape && <p class="field-error">{fields.linkShape}</p>}
-        </fieldset>
+          <div class="admin-form-actions">
+            <button type="submit" class="button">
+              Guardar cambios
+            </button>
+          </div>
+        </form>
+      </div>
 
-        <fieldset class="field choice-group" aria-describedby="name-font-hint">
-          <legend>Tipografía de los nombres</legend>
-          <p class="field-hint" id="name-font-hint">
-            Para tu nombre, los títulos de sección y los nombres de los links. Cada opción se
-            muestra con su letra.
-          </p>
-          {NAME_FONTS.map((font) => (
-            <label class="choice" hidden={!themeRules.fonts.includes(font)}>
-              <input
-                type="radio"
-                name="nameFont"
-                value={font}
-                checked={effective.nameFont === font}
-              />
-              <span class="choice-name font-sample" data-name-font={font}>
-                {FONT_NAMES[font]?.name}
-              </span>
-              <span class="choice-hint">{FONT_NAMES[font]?.hint}</span>
-            </label>
-          ))}
-          {fields.nameFont && <p class="field-error">{fields.nameFont}</p>}
-        </fieldset>
-
-        <div class="field">
-          <label class="choice">
-            <input type="checkbox" name="showHandle" checked={values.showHandle} />
-            <span class="choice-name">Mostrar @{currentPage.handle}</span>
-            <span class="choice-hint">Debajo de tu nombre, en la página pública.</span>
-          </label>
-        </div>
-
-        <div class="admin-form-actions">
-          <button type="submit" class="button">
-            Guardar cambios
-          </button>
-        </div>
-      </form>
-    </>
+      <section
+        class="workspace-preview"
+        id="panel-vista-previa"
+        role="tabpanel"
+        aria-labelledby="tab-vista-previa"
+      >
+        <h2 class="workspace-preview-title">Vista previa</h2>
+        <p class="workspace-preview-hint">
+          Así se va a ver. Los cambios se ven acá al elegirlos y se publican al guardar.
+        </p>
+        <iframe
+          class="workspace-preview-frame"
+          src="/admin/vista-previa"
+          title={`Vista previa de ${currentPage.displayName}`}
+          data-preview-frame
+          data-draft-preview
+        ></iframe>
+      </section>
+    </div>
   ) : (
     <div class="admin-empty">
       <p class="admin-empty-title">No encontramos tu página.</p>

@@ -1,11 +1,14 @@
 ---
 // Vista previa del panel (SPEC-admin-panel): la página pública de la página con
 // la que se trabaja, recién leída de la base (sin pasar por la caché). Va en un
-// iframe del inicio; es la única ruta que se puede embeber, y solo en el propio sitio.
+// iframe del inicio y de la pantalla Página; es la única ruta que se puede
+// embeber, y solo en el propio sitio. Con `?borrador`, muestra los cambios que
+// la pantalla Página todavía no guardó (src/ui/view/page-draft.ts).
 import { getPublicPage } from "@/application/public/get-public-page";
 import { publicPages } from "@/composition/runtime";
 import { loadWorkspace } from "@/ui/admin/workspace";
 import ProfilePage from "@/ui/components/ProfilePage.astro";
+import { withDraft } from "@/ui/view/page-draft";
 
 const { currentPage } = await loadWorkspace(Astro);
 const result = currentPage
@@ -14,4 +17,4 @@ const result = currentPage
 if (!result?.ok) return new Response(null, { status: 404 });
 ---
 
-<ProfilePage page={result.value} preview />
+<ProfilePage page={withDraft(result.value, Astro.url.searchParams)} preview />
