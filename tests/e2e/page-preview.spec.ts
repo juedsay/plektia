@@ -41,3 +41,24 @@ test("lo elegido se ve en la vista previa sin publicarse", async ({
   await page.reload();
   await expect(preview.locator("body")).toHaveAttribute("data-theme", "tecnico");
 });
+
+test("Guardar está a mano y Descartar vuelve a lo guardado", async ({ page, context, baseURL }) => {
+  await signIn(context, baseURL ?? "", "avatar@plektia.test");
+  await page.goto("/admin/page");
+  const save = page.getByRole("button", { name: "Guardar cambios" });
+  const discard = page.getByRole("button", { name: "Descartar" });
+  // Al elegir un estilo arriba, la barra de guardado ya está a la vista.
+  await page.getByRole("radio", { name: /^Punto/ }).check();
+  await expect(save).toBeInViewport();
+  await expect(
+    page.getByRole("status").filter({ hasText: "Tenés cambios sin guardar." }),
+  ).toBeVisible();
+
+  const preview = page.frameLocator("iframe[data-draft-preview]");
+  await expect(preview.locator("body")).toHaveAttribute("data-theme", "punto");
+  await discard.click();
+  await expect(page.getByRole("radio", { name: /^Patchera/ })).toBeChecked();
+  await expect(page.getByRole("radio", { name: /^Filas/ })).toBeChecked();
+  await expect(discard).toBeHidden();
+  await expect(preview.locator("body")).toHaveAttribute("data-theme", "tecnico");
+});
