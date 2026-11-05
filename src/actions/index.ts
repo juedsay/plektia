@@ -42,7 +42,9 @@ import {
 
 /**
  * Los repositorios del usuario con sesión. Sin sesión la Action no corre, y
- * cada usuario tiene un límite de pedidos por minuto (scripts o abuso).
+ * cada usuario tiene un límite de pedidos por minuto (scripts o abuso). Una
+ * cuenta dada de baja tampoco: la RLS ya rechaza sus escrituras, pero así el
+ * rechazo es claro y no llega a la base ni a servicios de afuera.
  */
 async function repositoriesOf(context: ActionAPIContext) {
   const { user } = context.locals;
@@ -53,7 +55,15 @@ async function repositoriesOf(context: ActionAPIContext) {
       message: "Demasiados cambios seguidos. Esperá un minuto y probá de nuevo.",
     });
   }
-  return adminRepositoriesFor(context.request, context.cookies, user.id);
+  const repositories = adminRepositoriesFor(context.request, context.cookies, user.id);
+  const account = await repositories.users.currentAccount();
+  if (!account || account.disabled) {
+    throw new ActionError({
+      code: "FORBIDDEN",
+      message: "Tu acceso a Plektia fue quitado: no podés editar nada.",
+    });
+  }
+  return repositories;
 }
 
 const PageTarget = z.object({ pageId: z.uuid() });

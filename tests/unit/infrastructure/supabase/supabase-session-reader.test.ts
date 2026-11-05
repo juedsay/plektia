@@ -39,6 +39,11 @@ describe("SupabaseSessionReader", () => {
     },
   );
 
+  it("un token de una app de IA (con client_id) no es una sesión del panel", async () => {
+    const appToken = claims({ sub: "u-1", email: "a@b.test", client_id: "c-1" });
+    expect(await readerReturning(appToken).getCurrentUser()).toBeNull();
+  });
+
   it("si getClaims informa un error no hay sesión", async () => {
     const result = { data: null, error: new Error("firma inválida") } as unknown as Awaited<
       ReturnType<GetClaims>

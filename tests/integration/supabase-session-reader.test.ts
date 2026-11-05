@@ -4,6 +4,8 @@ import { afterEach, beforeAll, describe, expect, inject, it, vi } from "vitest";
 import { createSessionReader } from "@/composition/session";
 import { createSupabaseServerClient } from "@/infrastructure/supabase/server-client";
 
+import { connect, sessionFor } from "./oauth-connection";
+
 const supabase = inject("supabase");
 const config = { url: supabase.url, publishableKey: supabase.publishableKey };
 const OWNER_ID = "11111111-1111-4111-8111-111111111111";
@@ -120,6 +122,15 @@ describe("SupabaseSessionReader contra Supabase local", () => {
     });
     vi.useFakeTimers({ toFake: ["Date"] });
     vi.setSystemTime(Date.now() + 2 * 60 * 60 * 1000);
+    expect(await readerFor(jar).getCurrentUser()).toBeNull();
+  });
+
+  it("un token de una app de IA en la cookie no es una sesión del panel", async () => {
+    // Firmado por el proyecto y vigente, pero con `client_id`: solo sirve en /mcp.
+    const { accessToken } = await connect(await sessionFor("owner@plektia.test"), false);
+    const jar = tamper(await cookiesFor(session), (stored) => {
+      stored["access_token"] = accessToken;
+    });
     expect(await readerFor(jar).getCurrentUser()).toBeNull();
   });
 });
