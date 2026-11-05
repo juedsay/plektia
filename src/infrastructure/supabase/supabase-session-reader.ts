@@ -8,6 +8,10 @@ type ClaimsAuth = Pick<SupabaseClient["auth"], "getClaims">;
  * Lee la sesión con `getClaims()`, que verifica la firma del JWT con las claves
  * públicas del proyecto (JWKS) y su vencimiento. Nunca `getSession()`: sus datos
  * salen de la cookie sin verificar.
+ *
+ * Un token de una app de IA (claim `client_id`, SPEC-mcp-server) no es una
+ * sesión del panel aunque tenga la firma del proyecto: si alguien lo pone en la
+ * cookie, el panel lo trata como sin sesión. Solo sirve en `/mcp`.
  */
 export class SupabaseSessionReader implements SessionReader {
   constructor(private readonly auth: ClaimsAuth) {}
@@ -16,8 +20,9 @@ export class SupabaseSessionReader implements SessionReader {
     try {
       const { data, error } = await this.auth.getClaims();
       if (error || !data) return null;
-      const { sub, email } = data.claims;
+      const { sub, email, client_id: clientId } = data.claims;
       if (typeof sub !== "string" || sub.length === 0) return null;
+      if (clientId !== undefined && clientId !== null) return null;
       return { id: sub, email: typeof email === "string" ? email : null };
     } catch (cause) {
       // Ante cualquier falla inesperada (red, JWKS), sin sesión: falla cerrado.
