@@ -93,3 +93,26 @@ test.describe("en el celular", () => {
     await expect(page.getByRole("button", { name: "Ver", exact: true })).toBeFocused();
   });
 });
+
+test("al guardar, el aviso flota abajo y se va solo", async ({ page, context, baseURL }) => {
+  await signIn(context, baseURL ?? "", "avatar@plektia.test");
+  await page.goto("/admin/page");
+  // La bio: ninguna otra prueba de esta cuenta depende de ella (el modo y el
+  // estilo los revisa appearance.spec.ts, en paralelo).
+  const bio = page.getByLabel("Bio");
+  const before = await bio.inputValue();
+  await bio.fill("Bio del aviso de guardado");
+  await page.getByRole("button", { name: /^Guardar/ }).click();
+  await expect(page).toHaveURL(/\/admin\/page\?guardado$/);
+
+  const toast = page.getByRole("status").filter({ hasText: "Guardado" });
+  await expect(toast).toBeInViewport();
+  await expect(toast.getByRole("link", { name: /Ver página/ })).toBeVisible();
+  // Se va solo a los 6 s, sin que haga falta tocarlo.
+  await expect(toast).toBeHidden({ timeout: 10_000 });
+
+  // Volver a lo de antes.
+  await page.getByLabel("Bio").fill(before);
+  await page.getByRole("button", { name: /^Guardar/ }).click();
+  await expect(page).toHaveURL(/\/admin\/page\?guardado$/);
+});
