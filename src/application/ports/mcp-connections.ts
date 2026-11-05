@@ -51,7 +51,10 @@ export interface McpConnections {
   /** Las conexiones activas del dueño, de la más nueva a la más vieja. */
   list(): Promise<readonly Connection[]>;
   setPermission(clientId: string, canWrite: boolean): Promise<Result<void, ConsentError>>;
-  /** Corta el acceso ya (grant) e invalida sus tokens en Supabase. Repetirlo no falla. */
+  /**
+   * Invalida sus tokens en Supabase y corta el acceso (grant). Repetirlo no falla.
+   * Si Supabase no responde, lanza sin cambiar nada (se puede reintentar).
+   */
   revoke(clientId: string): Promise<Result<void, ConsentError>>;
   /** Si una app cambió ese link o sección en la última hora: cuál y cuándo. */
   lastEdit(targetId: string): Promise<AppEdit | null>;
