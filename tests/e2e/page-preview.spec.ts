@@ -30,7 +30,7 @@ test("lo elegido se ve en la vista previa sin publicarse", async ({
   await expect(preview.getByRole("heading", { level: 1 })).toHaveText("Nombre de prueba");
 
   // Sin guardar, quien visita sigue viendo lo de antes.
-  const visitorContext = await browser.newContext({ baseURL });
+  const visitorContext = await browser.newContext({ baseURL: baseURL ?? "" });
   const visitor = await visitorContext.newPage();
   await visitor.goto("/avatar-demo");
   await expect(visitor.locator("body")).toHaveAttribute("data-theme", "tecnico");
