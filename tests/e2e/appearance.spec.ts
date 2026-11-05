@@ -52,6 +52,20 @@ async function visit(browser: Browser, baseURL: string, colorScheme: "light" | "
   return { visitor, close: () => context.close() };
 }
 
+/**
+ * Deja la cuenta como al empezar. Al guardar otro estilo se guarda lo que ese
+ * estilo muestra (su acento y su forma), así que se vuelve a elegir todo.
+ */
+async function backToPatchera(page: Page) {
+  await page.goto("/admin/page");
+  await page.getByRole("radio", { name: /^Patchera/ }).check();
+  await page.getByRole("radio", { name: /^Hueso$/ }).check();
+  await page.getByRole("radio", { name: /^Filas/ }).check();
+  await page.getByRole("radio", { name: /^Bricolage/ }).check();
+  await page.getByRole("button", { name: "Guardar" }).click();
+  await expect(page).toHaveURL(/\/admin\/page\?guardado$/);
+}
+
 async function chooseMode(page: Page, name: "Automático" | "Oscuro" | "Claro") {
   await page.goto("/admin/page");
   await page.getByRole("radio", { name: new RegExp(`^${name}`) }).check();
@@ -174,6 +188,30 @@ test("la forma de los links elegida se aplica en la página pública", async ({
     await page.getByRole("button", { name: "Guardar" }).click();
     await expect(page).toHaveURL(/\/admin\/page\?guardado$/);
   }
+});
+
+// Las opciones siguen al estilo elegido, antes de guardar.
+test("al elegir otro estilo, forma y acento muestran solo lo que admite", async ({
+  page,
+  context,
+  baseURL,
+}) => {
+  await signIn(context, baseURL ?? "", "avatar@plektia.test");
+  await page.goto("/admin/page");
+  const rows = page.getByRole("radio", { name: /^Filas/ });
+  await expect(rows).toBeChecked();
+
+  // Punto no admite filas: se ocultan y queda marcada su forma, tarjetas.
+  await page.getByRole("radio", { name: /^Punto/ }).check();
+  await expect(rows).toBeHidden();
+  await expect(page.getByRole("radio", { name: /^Tarjetas/ })).toBeChecked();
+  await expect(page.getByRole("radio", { name: /^Hueso$/ })).toBeHidden();
+
+  // De vuelta en Patchera, vuelve lo que estaba elegido.
+  await page.getByRole("radio", { name: /^Patchera/ }).check();
+  await expect(rows).toBeVisible();
+  await expect(rows).toBeChecked();
+  await expect(page.getByRole("radio", { name: /^Hueso$/ })).toBeChecked();
 });
 
 // Tipografía de los nombres (tarea 36c): se usa y se precarga solo la elegida.
@@ -338,10 +376,7 @@ test("el estilo Punto se elige en el panel y se ve en la página, AAA en los dos
       await close();
     }
   } finally {
-    await page.goto("/admin/page");
-    await page.getByRole("radio", { name: /^Patchera/ }).check();
-    await page.getByRole("button", { name: "Guardar" }).click();
-    await expect(page).toHaveURL(/\/admin\/page\?guardado$/);
+    await backToPatchera(page);
   }
 });
 
@@ -372,10 +407,7 @@ test("el estilo Subte se elige en el panel y se ve en la página, AAA en los dos
       await close();
     }
   } finally {
-    await page.goto("/admin/page");
-    await page.getByRole("radio", { name: /^Patchera/ }).check();
-    await page.getByRole("button", { name: "Guardar" }).click();
-    await expect(page).toHaveURL(/\/admin\/page\?guardado$/);
+    await backToPatchera(page);
   }
 });
 
@@ -405,10 +437,7 @@ test("el estilo Lomo cosido se elige en el panel y se ve en la página, AAA en l
       await close();
     }
   } finally {
-    await page.goto("/admin/page");
-    await page.getByRole("radio", { name: /^Patchera/ }).check();
-    await page.getByRole("button", { name: "Guardar" }).click();
-    await expect(page).toHaveURL(/\/admin\/page\?guardado$/);
+    await backToPatchera(page);
   }
 });
 
@@ -436,10 +465,7 @@ test("el estilo Lado A / B se elige en el panel y se ve en la página, AAA en lo
       await close();
     }
   } finally {
-    await page.goto("/admin/page");
-    await page.getByRole("radio", { name: /^Patchera/ }).check();
-    await page.getByRole("button", { name: "Guardar" }).click();
-    await expect(page).toHaveURL(/\/admin\/page\?guardado$/);
+    await backToPatchera(page);
   }
 });
 
@@ -467,10 +493,7 @@ test("el estilo Corcho se elige en el panel y se ve en la página, AAA en los do
       await close();
     }
   } finally {
-    await page.goto("/admin/page");
-    await page.getByRole("radio", { name: /^Patchera/ }).check();
-    await page.getByRole("button", { name: "Guardar" }).click();
-    await expect(page).toHaveURL(/\/admin\/page\?guardado$/);
+    await backToPatchera(page);
   }
 });
 
@@ -498,10 +521,7 @@ test("el estilo Pedalera se elige en el panel y se ve en la página, AAA en los 
       await close();
     }
   } finally {
-    await page.goto("/admin/page");
-    await page.getByRole("radio", { name: /^Patchera/ }).check();
-    await page.getByRole("button", { name: "Guardar" }).click();
-    await expect(page).toHaveURL(/\/admin\/page\?guardado$/);
+    await backToPatchera(page);
   }
 });
 
@@ -529,10 +549,7 @@ test("el estilo Bitmap se elige en el panel y se ve en la página, AAA en los do
       await close();
     }
   } finally {
-    await page.goto("/admin/page");
-    await page.getByRole("radio", { name: /^Patchera/ }).check();
-    await page.getByRole("button", { name: "Guardar" }).click();
-    await expect(page).toHaveURL(/\/admin\/page\?guardado$/);
+    await backToPatchera(page);
   }
 });
 
@@ -560,10 +577,7 @@ test("el estilo Manual se elige en el panel y se ve en la página, AAA en los do
       await close();
     }
   } finally {
-    await page.goto("/admin/page");
-    await page.getByRole("radio", { name: /^Patchera/ }).check();
-    await page.getByRole("button", { name: "Guardar" }).click();
-    await expect(page).toHaveURL(/\/admin\/page\?guardado$/);
+    await backToPatchera(page);
   }
 });
 
@@ -591,10 +605,7 @@ test("el estilo Sumario se elige en el panel y se ve en la página, AAA en los d
       await close();
     }
   } finally {
-    await page.goto("/admin/page");
-    await page.getByRole("radio", { name: /^Patchera/ }).check();
-    await page.getByRole("button", { name: "Guardar" }).click();
-    await expect(page).toHaveURL(/\/admin\/page\?guardado$/);
+    await backToPatchera(page);
   }
 });
 
@@ -638,9 +649,6 @@ test("el rótulo escrito en el panel reemplaza al del estilo en la página", asy
   } finally {
     await deleteLinksTitled(AVATAR_ID, ["Link con rótulo"]);
     await deleteSectionsTitled(AVATAR_ID, [sectionTitle]);
-    await page.goto("/admin/page");
-    await page.getByRole("radio", { name: /^Patchera/ }).check();
-    await page.getByRole("button", { name: "Guardar" }).click();
-    await expect(page).toHaveURL(/\/admin\/page\?guardado$/);
+    await backToPatchera(page);
   }
 });
