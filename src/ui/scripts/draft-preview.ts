@@ -38,5 +38,6 @@ export function connectDraftPreview(
 
   form.addEventListener("input", refresh);
   form.addEventListener("change", refresh);
+  form.addEventListener("reset", refresh);
   return refresh;
 }

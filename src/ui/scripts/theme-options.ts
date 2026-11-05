@@ -35,12 +35,15 @@ export function connectThemeOptions(form: HTMLFormElement): void {
   // Lo último que eligió el dueño en cada grupo (lo guardado, al entrar). Marcar
   // una opción desde acá no dispara `change`, así que no lo pisa.
   const chosen = new Map<string, string>();
-  for (const group of GROUPS) {
-    const initial =
-      form.getAttribute(`data-chosen-${group.name}`) ??
-      radios(group.name).find((radio) => radio.checked)?.value;
-    if (initial) chosen.set(group.name, initial);
-  }
+  const remember = () => {
+    for (const group of GROUPS) {
+      const initial =
+        form.getAttribute(`data-chosen-${group.name}`) ??
+        radios(group.name).find((radio) => radio.checked)?.value;
+      if (initial) chosen.set(group.name, initial);
+    }
+  };
+  remember();
 
   const apply = (theme: string) => {
     if (!isAvailableTheme(theme)) return;
@@ -55,6 +58,16 @@ export function connectThemeOptions(form: HTMLFormElement): void {
       }
     }
   };
+
+  // "Descartar" vuelve el formulario a lo guardado: las opciones también.
+  // `reset` corre antes de que los campos vuelvan a sus valores.
+  form.addEventListener("reset", () => {
+    setTimeout(() => {
+      remember();
+      const theme = radios("theme").find((radio) => radio.checked);
+      if (theme) apply(theme.value);
+    }, 0);
+  });
 
   form.addEventListener("change", (event) => {
     const target = event.target;

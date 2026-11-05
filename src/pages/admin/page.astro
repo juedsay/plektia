@@ -500,7 +500,12 @@ const effective = effectiveAppearance(chosenTheme, {
             </label>
           </div>
 
-          <div class="admin-form-actions">
+          {/* Fija abajo mientras se recorren los ajustes: no hace falta bajar para guardar. */}
+          <div class="admin-form-actions save-bar">
+            <p class="save-bar-status" role="status" data-unsaved-status></p>
+            <button type="button" class="button is-quiet" data-discard hidden>
+              Descartar
+            </button>
             <button type="submit" class="button">
               Guardar cambios
             </button>

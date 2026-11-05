@@ -2084,3 +2084,45 @@
 .field .accent-option[hidden] {
   display: none;
 }
+
+/* Barra de guardado de la pantalla Página: queda fija abajo mientras se
+   recorren los ajustes (en el celular, sobre la barra de navegación). */
+.save-bar {
+  position: sticky;
+  bottom: calc(var(--admin-nav-height) + env(safe-area-inset-bottom));
+  z-index: 4;
+  align-items: center;
+  justify-content: flex-end;
+  margin-inline: calc(-1 * var(--space-3));
+  padding: var(--space-3);
+  border-top: 1px solid var(--color-line-soft);
+  background: var(--color-bg);
+}
+
+.save-bar-status {
+  flex: 1 1 12rem;
+  margin: 0;
+  color: var(--color-fg-muted);
+  font-size: var(--text-sm);
+}
+
+.save-bar-status:empty {
+  display: none;
+}
+
+.save-bar [hidden] {
+  display: none;
+}
+
+/* En el celular, el aviso va en su línea y los botones quedan juntos. */
+@media (max-width: 40rem) {
+  .save-bar-status {
+    flex-basis: 100%;
+  }
+}
+
+@media (min-width: 60rem) {
+  .save-bar {
+    bottom: 0;
+  }
+}

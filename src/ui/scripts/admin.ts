@@ -17,6 +17,13 @@ if (themeOptions) {
   });
 }
 
+// Avisa los cambios sin guardar y deja descartarlos.
+if (themeOptions) {
+  void import("@/ui/scripts/unsaved-changes").then(({ connectUnsavedChanges }) => {
+    connectUnsavedChanges(themeOptions);
+  });
+}
+
 // Y cada cambio se ve en la vista previa antes de guardar.
 const draftFrame = document.querySelector<HTMLIFrameElement>("iframe[data-draft-preview]");
 if (themeOptions && draftFrame) {
