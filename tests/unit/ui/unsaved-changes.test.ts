@@ -58,7 +58,7 @@ describe("connectUnsavedChanges", () => {
   it("un cambio avisa y ofrece descartar", () => {
     const { choose, status, discard, form } = setup();
     choose("theme", "punto");
-    expect(status()).toBe("Tenés cambios sin guardar.");
+    expect(status()).toBe("Sin guardar");
     expect(discard().hidden).toBe(false);
     expect(form.hasAttribute("data-dirty")).toBe(true);
   });
@@ -86,6 +86,17 @@ describe("connectUnsavedChanges", () => {
     expect(field('[name="linkShape"][value="rows"]').closest("label")?.hidden).toBe(false);
     expect(status()).toBe("");
     expect(discard().hidden).toBe(true);
+  });
+
+  it("un cambio hecho antes de que cargue el script también cuenta", () => {
+    document.body.innerHTML = `
+      <form><input name="displayName" value="Julián" /><p data-unsaved-status></p></form>`;
+    const form = document.querySelector("form");
+    const field = form?.querySelector("input");
+    if (!form || !field) throw new Error("falta el formulario");
+    field.value = "Otro";
+    connectUnsavedChanges(form);
+    expect(form.hasAttribute("data-dirty")).toBe(true);
   });
 
   it("salir con cambios pide confirmación; al guardar, no", () => {

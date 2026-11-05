@@ -161,34 +161,7 @@ const effective = effectiveAppearance(chosenTheme, {
 
   {currentPage ? (
     <div class="workspace" data-workspace>
-      <div class="workspace-tabs" role="tablist" aria-label="Ajustes y vista previa" hidden>
-        <button
-          type="button"
-          role="tab"
-          id="tab-ajustes"
-          aria-controls="panel-ajustes"
-          aria-selected="true"
-        >
-          Ajustes
-        </button>
-        <button
-          type="button"
-          role="tab"
-          id="tab-vista-previa"
-          aria-controls="panel-vista-previa"
-          aria-selected="false"
-          tabindex="-1"
-        >
-          Vista previa
-        </button>
-      </div>
-
-      <div
-        class="workspace-editor"
-        id="panel-ajustes"
-        role="tabpanel"
-        aria-labelledby="tab-ajustes"
-      >
+      <div class="workspace-editor" id="panel-ajustes">
         <section
           class="avatar-editor"
           aria-labelledby="avatar-title"
@@ -500,26 +473,50 @@ const effective = effectiveAppearance(chosenTheme, {
             </label>
           </div>
 
-          {/* Fija abajo mientras se recorren los ajustes: no hace falta bajar para guardar. */}
-          <div class="admin-form-actions save-bar">
+          {/*
+            Sin JavaScript, al final del formulario. Con JavaScript, flota abajo
+            y aparece solo cuando hay cambios sin guardar (unsaved-changes.ts).
+          */}
+          <div class="admin-form-actions save-bar" data-save-bar>
             <p class="save-bar-status" role="status" data-unsaved-status></p>
             <button type="button" class="button is-quiet" data-discard hidden>
               Descartar
             </button>
+            <button type="button" class="button is-quiet save-bar-preview" data-open-preview hidden>
+              Ver
+            </button>
             <button type="submit" class="button">
-              Guardar cambios
+              Guardar<span class="save-bar-long">&nbsp;cambios</span>
             </button>
           </div>
         </form>
       </div>
 
+      {/* En el celular, sin cambios: abre la vista previa (con cambios, lo hace "Ver"). */}
+      <button type="button" class="button preview-fab" data-open-preview hidden>
+        Vista previa
+      </button>
+      <div class="preview-sheet-backdrop" data-close-preview hidden></div>
+
+      {/*
+        En escritorio, al lado de los ajustes. En el celular, con JavaScript, es
+        una hoja que sube desde abajo (preview-sheet.ts); sin JavaScript, va
+        debajo del formulario.
+      */}
       <section
         class="workspace-preview"
         id="panel-vista-previa"
-        role="tabpanel"
-        aria-labelledby="tab-vista-previa"
+        aria-labelledby="preview-title"
+        data-preview-sheet
       >
-        <h2 class="workspace-preview-title">Vista previa</h2>
+        <div class="preview-sheet-head">
+          <h2 class="preview-sheet-title" id="preview-title">
+            Vista previa
+          </h2>
+          <button type="button" class="button is-quiet" data-close-preview hidden>
+            Cerrar
+          </button>
+        </div>
         <p class="workspace-preview-hint">
           Así se va a ver. Los cambios se ven acá al elegirlos y se publican al guardar.
         </p>
