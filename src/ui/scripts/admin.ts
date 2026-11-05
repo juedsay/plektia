@@ -9,6 +9,14 @@ document.querySelector<HTMLElement>(".admin-main .alert:not([hidden])")?.focus()
 const workspace = document.querySelector<HTMLElement>("[data-workspace]");
 if (workspace) connectLivePreview(workspace);
 
+// Acento, forma y tipografía siguen al estilo elegido (/admin/page).
+const themeOptions = document.querySelector<HTMLFormElement>("form[data-theme-options]");
+if (themeOptions) {
+  void import("@/ui/scripts/theme-options").then(({ connectThemeOptions }) => {
+    connectThemeOptions(themeOptions);
+  });
+}
+
 // El editor del avatar solo se carga en la pantalla que lo tiene (/admin/page).
 const avatarEditor = document.querySelector<HTMLElement>("[data-avatar-editor]");
 if (avatarEditor) {

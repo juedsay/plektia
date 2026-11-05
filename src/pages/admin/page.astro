@@ -4,8 +4,15 @@
 import { actions } from "astro:actions";
 import { Font } from "astro:assets";
 
-import { BIO_MAX_LENGTH, COLOR_MODES } from "@/domain/page";
-import { THEME_FAMILIES, THEME_RULES, type Theme, THEMES } from "@/domain/theme";
+import { ACCENTS, BIO_MAX_LENGTH, COLOR_MODES, LINK_SHAPES, NAME_FONTS } from "@/domain/page";
+import {
+  effectiveAppearance,
+  isAvailableTheme,
+  THEME_FAMILIES,
+  THEME_RULES,
+  type Theme,
+  THEMES,
+} from "@/domain/theme";
 import { THEME_STYLESHEETS } from "@/ui/styles/themes";
 import { loadWorkspace } from "@/ui/admin/workspace";
 import Alert from "@/ui/components/Alert.astro";
@@ -110,19 +117,21 @@ const THEME_NAMES: Record<Theme, { name: string; hint: string }> = {
   sumario: { name: "Sumario", hint: "El índice de una revista." },
 };
 
-// Lo que admite el estilo guardado (SPEC-styles): solo eso se ofrece, y si algo
-// guardado no aplica, se avisa qué usa la página.
-const savedTheme: Theme = currentPage?.theme ?? "tecnico";
-const themeRules = THEME_RULES[savedTheme];
-const ACCENTS = themeRules.accents;
-const LINK_SHAPES = themeRules.shapes;
-const NAME_FONTS = themeRules.fonts;
-const notApplied = (kind: "accent" | "linkShape" | "nameFont") => {
-  if (!currentPage) return null;
-  const allowed: readonly string[] =
-    kind === "accent" ? ACCENTS : kind === "linkShape" ? LINK_SHAPES : NAME_FONTS;
-  return allowed.includes(currentPage[kind]) ? null : THEME_NAMES[savedTheme].name;
-};
+// Lo que admite el estilo elegido (SPEC-styles): se dibujan todas las opciones
+// y se ocultan las que no aplican; con JavaScript, siguen al estilo que se
+// elige (src/ui/scripts/theme-options.ts). Queda marcado lo que la página usa
+// de verdad, y lo que eligió el dueño viaja en el formulario para recuperarlo
+// si vuelve a un estilo que lo admite.
+const chosenTheme: Theme = isAvailableTheme(values.theme) ? values.theme : "tecnico";
+const themeRules = THEME_RULES[chosenTheme];
+/** El valor si está en la lista; si no (un formulario alterado), el de respaldo. */
+const oneOf = <T extends string>(list: readonly T[], value: string, fallback: T): T =>
+  list.find((candidate) => candidate === value) ?? fallback;
+const effective = effectiveAppearance(chosenTheme, {
+  accent: oneOf(ACCENTS, values.accent, themeRules.defaultAccent),
+  linkShape: oneOf(LINK_SHAPES, values.linkShape, themeRules.defaultShape),
+  nameFont: oneOf(NAME_FONTS, values.nameFont, themeRules.defaultFont),
+});
 ---
 
 <AdminLayout
@@ -248,7 +257,16 @@ const notApplied = (kind: "accent" | "linkShape" | "nameFont") => {
         <p class="visually-hidden" role="status" data-avatar-status></p>
       </section>
 
-      <form class="admin-form" method="post" action={actions.pages.update} novalidate>
+      <form
+        class="admin-form"
+        method="post"
+        action={actions.pages.update}
+        novalidate
+        data-theme-options
+        data-chosen-accent={values.accent}
+        data-chosen-linkshape={values.linkShape}
+        data-chosen-namefont={values.nameFont}
+      >
         <input type="hidden" name="pageId" value={currentPage.id} />
         {justSaved && publicUrl && (
           <Alert variant="success" message="Guardado. Tu página pública ya muestra los cambios.">
@@ -310,7 +328,7 @@ const notApplied = (kind: "accent" | "linkShape" | "nameFont") => {
         <fieldset class="field choice-group" aria-describedby="theme-hint">
           <legend>Estilo</legend>
           <p class="field-hint" id="theme-hint">
-            Cada estilo trae sus colores, su tipografía y su forma. Al guardarlo, los ajustes de
+            Cada estilo trae sus colores, su tipografía y su forma. Al elegirlo, los ajustes de
             abajo muestran lo que admite.
           </p>
           {THEME_FAMILIES.map((family) => (
@@ -381,24 +399,18 @@ const notApplied = (kind: "accent" | "linkShape" | "nameFont") => {
 
         <fieldset class="field choice-group" aria-describedby="accent-hint">
           <legend>Acento</legend>
-          {notApplied("accent") && (
-            <p class="field-hint">
-              Lo que elegiste no se usa en {notApplied("accent")}: la página muestra el de ese
-              estilo.
-            </p>
-          )}
           <p class="field-hint" id="accent-hint">
             El color del hilo, los jacks y los títulos de sección. Cada uno tiene su tono para claro
             y para oscuro.
           </p>
           <div class="accent-options">
             {ACCENTS.map((accent) => (
-              <label class="accent-option">
+              <label class="accent-option" hidden={!themeRules.accents.includes(accent)}>
                 <input
                   type="radio"
                   name="accent"
                   value={accent}
-                  checked={values.accent === accent}
+                  checked={effective.accent === accent}
                 />
                 <span class="accent-swatch" data-accent={accent} aria-hidden="true" />
                 <span class="choice-name">{ACCENT_NAMES[accent]}</span>
@@ -410,19 +422,13 @@ const notApplied = (kind: "accent" | "linkShape" | "nameFont") => {
 
         <fieldset class="field choice-group">
           <legend>Forma de los links</legend>
-          {notApplied("linkShape") && (
-            <p class="field-hint">
-              Lo que elegiste no se usa en {notApplied("linkShape")}: la página muestra el de ese
-              estilo.
-            </p>
-          )}
           {LINK_SHAPES.map((shape) => (
-            <label class="choice">
+            <label class="choice" hidden={!themeRules.shapes.includes(shape)}>
               <input
                 type="radio"
                 name="linkShape"
                 value={shape}
-                checked={values.linkShape === shape}
+                checked={effective.linkShape === shape}
               />
               <span class="choice-name">{SHAPE_NAMES[shape]?.name}</span>
               <span class="choice-hint">{SHAPE_NAMES[shape]?.hint}</span>
@@ -433,19 +439,18 @@ const notApplied = (kind: "accent" | "linkShape" | "nameFont") => {
 
         <fieldset class="field choice-group" aria-describedby="name-font-hint">
           <legend>Tipografía de los nombres</legend>
-          {notApplied("nameFont") && (
-            <p class="field-hint">
-              Lo que elegiste no se usa en {notApplied("nameFont")}: la página muestra el de ese
-              estilo.
-            </p>
-          )}
           <p class="field-hint" id="name-font-hint">
             Para tu nombre, los títulos de sección y los nombres de los links. Cada opción se
             muestra con su letra.
           </p>
           {NAME_FONTS.map((font) => (
-            <label class="choice">
-              <input type="radio" name="nameFont" value={font} checked={values.nameFont === font} />
+            <label class="choice" hidden={!themeRules.fonts.includes(font)}>
+              <input
+                type="radio"
+                name="nameFont"
+                value={font}
+                checked={effective.nameFont === font}
+              />
               <span class="choice-name font-sample" data-name-font={font}>
                 {FONT_NAMES[font]?.name}
               </span>

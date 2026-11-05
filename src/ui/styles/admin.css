@@ -2078,3 +2078,9 @@
 .theme-option.is-disabled .theme-sample {
   opacity: 0.55;
 }
+
+/* Opciones que el estilo elegido no admite (src/ui/scripts/theme-options.ts). */
+.field .choice[hidden],
+.field .accent-option[hidden] {
+  display: none;
+}
