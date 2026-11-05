@@ -105,7 +105,7 @@ describe("inviteUser", () => {
 });
 
 describe("revokeUser", () => {
-  it("quita el acceso y saca de la caché todas sus páginas", async () => {
+  it("quita el acceso y saca de la caché todas sus páginas y el sitemap", async () => {
     const users = new FakeDirectory();
     users.revokeAnswer = { status: "revoked", handles: ["ana", "ana-stream"] };
     const cache = new RecordingPageCache();
@@ -114,7 +114,15 @@ describe("revokeUser", () => {
       value: undefined,
     });
     expect(users.revoked).toEqual(["ana@ejemplo.com"]);
-    expect(cache.purged).toEqual(["profile:ana", "profile:ana-stream"]);
+    expect(cache.purged).toEqual(["profile:ana", "profile:ana-stream", "site"]);
+  });
+
+  it("una invitación sin cuenta no tiene páginas: no purga el sitio", async () => {
+    const users = new FakeDirectory();
+    users.revokeAnswer = { status: "revoked", handles: [] };
+    const cache = new RecordingPageCache();
+    await revokeUser({ users, cache })({ email: "ana@ejemplo.com" });
+    expect(cache.purged).toEqual([]);
   });
 
   it("nadie se quita el acceso a sí mismo; un correo desconocido es not_found", async () => {

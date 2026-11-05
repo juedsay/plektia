@@ -33,8 +33,9 @@ export function inviteUser(deps: { users: UserDirectory }) {
 
 /**
  * Quita el acceso: la invitación se borra y la cuenta queda dada de baja (su
- * página deja de publicarse y no puede editar nada). Sus páginas salen de la
- * caché al instante.
+ * página deja de publicarse y no puede editar nada; la base cierra sus sesiones
+ * y desconecta sus apps de IA). Sus páginas salen de la caché al instante, y el
+ * sitio también: el sitemap deja de listarlas.
  */
 export function revokeUser(deps: { users: UserDirectory; cache: PageCache }) {
   return async (raw: unknown): UseCaseResult<void> => {
@@ -47,7 +48,9 @@ export function revokeUser(deps: { users: UserDirectory; cache: PageCache }) {
     if (result.value.status === "self") {
       return err(invalidInput({ email: "No podés quitarte el acceso a vos." }));
     }
-    await Promise.all(result.value.handles.map((handle) => deps.cache.purgeProfile(handle)));
+    const { handles } = result.value;
+    await Promise.all(handles.map((handle) => deps.cache.purgeProfile(handle)));
+    if (handles.length > 0) await deps.cache.purgeSite();
     return ok(undefined);
   };
 }
