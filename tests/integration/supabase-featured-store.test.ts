@@ -92,10 +92,33 @@ describe("SupabaseFeaturedStore contra Supabase local", () => {
   });
 
   it("el presupuesto de cuota corta al llegar al límite diario", async () => {
-    const budget = new IngestQuotaBudget(ingest, `integracion-${crypto.randomUUID()}`, 3);
+    const budget = new IngestQuotaBudget(ingest, [
+      { name: `integracion:${crypto.randomUUID()}`, limit: 3 },
+    ]);
     expect(await budget.tryConsume(2)).toBe(true);
     expect(await budget.tryConsume(2)).toBe(false);
     expect(await budget.tryConsume(1)).toBe(true);
+    expect(await budget.tryConsume(1)).toBe(false);
+  });
+
+  it("descuenta del total y de los fondos del trabajo y la cuenta, todo o nada", async () => {
+    const run = crypto.randomUUID();
+    const total = { name: `integracion:${run}`, limit: 100 };
+    const account = (owner: string) => ({ name: `integracion:cuenta:${owner}`, limit: 2 });
+    const first = new IngestQuotaBudget(ingest, [total, account(crypto.randomUUID())]);
+    const second = new IngestQuotaBudget(ingest, [total, account(crypto.randomUUID())]);
+    expect(await first.tryConsume(2)).toBe(true);
+    // La primera cuenta llegó a su tope: la segunda no se entera.
+    expect(await first.tryConsume(1)).toBe(false);
+    expect(await second.tryConsume(2)).toBe(true);
+  });
+
+  it("si el proveedor dice que no hay más cuota, el total queda agotado hasta mañana", async () => {
+    const budget = new IngestQuotaBudget(ingest, [
+      { name: `integracion:${crypto.randomUUID()}`, limit: 100 },
+    ]);
+    expect(await budget.tryConsume(1)).toBe(true);
+    await budget.exhaust();
     expect(await budget.tryConsume(1)).toBe(false);
   });
 

@@ -230,7 +230,12 @@ export class YouTubeProvider implements FeaturedContentProvider, LiveStatusProvi
     } catch {
       return err(status >= 500 ? "unavailable" : "invalid_response");
     }
-    if (status !== 200) return err(failureOf(status, json));
+    if (status !== 200) {
+      const failure = failureOf(status, json);
+      // Google ya no da más hoy: que las próximas llamadas corten antes de salir.
+      if (failure === "quota_exceeded") await this.budget.exhaust();
+      return err(failure);
+    }
     const parsed = schema.safeParse(json);
     return parsed.success ? ok(parsed.data) : err("invalid_response");
   }

@@ -4,7 +4,7 @@
 begin;
 create extension if not exists pgtap with schema extensions;
 
-select plan(23);
+select plan(30);
 
 create function pg_temp.login(uid uuid)
 returns void language sql as $$
@@ -44,8 +44,10 @@ select throws_ok($$ select * from public.provider_channels $$, '42501', null,
   'ni lee los canales');
 select throws_ok($$ select public.ingest_try_lock('featured', 60) $$, '42501', null,
   'ni toma el lock del cron');
-select throws_ok($$ select public.ingest_consume_quota('youtube', 1, 8000) $$, '42501', null,
+select throws_ok($$ select public.ingest_consume_quota_from('{youtube}', '{8000}', 1) $$, '42501', null,
   'ni gasta cuota');
+select throws_ok($$ select public.ingest_exhaust_quota('youtube', 8000) $$, '42501', null,
+  'ni da la cuota por agotada');
 select throws_ok(
   $$ select public.ingest_featured('b1000000-0000-4000-8000-000000000001', 'dQw4w9WgXcQ',
        'video', 'Falso', now(), null) $$,
@@ -65,9 +67,34 @@ select is(public.ingest_try_lock('featured', 600), false, 'no lo toma dos veces'
 select public.ingest_release_lock('featured');
 select is(public.ingest_try_lock('featured', 600), true, 'liberado, se vuelve a tomar');
 
-select is(public.ingest_consume_quota('youtube', 5, 8), true, 'gasta cuota dentro del límite');
-select is(public.ingest_consume_quota('youtube', 4, 8), false, 'no pasa el límite diario');
-select is(public.ingest_consume_quota('youtube', 3, 8), true, 'lo que entra, entra');
+select is(public.ingest_consume_quota_from('{youtube}', '{8}', 5), true, 'gasta cuota dentro del límite');
+select is(public.ingest_consume_quota_from('{youtube}', '{8}', 4), false, 'no pasa el límite diario');
+select is(public.ingest_consume_quota_from('{youtube}', '{8}', 3), true, 'lo que entra, entra');
+
+-- Fondos: el total, el del trabajo y el de la cuenta, todo o nada.
+select is(
+  public.ingest_consume_quota_from('{prueba,prueba:check}', '{100,10}', 8),
+  true, 'descuenta del total y del trabajo');
+select is(
+  public.ingest_consume_quota_from('{prueba,prueba:check}', '{100,10}', 3),
+  false, 'si el fondo del trabajo no alcanza, no descuenta de ninguno');
+reset role;
+select is(
+  (select units from private.quota_usage where provider = 'prueba'
+     and day = (now() at time zone 'America/Los_Angeles')::date),
+  8, 'el total quedó como estaba');
+set local role service_role;
+select is(
+  public.ingest_consume_quota_from('{prueba,prueba:live}', '{100,50}', 3),
+  true, 'otro trabajo sigue teniendo su fondo');
+select is(
+  public.ingest_consume_quota_from('{prueba}', '{100,50}', 1),
+  false, 'fondos y topes de distinto largo: no');
+
+select public.ingest_exhaust_quota('prueba', 100);
+select is(
+  public.ingest_consume_quota_from('{prueba,prueba:live}', '{100,50}', 1),
+  false, 'con la cuota agotada por Google, no se gasta más');
 
 select results_eq(
   $$ select link_id, handle, featured_mode, channel_id from public.ingest_featured_targets()

@@ -36,4 +36,6 @@ export interface FeaturedContentProvider {
 /** Presupuesto diario de cuota: cada llamada pide sus unidades antes de salir. */
 export interface QuotaBudget {
   tryConsume(units: number): Promise<boolean>;
+  /** El proveedor dijo que no hay más cuota hoy: no se gasta más hasta mañana. */
+  exhaust(): Promise<void>;
 }

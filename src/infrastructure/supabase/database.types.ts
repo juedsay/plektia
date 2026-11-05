@@ -602,8 +602,8 @@ export type Database = {
         Args: { p_error: string; p_external_id: string; p_handle: string; p_provider: string };
         Returns: undefined;
       };
-      ingest_consume_quota: {
-        Args: { p_daily_limit: number; p_provider: string; p_units: number };
+      ingest_consume_quota_from: {
+        Args: { p_buckets: string[]; p_limits: number[]; p_units: number };
         Returns: boolean;
       };
       ingest_contact_message: {
@@ -621,6 +621,7 @@ export type Database = {
         };
         Returns: undefined;
       };
+      ingest_exhaust_quota: { Args: { p_bucket: string; p_limit: number }; Returns: undefined };
       ingest_featured: {
         Args: {
           p_duration_s: number;

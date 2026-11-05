@@ -24,7 +24,10 @@ interface World {
   make(failing: boolean): { provider: LiveStatusProvider; requests: () => number };
 }
 
-const unlimited: QuotaBudget = { tryConsume: () => Promise.resolve(true) };
+const unlimited: QuotaBudget = {
+  tryConsume: () => Promise.resolve(true),
+  exhaust: () => Promise.resolve(),
+};
 const json = (status: number, body: unknown) => new Response(JSON.stringify(body), { status });
 
 const twitch: World = {

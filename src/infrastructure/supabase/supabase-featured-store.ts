@@ -83,25 +83,41 @@ export class SupabaseFeaturedStore implements FeaturedStore {
   }
 }
 
+/** Un fondo de cuota diaria: su nombre (`youtube`, `youtube:live`…) y su tope. */
+export interface QuotaBucket {
+  readonly name: string;
+  readonly limit: number;
+}
+
 /**
- * Presupuesto diario de la cuota de YouTube, compartido entre corridas: se
- * corta al 80 % de las 10.000 unidades gratis (SPEC-live-status, "Seguridad").
+ * Presupuesto diario de la cuota de YouTube, compartido entre corridas. Cada
+ * llamada descuenta, todo o nada, de todos sus fondos: el total del día (el
+ * primero), el del trabajo y, en "Comprobar ahora", el de la cuenta. Así ningún
+ * trabajo ni ninguna cuenta deja sin cuota al resto (src/composition/live.ts).
  */
 export class IngestQuotaBudget implements QuotaBudget {
   constructor(
     private readonly ingest: IngestClient,
-    private readonly provider = "youtube",
-    private readonly dailyLimit = 8000,
+    private readonly buckets: readonly [QuotaBucket, ...QuotaBucket[]],
   ) {}
 
   async tryConsume(units: number): Promise<boolean> {
-    const { data, error } = await this.ingest.call("ingest_consume_quota", {
-      p_provider: this.provider,
+    const { data, error } = await this.ingest.call("ingest_consume_quota_from", {
+      p_buckets: this.buckets.map((bucket) => bucket.name),
+      p_limits: this.buckets.map((bucket) => bucket.limit),
       p_units: units,
-      p_daily_limit: this.dailyLimit,
     });
-    if (error) throw unexpected("ingest_consume_quota", error);
+    if (error) throw unexpected("ingest_consume_quota_from", error);
     return data === true;
+  }
+
+  async exhaust(): Promise<void> {
+    const [total] = this.buckets;
+    const { error } = await this.ingest.call("ingest_exhaust_quota", {
+      p_bucket: total.name,
+      p_limit: total.limit,
+    });
+    if (error) throw unexpected("ingest_exhaust_quota", error);
   }
 }
 
