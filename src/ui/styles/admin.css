@@ -1202,6 +1202,57 @@
   }
 }
 
+/* "Guardado" de la pantalla Página: el mismo aviso flotante, que se va solo a
+   los 6 s (sin JavaScript). Con el mouse o el foco encima, espera. */
+.save-toast {
+  display: inline-flex;
+  animation:
+    undo-toast-in var(--dur-base) var(--ease-out),
+    save-toast-out var(--dur-base) var(--ease-out) 6s forwards;
+}
+
+/* En el celular va a la izquierda: a la derecha está "Vista previa". */
+@media (max-width: 59.99rem) {
+  .save-toast {
+    left: var(--space-3);
+    transform: none;
+    animation:
+      save-toast-in var(--dur-base) var(--ease-out),
+      save-toast-out var(--dur-base) var(--ease-out) 6s forwards;
+  }
+}
+
+@keyframes save-toast-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+
+.save-toast:hover,
+.save-toast:focus-within {
+  animation-play-state: paused;
+}
+
+.save-toast .undo-toast-button {
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+}
+
+@keyframes save-toast-out {
+  to {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .save-toast {
+    animation: save-toast-out 0s linear 6s forwards;
+  }
+}
+
 /* Ordenar: el asa se agarra con el mouse o el dedo, o se activa con Espacio. */
 .drag-handle {
   display: inline-grid;

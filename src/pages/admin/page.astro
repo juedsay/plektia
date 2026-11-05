@@ -270,14 +270,20 @@ const effective = effectiveAppearance(chosenTheme, {
           data-chosen-namefont={values.nameFont}
         >
           <input type="hidden" name="pageId" value={currentPage.id} />
+          {/*
+            Aviso flotante abajo, donde se está mirando (no arriba de todo). Se va
+            solo a los 6 s, sin JavaScript; con el mouse o el foco encima, espera.
+          */}
           {justSaved && publicUrl && (
-            <Alert variant="success" message="Guardado. Tu página pública ya muestra los cambios.">
-              <div class="alert-actions">
-                <a class="button is-quiet" href={publicUrl} target="_blank" rel="noopener">
-                  Ver página<span class="visually-hidden"> (se abre en otra pestaña)</span>
-                </a>
-              </div>
-            </Alert>
+            <div class="undo-toast save-toast" role="status">
+              <p class="undo-toast-message">
+                <span aria-hidden="true">✓ </span>Guardado
+                <span class="visually-hidden">: tu página pública ya muestra los cambios.</span>
+              </p>
+              <a class="undo-toast-button" href={publicUrl} target="_blank" rel="noopener">
+                Ver página<span class="visually-hidden"> (se abre en otra pestaña)</span>
+              </a>
+            </div>
           )}
           {message && <Alert variant="error" message={message} />}
 
