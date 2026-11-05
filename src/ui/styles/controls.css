@@ -1,0 +1,41 @@
+/*
+ * Estados de los controles del sitio y del panel (DESIGN.md, "Shapes"). Va
+ * aparte de base.css porque las páginas de links no tienen estos botones: cada
+ * byte de más en su primera respuesta puede costar un viaje de red (el LCP de
+ * /miembro-demo pasó de ~1.7 s a 1.83 s con estas reglas en base.css).
+ */
+
+.button {
+  transition:
+    background-color var(--dur-fast) var(--ease-out),
+    color var(--dur-fast) var(--ease-out),
+    transform var(--dur-fast) var(--ease-out);
+}
+
+/* Al pasar el mouse se aclara un poco; al apretar se hunde apenas. */
+.button:hover {
+  background: color-mix(in srgb, var(--color-fg) 85%, var(--color-bg));
+}
+
+.button.is-quiet:hover {
+  background: color-mix(in srgb, var(--color-fg) 8%, transparent);
+}
+
+.button:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+/* El contorno de foco sigue la forma del botón (el global es de 4 px). */
+.button:focus-visible {
+  border-radius: var(--radius-pill);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .button {
+    transition: none;
+  }
+
+  .button:active:not(:disabled) {
+    transform: none;
+  }
+}
