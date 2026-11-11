@@ -2,7 +2,6 @@ import { randomBytes } from "node:crypto";
 
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { StreamableHTTPClientTransport } from "@modelcontextprotocol/sdk/client/streamableHttp.js";
-import type { Transport } from "@modelcontextprotocol/sdk/shared/transport.js";
 import { expect, test } from "@playwright/test";
 
 import { connectMcpClient } from "./support/session";
@@ -19,9 +18,7 @@ async function mcpClient(baseURL: string, accessToken: string) {
   const transport = new StreamableHTTPClientTransport(new URL("/mcp", baseURL), {
     requestInit: { headers: { Authorization: `Bearer ${accessToken}` } },
   });
-  // El SDK 1.32.1 no declara `| undefined` en las propiedades opcionales del
-  // transporte (lo corrige 1.32.2); con `exactOptionalPropertyTypes` hace falta el cast.
-  await client.connect(transport as unknown as Transport);
+  await client.connect(transport);
   return client;
 }
 
