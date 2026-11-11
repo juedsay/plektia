@@ -10,7 +10,6 @@ import { createInterface } from "node:readline/promises";
 import { UnauthorizedError } from "@modelcontextprotocol/sdk/client/auth.js";
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { StreamableHTTPClientTransport } from "@modelcontextprotocol/sdk/client/streamableHttp.js";
-import type { Transport } from "@modelcontextprotocol/sdk/shared/transport.js";
 import type { CallToolResult } from "@modelcontextprotocol/sdk/types.js";
 
 import { findItem, HELP, parseCommand, payloadOf, type Command } from "./commands.ts";
@@ -33,12 +32,8 @@ function openBrowser(url: URL): void {
 const credentials = new CredentialsFile();
 const provider = new FileOAuthProvider(SERVER, credentials, openBrowser);
 
-function transport(): Transport {
-  // El SDK 1.32.1 no declara `| undefined` en las propiedades opcionales del
-  // transporte (lo corrige 1.32.2); con `exactOptionalPropertyTypes` hace falta el cast.
-  return new StreamableHTTPClientTransport(MCP_URL, {
-    authProvider: provider,
-  }) as unknown as Transport;
+function transport(): StreamableHTTPClientTransport {
+  return new StreamableHTTPClientTransport(MCP_URL, { authProvider: provider });
 }
 
 /** Espera la vuelta del navegador en 127.0.0.1 con el código (y el `state` esperado). */
@@ -88,7 +83,7 @@ async function connect(): Promise<Client> {
   }
   console.info("Hace falta autorizar esta compu en Plektia.");
   const code = await waitForCode();
-  await (first as unknown as StreamableHTTPClientTransport).finishAuth(code);
+  await first.finishAuth(code);
   const again = new Client({ name: "plektia-cli", version: "1.0.0" });
   await again.connect(transport());
   return again;
