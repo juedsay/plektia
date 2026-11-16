@@ -73,6 +73,40 @@ const notice =
           </svg>
           <span class="visually-hidden">(se abre en otra pestaña)</span>
         </a>
+        {/*
+          Código QR de la página, para imprimir o mostrar en pantalla. Sin
+          JavaScript se ve y se descarga en SVG; con JavaScript, también en PNG.
+        */}
+        <details class="admin-qr" data-qr>
+          <summary class="button is-quiet">Código QR</summary>
+          <div class="admin-qr-body">
+            <img
+              src={`${publicUrl.pathname}/qr.svg`}
+              alt={`Código QR de ${publicUrl.host}${publicUrl.pathname}`}
+              width="200"
+              height="200"
+              loading="lazy"
+              decoding="async"
+              data-qr-image
+            />
+            <p class="admin-qr-actions">
+              <a class="button is-quiet" href={`${publicUrl.pathname}/qr.svg?descargar`} download>
+                Descargar SVG
+              </a>
+              <button
+                type="button"
+                class="button is-quiet"
+                data-qr-png={`plektia-${currentPage.handle}-qr.png`}
+                hidden
+              >
+                Descargar PNG
+              </button>
+            </p>
+            <p class="field-hint">
+              Lleva a tu página. SVG para diseño e impresión; PNG para compartir.
+            </p>
+          </div>
+        </details>
         {currentPage.bio && <p class="admin-bio">{currentPage.bio}</p>}
       </header>
 

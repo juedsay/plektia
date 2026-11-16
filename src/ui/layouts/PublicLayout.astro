@@ -115,6 +115,7 @@ const shareUrl = (canonical ?? publicUrl ?? new URL(Astro.url.pathname, Astro.ur
         title={title}
         name={sharePreview?.name ?? "Plektia"}
         brand={sharePreview?.brand ?? !sharePreview}
+        qr={Boolean(sharePreview)}
       />
     )}
     <script>

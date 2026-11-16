@@ -2513,3 +2513,41 @@
     padding-inline: 0;
   }
 }
+
+/* ── Código QR de la página (Inicio) ───────────────────────────────────────── */
+.admin-qr {
+  justify-self: start;
+}
+
+.admin-qr summary {
+  list-style: none;
+}
+
+.admin-qr summary::-webkit-details-marker {
+  display: none;
+}
+
+.admin-qr-body {
+  display: grid;
+  gap: var(--space-3);
+  justify-items: start;
+  margin-top: var(--space-3);
+  padding: var(--space-4);
+  border: 1px solid var(--color-line-soft);
+  border-radius: var(--radius-card);
+}
+
+.admin-qr-body img {
+  border-radius: calc(var(--radius-card) - var(--space-4) / 2);
+}
+
+.admin-qr-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin: 0;
+}
+
+.admin-qr-actions [hidden] {
+  display: none;
+}

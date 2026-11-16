@@ -16,9 +16,15 @@ interface Props {
   name: string;
   /** Página propia de Plektia: el avatar es el isotipo. */
   brand?: boolean;
+  /** Si es la página de un perfil: tiene código QR (`/{handle}/qr.svg`). */
+  qr?: boolean;
 }
-const { url, title, name, brand = false } = Astro.props;
+const { url, title, name, brand = false, qr = false } = Astro.props;
 const targets = shareTargets(url, title);
+// El QR lo genera `/{handle}/qr.svg`. El desplegable lo arma el script al abrir
+// la ventana (src/ui/scripts/share-qr.ts): la página solo lleva la ruta, así no
+// suma peso a la primera respuesta (el presupuesto de LCP está justo).
+const qrSrc = qr ? `${new URL(url).pathname}/qr.svg` : undefined;
 ---
 
 <dialog
@@ -27,6 +33,7 @@ const targets = shareTargets(url, title);
   data-share-dialog
   data-share-url={url}
   data-share-title={title}
+  data-share-qr={qrSrc}
 >
   <div class="share-head">
     <h2 id="share-title">Compartir</h2>

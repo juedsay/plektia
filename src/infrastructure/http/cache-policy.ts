@@ -32,6 +32,8 @@ const PREVIEW_IMAGES_TAG = "link-previews";
 /** `/thumbs/{videoId}.jpg`: miniaturas de YouTube, servidas desde el propio sitio. */
 const THUMB_PATH = /^\/thumbs\/[A-Za-z0-9_-]{11}\.jpg$/;
 const THUMBS_TAG = "thumbs";
+/** `/{handle}/qr.svg`: el código QR de una página (`src/pages/[handle]/qr.svg.ts`). */
+const QR_PATH = /^\/([^/]+)\/qr\.svg$/;
 
 // Formularios con estado (Turnstile, avisos de envío) o pasos del login: nunca.
 const PRIVATE_PATHS = new Set(["/contact", "/contacto"]);
@@ -64,6 +66,14 @@ export function cachePolicy(request: {
   // Una miniatura casi nunca cambia, pero puede (el dueño del video la edita): un día.
   if (THUMB_PATH.test(pathname) && status === 200) {
     return { cacheControl: "public, max-age=86400", tags: [THUMBS_TAG] };
+  }
+
+  // El QR de una página no cambia mientras exista: un día, con la etiqueta del
+  // perfil (si la página se borra, la purga lo saca).
+  const qrSegment = QR_PATH.exec(pathname)?.[1];
+  const qrHandle = qrSegment ? decodeSafe(qrSegment).toLowerCase() : null;
+  if (qrHandle && /^[a-z0-9_-]{1,40}$/.test(qrHandle) && status === 200) {
+    return { cacheControl: "public, max-age=86400", tags: [profileTag(qrHandle)] };
   }
 
   // Como un perfil: editarla desde el panel purga su etiqueta y se ve al instante.
