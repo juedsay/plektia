@@ -2,6 +2,11 @@ import { randomBytes } from "node:crypto";
 
 import { expect, test } from "@playwright/test";
 
+import {
+  LIMIT_TEST_TIMEOUT_MS,
+  limitWindowOf,
+  waitForRoomInLimitWindow,
+} from "./support/rate-limit-window";
 import { createPageAs, deletePage, insertLink, signIn, statsToday } from "./support/session";
 
 // Estadísticas sin cookies (tarea 27, SPEC-click-analytics). Una página propia
@@ -113,18 +118,33 @@ test.describe("el dueño", () => {
   });
 });
 
+// Si la ráfaga cruzara el cambio de minuto podría registrar hasta 30 + 30
+// (ver support/rate-limit-window.ts).
+const BURST_SIZE = 100;
+const CONCURRENT_REQUESTS = 10;
+
 test.describe("límite", () => {
   test.use({ extraHTTPHeaders: { "cf-connecting-ip": ipOfThisRun() } });
 
   test("100 eventos seguidos desde una IP registran 30 o menos", async ({ request, baseURL }) => {
+    test.setTimeout(LIMIT_TEST_TIMEOUT_MS);
     const before = await statsToday(PAGE_ID, linkId);
     const view = JSON.stringify({ t: "view", h: HANDLE, s: "direct" });
-    for (let index = 0; index < 100; index++) {
-      await request.post("/api/e", {
+    const sendView = () =>
+      request.post("/api/e", {
         data: view,
         headers: { origin: baseURL ?? "", "content-type": "text/plain" },
       });
+
+    const windowAtStart = await waitForRoomInLimitWindow();
+    // De a tandas en paralelo: la ráfaga dura poco aunque el servidor esté cargado.
+    for (let sent = 0; sent < BURST_SIZE; sent += CONCURRENT_REQUESTS) {
+      await Promise.all(Array.from({ length: CONCURRENT_REQUESTS }, sendView));
     }
+    expect(limitWindowOf(Date.now()), "la ráfaga entera cae en una sola ventana").toBe(
+      windowAtStart,
+    );
+
     const added = (await statsToday(PAGE_ID, linkId)).views - before.views;
     expect(added).toBeGreaterThan(0);
     expect(added).toBeLessThanOrEqual(30);
