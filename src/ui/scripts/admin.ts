@@ -50,6 +50,14 @@ if (themeOptions && draftFrame) {
   });
 }
 
+// Código QR de la página (Inicio): descarga también en PNG.
+const qr = document.querySelector<HTMLElement>("[data-qr]");
+if (qr) {
+  void import("@/ui/scripts/qr-download").then(({ connectQrDownload }) => {
+    connectQrDownload(qr);
+  });
+}
+
 // El editor del avatar solo se carga en la pantalla que lo tiene (/admin/page).
 const avatarEditor = document.querySelector<HTMLElement>("[data-avatar-editor]");
 if (avatarEditor) {

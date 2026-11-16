@@ -4,6 +4,7 @@ import { mountBeacon } from "@/ui/scripts/beacon";
 import { toggleDisclosure } from "@/ui/scripts/disclosure";
 import { liveElapsed } from "@/ui/view/live";
 import { shareMessage, shareOrCopy } from "@/ui/scripts/share";
+import { mountShareQr } from "@/ui/scripts/share-qr";
 import { mountThread } from "@/ui/scripts/thread";
 
 const patchbay = document.querySelector<HTMLElement>("[data-patchbay]");
@@ -98,6 +99,8 @@ function mountShareDialog(trigger: HTMLButtonElement, dialog: HTMLDialogElement)
 
   trigger.addEventListener("click", () => {
     say(null);
+    // El QR se arma la primera vez que se abre (no pesa en la carga de la página).
+    mountShareQr(dialog, data.url.replace(/^https?:\/\//, ""));
     // Safari no le da foco a un botón al tocarlo: sin esto, al cerrar el
     // navegador devolvería el foco al <body>.
     trigger.focus();

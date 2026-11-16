@@ -53,6 +53,17 @@ describe("cachePolicy", () => {
     expect(get("/link-previews/otra-cosa.svg").cacheControl).toBe("private, no-store");
   });
 
+  it("el QR de una página se cachea un día con la etiqueta del perfil", () => {
+    expect(get("/JuedSay/qr.svg")).toEqual({
+      cacheControl: "public, max-age=86400",
+      tags: ["profile:juedsay"],
+    });
+    expect(get("/plektia/qr.svg").tags).toEqual(["profile:plektia"]);
+    // El de una página que no existe no se cachea como QR.
+    expect(get("/nadie/qr.svg", 404).cacheControl).toBe("public, max-age=60");
+    expect(get("/a b<c/qr.svg").cacheControl).toBe("private, no-store");
+  });
+
   it("una miniatura de YouTube se cachea un día", () => {
     expect(get("/thumbs/aBcDeFgHiJk.jpg")).toEqual({
       cacheControl: "public, max-age=86400",
