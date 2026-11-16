@@ -55,6 +55,24 @@ test.describe("aviso en vivo", () => {
 const AVATAR_ID = "44444444-4444-4444-8444-444444444444";
 const CHANNEL_TITLE = "Canal para comprobar";
 
+// El limitador local (Miniflare) cuenta por ventanas fijas de un minuto
+// alineadas al reloj, no por los últimos 60 s: si el segundo pedido cae en el
+// minuto siguiente al primero, pasa y no aparece el aviso del límite. Por eso
+// los dos pedidos se hacen dentro de una sola ventana.
+const LIMIT_WINDOW_MS = 60_000;
+/** Lo que tiene que quedar de ventana para arrancar; los dos pedidos tardan mucho menos. */
+const CHECKS_ROOM_MS = 15_000;
+
+const limitWindowOf = (timestamp: number) => Math.floor(timestamp / LIMIT_WINDOW_MS);
+
+/** Si a la ventana actual le queda poco, espera a que empiece la siguiente. */
+async function waitForRoomInLimitWindow() {
+  const remainingInWindow = LIMIT_WINDOW_MS - (Date.now() % LIMIT_WINDOW_MS);
+  if (remainingInWindow < CHECKS_ROOM_MS) {
+    await new Promise((resolve) => setTimeout(resolve, remainingInWindow + 100));
+  }
+}
+
 test.describe("comprobar ahora", () => {
   test.beforeAll(async () => {
     await deleteLinksTitled(AVATAR_ID, [CHANNEL_TITLE]);
@@ -75,6 +93,8 @@ test.describe("comprobar ahora", () => {
     context,
     baseURL,
   }) => {
+    // La espera hasta la próxima ventana puede sumar hasta CHECKS_ROOM_MS.
+    test.setTimeout(60_000);
     await signIn(context, baseURL ?? "", "avatar@plektia.test");
     await page.goto("/admin");
     const button = page.getByRole("button", { name: "Comprobar ahora si estoy en vivo" });
@@ -84,6 +104,8 @@ test.describe("comprobar ahora", () => {
     page.on("request", (request) => {
       if (request.method() === "POST") posts.push(request.url());
     });
+    await waitForRoomInLimitWindow();
+    const windowAtFirstCheck = limitWindowOf(Date.now());
     await button.dblclick();
     const done = page.getByRole("status").filter({ hasText: "revisamos tus canales" });
     const notConfigured = page
@@ -95,6 +117,9 @@ test.describe("comprobar ahora", () => {
     if (await done.isVisible()) {
       await expect(page).toHaveURL(/\/admin\?comprobado$/);
       await page.getByRole("button", { name: "Comprobar ahora si estoy en vivo" }).click();
+      expect(limitWindowOf(Date.now()), "los dos pedidos caen en una sola ventana").toBe(
+        windowAtFirstCheck,
+      );
       await expect(page.getByRole("alert")).toContainText("hace menos de un minuto");
     }
   });
